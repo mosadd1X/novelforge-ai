@@ -21,7 +21,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Ebook Generator Team",
     author_email="example@example.com",
-    url="https://github.com/yourusername/ebook-generator",
+    url="https://github.com/mosadd1X/ebook-generator",
     packages=find_packages(),
     include_package_data=True,
     install_requires=requirements,

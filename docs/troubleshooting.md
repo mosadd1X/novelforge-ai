@@ -222,8 +222,8 @@ Ensure you call `initialize_novel()` before attempting to generate content
 
 If you're experiencing issues not covered in this guide:
 
-1. Check the [GitHub Issues](https://github.com/yourusername/ebook-generator/issues) for similar problems
-2. Search the [Discussions](https://github.com/yourusername/ebook-generator/discussions) for community solutions
+1. Check the [GitHub Issues](https://github.com/mosadd1X/ebook-generator/issues) for similar problems
+2. Search the [Discussions](https://github.com/mosadd1X/ebook-generator/discussions) for community solutions
 3. Open a new issue with detailed information about your problem
 4. Include relevant error messages, system information, and steps to reproduce the issue
 

@@ -13,7 +13,7 @@ A comprehensive guide to the AI-powered ebook generation system that creates com
 {: .fs-6 .fw-300 }
 
 [Get Started](./getting-started.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
-[View on GitHub](https://github.com/yourusername/ebook-generator){: .btn .fs-5 .mb-4 .mb-md-0 }
+[View on GitHub](https://github.com/mosadd1X/ebook-generator){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ---
 
@@ -81,5 +81,5 @@ For more information about the project's motivation, challenges, and successes, 
 If you encounter issues or have questions about the Ebook Generator:
 
 - Check the [Troubleshooting Guide](./troubleshooting.html)
-- [Open an issue](https://github.com/yourusername/ebook-generator/issues) on GitHub
-- Contribute to the [Discussions](https://github.com/yourusername/ebook-generator/discussions) on GitHub
+- [Open an issue](https://github.com/mosadd1X/ebook-generator/issues) on GitHub
+- Contribute to the [Discussions](https://github.com/mosadd1X/ebook-generator/discussions) on GitHub

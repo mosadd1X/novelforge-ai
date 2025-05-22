@@ -36,7 +36,7 @@ Before setting up the development environment, ensure you have the following pre
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ebook-generator.git
+git clone https://github.com/mosadd1X/ebook-generator.git
 
 # Navigate to the project directory
 cd ebook-generator

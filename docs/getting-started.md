@@ -34,7 +34,7 @@ Before installing the Ebook Generator, ensure you have the following prerequisit
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/ebook-generator.git
+git clone https://github.com/mosadd1X/ebook-generator.git
 
 # Navigate to the project directory
 cd ebook-generator
@@ -50,7 +50,7 @@ pip install -r requirements.txt
 pip install ebook-generator
 
 # Or install directly from GitHub
-pip install git+https://github.com/yourusername/ebook-generator.git
+pip install git+https://github.com/mosadd1X/ebook-generator.git
 ```
 
 ## Configuration

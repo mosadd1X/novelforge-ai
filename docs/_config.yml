@@ -7,7 +7,7 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # Aux links for the upper right navigation
 aux_links:
   "Ebook Generator on GitHub":
-    - "//github.com/yourusername/ebook-generator"
+    - "//github.com/mosadd1X/ebook-generator"
 
 # Makes Aux links open in a new tab
 aux_links_new_tab: true
@@ -38,7 +38,7 @@ last_edit_time_format: "%b %e %Y at %I:%M %p"
 # Footer "Edit this page on GitHub" link text
 gh_edit_link: true
 gh_edit_link_text: "Edit this page on GitHub"
-gh_edit_repository: "https://github.com/yourusername/ebook-generator"
+gh_edit_repository: "https://github.com/mosadd1X/ebook-generator"
 gh_edit_branch: "main"
 gh_edit_view_mode: "tree"
 gh_edit_source: docs

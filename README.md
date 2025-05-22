@@ -23,7 +23,7 @@ An advanced AI-powered ebook generation system that creates complete, human-like
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/ebook-generator.git
+   git clone https://github.com/mosadd1X/ebook-generator.git
    cd ebook-generator
    ```
 
