@@ -1,5 +1,37 @@
 """
 Utility for setting default generation options based on genre.
+
+This module provides default settings for various novel genres, including:
+
+Target Length Options:
+- short: For shorter works like novellas, children's books (typically under 60,000 words)
+- medium: For standard-length novels (typically 60,000-100,000 words)
+- long: For longer works like epics, fantasy series (typically over 100,000 words)
+
+Writing Style Options:
+- Descriptive and detailed: Rich descriptions, elaborate prose (literary fiction, fantasy)
+- Concise and direct: Straightforward, action-oriented prose (thrillers, mysteries)
+- Conversational and casual: Informal, accessible language (YA, contemporary fiction)
+- Technical and precise: Specialized terminology, accurate descriptions (sci-fi, academic)
+- Various other styles specific to certain genres
+
+POV (Point of View) Options:
+- First person: Narrated from "I" perspective
+- Third person limited: Focuses on one character's perspective at a time
+- Third person omniscient: All-knowing narrator with access to multiple characters' thoughts
+- Multiple POVs: Alternating between different character perspectives
+- Second person: Rare, uses "you" as the narrative voice (common in self-help)
+
+Theme Options:
+- Each genre has recommended themes that work well for that type of story
+- Themes include concepts like "Identity and self-discovery", "Good vs. evil", etc.
+- Multiple themes can be combined for more complex narratives
+
+Chapter Parameters:
+- chapter_count: Recommended number of chapters for the genre
+- target_word_count: Total word count target for the entire book
+- chapter_length: Average words per chapter
+- min_chapter_length: Minimum words per chapter to avoid excessive chapter splitting
 """
 import re
 from typing import Dict, Any, List, Optional, Tuple, Set
