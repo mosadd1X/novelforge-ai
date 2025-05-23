@@ -703,6 +703,15 @@ def generate_cover(novel_data: Dict[str, Any], output_dir: str, auto_mode: bool 
                 "textured",
                 "abstract",
                 "classic",
+                "modern",
+                "artistic",
+                "dramatic",
+                "elegant",
+                "vintage",
+                "bold",
+                "sophisticated",
+                "cinematic",
+                "editorial",
                 "random"
             ],
             style=custom_style
@@ -712,49 +721,49 @@ def generate_cover(novel_data: Dict[str, Any], output_dir: str, auto_mode: bool 
         if design_style == "random":
             design_style = None
     else:
-        # In auto mode, select design style based on genre
+        # In auto mode, select design style based on genre with enhanced styles
         genre_style_map = {
             # Fiction genres
-            "thriller": "gradient",
-            "mystery": "textured",
-            "mystery/thriller": "textured",
-            "science fiction": "geometric",
-            "fantasy": "abstract",
-            "epic fantasy": "abstract",
-            "romance": "gradient",
-            "paranormal romance": "gradient",
+            "thriller": "dramatic",
+            "mystery": "vintage",
+            "mystery/thriller": "bold",
+            "science fiction": "modern",
+            "fantasy": "artistic",
+            "epic fantasy": "dramatic",
+            "romance": "elegant",
+            "paranormal romance": "artistic",
             "literary fiction": "minimalist",
-            "commercial fiction": "classic",
-            "contemporary fiction": "classic",
-            "historical fiction": "textured",
-            "alternate history": "textured",
-            "horror": "abstract",
-            "young adult": "geometric",
+            "commercial fiction": "modern",
+            "contemporary fiction": "modern",
+            "historical fiction": "vintage",
+            "alternate history": "vintage",
+            "horror": "dramatic",
+            "young adult": "bold",
             "middle grade": "geometric",
             "children's chapter books": "gradient",
-            "urban fantasy": "geometric",
-            "dystopian": "abstract",
-            "speculative fiction": "geometric",
-            "novella": "minimalist",
-            "graphic novel": "abstract",
+            "urban fantasy": "modern",
+            "dystopian": "dramatic",
+            "speculative fiction": "modern",
+            "novella": "elegant",
+            "graphic novel": "artistic",
             "short story collection": "minimalist",
 
             # Non-fiction genres
-            "memoir": "classic",
+            "memoir": "elegant",
             "biography": "classic",
-            "history": "textured",
-            "self-help": "gradient",
+            "history": "vintage",
+            "self-help": "modern",
             "business": "minimalist",
             "popular science": "geometric",
             "academic": "minimalist",
-            "travel": "textured",
+            "travel": "artistic",
             "cookbook": "gradient",
             "how-to": "geometric",
-            "essay collection": "minimalist",
+            "essay collection": "elegant",
             "philosophy": "minimalist",
-            "true crime": "textured",
-            "poetry collection": "minimalist",
-            "creative non-fiction": "classic",
+            "true crime": "dramatic",
+            "poetry collection": "artistic",
+            "creative non-fiction": "elegant",
 
             # Test genre
             "test": "minimalist"
@@ -772,14 +781,18 @@ def generate_cover(novel_data: Dict[str, Any], output_dir: str, auto_mode: bool 
     if "subtitle" in novel_data["metadata"]:
         subtitle = novel_data["metadata"]["subtitle"]
 
-    # Generate the cover
+    # Get description for enhanced cover generation
+    description = novel_data["metadata"].get("description", "")
+
+    # Generate the enhanced cover
     cover_path = cover_generator.generate_cover(
         title=title,
         author=author,
         genre=genre,
         subtitle=subtitle,
         series_info=series_info,
-        design_style=design_style
+        design_style=design_style,
+        description=description
     )
 
     if not auto_mode:
