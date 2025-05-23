@@ -11,6 +11,7 @@ from rich.progress import Progress
 from src.core.gemini_client import GeminiClient
 from src.core.memory_manager import MemoryManager
 from src.utils.word_counter import count_words
+from src.utils.genre_defaults import get_genre_defaults, create_flexible_pov_structure, determine_character_gender, assign_chapter_pov
 
 # Import SeriesManager conditionally to avoid circular imports
 try:
@@ -668,8 +669,37 @@ class NovelGenerator:
                         elif field == "voice":
                             char[field] = "Speaks in a manner consistent with their personality and background"
 
+                # Determine character gender for POV purposes
+                char["gender"] = determine_character_gender(char)
+
+                # Assign POV character status for alternating POV genres
+                if self.generation_options and (
+                    self.generation_options.get('pov', "").lower() == "alternating povs" or
+                    self.generation_options.get('pov_structure') == "flexible_alternating"
+                ):
+                    # Mark main characters as POV characters
+                    if char.get("role", "").lower() in ["protagonist", "main character", "love interest"]:
+                        char["pov_character"] = True
+                        # Set POV order based on gender for balanced alternating
+                        if char["gender"] == "male":
+                            char["pov_order"] = 1
+                        elif char["gender"] == "female":
+                            char["pov_order"] = 2
+                        else:
+                            char["pov_order"] = 3
+
                 # Add character to memory manager
                 self.memory_manager.add_character(char)
+
+            # Create POV structure if using flexible alternating POV
+            if self.generation_options and (
+                self.generation_options.get('pov', "").lower() == "alternating povs" or
+                self.generation_options.get('pov_structure') == "flexible_alternating"
+            ):
+                pov_structure = create_flexible_pov_structure(characters, self.generation_options)
+                # Store POV structure in memory manager for later use
+                if hasattr(self.memory_manager, 'narrative_tracking'):
+                    self.memory_manager.narrative_tracking["pov_structure"] = pov_structure
 
             return characters
 
@@ -1039,26 +1069,54 @@ class NovelGenerator:
             writing_style = self.generation_options.get('writing_style', writing_style)
             pov = self.generation_options.get('pov', pov)
 
-            # Check if we're using alternating POVs (especially for romance)
-            if pov.lower() == "alternating povs" or self.generation_options.get('pov_structure') == "alternating":
-                # Find POV characters
-                pov_characters = []
-                for char in characters:
-                    if char.get("pov_character") is True or char.get("pov_character") == "true":
-                        pov_characters.append(char)
+            # Check if we're using flexible alternating POVs
+            if (pov.lower() == "alternating povs" or
+                self.generation_options.get('pov_structure') == "flexible_alternating"):
 
-                # Sort by POV order if available
-                pov_characters.sort(key=lambda x: x.get("pov_order", 999))
+                # Get POV structure from memory manager
+                pov_structure = None
+                if hasattr(self.memory_manager, 'narrative_tracking'):
+                    pov_structure = self.memory_manager.narrative_tracking.get("pov_structure")
 
-                # Determine which character's POV to use for this chapter
-                if pov_characters:
-                    if len(pov_characters) >= 2:
-                        # Odd chapters use first POV character, even chapters use second
-                        pov_index = 0 if chapter_num % 2 == 1 else 1
-                        pov_character = pov_characters[pov_index]
-                    else:
-                        # If only one POV character, use that one
-                        pov_character = pov_characters[0]
+                if pov_structure:
+                    # Use the new flexible POV assignment
+                    chapter_outline_text = chapter_outline if isinstance(chapter_outline, str) else ""
+                    pov_character = assign_chapter_pov(
+                        chapter_num=chapter_num,
+                        pov_structure=pov_structure,
+                        chapter_outline=chapter_outline_text,
+                        story_context=context
+                    )
+                else:
+                    # Fallback to old system if POV structure not available
+                    pov_characters = []
+                    for char in characters:
+                        if char.get("pov_character") is True or char.get("pov_character") == "true":
+                            pov_characters.append(char)
+
+                    # Sort by POV order if available
+                    pov_characters.sort(key=lambda x: x.get("pov_order", 999))
+
+                    # Determine which character's POV to use for this chapter
+                    if pov_characters:
+                        if len(pov_characters) >= 2:
+                            # Flexible alternating based on gender balance
+                            male_chars = [c for c in pov_characters if c.get("gender") == "male"]
+                            female_chars = [c for c in pov_characters if c.get("gender") == "female"]
+
+                            if male_chars and female_chars:
+                                # Alternate with flexibility for story needs
+                                if chapter_num % 2 == 1:
+                                    pov_character = male_chars[0]
+                                else:
+                                    pov_character = female_chars[0]
+                            else:
+                                # Simple alternating if no gender balance
+                                pov_index = (chapter_num - 1) % len(pov_characters)
+                                pov_character = pov_characters[pov_index]
+                        else:
+                            # If only one POV character, use that one
+                            pov_character = pov_characters[0]
 
         # Calculate target chapter length
         target_chapter_length = "3,500-4,500"  # Default target range

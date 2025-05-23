@@ -59,8 +59,8 @@ You'll be prompted to enter basic information about your book:
 
 5. **Description**: Enter a brief description of your book
    ```
-   Enter a description: A physicist discovers a way to manipulate quantum 
-   particles to accelerate plant growth, creating a garden where time 
+   Enter a description: A physicist discovers a way to manipulate quantum
+   particles to accelerate plant growth, creating a garden where time
    flows differently.
    ```
 
@@ -152,8 +152,8 @@ You'll be prompted to enter information about your series:
 
 5. **Description**: Enter a brief description of your series
    ```
-   Enter a description: A sweeping fantasy saga where four young mages, 
-   each wielding one of the primal elements, must unite to prevent an 
+   Enter a description: A sweeping fantasy saga where four young mages,
+   each wielding one of the primal elements, must unite to prevent an
    ancient darkness from consuming their world.
    ```
 
@@ -188,6 +188,23 @@ Would you like to generate Book 2: "Tides of Change"? (y/n): y
 ```
 
 You can generate all books in one session or return later to continue the series.
+
+### Step 7: Zip Your Series (Optional)
+
+Once you have generated multiple books in your series, you can create a zip archive for easy sharing:
+
+1. From the series management menu, select "Zip Series Books"
+2. Choose which file formats to include (EPUB only, all ebook formats, or everything)
+3. Select where to save the zip file (series directory, Desktop, Downloads, or custom location)
+4. Enter a filename for the zip archive
+5. The system will create a compressed archive with all your books organized in folders
+
+The zip file will contain:
+- Series information file
+- Each book in its own numbered folder (Book_01, Book_02, etc.)
+- All selected file formats for each book
+
+This makes it easy to share your complete series with others or backup your work.
 
 ## Using Book and Series Ideas
 

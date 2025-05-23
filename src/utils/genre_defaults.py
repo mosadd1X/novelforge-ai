@@ -20,7 +20,17 @@ POV (Point of View) Options:
 - Third person limited: Focuses on one character's perspective at a time
 - Third person omniscient: All-knowing narrator with access to multiple characters' thoughts
 - Multiple POVs: Alternating between different character perspectives
+- Alternating POVs: Enhanced flexible system that switches based on story needs
 - Second person: Rare, uses "you" as the narrative voice (common in self-help)
+
+Enhanced POV Features (for Alternating POVs):
+- pov_structure: "flexible_alternating" enables story-driven POV switching
+- pov_pattern: "story_driven" assigns POV based on chapter content and character relevance
+- pov_strategy: "balanced_with_story_focus" maintains gender balance while prioritizing story needs
+- Gender Detection: Automatically detects character gender from names and descriptions
+- Supports both Western and Indian names for accurate gender identification
+- Context-Aware Assignment: POV switches based on chapter outline and character involvement
+- Flexible Alternating: Not rigid odd/even chapters but adapts to narrative requirements
 
 Theme Options:
 - Each genre has recommended themes that work well for that type of story
@@ -126,13 +136,15 @@ def get_genre_defaults(genre: str) -> Dict[str, Any]:
             "target_length": "medium",
             "writing_style": "Descriptive and detailed",
             "pov": "Alternating POVs",
-            "themes": ["Love and relationships", "Personal growth", "Identity and self-discovery"],
+            "themes": ["Unspoken Love", "Emotional Sacrifice", "Mental Health Struggles", "Longing Without Receiving", "Love That Goes Unnoticed", "Letting Go When It Hurts the Most"],
             "chapter_count": 25,
-            "target_word_count": 70000,
-            "chapter_length": 2800,
-            "min_chapter_length": 2800,
-            "pov_structure": "alternating",  # Alternating between main characters
-            "pov_characters": ["protagonist", "love interest"],  # Will be replaced with actual character names
+            "target_word_count": 90000,
+            "chapter_length": 3100,
+            "min_chapter_length": 3600,
+            "pov_structure": "flexible_alternating",
+            "pov_pattern": "story_driven",
+            "pov_characters": ["male_protagonist", "female_protagonist"],
+            "pov_strategy": "balanced_with_story_focus",
         },
         "fantasy": {
             "target_length": "long",
@@ -435,8 +447,10 @@ def get_genre_defaults(genre: str) -> Dict[str, Any]:
             "target_word_count": 85000,
             "chapter_length": 2800,
             "min_chapter_length": 2500,
-            "pov_structure": "alternating",
-            "pov_characters": ["protagonist", "love interest"],
+            "pov_structure": "flexible_alternating",
+            "pov_pattern": "story_driven",
+            "pov_characters": ["male_protagonist", "female_protagonist"],
+            "pov_strategy": "balanced_with_story_focus",
         },
         "urban fantasy": {
             "target_length": "medium",
@@ -688,3 +702,237 @@ def get_all_genres() -> List[str]:
 
     # Return a list of properly capitalized genre names
     return [genre.title() for genre in genre_defaults.keys()]
+
+
+def create_flexible_pov_structure(characters: List[Dict[str, Any]], generation_options: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Create a flexible POV structure based on characters and generation options.
+
+    Args:
+        characters: List of character dictionaries
+        generation_options: Generation options including POV settings
+
+    Returns:
+        Dictionary containing POV structure information
+    """
+    pov_structure = {
+        "type": "flexible_alternating",
+        "strategy": generation_options.get("pov_strategy", "balanced_with_story_focus"),
+        "pattern": generation_options.get("pov_pattern", "story_driven"),
+        "characters": [],
+        "chapter_assignments": {},
+        "gender_balance": True
+    }
+
+    # Identify POV characters and their genders
+    pov_characters = []
+    for char in characters:
+        if char.get("pov_character") is True or char.get("pov_character") == "true":
+            # Try to determine gender from character description
+            gender = determine_character_gender(char)
+            char["gender"] = gender
+            pov_characters.append(char)
+
+    # Sort by POV order if available, otherwise by gender for balance
+    pov_characters.sort(key=lambda x: (x.get("pov_order", 999), x.get("gender", "unknown")))
+
+    pov_structure["characters"] = pov_characters
+    return pov_structure
+
+
+def determine_character_gender(character: Dict[str, Any]) -> str:
+    """
+    Determine character gender from their description and name.
+
+    Args:
+        character: Character dictionary
+
+    Returns:
+        "male", "female", or "unknown"
+    """
+    name = character.get("name", "").lower()
+    description = character.get("appearance", "").lower()
+    personality = character.get("personality", "").lower()
+    background = character.get("background", "").lower()
+
+    # Combine all text for analysis
+    full_text = f"{name} {description} {personality} {background}".lower()
+
+    # Gender indicators
+    male_indicators = [
+        "he", "him", "his", "man", "male", "boy", "guy", "gentleman", "father", "dad",
+        "brother", "son", "husband", "boyfriend", "king", "prince", "lord", "sir"
+    ]
+
+    female_indicators = [
+        "she", "her", "hers", "woman", "female", "girl", "lady", "mother", "mom",
+        "sister", "daughter", "wife", "girlfriend", "queen", "princess", "lady", "miss", "mrs"
+    ]
+
+    # Common male names (Western + Indian)
+    male_names = [
+        # Western names
+        "alex", "alexander", "andrew", "anthony", "benjamin", "brad", "brian", "bruce",
+        "charles", "chris", "christopher", "daniel", "david", "edward", "eric", "frank",
+        "george", "henry", "jack", "james", "jason", "john", "joseph", "kevin", "mark",
+        "matthew", "michael", "paul", "peter", "richard", "robert", "ryan", "stephen",
+        "steven", "thomas", "william", "adam", "adrian", "alan", "austin", "blake",
+        "brandon", "caleb", "cameron", "connor", "derek", "ethan", "evan", "gabriel",
+        "ian", "jacob", "jordan", "joshua", "justin", "kyle", "logan", "lucas", "mason",
+        "nathan", "nicholas", "noah", "owen", "samuel", "sean", "tyler", "zachary",
+        # Indian male names
+        "aarav", "aditya", "akash", "amit", "anand", "ankit", "anuj", "arjun", "ashish",
+        "ashwin", "ayaan", "deepak", "dev", "dhruv", "gaurav", "harsh", "karan", "kartik", "kunal",
+        "manish", "nikhil", "nitin", "pradeep", "prakash", "pranav", "rahul", "raj", "rajesh",
+        "ravi", "rohit", "sachin", "sagar", "sahil", "sandeep", "sanjay", "shubham", "siddharth",
+        "suresh", "tushar", "varun", "vikash", "vikram", "vinay", "vishal", "yash", "yogesh",
+        "abhishek", "ajay", "akshay", "aman", "amitabh", "arun", "bharat", "chandan", "dinesh",
+        "girish", "gopal", "hari", "hemant", "jagdish", "jayesh", "kamal", "krishna", "mahesh",
+        "mukesh", "naresh", "pankaj", "pawan", "raghav", "ramesh", "ritesh", "shailesh", "shyam",
+        "subhash", "sumit", "sunil", "surya", "umesh", "vijay", "vivek", "yogi"
+    ]
+
+    # Common female names (Western + Indian)
+    female_names = [
+        # Western names
+        "alexandra", "amanda", "amy", "angela", "anna", "ashley", "barbara", "betty",
+        "brenda", "carol", "carolyn", "catherine", "christine", "deborah", "diana",
+        "donna", "dorothy", "elizabeth", "emily", "emma", "helen", "jennifer", "jessica",
+        "karen", "kimberly", "laura", "linda", "lisa", "maria", "mary", "michelle",
+        "nancy", "patricia", "rebecca", "ruth", "sandra", "sarah", "sharon", "stephanie",
+        "susan", "abigail", "alyssa", "andrea", "brooke", "chloe", "claire", "grace",
+        "hailey", "hannah", "isabella", "jasmine", "julia", "kayla", "lauren", "madison",
+        "megan", "natalie", "nicole", "olivia", "rachel", "samantha", "sophia", "taylor",
+        "victoria", "zoe",
+        # Indian female names
+        "aadhya", "aisha", "ananya", "anika", "anya","anjali", "anushka", "aparna", "arpita", "avni",
+        "deepika", "diya", "divya", "gauri", "ishita", "jyoti", "kavya", "kiara", "kriti",
+        "meera", "naina", "neha", "nisha", "pooja", "priya", "riya", "sakshi", "shreya",
+        "simran", "sneha", "sonia", "swati", "tanvi", "tanya", "vaishali", "vidya", "zara",
+        "aditi", "akshara", "alka", "amrita", "arya", "bhavana", "chitra", "devika", "garima",
+        "harsha", "indira", "janvi", "kalpana", "lakshmi", "madhuri", "namrata", "pallavi",
+        "rachna", "radha", "rashmi", "ritu", "sadhana", "sangeeta", "shanti", "shilpa",
+        "sita", "sonal", "sunita", "sushma", "usha", "vandana", "veena", "yamini",
+        "aarti", "archana", "geeta", "hema", "kiran", "lata", "mala", "nita", "poonam",
+        "rekha", "renu", "rita", "ruby", "seema", "shobha", "sudha", "suman", "uma"
+    ]
+
+    # Count indicators
+    male_score = 0
+    female_score = 0
+
+    # Check name
+    first_name = name.split()[0] if name.split() else ""
+    if first_name in male_names:
+        male_score += 3
+    elif first_name in female_names:
+        female_score += 3
+
+    # Check text indicators
+    for indicator in male_indicators:
+        if indicator in full_text:
+            male_score += 1
+
+    for indicator in female_indicators:
+        if indicator in full_text:
+            female_score += 1
+
+    # Determine gender
+    if male_score > female_score:
+        return "male"
+    elif female_score > male_score:
+        return "female"
+    else:
+        return "unknown"
+
+
+def assign_chapter_pov(chapter_num: int, pov_structure: Dict[str, Any],
+                      chapter_outline: str = "", story_context: Dict[str, Any] = None) -> Optional[Dict[str, Any]]:
+    """
+    Assign POV character for a specific chapter based on story needs.
+
+    Args:
+        chapter_num: Chapter number (1-based)
+        pov_structure: POV structure information
+        chapter_outline: Chapter outline/description for context
+        story_context: Additional story context
+
+    Returns:
+        POV character dictionary or None
+    """
+    if not pov_structure.get("characters"):
+        return None
+
+    strategy = pov_structure.get("strategy", "balanced_with_story_focus")
+    pattern = pov_structure.get("pattern", "story_driven")
+    characters = pov_structure["characters"]
+
+    # If only one POV character, use that one
+    if len(characters) == 1:
+        return characters[0]
+
+    # Story-driven POV assignment
+    if pattern == "story_driven" and chapter_outline:
+        # Analyze chapter outline for character focus
+        outline_lower = chapter_outline.lower()
+
+        # Score each character based on their presence/relevance in the outline
+        character_scores = []
+        for char in characters:
+            score = 0
+            name = char.get("name", "").lower()
+            gender = char.get("gender", "unknown")
+
+            # Check if character name appears in outline
+            if name in outline_lower:
+                score += 5
+
+            # Check for gender-specific content
+            if gender == "male":
+                male_keywords = ["his", "he", "him", "man", "male", "father", "brother", "husband"]
+                score += sum(1 for keyword in male_keywords if keyword in outline_lower)
+            elif gender == "female":
+                female_keywords = ["her", "she", "woman", "female", "mother", "sister", "wife"]
+                score += sum(1 for keyword in female_keywords if keyword in outline_lower)
+
+            character_scores.append((char, score))
+
+        # Sort by score and return highest scoring character
+        character_scores.sort(key=lambda x: x[1], reverse=True)
+        if character_scores[0][1] > 0:
+            return character_scores[0][0]
+
+    # Fallback to balanced alternating
+    if strategy == "balanced_with_story_focus":
+        # Try to maintain gender balance while considering story needs
+        male_chars = [c for c in characters if c.get("gender") == "male"]
+        female_chars = [c for c in characters if c.get("gender") == "female"]
+
+        # Simple alternating with preference for balance
+        if male_chars and female_chars:
+            # Alternate between male and female, but allow flexibility
+            if chapter_num % 2 == 1:
+                return male_chars[0] if male_chars else female_chars[0]
+            else:
+                return female_chars[0] if female_chars else male_chars[0]
+
+    # Default: simple alternating by order
+    char_index = (chapter_num - 1) % len(characters)
+    return characters[char_index]
+
+
+def get_pov_options() -> List[str]:
+    """
+    Get available POV options for the UI.
+
+    Returns:
+        List of POV option strings
+    """
+    return [
+        "First person",
+        "Third person limited",
+        "Third person omniscient",
+        "Alternating POVs",
+        "Multiple POVs",
+        "Second person"
+    ]

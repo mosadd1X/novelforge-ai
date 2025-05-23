@@ -16,7 +16,7 @@ from questionary import Style
 
 from src.core.series_manager import SeriesManager
 from src.core.series_generator import SeriesGenerator
-from src.utils.file_handler import create_output_directory, create_series_directory, sanitize_filename
+from src.utils.file_handler import create_output_directory, create_series_directory, sanitize_filename, zip_series_books, get_series_files
 from src.formatters.epub_formatter import EpubFormatter
 from src.utils.genre_defaults import get_all_genres
 from src.ui.terminal_ui import (
@@ -568,6 +568,153 @@ def export_books(series_manager: SeriesManager) -> None:
 
     console.print(f"\n[bold green]✓ Export to {selected_format} complete![/bold green]")
 
+def zip_series_books_menu(series_manager: SeriesManager) -> None:
+    """
+    Create a zip archive of all books in a series.
+
+    Args:
+        series_manager: SeriesManager instance
+    """
+    # Get series directory
+    series_dir = create_series_directory(series_manager.series_title)
+
+    # Check if series has any books
+    series_files = get_series_files(series_dir)
+    if not series_files:
+        console.print("[yellow]No books found in this series to zip.[/yellow]")
+        return
+
+    # Display available files
+    console.print("\n[bold cyan]Available Files in Series:[/bold cyan]")
+    all_formats = set()
+    total_files = 0
+
+    for book_dir, files in sorted(series_files.items()):
+        book_num = book_dir.split('_')[1] if '_' in book_dir else '?'
+        console.print(f"\n[bold green]Book {book_num}:[/bold green]")
+        for file_path in files:
+            file_name = os.path.basename(file_path)
+            file_ext = os.path.splitext(file_name)[1].lower()
+            all_formats.add(file_ext)
+            console.print(f"  • {file_name}")
+            total_files += 1
+
+    console.print(f"\n[bold cyan]Total files found: {total_files}[/bold cyan]")
+
+    # Ask user which formats to include
+    format_choices = []
+    for fmt in sorted(all_formats):
+        if fmt:  # Skip empty extensions
+            format_choices.append(fmt.upper())
+
+    # Add preset options
+    preset_choices = [
+        "EPUB only",
+        "All ebook formats (EPUB, PDF, MOBI, AZW3)",
+        "Everything (all files)",
+        "Custom selection"
+    ]
+
+    format_selection = questionary.select(
+        "What files would you like to include in the zip?",
+        choices=preset_choices,
+        style=custom_style
+    ).ask()
+
+    # Determine which formats to include
+    include_formats = None
+    if format_selection == "EPUB only":
+        include_formats = ['.epub']
+    elif format_selection == "All ebook formats (EPUB, PDF, MOBI, AZW3)":
+        include_formats = ['.epub', '.pdf', '.mobi', '.azw3']
+    elif format_selection == "Everything (all files)":
+        include_formats = None  # Include all
+    elif format_selection == "Custom selection":
+        if format_choices:
+            selected_formats = questionary.checkbox(
+                "Select file formats to include:",
+                choices=format_choices,
+                style=custom_style
+            ).ask()
+            include_formats = [f'.{fmt.lower()}' for fmt in selected_formats]
+        else:
+            console.print("[yellow]No file formats available for selection.[/yellow]")
+            return
+
+    # Ask for output location
+    default_zip_name = f"{sanitize_filename(series_manager.series_title)}_series.zip"
+
+    zip_name = questionary.text(
+        "Enter zip file name:",
+        default=default_zip_name,
+        validate=lambda text: len(text) > 0 and text.endswith('.zip'),
+        style=custom_style
+    ).ask()
+
+    # Ask for output directory
+    output_choices = [
+        "Same as series directory",
+        "Desktop",
+        "Downloads",
+        "Custom location"
+    ]
+
+    output_location = questionary.select(
+        "Where would you like to save the zip file?",
+        choices=output_choices,
+        style=custom_style
+    ).ask()
+
+    # Determine output path
+    if output_location == "Same as series directory":
+        output_path = os.path.join(series_dir, zip_name)
+    elif output_location == "Desktop":
+        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
+        output_path = os.path.join(desktop_path, zip_name)
+    elif output_location == "Downloads":
+        downloads_path = os.path.join(os.path.expanduser("~"), "Downloads")
+        output_path = os.path.join(downloads_path, zip_name)
+    else:  # Custom location
+        custom_dir = questionary.path(
+            "Enter the directory path:",
+            style=custom_style
+        ).ask()
+        if custom_dir:
+            output_path = os.path.join(custom_dir, zip_name)
+        else:
+            console.print("[yellow]No directory selected. Cancelling zip creation.[/yellow]")
+            return
+
+    # Create progress callback
+    def progress_callback(current: int, total: int, message: str):
+        percentage = (current / total) * 100 if total > 0 else 0
+        console.print(f"[bold cyan]Progress: {current}/{total} ({percentage:.1f}%) - {message}[/bold cyan]")
+
+    # Create the zip file
+    console.print(f"\n[bold cyan]Creating zip archive...[/bold cyan]")
+    console.print(f"[bold cyan]Output: {output_path}[/bold cyan]")
+
+    success, message = zip_series_books(
+        series_dir=series_dir,
+        output_path=output_path,
+        include_formats=include_formats,
+        progress_callback=progress_callback
+    )
+
+    if success:
+        console.print(f"\n[bold green]✓ {message}[/bold green]")
+        console.print(f"[bold green]✓ Zip file saved to: {output_path}[/bold green]")
+
+        # Show file size
+        try:
+            file_size = os.path.getsize(output_path)
+            size_mb = file_size / (1024 * 1024)
+            console.print(f"[bold green]✓ File size: {size_mb:.2f} MB[/bold green]")
+        except:
+            pass
+    else:
+        console.print(f"\n[bold red]✗ {message}[/bold red]")
+
 def series_management_menu() -> None:
     """Main series management menu."""
     while True:
@@ -622,6 +769,7 @@ def series_options_menu(series_manager: SeriesManager) -> None:
             "Generate Books One by One",
             "Create Covers for Books",
             "Export Books to Different Formats",
+            "Zip Series Books",
             "API Key Status",
             "← Back to Main Menu"
         ]
@@ -646,6 +794,10 @@ def series_options_menu(series_manager: SeriesManager) -> None:
 
         elif selected == "Export Books to Different Formats":
             export_books(series_manager)
+            input("\nPress Enter to continue...")
+
+        elif selected == "Zip Series Books":
+            zip_series_books_menu(series_manager)
             input("\nPress Enter to continue...")
 
         elif selected == "API Key Status":

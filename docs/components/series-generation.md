@@ -163,6 +163,40 @@ Manages series metadata and consistency:
 - `get_series_info()`: Gets information about the series
 - `get_book_info(book_number)`: Gets information about a specific book
 
+## Series Management Features
+
+### Zip Series Books
+
+The Series Management Menu includes a "Zip Series Books" feature that allows you to create a compressed archive of all books in a series for easy sharing:
+
+**Features:**
+- **Format Selection**: Choose which file formats to include (EPUB only, all ebook formats, or everything)
+- **Custom Output Location**: Save to series directory, Desktop, Downloads, or custom location
+- **Organized Structure**: Books are organized in numbered folders within the zip (Book_01, Book_02, etc.)
+- **Progress Tracking**: Real-time progress updates during zip creation
+- **File Size Information**: Shows final zip file size
+
+**Usage:**
+1. Select "Work with Existing Series" from the main menu
+2. Choose your series
+3. Select "Zip Series Books"
+4. Choose which file formats to include
+5. Specify output location and filename
+6. The zip file will be created with all selected books and formats
+
+**Zip Structure:**
+```
+series_name.zip
+├── series_info.json
+├── Book_01/
+│   ├── book_title.epub
+│   ├── book_title.json
+│   └── cover.jpg
+├── Book_02/
+│   └── ...
+└── ...
+```
+
 ## Best Practices
 
 For the best results with series generation:
@@ -172,6 +206,7 @@ For the best results with series generation:
 3. **Review Between Books**: Check each book before generating the next one
 4. **Maintain Character Focus**: Decide on main characters that will appear throughout
 5. **Define Clear Themes**: Establish core themes that will develop across books
+6. **Use Zip Feature for Sharing**: Create zip archives to easily share complete series
 
 ## Troubleshooting
 
@@ -181,6 +216,8 @@ Common issues and solutions:
 - **Plot Holes**: Review the series plan and adjust as needed
 - **Generation Failures**: Check API key status and ensure you have sufficient quota
 - **Missing Files**: Verify the series directory structure is intact
+- **Zip Creation Fails**: Ensure you have write permissions to the output directory and sufficient disk space
+- **Empty Zip File**: Check that the series has generated books with the selected file formats
 
 ## Example Series Plan
 
