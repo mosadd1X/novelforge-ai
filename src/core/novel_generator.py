@@ -1044,13 +1044,17 @@ class NovelGenerator:
         if genre.lower() == "test":
             return self._create_test_genre_prompt(chapter_num, chapter_title, context)
 
-        # Create character information
+        # Create character information (handle empty character lists for non-fiction/special formats)
         character_info = ""
-        for char in characters:
-            name = char.get("name", "")
-            role = char.get("role", "")
-            traits = char.get("personality_traits", char.get("personality", ""))
-            character_info += f"- {name} ({role}): {traits}\n"
+        if characters:
+            for char in characters:
+                name = char.get("name", "")
+                role = char.get("role", "")
+                traits = char.get("personality_traits", char.get("personality", ""))
+                character_info += f"- {name} ({role}): {traits}\n"
+        else:
+            # For non-fiction and special formats that don't use characters
+            character_info = "No characters (this is informational/artistic content)\n"
 
         # Create previous chapter summaries
         previous_chapter_info = ""
@@ -1090,9 +1094,10 @@ class NovelGenerator:
                 else:
                     # Fallback to old system if POV structure not available
                     pov_characters = []
-                    for char in characters:
-                        if char.get("pov_character") is True or char.get("pov_character") == "true":
-                            pov_characters.append(char)
+                    if characters:  # Only process if we have characters
+                        for char in characters:
+                            if char.get("pov_character") is True or char.get("pov_character") == "true":
+                                pov_characters.append(char)
 
                     # Sort by POV order if available
                     pov_characters.sort(key=lambda x: x.get("pov_order", 999))
@@ -1135,7 +1140,7 @@ class NovelGenerator:
 
         # Determine POV character from narrative context
         narrative_pov = narrative_context.get("pov_character")
-        if narrative_pov:
+        if narrative_pov and characters:  # Only process if we have characters
             pov_character = None
             # Find the character object for the POV character
             for char in characters:
@@ -1384,10 +1389,13 @@ class NovelGenerator:
 
         # Create simplified character information (just names and roles)
         character_info = ""
-        for i, char in enumerate(characters[:3]):  # Limit to top 3 characters for test genre
-            name = char.get("name", f"Character {i+1}")
-            role = char.get("role", "Supporting character")
-            character_info += f"- {name} ({role})\n"
+        if characters:
+            for i, char in enumerate(characters[:3]):  # Limit to top 3 characters for test genre
+                name = char.get("name", f"Character {i+1}")
+                role = char.get("role", "Supporting character")
+                character_info += f"- {name} ({role})\n"
+        else:
+            character_info = "No characters (this is test content)\n"
 
         # Get only the most recent previous chapter summary
         previous_chapter_info = ""

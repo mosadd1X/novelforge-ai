@@ -59,6 +59,63 @@ except ImportError:
 console = Console()
 
 
+def should_generate_characters(genre: str) -> bool:
+    """
+    Determine if character generation is needed for a given genre.
+
+    Args:
+        genre: The genre of the book
+
+    Returns:
+        bool: True if characters should be generated, False otherwise
+    """
+    # Fiction genres that need characters (narrative content)
+    fiction_genres = [
+        "literary fiction", "commercial fiction", "mystery", "mystery thriller",
+        "thriller", "romance", "fantasy", "epic fantasy", "science fiction",
+        "historical fiction", "horror", "young adult", "middle grade",
+        "children's chapter books", "speculative fiction", "alternate history",
+        "contemporary fiction", "paranormal romance", "urban fantasy", "dystopian",
+        "test"  # Include test genre for development
+    ]
+
+    # Non-fiction genres that don't need characters (informational content)
+    non_fiction_genres = [
+        "memoir", "biography", "history", "self help", "business",
+        "popular science", "academic", "travel", "cookbook", "how to",
+        "philosophy", "true crime"
+    ]
+
+    # Special formats that don't need traditional characters
+    special_format_genres = [
+        "short story collection", "novella", "graphic novel",
+        "essay collection", "poetry collection", "creative non fiction"
+    ]
+
+    # Normalize genre name for comparison
+    genre_normalized = genre.lower().strip()
+
+    # Check if it's a fiction genre that needs characters
+    # First check for exact matches
+    for fiction_genre in fiction_genres:
+        if fiction_genre.lower() == genre_normalized:
+            return True
+
+    # Then check for partial matches, but be very careful
+    for fiction_genre in fiction_genres:
+        # Only allow partial matches if the genre is clearly contained
+        if genre_normalized in fiction_genre.lower() and len(genre_normalized) > 3:
+            # Avoid false positives like "history" matching fiction genres
+            if genre_normalized == "history" and ("historical" in fiction_genre.lower() or "alternate" in fiction_genre.lower()):
+                continue
+            if genre_normalized == "science" and "science fiction" in fiction_genre.lower():
+                continue
+            return True
+
+    # All other genres (non-fiction and special formats) don't need characters
+    return False
+
+
 def auto_generate_series() -> None:
     """
     Auto-generate a complete series without user interaction.
@@ -285,10 +342,16 @@ def main() -> None:
 
         console.print(f"[bold green]✓[/bold green] Novel outline with {chapter_count} chapters generated successfully")
 
-        # Generate characters
-        console.print("[bold cyan]Generating characters...[/bold cyan]")
-        characters = generator.generate_characters()
-        console.print(f"[bold green]✓[/bold green] {len(characters)} characters generated successfully")
+        # Generate characters only for content types that need them
+        characters = []
+        if should_generate_characters(novel_info["genre"]):
+            console.print("[bold cyan]Generating characters...[/bold cyan]")
+            characters = generator.generate_characters()
+            console.print(f"[bold green]✓[/bold green] {len(characters)} characters generated successfully")
+        else:
+            console.print(f"[bold yellow]⏭️[/bold yellow] Skipping character generation (not needed for {novel_info['genre']})")
+            # Create empty character list for non-fiction and special formats
+            characters = []
 
         # Confirm generation again after seeing outline and characters
         if not confirm_generation():
