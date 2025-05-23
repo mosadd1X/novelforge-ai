@@ -167,7 +167,7 @@ def get_series_files(series_dir: str, include_formats: List[str] = None) -> Dict
         Dictionary with book directories as keys and lists of file paths as values
     """
     if include_formats is None:
-        include_formats = ['.epub', '.pdf', '.mobi', '.azw3', '.docx', '.html', '.json', '.jpg', '.png']
+        include_formats = ['.epub', '.pdf', '.mobi', '.azw3', '.docx', '.json', '.jpg', '.png']
 
     # Convert to lowercase for case-insensitive matching
     include_formats = [fmt.lower() if fmt.startswith('.') else f'.{fmt.lower()}' for fmt in include_formats]

@@ -635,7 +635,7 @@ def export_books(series_manager: SeriesManager) -> None:
         console.print(f"[bold green]{i}.[/bold green] {os.path.basename(path)}")
 
     # Ask which format to export to
-    format_choices = ["PDF", "MOBI", "AZW3", "DOCX", "HTML", "← Back"]
+    format_choices = ["PDF", "MOBI", "AZW3", "DOCX", "All Formats", "← Back"]
     selected_format = questionary.select(
         "Select export format:",
         choices=format_choices,
@@ -645,65 +645,90 @@ def export_books(series_manager: SeriesManager) -> None:
     if selected_format == "← Back":
         return
 
-    # Convert each EPUB file
+    # Map user-friendly format names to Calibre format names and file extensions
+    format_mapping = {
+        "PDF": {"calibre_format": "pdf", "extension": "pdf"},
+        "MOBI": {"calibre_format": "mobi", "extension": "mobi"},
+        "AZW3": {"calibre_format": "azw3", "extension": "azw3"},
+        "DOCX": {"calibre_format": "docx", "extension": "docx"}
+    }
+
+    # Determine which formats to convert to
+    if selected_format == "All Formats":
+        formats_to_convert = list(format_mapping.keys())
+        console.print(f"[bold cyan]Converting to all formats: {', '.join(formats_to_convert)}[/bold cyan]")
+    else:
+        formats_to_convert = [selected_format]
+
+    # Convert each EPUB file to selected format(s)
+    total_conversions = len(epub_files) * len(formats_to_convert)
     successful_conversions = 0
-    total_conversions = len(epub_files)
+    conversion_count = 0
 
     for epub_path in epub_files:
-        output_path = epub_path.replace(".epub", f".{selected_format.lower()}")
+        for format_name in formats_to_convert:
+            conversion_count += 1
+            format_info = format_mapping[format_name]
+            file_extension = format_info["extension"]
+            output_path = epub_path.replace(".epub", f".{file_extension}")
 
-        console.print(f"[bold cyan]Converting {os.path.basename(epub_path)} to {selected_format}...[/bold cyan]")
-
-        try:
-            # Normalize paths for Windows compatibility
-            epub_path_normalized = os.path.normpath(epub_path)
-            output_path_normalized = os.path.normpath(output_path)
-
-            # Check if input file exists
-            if not os.path.exists(epub_path_normalized):
-                console.print(f"[bold red]Error: Input file not found: {epub_path_normalized}[/bold red]")
-                continue
-
-            # Validate EPUB file
-            if not validate_epub_file(epub_path_normalized):
-                console.print(f"[bold red]Error: Invalid EPUB file: {os.path.basename(epub_path)}[/bold red]")
-                console.print(f"[dim]The EPUB file may be corrupted or improperly formatted[/dim]")
-                continue
-
-            # Run the conversion with detailed error capture
-            result = subprocess.run(
-                ["ebook-convert", epub_path_normalized, output_path_normalized],
-                capture_output=True,
-                text=True,
-                timeout=300  # 5 minute timeout
-            )
-
-            if result.returncode == 0:
-                console.print(f"[bold green]✓[/bold green] Converted to: [bold cyan]{output_path_normalized}[/bold cyan]")
-                successful_conversions += 1
+            if selected_format == "All Formats":
+                console.print(f"[bold cyan]Converting {os.path.basename(epub_path)} to {format_name} ({conversion_count}/{total_conversions})...[/bold cyan]")
             else:
-                console.print(f"[bold red]Error converting {os.path.basename(epub_path)}[/bold red]")
-                if result.stderr:
-                    console.print(f"[dim]Error details: {result.stderr.strip()}[/dim]")
-                if result.stdout:
-                    console.print(f"[dim]Output: {result.stdout.strip()}[/dim]")
+                console.print(f"[bold cyan]Converting {os.path.basename(epub_path)} to {format_name}...[/bold cyan]")
 
-        except subprocess.TimeoutExpired:
-            console.print(f"[bold red]Error: Conversion timed out for {os.path.basename(epub_path)}[/bold red]")
-        except subprocess.CalledProcessError as e:
-            console.print(f"[bold red]Error converting {os.path.basename(epub_path)}: {e}[/bold red]")
-            if hasattr(e, 'stderr') and e.stderr:
-                console.print(f"[dim]Error details: {e.stderr}[/dim]")
-        except Exception as e:
-            console.print(f"[bold red]Unexpected error converting {os.path.basename(epub_path)}: {e}[/bold red]")
+            try:
+                # Normalize paths for Windows compatibility
+                epub_path_normalized = os.path.normpath(epub_path)
+                output_path_normalized = os.path.normpath(output_path)
+
+                # Check if input file exists
+                if not os.path.exists(epub_path_normalized):
+                    console.print(f"[bold red]Error: Input file not found: {epub_path_normalized}[/bold red]")
+                    continue
+
+                # Validate EPUB file
+                if not validate_epub_file(epub_path_normalized):
+                    console.print(f"[bold red]Error: Invalid EPUB file: {os.path.basename(epub_path)}[/bold red]")
+                    console.print(f"[dim]The EPUB file may be corrupted or improperly formatted[/dim]")
+                    continue
+
+                # Run the conversion with detailed error capture
+                # Calibre determines output format from file extension
+                result = subprocess.run(
+                    ["ebook-convert", epub_path_normalized, output_path_normalized],
+                    capture_output=True,
+                    text=True,
+                    timeout=300  # 5 minute timeout
+                )
+
+                if result.returncode == 0:
+                    console.print(f"[bold green]✓[/bold green] Converted to: [bold cyan]{output_path_normalized}[/bold cyan]")
+                    successful_conversions += 1
+                else:
+                    console.print(f"[bold red]Error converting {os.path.basename(epub_path)} to {format_name}[/bold red]")
+                    if result.stderr:
+                        console.print(f"[dim]Error details: {result.stderr.strip()}[/dim]")
+                    if result.stdout:
+                        console.print(f"[dim]Output: {result.stdout.strip()}[/dim]")
+
+            except subprocess.TimeoutExpired:
+                console.print(f"[bold red]Error: Conversion timed out for {os.path.basename(epub_path)} to {format_name}[/bold red]")
+            except subprocess.CalledProcessError as e:
+                console.print(f"[bold red]Error converting {os.path.basename(epub_path)} to {format_name}: {e}[/bold red]")
+                if hasattr(e, 'stderr') and e.stderr:
+                    console.print(f"[dim]Error details: {e.stderr}[/dim]")
+            except Exception as e:
+                console.print(f"[bold red]Unexpected error converting {os.path.basename(epub_path)} to {format_name}: {e}[/bold red]")
 
     # Summary
+    format_text = "all formats" if selected_format == "All Formats" else selected_format
     if successful_conversions == total_conversions:
-        console.print(f"\n[bold green]✓ Export to {selected_format} complete! ({successful_conversions}/{total_conversions} files converted)[/bold green]")
+        console.print(f"\n[bold green]✓ Export to {format_text} complete! ({successful_conversions}/{total_conversions} conversions successful)[/bold green]")
     elif successful_conversions > 0:
-        console.print(f"\n[bold yellow]⚠ Export to {selected_format} partially complete. ({successful_conversions}/{total_conversions} files converted)[/bold yellow]")
+        console.print(f"\n[bold yellow]⚠ Export to {format_text} partially complete. ({successful_conversions}/{total_conversions} conversions successful)[/bold yellow]")
     else:
-        console.print(f"\n[bold red]✗ Export to {selected_format} failed. No files were converted successfully.[/bold red]")
+        console.print(f"\n[bold red]✗ Export to {format_text} failed. No conversions were successful.[/bold red]")
         console.print("[yellow]Common issues:[/yellow]")
         console.print("[yellow]  • Calibre not properly installed or not in PATH[/yellow]")
         console.print("[yellow]  • EPUB files may be corrupted or invalid[/yellow]")
@@ -761,7 +786,7 @@ def zip_series_books_menu(series_manager: SeriesManager) -> None:
     # Add preset options
     preset_choices = [
         "EPUB only",
-        "All ebook formats (EPUB, PDF, MOBI, AZW3)",
+        "All ebook formats (EPUB, PDF, MOBI, AZW3, DOCX)",
         "Everything (all files)",
         "Custom selection"
     ]
@@ -776,8 +801,8 @@ def zip_series_books_menu(series_manager: SeriesManager) -> None:
     include_formats = None
     if format_selection == "EPUB only":
         include_formats = ['.epub']
-    elif format_selection == "All ebook formats (EPUB, PDF, MOBI, AZW3)":
-        include_formats = ['.epub', '.pdf', '.mobi', '.azw3']
+    elif format_selection == "All ebook formats (EPUB, PDF, MOBI, AZW3, DOCX)":
+        include_formats = ['.epub', '.pdf', '.mobi', '.azw3', '.docx']
     elif format_selection == "Everything (all files)":
         include_formats = None  # Include all
     elif format_selection == "Custom selection":
