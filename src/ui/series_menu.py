@@ -505,6 +505,86 @@ def generate_series_covers(series_manager: SeriesManager) -> None:
                 formatter.save_epub(book_dir, cover_path)
                 console.print(f"[bold green]✓[/bold green] EPUB updated with new cover")
 
+def validate_epub_file(epub_path: str) -> bool:
+    """
+    Validate an EPUB file to check if it's properly formatted.
+
+    Args:
+        epub_path: Path to the EPUB file
+
+    Returns:
+        True if valid, False otherwise
+    """
+    try:
+        import zipfile
+
+        # Check if file exists and is readable
+        if not os.path.exists(epub_path):
+            return False
+
+        # Check if it's a valid zip file (EPUB is a zip)
+        with zipfile.ZipFile(epub_path, 'r') as zip_file:
+            # Check for required EPUB files
+            file_list = zip_file.namelist()
+
+            # Must have mimetype file
+            if 'mimetype' not in file_list:
+                return False
+
+            # Must have META-INF directory
+            meta_inf_files = [f for f in file_list if f.startswith('META-INF/')]
+            if not meta_inf_files:
+                return False
+
+            # Check mimetype content
+            mimetype_content = zip_file.read('mimetype').decode('utf-8').strip()
+            if mimetype_content != 'application/epub+zip':
+                return False
+
+        return True
+
+    except Exception:
+        return False
+
+def show_calibre_installation_help() -> None:
+    """Show detailed Calibre installation and troubleshooting help."""
+    console.print("\n[bold cyan]Calibre Installation and Troubleshooting Guide[/bold cyan]")
+    console.print("=" * 50)
+
+    console.print("\n[bold yellow]1. Install Calibre:[/bold yellow]")
+    console.print("   • Download from: https://calibre-ebook.com/download")
+    console.print("   • Choose the version for your operating system")
+    console.print("   • Run the installer with administrator privileges")
+
+    console.print("\n[bold yellow]2. Verify Installation:[/bold yellow]")
+    console.print("   • Open Command Prompt/Terminal")
+    console.print("   • Type: ebook-convert --version")
+    console.print("   • You should see version information")
+
+    console.print("\n[bold yellow]3. Common Issues:[/bold yellow]")
+    console.print("   • [bold red]'ebook-convert' is not recognized:[/bold red]")
+    console.print("     - Calibre is not in your system PATH")
+    console.print("     - Try restarting your terminal/command prompt")
+    console.print("     - On Windows, restart your computer after installation")
+
+    console.print("   • [bold red]Exit status 1 errors:[/bold red]")
+    console.print("     - EPUB files may be corrupted or invalid")
+    console.print("     - Insufficient disk space")
+    console.print("     - File permission issues")
+    console.print("     - Antivirus software blocking the conversion")
+
+    console.print("\n[bold yellow]4. Manual PATH Setup (if needed):[/bold yellow]")
+    console.print("   • Windows: Add Calibre installation folder to PATH")
+    console.print("     (Usually: C:\\Program Files\\Calibre2\\)")
+    console.print("   • macOS/Linux: Calibre usually adds itself to PATH")
+
+    console.print("\n[bold yellow]5. Alternative Solutions:[/bold yellow]")
+    console.print("   • Use Calibre's GUI application for manual conversion")
+    console.print("   • Check if EPUB files open properly in other readers")
+    console.print("   • Try converting one file at a time to isolate issues")
+
+    input("\nPress Enter to continue...")
+
 def export_books(series_manager: SeriesManager) -> None:
     """
     Export books to different formats using Calibre.
@@ -514,10 +594,25 @@ def export_books(series_manager: SeriesManager) -> None:
     """
     # Check if Calibre is installed
     try:
-        subprocess.run(["ebook-convert", "--version"], capture_output=True, check=False)
+        result = subprocess.run(["ebook-convert", "--version"], capture_output=True, check=False)
+        if result.returncode != 0:
+            console.print("[bold red]Error: Calibre's ebook-convert tool not working properly.[/bold red]")
+            console.print("[yellow]Please reinstall Calibre from https://calibre-ebook.com/download[/yellow]")
+            console.print(f"[dim]Error details: {result.stderr.decode() if result.stderr else 'Unknown error'}[/dim]")
+            return
     except FileNotFoundError:
         console.print("[bold red]Error: Calibre's ebook-convert tool not found.[/bold red]")
         console.print("[yellow]Please install Calibre from https://calibre-ebook.com/download[/yellow]")
+        console.print("[yellow]Make sure Calibre is added to your system PATH.[/yellow]")
+
+        show_help = questionary.confirm(
+            "Would you like to see detailed installation and troubleshooting help?",
+            default=True,
+            style=custom_style
+        ).ask()
+
+        if show_help:
+            show_calibre_installation_help()
         return
 
     # Get series directory
@@ -551,22 +646,78 @@ def export_books(series_manager: SeriesManager) -> None:
         return
 
     # Convert each EPUB file
+    successful_conversions = 0
+    total_conversions = len(epub_files)
+
     for epub_path in epub_files:
         output_path = epub_path.replace(".epub", f".{selected_format.lower()}")
 
         console.print(f"[bold cyan]Converting {os.path.basename(epub_path)} to {selected_format}...[/bold cyan]")
 
         try:
-            subprocess.run(
-                ["ebook-convert", epub_path, output_path],
+            # Normalize paths for Windows compatibility
+            epub_path_normalized = os.path.normpath(epub_path)
+            output_path_normalized = os.path.normpath(output_path)
+
+            # Check if input file exists
+            if not os.path.exists(epub_path_normalized):
+                console.print(f"[bold red]Error: Input file not found: {epub_path_normalized}[/bold red]")
+                continue
+
+            # Validate EPUB file
+            if not validate_epub_file(epub_path_normalized):
+                console.print(f"[bold red]Error: Invalid EPUB file: {os.path.basename(epub_path)}[/bold red]")
+                console.print(f"[dim]The EPUB file may be corrupted or improperly formatted[/dim]")
+                continue
+
+            # Run the conversion with detailed error capture
+            result = subprocess.run(
+                ["ebook-convert", epub_path_normalized, output_path_normalized],
                 capture_output=True,
-                check=True
+                text=True,
+                timeout=300  # 5 minute timeout
             )
-            console.print(f"[bold green]✓[/bold green] Converted to: [bold cyan]{output_path}[/bold cyan]")
+
+            if result.returncode == 0:
+                console.print(f"[bold green]✓[/bold green] Converted to: [bold cyan]{output_path_normalized}[/bold cyan]")
+                successful_conversions += 1
+            else:
+                console.print(f"[bold red]Error converting {os.path.basename(epub_path)}[/bold red]")
+                if result.stderr:
+                    console.print(f"[dim]Error details: {result.stderr.strip()}[/dim]")
+                if result.stdout:
+                    console.print(f"[dim]Output: {result.stdout.strip()}[/dim]")
+
+        except subprocess.TimeoutExpired:
+            console.print(f"[bold red]Error: Conversion timed out for {os.path.basename(epub_path)}[/bold red]")
         except subprocess.CalledProcessError as e:
             console.print(f"[bold red]Error converting {os.path.basename(epub_path)}: {e}[/bold red]")
+            if hasattr(e, 'stderr') and e.stderr:
+                console.print(f"[dim]Error details: {e.stderr}[/dim]")
+        except Exception as e:
+            console.print(f"[bold red]Unexpected error converting {os.path.basename(epub_path)}: {e}[/bold red]")
 
-    console.print(f"\n[bold green]✓ Export to {selected_format} complete![/bold green]")
+    # Summary
+    if successful_conversions == total_conversions:
+        console.print(f"\n[bold green]✓ Export to {selected_format} complete! ({successful_conversions}/{total_conversions} files converted)[/bold green]")
+    elif successful_conversions > 0:
+        console.print(f"\n[bold yellow]⚠ Export to {selected_format} partially complete. ({successful_conversions}/{total_conversions} files converted)[/bold yellow]")
+    else:
+        console.print(f"\n[bold red]✗ Export to {selected_format} failed. No files were converted successfully.[/bold red]")
+        console.print("[yellow]Common issues:[/yellow]")
+        console.print("[yellow]  • Calibre not properly installed or not in PATH[/yellow]")
+        console.print("[yellow]  • EPUB files may be corrupted or invalid[/yellow]")
+        console.print("[yellow]  • Insufficient disk space[/yellow]")
+        console.print("[yellow]  • File permissions issues[/yellow]")
+
+        show_help = questionary.confirm(
+            "Would you like to see detailed troubleshooting help?",
+            default=True,
+            style=custom_style
+        ).ask()
+
+        if show_help:
+            show_calibre_installation_help()
 
 def zip_series_books_menu(series_manager: SeriesManager) -> None:
     """
