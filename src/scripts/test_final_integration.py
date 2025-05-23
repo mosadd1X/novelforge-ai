@@ -9,7 +9,7 @@ from rich.console import Console
 from rich.table import Table
 from rich import box
 
-console = Console()
+console = Console(markup=True)
 
 def should_generate_characters(genre: str) -> bool:
     """Copy of the function from main.py for testing."""

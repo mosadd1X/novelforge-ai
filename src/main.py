@@ -32,6 +32,7 @@ from src.formatters.epub_formatter import EpubFormatter
 from src.utils.file_handler import create_output_directory, save_novel_json, create_series_directory
 from src.core.series_manager import SeriesManager
 from src.core.series_generator import SeriesGenerator
+from src.utils.logger import init_logger, get_logger, close_logger, log_info, log_error, log_debug, log_warning
 from src.ui.terminal_ui import (
     clear_screen,
     display_title,
@@ -55,8 +56,8 @@ try:
 except ImportError:
     series_management_menu = None
 
-# Create console
-console = Console()
+# Create console with markup enabled
+console = Console(markup=True)
 
 
 def should_generate_characters(genre: str) -> bool:
@@ -221,16 +222,26 @@ def main() -> None:
     Returns:
         None
     """
+    # Initialize logging system
+    logger = init_logger("DEBUG")
+
     try:
+        log_info("=== NOVEL GENERATION SESSION STARTED ===")
+        log_info("Initializing main novel generation function")
+
         # Clear screen and display title
         clear_screen()
         display_title()
+
+        log_debug("UI initialized, screen cleared and title displayed")
 
         console.print("[bold cyan]Let's create your novel![/bold cyan]")
         console.print("Please provide some basic information to get started.\n")
 
         # Get series information first
+        log_debug("Getting series information from user")
         series_info = get_series_info()
+        log_info("Series information collected", is_series=series_info.get("is_series", False))
 
         # Initialize series manager if needed
         series_manager = None
@@ -266,7 +277,12 @@ def main() -> None:
                 book_number = None  # Will be assigned when adding to series
 
         # Get novel information from user
+        log_debug("Getting novel information from user")
         novel_info = get_novel_info(series_info)
+        log_info("Novel information collected",
+                title=novel_info.get("title", "Unknown"),
+                genre=novel_info.get("genre", "Unknown"),
+                target_audience=novel_info.get("target_audience", "Unknown"))
 
         # Create output directory early
         output_dir = create_output_directory(
@@ -326,20 +342,39 @@ def main() -> None:
         console.print(f"[dim]Started: {generation_timer.get_start_datetime()}[/dim]", justify="right")
 
         # Generate writer profile
+        log_info("Starting writer profile generation", genre=novel_info["genre"])
         console.print("[bold cyan]Generating writer profile...[/bold cyan]")
-        writer_profile = generator.generate_writer_profile()
-        console.print("[bold green]✓[/bold green] Writer profile generated successfully")
+        try:
+            writer_profile = generator.generate_writer_profile()
+            log_info("Writer profile generated successfully", profile_length=len(writer_profile) if writer_profile else 0)
+            console.print("[bold green]✓[/bold green] Writer profile generated successfully")
+        except Exception as e:
+            log_error("Failed to generate writer profile", exception=e)
+            raise
 
         # Generate novel outline
+        log_info("Starting novel outline generation", genre=novel_info["genre"])
         console.print("[bold cyan]Generating novel outline...[/bold cyan]")
-        chapter_outlines, chapter_count = generator.generate_novel_outline(writer_profile)
+        try:
+            chapter_outlines, chapter_count = generator.generate_novel_outline(writer_profile)
+            log_info("Novel outline generation completed",
+                    chapter_count=chapter_count,
+                    outlines_length=len(chapter_outlines) if chapter_outlines else 0)
+        except Exception as e:
+            log_error("Failed to generate novel outline", exception=e)
+            raise
 
         # Check if we have a valid chapter count
         if chapter_count == 0 or not chapter_outlines:
+            log_error("Invalid novel outline generated",
+                     chapter_count=chapter_count,
+                     has_outlines=bool(chapter_outlines),
+                     outlines_length=len(chapter_outlines) if chapter_outlines else 0)
             console.print("[bold red]Failed to generate a proper novel outline.[/bold red]")
             console.print("[bold yellow]Please try again with more specific details about your novel.[/bold yellow]")
             return
 
+        log_info("Novel outline validation passed", chapter_count=chapter_count)
         console.print(f"[bold green]✓[/bold green] Novel outline with {chapter_count} chapters generated successfully")
 
         # Generate characters only for content types that need them
@@ -651,11 +686,23 @@ def main() -> None:
         )
 
     except KeyboardInterrupt:
+        log_warning("Novel generation cancelled by user (KeyboardInterrupt)")
         console.print("\n[bold yellow]Novel generation cancelled by user.[/bold yellow]")
+        close_logger()
         sys.exit(0)
     except Exception as e:
+        log_critical("Fatal error during novel generation", exception=e)
         console.print(f"\n[bold red]Error: {str(e)}[/bold red]")
+        console.print(f"\n[bold yellow]Check the log file for detailed error information: {get_logger().get_log_file_path()}[/bold yellow]")
+        close_logger()
         sys.exit(1)
+    finally:
+        # Ensure logger is closed even if no exception occurs
+        try:
+            log_info("=== NOVEL GENERATION SESSION COMPLETED ===")
+            close_logger()
+        except:
+            pass
 
 
 def parse_args():
@@ -720,8 +767,24 @@ if __name__ == "__main__":
             elif selected_menu == "Book Management Menu":
                 book_management_menu()
             elif selected_menu == "Generate Single Book (Classic)":
-                main()
+                try:
+                    main()
+                except Exception as e:
+                    try:
+                        log_critical("Uncaught exception in main menu", exception=e)
+                        close_logger()
+                    except:
+                        pass
+                    raise
             elif selected_menu == "Exit":
                 console.print("[bold cyan]Thank you for using the Novel Generation System![/bold cyan]")
         else:
-            main()
+            try:
+                main()
+            except Exception as e:
+                try:
+                    log_critical("Uncaught exception in main", exception=e)
+                    close_logger()
+                except:
+                    pass
+                raise

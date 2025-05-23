@@ -15,7 +15,7 @@ from src.ui.terminal_ui import generate_cover
 from src.core.series_manager import SeriesManager
 from src.utils.genre_defaults import get_genre_defaults
 
-console = Console()
+console = Console(markup=True)
 
 
 class SeriesGenerator:

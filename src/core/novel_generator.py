@@ -12,6 +12,7 @@ from src.core.gemini_client import GeminiClient
 from src.core.memory_manager import MemoryManager
 from src.utils.word_counter import count_words
 from src.utils.genre_defaults import get_genre_defaults, create_flexible_pov_structure, determine_character_gender, assign_chapter_pov
+from src.utils.logger import get_logger, log_info, log_error, log_debug, log_warning
 
 # Import SeriesManager conditionally to avoid circular imports
 try:
@@ -19,7 +20,7 @@ try:
 except ImportError:
     SeriesManager = None
 
-console = Console()
+console = Console(markup=True)
 
 
 class NovelGenerator:
@@ -107,6 +108,10 @@ class NovelGenerator:
         if not self.memory_manager:
             raise ValueError("Novel not initialized. Call initialize_novel first.")
 
+        log_info("Starting writer profile generation",
+                genre=self.memory_manager.metadata.get('genre', 'Unknown'),
+                title=self.memory_manager.metadata.get('title', 'Unknown'))
+
         prompt = f"""
         Create a detailed writer profile for an author who would write a {self.memory_manager.metadata['genre']} novel
         titled "{self.memory_manager.metadata['title']}" for {self.memory_manager.metadata['target_audience']} audience.
@@ -123,7 +128,13 @@ class NovelGenerator:
         Format your response as a JSON object with these fields.
         """
 
-        response = self.gemini.generate_content(prompt, temperature=0.7)
+        log_debug("Sending writer profile prompt to Gemini API", prompt_length=len(prompt))
+        try:
+            response = self.gemini.generate_content(prompt, temperature=0.7)
+            log_info("Writer profile API response received", response_length=len(response) if response else 0)
+        except Exception as e:
+            log_error("Failed to get writer profile from Gemini API", exception=e)
+            raise
 
         # Try to parse the response as JSON
         try:
@@ -176,6 +187,10 @@ class NovelGenerator:
         }
         if not self.memory_manager:
             raise ValueError("Novel not initialized. Call initialize_novel first.")
+
+        log_info("Starting novel outline generation",
+                genre=self.memory_manager.metadata.get('genre', 'Unknown'),
+                title=self.memory_manager.metadata.get('title', 'Unknown'))
 
         # Get genre-specific chapter count and word count recommendations
         genre = self.memory_manager.metadata['genre']
@@ -249,16 +264,30 @@ class NovelGenerator:
         - chapters: array of objects with title, summary, key_points, plot_threads, character_development, and thematic_elements fields
         """
 
-        response = self.gemini.generate_content(prompt, temperature=0.7)
+        log_debug("Sending novel outline prompt to Gemini API",
+                 prompt_length=len(prompt),
+                 genre=genre,
+                 target_length=target_length)
+        try:
+            response = self.gemini.generate_content(prompt, temperature=0.7)
+            log_info("Novel outline API response received",
+                    response_length=len(response) if response else 0,
+                    genre=genre)
+        except Exception as e:
+            log_error("Failed to get novel outline from Gemini API", exception=e, genre=genre)
+            raise
 
         # Try to parse the response as JSON
         try:
+            log_debug("Starting JSON parsing of outline response", response_preview=response[:200] if response else "None")
+
             # Clean the response to extract just the JSON part
             response_text = response.strip()
 
             # Remove markdown code block markers if present
             if response_text.startswith('```json'):
                 response_text = response_text[7:]
+                log_debug("Removed JSON markdown markers from response")
             if response_text.endswith('```'):
                 response_text = response_text[:-3]
 
@@ -266,9 +295,16 @@ class NovelGenerator:
             start_idx = response_text.find('{')
             end_idx = response_text.rfind('}') + 1
 
+            log_debug("JSON parsing indices", start_idx=start_idx, end_idx=end_idx)
+
             if start_idx >= 0 and end_idx > start_idx:
                 json_str = response_text[start_idx:end_idx]
+                log_debug("Attempting to parse JSON", json_length=len(json_str))
                 outline_data = json.loads(json_str)
+                log_info("Successfully parsed outline JSON",
+                        has_chapters=bool(outline_data.get('chapters')),
+                        chapter_count=len(outline_data.get('chapters', [])),
+                        recommended_count=outline_data.get('recommended_chapter_count', 0))
 
                 # Extract chapter outlines
                 chapters = outline_data.get('chapters', [])
@@ -367,9 +403,11 @@ class NovelGenerator:
 
         except json.JSONDecodeError as e:
             # Fallback if JSON parsing fails
+            log_error("JSON parsing error in outline generation", exception=e, response_preview=response[:300] if response else "None")
             console.print(f"[yellow]JSON parsing error: {e}. Using fallback method.[/yellow]")
             return self._fallback_outline_parsing(response)
         except Exception as e:
+            log_error("Unexpected error in outline generation", exception=e, response_preview=response[:300] if response else "None")
             console.print(f"[yellow]Error parsing outline: {e}. Using fallback method.[/yellow]")
             return self._fallback_outline_parsing(response)
 
@@ -967,6 +1005,18 @@ class NovelGenerator:
         # Count words
         word_count = count_words(chapter_text)
 
+        # Check for chapters with very little actual content (just title/header)
+        content_without_title = chapter_text.replace(f"Chapter {chapter_num}", "").replace(chapter_title, "").strip()
+        content_word_count = count_words(content_without_title)
+
+        # If the chapter has very little actual content, log a warning
+        if content_word_count < 100:
+            log_warning(f"Chapter {chapter_num} has very little content",
+                       chapter_title=chapter_title,
+                       total_words=word_count,
+                       content_words=content_word_count,
+                       chapter_preview=chapter_text[:200] + "..." if len(chapter_text) > 200 else chapter_text)
+
         # Check if we need to extend the chapter to meet minimum word count
         if word_count < min_chapter_length:
             console.print(f"[yellow]Chapter {chapter_num} is only {word_count} words (minimum: {min_chapter_length}). Extending...[/yellow]")
@@ -1004,14 +1054,60 @@ class NovelGenerator:
             console.print(f"[green]Chapter extended to {word_count} words[/green]")
 
         # Create a summary for memory
-        summary_prompt = f"""
-        Summarize the following chapter in 2-3 sentences, capturing the key events and developments:
+        # Use more content for summary if chapter is short, or if first 2000 chars don't contain much content
+        summary_text = chapter_text[:4000] if len(chapter_text) > 2000 else chapter_text
 
-        {chapter_text[:2000]}... [chapter continues]
+        # Check if the summary text contains meaningful content (not just title)
+        meaningful_content = summary_text.replace(f"Chapter {chapter_num}", "").replace(chapter_title, "").strip()
+
+        if len(meaningful_content) < 100:
+            # If there's very little meaningful content, use the entire chapter for summary
+            summary_text = chapter_text
+
+        summary_prompt = f"""
+        Summarize the following chapter content in 2-3 sentences, capturing the key events and developments.
+        Focus on what actually happens in the chapter, not just the chapter title.
+
+        Chapter {chapter_num}: {chapter_title}
+
+        Content:
+        {summary_text}
+
+        Provide a meaningful summary of the actual events and developments in this chapter.
+        Do NOT just repeat the chapter title or number.
         """
 
-        summary = self.gemini.generate_content(summary_prompt, temperature=0.5, max_tokens=200)
+        summary = self.gemini.generate_content(summary_prompt, temperature=0.5, max_tokens=300)
         summary = self.gemini.clean_response(summary)
+
+        # Validate the summary - if it's just repeating the chapter title, try again with different prompt
+        if (summary.lower().strip() == f"chapter {chapter_num}: chapter" or
+            summary.lower().strip() == f"chapter {chapter_num}" or
+            len(summary.strip()) < 20):
+
+            # Try a more specific prompt
+            fallback_prompt = f"""
+            Read this chapter content and describe what happens in it using 2-3 sentences.
+            Ignore the chapter title and focus on the actual story events, character actions, and plot developments.
+
+            {chapter_text}
+
+            What actually happens in this chapter? Describe the events, not the title.
+            """
+
+            summary = self.gemini.generate_content(fallback_prompt, temperature=0.7, max_tokens=300)
+            summary = self.gemini.clean_response(summary)
+
+            # If still getting bad summary, create a basic one
+            if len(summary.strip()) < 20:
+                summary = f"Chapter {chapter_num} continues the story with {word_count} words of content."
+
+        # Log summary generation for debugging
+        log_debug(f"Generated summary for Chapter {chapter_num}",
+                 chapter_title=chapter_title,
+                 summary_length=len(summary),
+                 chapter_word_count=word_count,
+                 summary_preview=summary[:100] + "..." if len(summary) > 100 else summary)
 
         # Add to memory
         self.memory_manager.add_chapter_summary(chapter_num, summary, word_count)

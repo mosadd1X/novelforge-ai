@@ -11,7 +11,7 @@ from rich import box
 from rich.panel import Panel
 from rich.text import Text
 
-console = Console()
+console = Console(markup=True)
 
 def should_generate_characters(genre: str) -> bool:
     """Copy of the function from main.py for testing all 38 genres."""

@@ -127,8 +127,8 @@ generation_timer = GenerationTimer()
 
 from src.utils.genre_defaults import get_genre_defaults, get_all_genres
 
-# Create console
-console = Console()
+# Create console with markup enabled for Rich formatting
+console = Console(markup=True)
 
 def display_api_key_status(gemini_client) -> None:
     """

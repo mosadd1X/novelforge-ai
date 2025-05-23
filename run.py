@@ -40,8 +40,8 @@ try:
 except ImportError:
     book_management_menu = None
 
-# Create console
-console = Console()
+# Create console with markup enabled
+console = Console(markup=True)
 
 def generate_book():
     """

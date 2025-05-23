@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 # Set up console for rich output
-console = Console()
+console = Console(markup=True)
 
 class CoverGenerator:
     """
