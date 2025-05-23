@@ -1,0 +1,181 @@
+"""
+Children's Chapter Books genre-specific prompts for novel generation.
+"""
+
+from .base_prompts import FictionBasePrompts
+
+class ChildrenSChapterBooksPrompts(FictionBasePrompts):
+    GENRE_NAME = "Children's Chapter Books"
+    GENRE_DESCRIPTION = "Children's chapter books are designed for young readers transitioning from picture books to longer narratives. They typically feature simple plots, relatable characters, and age-appropriate themes, divided into easily digestible chapters. The language is accessible, and the stories often focus on themes of friendship, family, problem-solving, and self-discovery, with a clear and satisfying resolution."
+    
+    GENRE_CHARACTERISTICS = [
+        "Simple and straightforward plotlines that are easy for young readers to follow.",
+        "Relatable and age-appropriate characters, often children or animals, with clear motivations and flaws.",
+        "Focus on themes of friendship, family, school, and personal growth.",
+        "Clear and concise language with limited complex vocabulary or sentence structures.",
+        "Positive and optimistic tone, often with a focus on problem-solving and overcoming challenges.",
+        "Shorter chapters that provide natural stopping points and encourage reading progress.",
+        "Illustrations interspersed throughout the text to break up the narrative and enhance engagement.",
+        "A clear moral or lesson, often subtly woven into the story.",
+        "Limited subplots to avoid overwhelming young readers.",
+        "A satisfying and age-appropriate resolution to the central conflict."
+    ]
+    
+    TYPICAL_ELEMENTS = [
+        "A protagonist who is a child or animal facing a relatable challenge.",
+        "A supportive cast of friends, family members, or mentors.",
+        "A clear antagonist or obstacle that the protagonist must overcome.",
+        "A series of events or adventures that lead to the resolution of the conflict.",
+        "A turning point or moment of realization for the protagonist.",
+        "A satisfying resolution that reinforces positive values.",
+        "Humorous elements or situations to engage young readers.",
+        "Descriptive language that paints a vivid picture of the setting and characters.",
+        "Dialogue that is realistic and age-appropriate.",
+        "Illustrations that complement the text and enhance the story.",
+        "Chapters that end on a cliffhanger or with a question to encourage further reading.",
+        "Themes of kindness, empathy, and perseverance."
+    ]
+
+    @classmethod
+    def get_writer_profile_prompt(cls, **kwargs) -> str:
+        base_prompt = super().get_writer_profile_prompt(**kwargs)
+        
+        children_s_chapter_books_additions = '''
+## Children's Chapter Books-Specific Writing Considerations
+- **Key Aspect 1: Age Appropriateness**: Ensure all content, including vocabulary, themes, and plot complexity, is suitable for the target age range (typically 6-10 years old). Avoid mature themes or overly complex sentence structures.
+- **Key Aspect 2: Relatability**: Create characters and situations that young readers can easily relate to, drawing on common childhood experiences and emotions.
+- **Key Aspect 3: Positive Messaging**: Focus on positive values such as friendship, kindness, perseverance, and problem-solving. Avoid negativity or cynicism.
+- **Key Aspect 4: Clear and Concise Language**: Use simple, straightforward language with limited jargon or figurative language. Keep sentences short and easy to understand.
+- **Key Aspect 5: Engaging Tone**: Maintain an engaging and upbeat tone that will capture and hold the reader's attention. Use humor and vivid descriptions to bring the story to life.
+- **Key Aspect 6: Visual Appeal**: Consider how illustrations can enhance the story and break up the text. Work with an illustrator to create images that complement the narrative.
+- **Key Aspect 7: Chapter Length**: Keep chapters relatively short (5-10 pages) to provide natural stopping points and encourage reading progress.
+- **Key Aspect 8: Moral of the Story**: Subtly weave a moral or lesson into the story without being preachy or didactic. Let the characters' actions and experiences speak for themselves.
+'''
+        return base_prompt + children_s_chapter_books_additions
+
+    @classmethod
+    def get_outline_prompt(cls, **kwargs) -> str:
+        base_prompt = super().get_outline_prompt(**kwargs)
+        
+        children_s_chapter_books_additions = '''
+## Children's Chapter Books-Specific Outline Requirements
+- **Structure Element 1: Clear Beginning, Middle, and End**: Ensure the story has a well-defined beginning that introduces the characters and setting, a middle that develops the conflict, and an end that resolves the conflict in a satisfying way.
+- **Structure Element 2: Chapter Breakdown**: Plan out each chapter with a specific goal in mind, such as introducing a new character, advancing the plot, or building suspense.
+- **Structure Element 3: Rising Action**: Build tension gradually throughout the story, leading to a climax or turning point.
+- **Structure Element 4: Conflict and Resolution**: Clearly define the central conflict and how the protagonist will overcome it.
+- **Structure Element 5: Subplot Limitation**: Avoid complex subplots that could confuse young readers. Focus on the main storyline.
+- **Structure Element 6: Pacing**: Maintain a brisk pace to keep readers engaged. Avoid lengthy descriptions or unnecessary details.
+- **Structure Element 7: Cliffhangers**: Consider ending chapters on a cliffhanger or with a question to encourage further reading.
+- **Structure Element 8: Emotional Arc**: Map out the emotional journey of the protagonist, showing how they grow and change throughout the story.
+
+**Detailed Outline Guidance:**
+
+1.  **Introduction:**
+    *   Introduce the main character(s) and their world.
+    *   Establish the setting and time period.
+    *   Hint at the central conflict or problem.
+
+2.  **Rising Action:**
+    *   The protagonist encounters a challenge or obstacle.
+    *   The protagonist attempts to solve the problem, but faces setbacks.
+    *   New characters are introduced who may help or hinder the protagonist.
+    *   The stakes are raised as the story progresses.
+
+3.  **Climax:**
+    *   The protagonist faces their greatest challenge or fear.
+    *   A turning point occurs that changes the course of the story.
+
+4.  **Falling Action:**
+    *   The protagonist works to resolve the conflict.
+    *   Loose ends are tied up.
+
+5.  **Resolution:**
+    *   The conflict is resolved in a satisfying way.
+    *   The protagonist learns a valuable lesson.
+    *   The story ends on a positive and hopeful note.
+'''
+        return base_prompt + children_s_chapter_books_additions
+
+    @classmethod
+    def get_character_prompt(cls, **kwargs) -> str:
+        base_prompt = super().get_character_prompt(**kwargs)
+        
+        children_s_chapter_books_additions = '''
+## Children's Chapter Books-Specific Character Development
+- **Character Aspect 1: Relatable Flaws**: Give your characters relatable flaws and weaknesses that make them more human and sympathetic.
+- **Character Aspect 2: Clear Motivations**: Ensure your characters have clear motivations and goals that drive their actions.
+- **Character Aspect 3: Age-Appropriate Behavior**: Make sure your characters behave in a way that is consistent with their age and maturity level.
+- **Character Aspect 4: Growth and Change**: Show how your characters grow and change throughout the story as a result of their experiences.
+- **Character Aspect 5: Distinct Personalities**: Give each character a distinct personality and voice that makes them memorable.
+- **Character Aspect 6: Positive Role Models**: Create characters who embody positive values such as kindness, courage, and perseverance.
+- **Character Aspect 7: Character Backstories**: Develop brief backstories for your main characters to understand their motivations and behaviors better.
+- **Character Aspect 8: Character Relationships**: Explore the relationships between your characters and how they influence each other.
+
+**Detailed Character Guidance:**
+
+*   **Protagonist:**
+    *   A child or animal who is relatable and sympathetic.
+    *   Faces a challenge or problem that they must overcome.
+    *   Undergoes a transformation or learns a valuable lesson.
+
+*   **Supporting Characters:**
+    *   Friends, family members, or mentors who help the protagonist.
+    *   Provide support, guidance, and encouragement.
+    *   May have their own subplots or challenges.
+
+*   **Antagonist:**
+    *   A character or force that opposes the protagonist.
+    *   Creates conflict and obstacles for the protagonist to overcome.
+    *   May be a person, an animal, or a natural force.
+'''
+        return base_prompt + children_s_chapter_books_additions
+
+    @classmethod
+    def get_chapter_prompt(cls, **kwargs) -> str:
+        base_prompt = super().get_chapter_prompt(**kwargs)
+        
+        children_s_chapter_books_additions = '''
+## Children's Chapter Books-Specific Chapter Writing
+- **Writing Technique 1: Focus on Action**: Keep the plot moving forward with plenty of action and dialogue. Avoid lengthy descriptions or exposition.
+- **Writing Technique 2: Use Vivid Language**: Use vivid and descriptive language to paint a picture in the reader's mind.
+- **Writing Technique 3: Create Suspense**: Build suspense by hinting at future events or creating cliffhangers at the end of chapters.
+- **Writing Technique 4: Show, Don't Tell**: Show the reader what is happening through the characters' actions and dialogue, rather than simply telling them.
+- **Writing Technique 5: Maintain a Consistent Tone**: Maintain a consistent tone throughout the chapter that is appropriate for the target age range.
+- **Writing Technique 6: Vary Sentence Structure**: Vary your sentence structure to keep the writing engaging and avoid monotony.
+- **Writing Technique 7: Use Dialogue Effectively**: Use dialogue to reveal character, advance the plot, and create conflict.
+- **Writing Technique 8: End with a Hook**: End each chapter with a hook that will make the reader want to keep reading.
+
+**Detailed Chapter Writing Guidance:**
+
+*   **Beginning:**
+    *   Start with an engaging hook that grabs the reader's attention.
+    *   Briefly recap previous events if necessary.
+    *   Introduce the main action or conflict of the chapter.
+
+*   **Middle:**
+    *   Develop the plot and characters through action and dialogue.
+    *   Build suspense and tension.
+    *   Introduce new challenges or obstacles.
+
+*   **End:**
+    *   Resolve the main conflict of the chapter.
+    *   Leave the reader with a sense of closure or anticipation.
+    *   End with a cliffhanger or a question that will make them want to read the next chapter.
+'''
+        return base_prompt + children_s_chapter_books_additions
+
+# Convenience functions for direct access
+def get_writer_profile_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_writer_profile_prompt(**kwargs)
+
+def get_outline_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_outline_prompt(**kwargs)
+
+def get_character_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_character_prompt(**kwargs)
+
+def get_chapter_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_chapter_prompt(**kwargs)
+
+def get_enhancement_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_enhancement_prompt(**kwargs)

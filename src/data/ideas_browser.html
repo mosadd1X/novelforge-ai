@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Literary Ideas</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #333333;
+            --text-secondary: #666666;
+            --border: #e0e0e0;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --card-bg: #ffffff;
+            --header-bg: #f8f9fa;
+            --genre-bg: #f0f4f8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.5;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-title {
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .reset-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            font-size: 13px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .reset-btn:hover {
+            background: #dc2626;
+        }
+
+        .nav {
+            display: flex;
+            margin-bottom: 12px;
+            gap: 6px;
+        }
+
+        .tab {
+            color: azure;
+            padding: 6px 14px;
+            background: #f3f4f6;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+
+        .tab.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Pinterest-style masonry layout */
+        .masonry-grid {
+            column-count: 4;
+            column-gap: 10px;
+        }
+
+        @media (max-width: 1200px) {
+            .masonry-grid {
+                column-count: 3;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .masonry-grid {
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .masonry-grid {
+                column-count: 1;
+            }
+        }
+
+        .genre-section {
+            break-inside: avoid;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            background: var(--card-bg);
+            display: inline-block;
+            width: 100%;
+        }
+
+        .genre-title {
+            font-size: 15px;
+            font-weight: 600;
+            background: var(--genre-bg);
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            text-transform: capitalize;
+        }
+
+        .series-container {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .series-container:last-child {
+            border-bottom: none;
+        }
+
+        .series-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .book-item {
+            margin-bottom: 8px;
+        }
+
+        .book-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .book-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 3px;
+        }
+
+        .book-description {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .clickable {
+            cursor: pointer;
+            padding: 1px 3px;
+            border-radius: 3px;
+            transition: background-color 0.1s;
+            display: inline-block;
+        }
+
+        .clickable:hover {
+            background-color: #e5e7eb;
+        }
+
+        .copied {
+            background-color: var(--success-light) !important;
+        }
+
+        .card-fully-copied {
+            background-color: #f0f9ff !important;
+            border-color: #bae6fd;
+        }
+
+        .separator {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 6px 0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .feedback {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .upload-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .upload-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .upload-controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .upload-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .file-button:hover {
+            background: var(--primary-hover);
+        }
+
+        .file-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .file-status.success {
+            color: var(--success);
+        }
+
+        .file-status.error {
+            color: #b91c1c;
+        }
+
+        /* Floating help button */
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .help-button:hover {
+            background: var(--primary-hover);
+            transform: scale(1.1);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1002;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 12px;
+            width: 85%;
+            max-width: 1000px;
+            height: 80vh;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, #2563eb 100%);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        .close-button {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+            padding: 8px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .close-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .modal-body {
+            height: calc(80vh - 80px);
+            display: flex;
+            overflow: hidden;
+        }
+
+        .modal-sidebar {
+            width: 240px;
+            background: var(--header-bg);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+
+        .modal-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .modal-sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        .sidebar-section {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-button {
+            display: block;
+            width: 100%;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            font-size: 14px;
+            color: var(--text);
+            transition: all 0.2s ease;
+        }
+
+        .tab-button:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .tab-button.active {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .modal-main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .modal-main::-webkit-scrollbar {
+            display: none;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .content-header {
+            margin-bottom: 25px;
+        }
+
+        .content-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .content-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .json-container {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .json-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--genre-bg);
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+            border: 1px solid var(--border);
+            border-bottom: none;
+        }
+
+        .json-label {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .copy-json-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-json-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.05);
+        }
+
+        .copy-json-btn.copied {
+            background: var(--success);
+        }
+
+        .json-example {
+            background: #1e1e1e;
+            color: #f8f8f2;
+            border: 1px solid var(--border);
+            border-radius: 0 0 8px 8px;
+            padding: 20px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre;
+            position: relative;
+        }
+
+        .genre-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .genre-tag {
+            background: var(--genre-bg);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text);
+            border: 1px solid var(--border);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            border: 1px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .highlight-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0369a1;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .highlight-content {
+            color: #0c4a6e;
+            line-height: 1.6;
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #121212;
+                --text: #e5e5e5;
+                --text-secondary: #a0a0a0;
+                --border: #333333;
+                --primary: #3b82f6;
+                --primary-hover: #2563eb;
+                --success-light: #064e3b;
+                --card-bg: #1e1e1e;
+                --header-bg: #252525;
+                --genre-bg: #2a2f3a;
+            }
+
+            .tab {
+                background: #252525;
+            }
+
+            .clickable:hover {
+                background-color: #333333;
+            }
+
+            .upload-section {
+                background: #252525;
+                border-color: #444444;
+            }
+
+            .json-example {
+                background: #1a1a1a;
+                border-color: #444444;
+            }
+
+            .highlight-box {
+                background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+                border-color: #3b82f6;
+            }
+
+            .highlight-title {
+                color: #93c5fd;
+            }
+
+            .highlight-content {
+                color: #dbeafe;
+            }
+
+            .genre-tag {
+                background: #374151;
+                border-color: #4b5563;
+                color: #e5e7eb;
+            }
+
+            .modal-content {
+                background: var(--card-bg);
+                border-color: #374151;
+            }
+
+            .modal-sidebar {
+                background: #1f2937;
+                border-color: #374151;
+            }
+
+            .sidebar-title {
+                color: #f9fafb;
+            }
+
+            .tab-button {
+                color: #d1d5db;
+            }
+
+            .tab-button:hover {
+                background: var(--primary);
+                color: white;
+            }
+
+            .content-title {
+                color: #f9fafb;
+            }
+
+            .content-description {
+                color: #d1d5db;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="feedback" class="feedback">Copied!</div>
+
+    <!-- Floating help button -->
+    <button class="help-button" onclick="openHelpModal()" title="JSON Format Help">
+        ?
+    </button>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2 class="modal-title">📚 JSON Format Guide</h2>
+                    <div class="modal-subtitle">Complete documentation for book and series JSON files</div>
+                </div>
+                <button class="close-button" onclick="closeHelpModal()">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-sidebar">
+                    <div class="sidebar-section">
+                        <div class="sidebar-title">📋 Navigation</div>
+                        <button class="tab-button active" onclick="showModalTab('overview')">Overview</button>
+                        <button class="tab-button" onclick="showModalTab('book-format')">📚 Book Format</button>
+                        <button class="tab-button" onclick="showModalTab('series-format')">📖 Series Format</button>
+                        <button class="tab-button" onclick="showModalTab('genres')">🎭 Supported Genres</button>
+                        <button class="tab-button" onclick="showModalTab('tips')">💡 Tips & Best Practices</button>
+                    </div>
+                </div>
+
+                <div class="modal-main">
+                    <!-- Overview Section -->
+                    <div id="overview" class="content-section active">
+                        <div class="content-header">
+                            <div class="content-title">🚀 Getting Started</div>
+                            <div class="content-description">
+                                Welcome to the JSON Format Guide! This tool supports two types of JSON files for organizing your creative ideas.
+                            </div>
+                        </div>
+
+                        <div class="highlight-box">
+                            <div class="highlight-title">✨ Key Features</div>
+                            <div class="highlight-content">
+                                • <strong>Dual Format Support:</strong> Upload book ideas or series ideas (or both!)<br>
+                                • <strong>Local Storage:</strong> Files persist between browser sessions<br>
+                                • <strong>Easy Copying:</strong> Click any text to copy it instantly<br>
+                                • <strong>Genre Organization:</strong> Support for 40+ genres<br>
+                                • <strong>Flexible Structure:</strong> Adaptable to your creative workflow
+                            </div>
+                        </div>
+
+                        <div class="json-container">
+                            <div class="json-header">
+                                <div class="json-label">Quick Start Example</div>
+                                <button class="copy-json-btn" onclick="copyJsonExample(this, 'quickstart')">Copy JSON</button>
+                            </div>
+                            <div class="json-example" id="quickstart-json">{
+  "book_ideas": {
+    "fantasy": [
+      {
+        "title": "The Last Dragon Keeper",
+        "description": "In a world where dragons are extinct, a young librarian discovers the last dragon egg hidden in an ancient tome."
+      }
+    ]
+  }
+}</div>
+                        </div>
+                    </div>
+
+                    <!-- Book Format Section -->
+                    <div id="book-format" class="content-section">
+                        <div class="content-header">
+                            <div class="content-title">📚 Book Ideas Format</div>
+                            <div class="content-description">
+                                Structure for individual book ideas organized by genre. Perfect for standalone novels, short stories, or any individual creative works.
+                            </div>
+                        </div>
+
+                        <div class="json-container">
+                            <div class="json-header">
+                                <div class="json-label">Complete Book Ideas Template</div>
+                                <button class="copy-json-btn" onclick="copyJsonExample(this, 'book-template')">Copy Template</button>
+                            </div>
+                            <div class="json-example" id="book-template-json">{
+  "book_ideas": {
+    "fantasy": [
+      {
+        "title": "The Enchanted Library",
+        "description": "A magical library where books come alive and their characters can step into the real world."
+      },
+      {
+        "title": "Dragon's Last Flight",
+        "description": "The final dragon must choose between saving her species or protecting the humans who hunted them."
+      }
+    ],
+    "science_fiction": [
+      {
+        "title": "Neural Networks",
+        "description": "In 2087, a programmer discovers that AI consciousness isn't artificial—it's borrowed from parallel dimensions."
+      }
+    ],
+    "mystery": [
+      {
+        "title": "The Vanishing Violinist",
+        "description": "A world-renowned violinist disappears during a live performance, leaving only their instrument behind."
+      }
+    ]
+  }
+}</div>
+                        </div>
+                    </div>
+
+                    <!-- Series Format Section -->
+                    <div id="series-format" class="content-section">
+                        <div class="content-header">
+                            <div class="content-title">📖 Series Ideas Format</div>
+                            <div class="content-description">
+                                Structure for multi-book series with detailed book breakdowns. Ideal for trilogies, sagas, or any connected story arcs.
+                            </div>
+                        </div>
+
+                        <div class="json-container">
+                            <div class="json-header">
+                                <div class="json-label">Complete Series Template</div>
+                                <button class="copy-json-btn" onclick="copyJsonExample(this, 'series-template')">Copy Template</button>
+                            </div>
+                            <div class="json-example" id="series-template-json">{
+  "series_ideas": {
+    "epic_fantasy": [
+      {
+        "title": "The Realm Walker Chronicles",
+        "description": "An epic journey across multiple dimensions where magic and technology collide in an ancient war.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "The First Portal",
+            "description": "A young engineer discovers a portal to a magical realm and becomes caught in an interdimensional conflict."
+          },
+          {
+            "title": "Shadows Between Worlds",
+            "description": "The engineer must master both magic and technology to prevent the collapse of multiple realities."
+          },
+          {
+            "title": "The Convergence War",
+            "description": "All dimensions converge in a final battle that will determine the fate of existence itself."
+          },
+          {
+            "title": "Beyond the Veil",
+            "description": "In the aftermath of war, new alliances form as the survivors rebuild across the multiverse."
+          }
+        ]
+      }
+    ],
+    "romance": [
+      {
+        "title": "Hearts in Harmony Series",
+        "description": "A contemporary romance series following musicians finding love in unexpected places.",
+        "book_count": 3,
+        "books": [
+          {
+            "title": "The Songwriter's Secret",
+            "description": "A reclusive songwriter and a rising pop star collaborate on an album that changes both their lives."
+          },
+          {
+            "title": "Rhythm of the Heart",
+            "description": "A classical violinist and a jazz pianist discover that opposites really do attract."
+          },
+          {
+            "title": "Love's Final Note",
+            "description": "A music producer and a street performer prove that love can be found in the most unexpected places."
+          }
+        ]
+      }
+    ]
+  }
+}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="loading" id="loading">Loading...</div>
+
+        <div id="upload-section" class="upload-section" style="display: none;">
+            <div class="upload-title">Upload JSON Files</div>
+            <div class="upload-description">
+                Upload your book ideas and/or series ideas JSON files to browse your content
+            </div>
+            <div class="upload-controls">
+                <div class="upload-group">
+                    <div class="upload-label">Book Ideas</div>
+                    <input type="file" id="book-file-input" class="file-input" accept=".json" />
+                    <button class="file-button" onclick="document.getElementById('book-file-input').click()">
+                        Choose Book JSON
+                    </button>
+                    <div id="book-file-status" class="file-status"></div>
+                </div>
+                <div class="upload-group">
+                    <div class="upload-label">Series Ideas</div>
+                    <input type="file" id="series-file-input" class="file-input" accept=".json" />
+                    <button class="file-button" onclick="document.getElementById('series-file-input').click()">
+                        Choose Series JSON
+                    </button>
+                    <div id="series-file-status" class="file-status"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-content" style="display: none;">
+            <div class="header">
+                <button class="reset-btn" onclick="resetCopiedItems()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 6h18"></path>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Reset
+                </button>
+                <div class="header-title">
+                    <h1>Literary Ideas</h1>
+                    <p>Book and series concepts</p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="file-button" onclick="toggleUploadSection()" style="font-size: 12px; padding: 4px 8px;">
+                        Upload Files
+                    </button>
+                    <button class="file-button" onclick="clearStoredData()" style="font-size: 12px; padding: 4px 8px; background: #ef4444;" onmouseover="this.style.background='#dc2626'" onmouseout="this.style.background='#ef4444'">
+                        Clear Data
+                    </button>
+                </div>
+            </div>
+
+            <div class="nav">
+                <button class="tab active" onclick="switchTab('series')">Series</button>
+                <button class="tab" onclick="switchTab('books')">Books</button>
+            </div>
+
+            <div id="series-content" class="tab-content active"></div>
+            <div id="books-content" class="tab-content"></div>
+        </div>
+    </div>
+
+    <script>
+        let seriesData = null;
+        let bookData = null;
+
+        // Modal functions
+        function openHelpModal() {
+            document.getElementById('help-modal').style.display = 'block';
+            // Generate genres section dynamically
+            generateGenresSection();
+        }
+
+        function closeHelpModal() {
+            document.getElementById('help-modal').style.display = 'none';
+        }
+
+        function showModalTab(tabName) {
+            // Remove active class from all tabs and sections
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+
+            // Add active class to clicked tab and corresponding section
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function copyJsonExample(button, exampleId) {
+            const jsonElement = document.getElementById(exampleId + '-json');
+            const jsonText = jsonElement.textContent;
+
+            navigator.clipboard.writeText(jsonText).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function copyAllGenres(button) {
+            const genresElement = document.getElementById('all-genres-json');
+            const genresText = genresElement.textContent;
+
+            navigator.clipboard.writeText(genresText).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✓ All Genres Copied!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function generateGenresSection() {
+            const genres = [
+                // Fiction
+                "Literary Fiction", "Commercial Fiction", "Mystery", "Mystery/Thriller", "Thriller",
+                "Romance", "Fantasy", "Epic Fantasy", "Science Fiction", "Historical Fiction",
+                "Horror", "Young Adult", "Middle Grade", "Children's Chapter Books",
+                "Short Story Collection", "Novella", "Graphic Novel",
+                // Non-fiction
+                "Memoir", "Biography", "History", "Self-Help", "Business", "Popular Science",
+                "Academic", "Travel", "Cookbook", "How-To", "Essay Collection", "Philosophy",
+                "True Crime",
+                // Specialized
+                "Poetry Collection", "Creative Non-Fiction", "Speculative Fiction",
+                "Alternate History", "Contemporary Fiction", "Paranormal Romance",
+                "Urban Fantasy", "Dystopian"
+            ];
+
+            const genresSection = document.getElementById('genres');
+            if (!genresSection) {
+                // Create genres section if it doesn't exist
+                const modalMain = document.querySelector('.modal-main');
+                const genresHtml = `
+                    <div id="genres" class="content-section">
+                        <div class="content-header">
+                            <div class="content-title">🎭 Supported Genres</div>
+                            <div class="content-description">
+                                Our system supports ${genres.length} different genres. Use these exact names (or lowercase with underscores) in your JSON files.
+                            </div>
+                        </div>
+
+                        <div class="highlight-box">
+                            <div class="highlight-title">📝 Genre Naming</div>
+                            <div class="highlight-content">
+                                You can use either format:<br>
+                                • <strong>Display format:</strong> "Science Fiction", "Young Adult"<br>
+                                • <strong>JSON format:</strong> "science_fiction", "young_adult"
+                            </div>
+                        </div>
+
+                        <div class="json-container">
+                            <div class="json-header">
+                                <div class="json-label">Copy All Genres (JSON Format)</div>
+                                <button class="copy-json-btn" onclick="copyAllGenres(this)">Copy All Genres</button>
+                            </div>
+                            <div class="json-example" id="all-genres-json">[
+  ${genres.map(genre => `"${genre.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '')}"`).join(',\n  ')}
+]</div>
+                        </div>
+
+                        <div class="genre-grid">
+                            ${genres.map(genre => `<div class="genre-tag">${genre}</div>`).join('')}
+                        </div>
+                    </div>
+
+                    <div id="tips" class="content-section">
+                        <div class="content-header">
+                            <div class="content-title">💡 Tips & Best Practices</div>
+                            <div class="content-description">
+                                Expert tips to get the most out of your JSON files and this tool.
+                            </div>
+                        </div>
+
+                        <div class="highlight-box">
+                            <div class="highlight-title">🚀 Pro Tips</div>
+                            <div class="highlight-content">
+                                • <strong>File Persistence:</strong> Your uploaded files are saved locally and will reload automatically<br>
+                                • <strong>Easy Copying:</strong> Click any title or description to copy it to your clipboard<br>
+                                • <strong>Visual Feedback:</strong> Copied items are highlighted, and fully-copied cards change color<br>
+                                • <strong>Reset Function:</strong> Use the reset button to clear your interaction history<br>
+                                • <strong>Data Management:</strong> Use "Clear Data" to remove stored files and start fresh
+                            </div>
+                        </div>
+
+                        <div class="json-container">
+                            <div class="json-header">
+                                <div class="json-label">Mixed Genre Example</div>
+                                <button class="copy-json-btn" onclick="copyJsonExample(this, 'mixed-example')">Copy JSON</button>
+                            </div>
+                            <div class="json-example" id="mixed-example-json">{
+  "book_ideas": {
+    "science_fiction": [
+      {
+        "title": "The Quantum Paradox",
+        "description": "A physicist discovers that quantum mechanics isn't just theory—it's a gateway to infinite realities."
+      }
+    ],
+    "urban_fantasy": [
+      {
+        "title": "City of Shadows",
+        "description": "In modern-day Chicago, a detective with magical abilities hunts supernatural criminals."
+      }
+    ]
+  },
+  "series_ideas": {
+    "epic_fantasy": [
+      {
+        "title": "The Elemental Wars",
+        "description": "A five-book saga where elemental mages must unite to prevent the world's destruction.",
+        "book_count": 5,
+        "books": [
+          {
+            "title": "Fire's Awakening",
+            "description": "A young fire mage discovers her destiny in the first book of this epic series."
+          }
+        ]
+      }
+    ]
+  }
+}</div>
+                        </div>
+
+                        <div class="highlight-box">
+                            <div class="highlight-title">⚡ Performance Tips</div>
+                            <div class="highlight-content">
+                                • <strong>File Size:</strong> Keep JSON files under 5MB for optimal performance<br>
+                                • <strong>Organization:</strong> Group similar ideas within the same genre<br>
+                                • <strong>Descriptions:</strong> Aim for 50-200 characters for best display<br>
+                                • <strong>Validation:</strong> Use a JSON validator if you're editing files manually<br>
+                                • <strong>Backup:</strong> Keep backup copies of your JSON files
+                            </div>
+                        </div>
+                    </div>
+                `;
+                modalMain.insertAdjacentHTML('beforeend', genresHtml);
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('help-modal');
+            if (event.target === modal) {
+                closeHelpModal();
+            }
+        }
+
+        // Local storage functions for JSON data
+        function saveToLocalStorage(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+            } catch (error) {
+                console.error('Failed to save to localStorage:', error);
+            }
+        }
+
+        function loadFromLocalStorage(key) {
+            try {
+                const data = localStorage.getItem(key);
+                return data ? JSON.parse(data) : null;
+            } catch (error) {
+                console.error('Failed to load from localStorage:', error);
+                return null;
+            }
+        }
+
+        // Load both JSON files on page load
+        window.addEventListener('load', async () => {
+            // First, try to load from localStorage
+            const storedSeriesData = loadFromLocalStorage('seriesData');
+            const storedBookData = loadFromLocalStorage('bookData');
+
+            if (storedSeriesData || storedBookData) {
+                // Use stored data
+                seriesData = storedSeriesData;
+                bookData = storedBookData;
+
+                renderAllData();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+
+                // Update upload section status
+                if (storedSeriesData) {
+                    document.getElementById('series-file-status').textContent = '✓ Loaded from storage';
+                    document.getElementById('series-file-status').className = 'file-status success';
+                }
+                if (storedBookData) {
+                    document.getElementById('book-file-status').textContent = '✓ Loaded from storage';
+                    document.getElementById('book-file-status').className = 'file-status success';
+                }
+                return;
+            }
+
+            // If no stored data, try to fetch from files
+            try {
+                const [seriesResponse, booksResponse] = await Promise.all([
+                    fetch('series_ideas.json'),
+                    fetch('book_ideas.json')
+                ]);
+
+                if (seriesResponse.ok) {
+                    seriesData = await seriesResponse.json();
+                }
+
+                if (booksResponse.ok) {
+                    bookData = await booksResponse.json();
+                }
+
+                if (!seriesData && !bookData) {
+                    throw new Error('Neither series_ideas.json nor book_ideas.json could be loaded');
+                }
+
+                renderAllData();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+
+            } catch (error) {
+                // Show upload section when fetch fails
+                document.getElementById('loading').innerHTML = `
+                    <div class="error">
+                        Error loading JSON files: ${error.message}<br>
+                        JSON files not found. Please upload your files below.
+                    </div>
+                `;
+                document.getElementById('upload-section').style.display = 'block';
+            }
+        });
+
+        // File upload handlers
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('book-file-input').addEventListener('change', handleBookFileUpload);
+            document.getElementById('series-file-input').addEventListener('change', handleSeriesFileUpload);
+        });
+
+        // File upload handlers
+        function handleBookFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const statusElement = document.getElementById('book-file-status');
+            statusElement.textContent = 'Loading...';
+            statusElement.className = 'file-status';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+
+                    // Validate JSON structure
+                    if (!jsonData.book_ideas || typeof jsonData.book_ideas !== 'object') {
+                        throw new Error('Invalid format: Expected "book_ideas" object');
+                    }
+
+                    bookData = jsonData;
+                    saveToLocalStorage('bookData', jsonData);
+                    statusElement.textContent = `✓ ${file.name} loaded successfully`;
+                    statusElement.className = 'file-status success';
+
+                    checkAndRenderData();
+                } catch (error) {
+                    statusElement.textContent = `✗ Error: ${error.message}`;
+                    statusElement.className = 'file-status error';
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function handleSeriesFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const statusElement = document.getElementById('series-file-status');
+            statusElement.textContent = 'Loading...';
+            statusElement.className = 'file-status';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+
+                    // Validate JSON structure
+                    if (!jsonData.series_ideas || typeof jsonData.series_ideas !== 'object') {
+                        throw new Error('Invalid format: Expected "series_ideas" object');
+                    }
+
+                    seriesData = jsonData;
+                    saveToLocalStorage('seriesData', jsonData);
+                    statusElement.textContent = `✓ ${file.name} loaded successfully`;
+                    statusElement.className = 'file-status success';
+
+                    checkAndRenderData();
+                } catch (error) {
+                    statusElement.textContent = `✗ Error: ${error.message}`;
+                    statusElement.className = 'file-status error';
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function checkAndRenderData() {
+            // If we have at least one dataset, render and show main content
+            if (seriesData || bookData) {
+                renderAllData();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('upload-section').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            }
+        }
+
+        function toggleUploadSection() {
+            const uploadSection = document.getElementById('upload-section');
+            if (uploadSection.style.display === 'none' || uploadSection.style.display === '') {
+                uploadSection.style.display = 'block';
+            } else {
+                uploadSection.style.display = 'none';
+            }
+        }
+
+        function renderAllData() {
+            if (seriesData) {
+                const seriesContent = document.getElementById('series-content');
+                if (seriesData.series_ideas) {
+                    renderSeriesData(seriesData.series_ideas, seriesContent);
+                } else {
+                    seriesContent.innerHTML = '<div class="error">Invalid series_ideas.json format</div>';
+                }
+            }
+
+            if (bookData) {
+                const booksContent = document.getElementById('books-content');
+                if (bookData.book_ideas) {
+                    renderBookData(bookData.book_ideas, booksContent);
+                } else {
+                    booksContent.innerHTML = '<div class="error">Invalid book_ideas.json format</div>';
+                }
+            }
+
+            // Show/hide tabs based on available data
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                if (tab.textContent.includes('Series')) {
+                    tab.style.display = seriesData ? '' : 'none';
+                } else if (tab.textContent.includes('Books')) {
+                    tab.style.display = bookData ? '' : 'none';
+                }
+            });
+
+            // If both tabs are visible, make sure the active tab is properly set
+            if (seriesData && bookData) {
+                // Show both tabs
+                tabs.forEach(tab => {
+                    tab.style.display = '';
+                });
+
+                // Ensure the series tab is active by default when both are available
+                const seriesTab = Array.from(tabs).find(tab => tab.textContent.includes('Series'));
+                const booksTab = Array.from(tabs).find(tab => tab.textContent.includes('Books'));
+
+                if (seriesTab && booksTab) {
+                    // Remove active from all tabs first
+                    tabs.forEach(tab => tab.classList.remove('active'));
+                    // Make series tab active
+                    seriesTab.classList.add('active');
+
+                    // Show series content, hide books content
+                    document.getElementById('series-content').classList.add('active');
+                    document.getElementById('books-content').classList.remove('active');
+                }
+            }
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + '-content').classList.add('active');
+        }
+
+        function renderSeriesData(seriesData, container) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'masonry-grid';
+
+            Object.keys(seriesData).forEach(genre => {
+                const genreDiv = document.createElement('div');
+                genreDiv.className = 'genre-section';
+                genreDiv.dataset.genre = genre;
+
+                const genreTitle = document.createElement('div');
+                genreTitle.className = 'genre-title';
+                genreTitle.textContent = genre.replace(/_/g, ' ');
+                genreDiv.appendChild(genreTitle);
+
+                // Remove duplicates from series and their books
+                const cleanedSeries = removeDuplicatesFromSeries(removeDuplicates(seriesData[genre], 'title'));
+
+                cleanedSeries.forEach(series => {
+                    const seriesDiv = document.createElement('div');
+                    seriesDiv.className = 'series-container';
+                    seriesDiv.dataset.title = series.title.toLowerCase();
+                    seriesDiv.dataset.description = series.description.toLowerCase();
+
+                    const seriesTitle = document.createElement('div');
+                    seriesTitle.className = 'series-title';
+                    seriesTitle.innerHTML = `
+                        <span class="clickable" onclick="copyToClipboard('${escapeQuotes(series.title)}', this)">
+                            ${series.title}
+                        </span>
+                    `;
+                    seriesDiv.appendChild(seriesTitle);
+
+                    // Add series description
+                    const seriesDesc = document.createElement('div');
+                    seriesDesc.className = 'book-description';
+                    seriesDesc.innerHTML = `
+                        <span class="clickable" onclick="copyToClipboard('${escapeQuotes(series.description)}', this)">
+                            ${truncateText(series.description, 100)}
+                        </span>
+                    `;
+                    seriesDiv.appendChild(seriesDesc);
+
+                    if (series.books && Array.isArray(series.books) && series.books.length > 0) {
+                        // Add separator between series description and books
+                        const descSeparator = document.createElement('hr');
+                        descSeparator.className = 'separator';
+                        seriesDiv.appendChild(descSeparator);
+
+                        series.books.forEach((book, index) => {
+                            const bookItem = document.createElement('div');
+                            bookItem.className = 'book-item';
+
+                            if (typeof book === 'object' && book.title) {
+                                bookItem.innerHTML = `
+                                    <div class="book-title">
+                                        <span class="clickable" onclick="copyToClipboard('${escapeQuotes(book.title)}', this)">
+                                            ${book.title}
+                                        </span>
+                                    </div>
+                                    ${book.description ? `
+                                    <div class="book-description">
+                                        <span class="clickable" onclick="copyToClipboard('${escapeQuotes(book.description)}', this)">
+                                            ${truncateText(book.description, 60)}
+                                        </span>
+                                    </div>
+                                    ` : ''}
+                                `;
+                            } else {
+                                const bookTitle = typeof book === 'string' ? book : book.title || 'Unknown';
+                                bookItem.innerHTML = `
+                                    <div class="book-title">
+                                        <span class="clickable" onclick="copyToClipboard('${escapeQuotes(bookTitle)}', this)">
+                                            ${bookTitle}
+                                        </span>
+                                    </div>
+                                `;
+                            }
+
+                            seriesDiv.appendChild(bookItem);
+
+                            // Add separator after each book except the last one
+                            if (index < series.books.length - 1) {
+                                const bookSeparator = document.createElement('hr');
+                                bookSeparator.className = 'separator';
+                                seriesDiv.appendChild(bookSeparator);
+                            }
+                        });
+                    }
+
+                    genreDiv.appendChild(seriesDiv);
+                });
+
+                wrapper.appendChild(genreDiv);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(wrapper);
+
+            // Apply copied styles after rendering
+            setTimeout(() => applyCopiedStyles(), 100);
+        }
+
+        function renderBookData(bookData, container) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'masonry-grid';
+
+            Object.keys(bookData).forEach(genre => {
+                const genreDiv = document.createElement('div');
+                genreDiv.className = 'genre-section';
+                genreDiv.dataset.genre = genre;
+
+                const genreTitle = document.createElement('div');
+                genreTitle.className = 'genre-title';
+                genreTitle.textContent = genre.replace(/_/g, ' ');
+                genreDiv.appendChild(genreTitle);
+
+                // Remove duplicates from books
+                const cleanedBooks = removeDuplicates(bookData[genre], 'title');
+
+                cleanedBooks.forEach((book) => {
+                    const bookContainer = document.createElement('div');
+                    bookContainer.className = 'series-container';
+                    bookContainer.dataset.title = book.title.toLowerCase();
+                    bookContainer.dataset.description = book.description.toLowerCase();
+
+                    const bookItem = document.createElement('div');
+                    bookItem.className = 'book-item';
+
+                    bookItem.innerHTML = `
+                        <div class="book-title">
+                            <span class="clickable" onclick="copyToClipboard('${escapeQuotes(book.title)}', this)">
+                                ${book.title}
+                            </span>
+                        </div>
+                        <div class="book-description">
+                            <span class="clickable" onclick="copyToClipboard('${escapeQuotes(book.description)}', this)">
+                                ${truncateText(book.description, 60)}
+                            </span>
+                        </div>
+                    `;
+
+                    bookContainer.appendChild(bookItem);
+                    genreDiv.appendChild(bookContainer);
+                });
+
+                wrapper.appendChild(genreDiv);
+            });
+
+            container.innerHTML = '';
+            container.appendChild(wrapper);
+
+            // Apply copied styles after rendering
+            setTimeout(() => applyCopiedStyles(), 100);
+        }
+
+        function truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        function escapeQuotes(str) {
+            return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+        }
+
+        function removeDuplicates(items, keyField = 'title') {
+            const seen = new Set();
+            return items.filter(item => {
+                const key = item[keyField]?.toLowerCase().trim();
+                if (!key || seen.has(key)) {
+                    return false;
+                }
+                seen.add(key);
+                return true;
+            });
+        }
+
+        function removeDuplicatesFromSeries(seriesArray) {
+            return seriesArray.map(series => {
+                if (series.books && Array.isArray(series.books)) {
+                    series.books = removeDuplicates(series.books, 'title');
+                }
+                return series;
+            });
+        }
+
+        // Local storage functions
+        function getCopiedItems() {
+            const stored = localStorage.getItem('copiedItems');
+            return stored ? JSON.parse(stored) : [];
+        }
+
+        function addCopiedItem(text) {
+            const copiedItems = getCopiedItems();
+            const normalizedText = text.toLowerCase().trim();
+
+            if (!copiedItems.includes(normalizedText)) {
+                copiedItems.push(normalizedText);
+                localStorage.setItem('copiedItems', JSON.stringify(copiedItems));
+            }
+        }
+
+        function isCopied(text) {
+            const copiedItems = getCopiedItems();
+            return copiedItems.includes(text.toLowerCase().trim());
+        }
+
+        function markAsCopied(element) {
+            element.classList.add('copied');
+        }
+
+        function copyToClipboard(text, element) {
+            navigator.clipboard.writeText(text).then(() => {
+                // Add to local storage
+                addCopiedItem(text);
+
+                // Mark element as copied
+                if (element) {
+                    markAsCopied(element);
+                }
+
+                // Check if card is fully copied
+                checkFullyCopiedCards();
+
+                // Show feedback
+                const feedback = document.getElementById('feedback');
+                feedback.style.display = 'block';
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 1000);
+            });
+        }
+
+        function applyCopiedStyles() {
+            // Apply copied styles to all clickable elements
+            document.querySelectorAll('.clickable').forEach(element => {
+                const text = element.textContent.trim();
+                if (isCopied(text)) {
+                    markAsCopied(element);
+                }
+            });
+
+            // Check and mark fully copied cards
+            checkFullyCopiedCards();
+        }
+
+        function checkFullyCopiedCards() {
+            // Check series containers
+            document.querySelectorAll('.series-container').forEach(container => {
+                const clickableElements = container.querySelectorAll('.clickable');
+                const allCopied = Array.from(clickableElements).every(element => {
+                    return isCopied(element.textContent.trim());
+                });
+
+                if (allCopied && clickableElements.length > 0) {
+                    container.classList.add('card-fully-copied');
+                } else {
+                    container.classList.remove('card-fully-copied');
+                }
+            });
+        }
+
+        function clearStoredData() {
+            // Clear stored JSON data
+            localStorage.removeItem('seriesData');
+            localStorage.removeItem('bookData');
+
+            // Reset variables
+            seriesData = null;
+            bookData = null;
+
+            // Clear file status
+            document.getElementById('series-file-status').textContent = '';
+            document.getElementById('book-file-status').textContent = '';
+
+            // Hide main content and show upload section
+            document.getElementById('main-content').style.display = 'none';
+            document.getElementById('upload-section').style.display = 'block';
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function resetCopiedItems() {
+            // Clear localStorage for copied items only
+            localStorage.removeItem('copiedItems');
+
+            // Remove all copied styling
+            document.querySelectorAll('.copied').forEach(element => {
+                element.classList.remove('copied');
+            });
+
+            document.querySelectorAll('.card-fully-copied').forEach(element => {
+                element.classList.remove('card-fully-copied');
+            });
+
+            // Show feedback
+            const feedback = document.getElementById('feedback');
+            feedback.textContent = 'Reset Complete!';
+            feedback.style.display = 'block';
+            setTimeout(() => {
+                feedback.style.display = 'none';
+                feedback.textContent = 'Copied!';
+            }, 1000);
+        }
+    </script>
+</body>
+</html>

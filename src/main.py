@@ -309,13 +309,99 @@ def main() -> None:
         # Create a live display for the table
         from rich.live import Live
 
-        # Create a function to generate the table
-        def generate_chapter_table():
+        # Create a function to generate the progress display
+        def generate_chapter_display():
             # Calculate elapsed time - force update every second
             current_time = datetime.datetime.now()
             elapsed = current_time - start_time
             elapsed_str = str(elapsed).split('.')[0]  # Remove microseconds
 
+            # Create a more compact display for many chapters
+            if chapter_count > 20:
+                return generate_compact_progress(elapsed_str)
+            else:
+                return generate_table_progress(elapsed_str)
+
+        def generate_compact_progress(elapsed_str):
+            """Generate a compact progress display for many chapters."""
+            from rich.panel import Panel
+            from rich.columns import Columns
+            from rich.text import Text
+
+            # Calculate statistics
+            completed = sum(1 for status in chapter_status.values() if "Completed" in status)
+            generating = sum(1 for status in chapter_status.values() if "Generating" in status or "Enhancing" in status)
+            errors = sum(1 for status in chapter_status.values() if "Error" in status)
+            pending = chapter_count - completed - generating - errors
+
+            total_words = sum(chapter_word_counts.values())
+
+            # Create progress bar
+            progress_percentage = (completed / chapter_count) * 100 if chapter_count > 0 else 0
+            progress_bar_width = 40
+            filled_width = int((progress_percentage / 100) * progress_bar_width)
+            progress_bar = "█" * filled_width + "░" * (progress_bar_width - filled_width)
+
+            # Create status summary
+            status_text = Text()
+            status_text.append(f"Progress: {completed}/{chapter_count} chapters ({progress_percentage:.1f}%)\n", style="bold cyan")
+            status_text.append(f"[{progress_bar}]\n\n", style="green")
+            status_text.append(f"✅ Completed: {completed}  ", style="green")
+            status_text.append(f"⚡ Generating: {generating}  ", style="cyan")
+            status_text.append(f"⏳ Pending: {pending}  ", style="yellow")
+            if errors > 0:
+                status_text.append(f"❌ Errors: {errors}", style="red")
+            status_text.append(f"\n📝 Total Words: {total_words:,}")
+
+            # Show current chapter details
+            current_chapter = None
+            for ch_num, status in chapter_status.items():
+                if "Generating" in status or "Enhancing" in status:
+                    current_chapter = ch_num
+                    break
+
+            if current_chapter:
+                ch_title = "Chapter"
+                if current_chapter <= len(chapter_outlines):
+                    outline = chapter_outlines[current_chapter - 1]
+                    if " - " in outline:
+                        ch_title = outline.split(" - ")[0]
+                    else:
+                        ch_title = outline
+
+                current_text = Text()
+                current_text.append(f"\n🔄 Currently Working On:\n", style="bold yellow")
+                current_text.append(f"Chapter {current_chapter}: {ch_title}\n", style="white")
+                current_text.append(f"Status: {chapter_status[current_chapter]}", style="cyan")
+                status_text.append(current_text)
+
+            # Show recent completions (last 5)
+            recent_completed = [ch for ch, status in chapter_status.items() if "Completed" in status]
+            if recent_completed:
+                recent = recent_completed[-5:]  # Last 5 completed
+                recent_text = Text()
+                recent_text.append(f"\n\n📚 Recently Completed:\n", style="bold green")
+                for ch_num in recent:
+                    ch_title = "Chapter"
+                    if ch_num <= len(chapter_outlines):
+                        outline = chapter_outlines[ch_num - 1]
+                        if " - " in outline:
+                            ch_title = outline.split(" - ")[0]
+                        else:
+                            ch_title = outline
+                    words = chapter_word_counts.get(ch_num, 0)
+                    recent_text.append(f"  ✅ Ch {ch_num}: {ch_title} ({words:,} words)\n", style="dim green")
+                status_text.append(recent_text)
+
+            return Panel(
+                status_text,
+                title=f"[bold cyan]Chapter Generation Progress[/bold cyan] - Elapsed: [bold yellow]{elapsed_str}[/bold yellow]",
+                border_style="cyan",
+                expand=False
+            )
+
+        def generate_table_progress(elapsed_str):
+            """Generate traditional table progress for smaller chapter counts."""
             table = Table(box=box.ROUNDED)
             table.add_column("Chapter", style="cyan")
             table.add_column("Status", style="green")
@@ -353,13 +439,13 @@ def main() -> None:
             chapter_word_counts[i] = 0
 
         # Create the live display with higher refresh rate to ensure timer updates every second
-        with Live(generate_chapter_table(), refresh_per_second=4, screen=True) as live:
+        with Live(generate_chapter_display(), refresh_per_second=4, screen=True) as live:
             # Process one chapter at a time (generate, enhance, then move to next)
 
             # Create a function to update the timer during long operations
             def update_timer_during_operation():
                 """Force update the timer display during long operations"""
-                live.update(generate_chapter_table())
+                live.update(generate_chapter_display())
 
             for chapter_num in range(1, chapter_count + 1):
                 # Get chapter title
@@ -373,7 +459,7 @@ def main() -> None:
 
                 # Update status to generating
                 chapter_status[chapter_num] = "[bold cyan]Generating...[/bold cyan]"
-                live.update(generate_chapter_table())
+                live.update(generate_chapter_display())
 
                 try:
                     # Generate current chapter with periodic timer updates
@@ -385,7 +471,7 @@ def main() -> None:
 
                     # Update status to enhancing
                     chapter_status[chapter_num] = "[bold cyan]Enhancing...[/bold cyan]"
-                    live.update(generate_chapter_table())
+                    live.update(generate_chapter_display())
 
 
 
@@ -423,7 +509,7 @@ def main() -> None:
 
                     # Update status to completed
                     chapter_status[chapter_num] = "[bold green]Completed[/bold green]"
-                    live.update(generate_chapter_table())
+                    live.update(generate_chapter_display())
 
                 except json.JSONDecodeError as e:
                     console.print(f"[bold red]Error parsing JSON in chapter {chapter_num}: {e}[/bold red]")
@@ -439,7 +525,7 @@ def main() -> None:
 
                     # Update status to error
                     chapter_status[chapter_num] = "[bold red]Error[/bold red]"
-                    live.update(generate_chapter_table())
+                    live.update(generate_chapter_display())
 
                 except Exception as e:
                     console.print(f"[bold red]Error generating chapter {chapter_num}: {e}[/bold red]")
@@ -453,7 +539,7 @@ def main() -> None:
 
                     # Update status to error
                     chapter_status[chapter_num] = "[bold red]Error[/bold red]"
-                    live.update(generate_chapter_table())
+                    live.update(generate_chapter_display())
 
         console.print(f"[bold green]✓[/bold green] All {chapter_count} chapters generated and enhanced successfully")
 
@@ -539,23 +625,40 @@ if __name__ == "__main__":
     elif args.series_menu and series_management_menu:
         series_management_menu()
     else:
-        # Ask if user wants to use the series menu or the standard flow
-        if series_management_menu:
+        # Import book management menu
+        try:
+            from src.ui.book_menu import book_management_menu
+        except ImportError:
+            book_management_menu = None
+
+        # Ask if user wants to use menus or the standard flow
+        if series_management_menu or book_management_menu:
             clear_screen()
             display_title()
 
             console.print("[bold cyan]Welcome to the Novel Generation System![/bold cyan]")
-            console.print("You can generate a single novel or work with a series of novels.\n")
+            console.print("You can generate a single novel, work with a series of novels, or manage your book library.\n")
 
-            use_series_menu = questionary.confirm(
-                "Would you like to use the Series Management Menu?",
-                default=True,
+            menu_choices = []
+            if series_management_menu:
+                menu_choices.append("Series Management Menu")
+            if book_management_menu:
+                menu_choices.append("Book Management Menu")
+            menu_choices.extend(["Generate Single Book (Classic)", "Exit"])
+
+            selected_menu = questionary.select(
+                "What would you like to do?",
+                choices=menu_choices,
                 style=custom_style
             ).ask()
 
-            if use_series_menu:
+            if selected_menu == "Series Management Menu":
                 series_management_menu()
-            else:
+            elif selected_menu == "Book Management Menu":
+                book_management_menu()
+            elif selected_menu == "Generate Single Book (Classic)":
                 main()
+            elif selected_menu == "Exit":
+                console.print("[bold cyan]Thank you for using the Novel Generation System![/bold cyan]")
         else:
             main()

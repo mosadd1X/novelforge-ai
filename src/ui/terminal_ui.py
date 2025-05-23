@@ -461,6 +461,50 @@ def display_novel_outline(chapter_outlines: List[str], chapter_count: int) -> No
     console.print("\n[bold cyan]Novel Outline[/bold cyan]")
     console.print(f"Total chapters: [bold]{chapter_count}[/bold]\n")
 
+    # For many chapters, use a more compact display
+    if chapter_count > 20:
+        display_compact_outline(chapter_outlines, chapter_count)
+    else:
+        display_table_outline(chapter_outlines)
+
+def display_compact_outline(chapter_outlines: List[str], chapter_count: int) -> None:
+    """Display outline in a compact format for many chapters."""
+    from rich.panel import Panel
+    from rich.text import Text
+    from rich.columns import Columns
+
+    # Show first 5 chapters
+    console.print("[bold yellow]📖 First 5 Chapters:[/bold yellow]")
+    for i in range(min(5, len(chapter_outlines))):
+        outline = chapter_outlines[i]
+        console.print(f"[cyan]Chapter {i+1}:[/cyan] {outline}")
+
+    # Show middle sample if there are many chapters
+    if chapter_count > 15:
+        console.print(f"\n[dim]... {chapter_count - 10} more chapters ...[/dim]")
+
+        # Show last 5 chapters
+        console.print("\n[bold yellow]📚 Last 5 Chapters:[/bold yellow]")
+        start_idx = max(5, len(chapter_outlines) - 5)
+        for i in range(start_idx, len(chapter_outlines)):
+            outline = chapter_outlines[i]
+            console.print(f"[cyan]Chapter {i+1}:[/cyan] {outline}")
+
+    # Show summary statistics
+    total_words = sum(len(outline.split()) for outline in chapter_outlines)
+    avg_words = total_words / len(chapter_outlines) if chapter_outlines else 0
+
+    summary_text = Text()
+    summary_text.append(f"\n📊 Outline Summary:\n", style="bold cyan")
+    summary_text.append(f"  • Total Chapters: {chapter_count}\n", style="white")
+    summary_text.append(f"  • Outline Words: {total_words:,}\n", style="white")
+    summary_text.append(f"  • Avg per Chapter: {avg_words:.0f} words\n", style="white")
+
+    console.print(Panel(summary_text, title="[bold cyan]Outline Overview[/bold cyan]", border_style="cyan"))
+    console.print()
+
+def display_table_outline(chapter_outlines: List[str]) -> None:
+    """Display outline in traditional table format for smaller chapter counts."""
     table = Table(box=box.ROUNDED)
     table.add_column("Chapter", style="cyan")
     table.add_column("Description", style="white")

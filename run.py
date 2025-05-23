@@ -34,6 +34,12 @@ try:
 except ImportError:
     series_management_menu = None
 
+# Import book management menu
+try:
+    from src.ui.book_menu import book_management_menu
+except ImportError:
+    book_management_menu = None
+
 # Create console
 console = Console()
 
@@ -68,6 +74,27 @@ def generate_series():
         series_management_menu()
     else:
         console.print("[bold red]Error: Series management functionality not available.[/bold red]")
+        input("\nPress Enter to continue...")
+
+def manage_books():
+    """
+    Run the book management functionality.
+
+    This function calls the book management menu to start the
+    book management process, which allows users to work with
+    existing books, browse their library, and perform various
+    book-related operations.
+
+    If the book management functionality is not available, it displays
+    an error message with troubleshooting information.
+
+    Returns:
+        None
+    """
+    if book_management_menu:
+        book_management_menu()
+    else:
+        console.print("[bold red]Error: Book management functionality not available.[/bold red]")
         input("\nPress Enter to continue...")
 
 def check_api_key_status():
@@ -118,8 +145,9 @@ def main_menu():
         choices = [
             "1. Generate a Book",
             "2. Generate a Series",
-            "3. API Key Status",
-            "4. Exit"
+            "3. Manage Books",
+            "4. API Key Status",
+            "5. Exit"
         ]
 
         selected = questionary.select(
@@ -132,9 +160,11 @@ def main_menu():
             generate_book()
         elif selected == "2. Generate a Series":
             generate_series()
-        elif selected == "3. API Key Status":
+        elif selected == "3. Manage Books":
+            manage_books()
+        elif selected == "4. API Key Status":
             check_api_key_status()
-        elif selected == "4. Exit":
+        elif selected == "5. Exit":
             console.print("[bold green]Thank you for using the Ebook Generator. Goodbye![/bold green]")
             sys.exit(0)
 

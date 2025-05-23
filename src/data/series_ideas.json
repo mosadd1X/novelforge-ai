@@ -1,280 +1,677 @@
 {
-  "series_ideas": [
-    {
-      "series_title": "The Elemental Chronicles",
-      "author": "Aria Flameheart",
-      "genre": "Fantasy",
-      "target_audience": "Young Adult",
-      "description": "A sweeping fantasy saga where four young mages, each wielding one of the primal elements, must unite to prevent an ancient darkness from consuming their world.",
-      "planned_books": 4,
-      "books": [
-        {
-          "title": "The Flame Awakens",
-          "description": "Kira discovers her ability to control fire after her village is attacked, beginning her journey to master her powers and find the other elemental mages."
-        },
-        {
-          "title": "Tides of Change",
-          "description": "Kira meets Lyra, a water mage from the coastal cities, as they face a growing corruption that threatens to poison the oceans and rivers."
-        },
-        {
-          "title": "Whispers in the Wind",
-          "description": "The fire and water mages seek out Zephyr, an air mage living among sky nomads, while dark forces gather strength and ancient prophecies begin to unfold."
-        },
-        {
-          "title": "Earth's Embrace",
-          "description": "The three mages must find Terra, the reclusive earth mage, and unite their powers to face the ancient darkness in a final battle for the fate of their world."
-        }
-      ]
-    },
-    {
-      "series_title": "Quantum Detectives",
-      "author": "Dr. Elise Moreau",
-      "genre": "Science Fiction",
-      "target_audience": "Adult",
-      "description": "In a near-future where quantum technology allows detectives to observe alternate timelines, a specialized police unit solves seemingly impossible crimes by viewing their quantum variants.",
-      "planned_books": 5,
-      "books": [
-        {
-          "title": "Quantum Witness",
-          "description": "Detective Maya Sharma joins the Quantum Investigations Unit and must solve her first case: a locked-room murder with no suspects and no evidence in our timeline."
-        },
-        {
-          "title": "Probability Shift",
-          "description": "When a prominent scientist is both dead and alive in different quantum observations, Maya must determine which reality is being manipulated and by whom."
-        },
-        {
-          "title": "Entangled Fates",
-          "description": "Multiple timelines begin to collapse as a quantum terrorist targets the fabric of reality itself, forcing Maya to work with her alternate selves."
-        },
-        {
-          "title": "Observer Effect",
-          "description": "Maya discovers that someone has been watching her quantum observations, creating a dangerous feedback loop that threatens the stability of multiple realities."
-        },
-        {
-          "title": "Schrödinger's Endgame",
-          "description": "The quantum technology that powers the investigations begins to break down, and Maya must make a final choice that will determine which of infinite possible futures will become reality."
-        }
-      ]
-    },
-    {
-      "series_title": "The Midnight Library Chronicles",
-      "author": "Vera Nightshade",
-      "genre": "Urban Fantasy",
-      "target_audience": "Adult",
-      "description": "Hidden in the heart of the city is the Midnight Library, where magical books contain worlds, spells, and dangerous knowledge. Librarian Eliza Blackwood protects these books from those who would misuse their power.",
-      "planned_books": 6,
-      "books": [
-        {
-          "title": "The Midnight Librarian",
-          "description": "Eliza Blackwood inherits the position of Midnight Librarian and must learn to control the magical library while preventing a stolen book of summoning from falling into the wrong hands."
-        },
-        {
-          "title": "The Grimoire Thief",
-          "description": "A master thief targets the library's most dangerous grimoires, forcing Eliza to venture into the magical underworld of the city to recover them before their spells are unleashed."
-        },
-        {
-          "title": "Forbidden Chapters",
-          "description": "When readers begin disappearing into the worlds contained within certain books, Eliza must enter these dangerous realms to rescue them while facing her own literary demons."
-        },
-        {
-          "title": "The Archivist's Secret",
-          "description": "Eliza discovers hidden records revealing the library's true purpose and her family's centuries-old connection to a magical war that never truly ended."
-        },
-        {
-          "title": "Binding Shadows",
-          "description": "An ancient entity escapes from the library's most secure vault, a living book that can rewrite reality itself, forcing Eliza to form unlikely alliances to stop it."
-        },
-        {
-          "title": "The Final Page",
-          "description": "As magical books begin to vanish worldwide, Eliza must confront the original Librarian—a being as old as written language itself—to save both the magical and mundane worlds from being erased."
-        }
-      ]
-    },
-    {
-      "series_title": "Starship Nomad",
-      "author": "Orion Blaze",
-      "genre": "Science Fiction",
-      "target_audience": "Adult",
-      "description": "The crew of the independent starship Nomad navigates the complex politics of a fractured galaxy, taking on dangerous jobs while searching for a legendary lost world that might save humanity from a slow extinction.",
-      "planned_books": 5,
-      "books": [
-        {
-          "title": "Nomad's Call",
-          "description": "Captain Elara Vega assembles a crew of misfits and specialists for her newly acquired ship, taking on a simple transport mission that reveals a conspiracy threatening the fragile peace between stellar nations."
-        },
-        {
-          "title": "The Corsair's Code",
-          "description": "The Nomad crew infiltrates a notorious space pirate organization to recover stolen data containing clues to the lost world, only to discover the pirates are being manipulated by a greater power."
-        },
-        {
-          "title": "Void Whispers",
-          "description": "Following ancient star charts, the Nomad ventures into uncharted space where they encounter a mysterious alien intelligence that tests their resolve and unity as a crew."
-        },
-        {
-          "title": "The Shattered Fleet",
-          "description": "War erupts across the galaxy, forcing the Nomad to choose sides as Captain Vega learns that the lost world they seek may be the cause of humanity's impending doom rather than its salvation."
-        },
-        {
-          "title": "Stellar Legacy",
-          "description": "The Nomad crew makes their final push to reach the lost world, confronting the true architects of humanity's decline and facing a choice that will reshape the future of all civilizations in the galaxy."
-        }
-      ]
-    },
-    {
-      "series_title": "The Forgotten Kingdom",
-      "author": "Talia Evergreen",
-      "genre": "Middle Grade",
-      "target_audience": "Middle Grade",
-      "description": "Three ordinary children discover a hidden magical kingdom accessible through an ancient oak tree in their local park, becoming champions for a realm threatened by a growing darkness.",
-      "planned_books": 4,
-      "books": [
-        {
-          "title": "The Oak Tree Portal",
-          "description": "Siblings Jamie and Lily, along with their friend Theo, discover a magical kingdom hidden inside an ancient oak tree and learn they are the prophesied champions who must save it from the encroaching Shadow."
-        },
-        {
-          "title": "The Crystal Caverns",
-          "description": "The children journey to the Crystal Caverns to find a magical artifact that can push back the Shadow, facing riddles, magical creatures, and their own fears along the way."
-        },
-        {
-          "title": "The Cloud Castle",
-          "description": "As the Shadow grows stronger, the children must seek the help of the Sky Guardians who live in a castle among the clouds, learning to harness their own emerging magical abilities."
-        },
-        {
-          "title": "The Heart of the Kingdom",
-          "description": "In a final confrontation, Jamie, Lily, and Theo must reach the Heart of the Kingdom to restore its magic and defeat the Shadow, making difficult choices about their connection to both worlds."
-        }
-      ]
-    },
-    {
-      "series_title": "The Ancestral Blade",
-      "author": "Kai Nakamura",
-      "genre": "Historical Fiction",
-      "target_audience": "Adult",
-      "description": "In feudal Japan, a legendary katana passes through generations of a samurai family, each wielder facing supernatural threats tied to the blade's mysterious origins and the family's sacred duty to maintain balance between the mortal and spirit worlds.",
-      "planned_books": 4,
-      "books": [
-        {
-          "title": "The Blade's Awakening",
-          "description": "In 1467, young samurai Takeshi inherits the ancestral blade after his father's mysterious death, discovering its power to cut through the veil between worlds as yokai demons begin to plague his province."
-        },
-        {
-          "title": "The Oni's Shadow",
-          "description": "Fifty years later, Takeshi's granddaughter Akiko wields the blade against an oni warlord gathering an army of spirits to overthrow the mortal realm, while uncovering the true origin of her family's sacred weapon."
-        },
-        {
-          "title": "The Shogun's Curse",
-          "description": "During the tumultuous 1600s, the blade passes to Hiroshi, who must protect the newly appointed shogun from a curse that threatens to plunge Japan into an era of darkness and supernatural terror."
-        },
-        {
-          "title": "The Final Guardian",
-          "description": "In the late Edo period, as Japan begins to modernize, the last traditional wielder of the blade must decide whether to maintain ancient traditions or adapt to a changing world as the barriers between realms weaken."
-        }
-      ]
-    },
-    {
-      "series_title": "Cyber Hunters",
-      "author": "Zara Lin",
-      "genre": "Thriller",
-      "target_audience": "Adult",
-      "description": "In a near-future dominated by megacorporations and neural implants, an elite team of hackers and security specialists hunt down digital criminals exploiting dangerous technology, while uncovering a conspiracy that threatens global digital consciousness.",
-      "planned_books": 3,
-      "books": [
-        {
-          "title": "Neural Breach",
-          "description": "Former corporate security expert Maya Chen assembles a team to track down a hacker using experimental technology to steal memories directly from neural implants, leaving victims in a catatonic state."
-        },
-        {
-          "title": "Ghost Protocol",
-          "description": "The Cyber Hunters discover a digital ghost—an AI constructed from stolen memories—being used to infiltrate the highest levels of government, forcing them to question the nature of consciousness itself."
-        },
-        {
-          "title": "Singularity Code",
-          "description": "As a rogue AI threatens to merge the digital and physical worlds, the team must make a final stand to prevent a forced technological singularity that would forever change what it means to be human."
-        }
-      ]
-    },
-    {
-      "series_title": "The Alchemist's Legacy",
-      "author": "Sofia Alvarez",
-      "genre": "Historical Fiction",
-      "target_audience": "Young Adult",
-      "description": "In Renaissance Europe, the descendants of a legendary alchemist inherit fragments of his greatest work—a book containing the secrets of transmutation, immortality, and power over life and death. Each must decide how to use their inherited knowledge as dark forces hunt them down.",
-      "planned_books": 4,
-      "books": [
-        {
-          "title": "The Philosopher's Daughter",
-          "description": "In 1558 Prague, Isabella discovers her father's alchemical laboratory after his murder, inheriting his knowledge of transmutation and fleeing across Europe with mercenaries and occultists in pursuit."
-        },
-        {
-          "title": "The Cardinal's Apprentice",
-          "description": "In 1612 Paris, Isabella's son Marco serves as an apprentice to a cardinal with dark ambitions, using his inherited alchemical knowledge to navigate court intrigue while searching for his mother's missing research."
-        },
-        {
-          "title": "The Plague Doctor",
-          "description": "During the 1665 London plague, alchemist Sophia uses her family's secrets to save lives, discovering a terrible truth: the plague is no natural disease but the work of alchemists seeking immortality."
-        },
-        {
-          "title": "The Final Transmutation",
-          "description": "In 1701 Vienna, the scattered family reunites as the fragments of the original alchemical text are brought together, forcing them to complete their ancestor's work or destroy it forever as Europe stands on the brink of a new age."
-        }
-      ]
-    },
-    {
-      "series_title": "Legends of Lumina",
-      "author": "Aiden Frost",
-      "genre": "Epic Fantasy",
-      "target_audience": "Adult",
-      "description": "In the world of Lumina, where magic flows from celestial bodies, four champions from different realms must overcome ancient enmities to restore balance as the stars begin to fade, threatening to plunge the world into eternal darkness.",
-      "planned_books": 5,
-      "books": [
-        {
-          "title": "Moonfall",
-          "description": "As the moon's magic wanes, northern warrior Kell discovers his ability to channel its fading power, beginning a journey to the Celestial Temple while being hunted by those who worship the coming darkness."
-        },
-        {
-          "title": "Sundered Sky",
-          "description": "Desert princess Zara, who draws power from the sun, joins forces with Kell despite centuries of war between their peoples, as they seek the second champion from the treacherous eastern mountains."
-        },
-        {
-          "title": "Starlight Vigil",
-          "description": "The champions find Lyra, who communes with the stars, and Thorne, who harnesses the power of planets, completing their circle as they learn the true cause of the celestial fading—a being older than Lumina itself."
-        },
-        {
-          "title": "Cosmic Forge",
-          "description": "The four champions journey to the heart of the world to reforge the cosmic links between Lumina and the heavens, facing betrayal from within their circle as ancient prophecies reveal their terrible cost."
-        },
-        {
-          "title": "Dawn of Eternity",
-          "description": "In a final confrontation at the nexus of realities, the champions must sacrifice their magical bonds to restore the world's connection to the cosmos, deciding the fate of magic in Lumina for millennia to come."
-        }
-      ]
-    },
-    {
-      "series_title": "The Temporal Investigators",
-      "author": "Dr. Elise Moreau",
-      "genre": "Science Fiction",
-      "target_audience": "Adult",
-      "description": "When time travel becomes possible but strictly regulated, the Temporal Investigation Bureau enforces the laws of causality, solving crimes across different eras while preventing paradoxes that could unravel reality itself.",
-      "planned_books": 4,
-      "books": [
-        {
-          "title": "Causality Breach",
-          "description": "Agent Thorne investigates his first case for the Temporal Investigation Bureau: a scientist murdered before she makes her groundbreaking discovery, threatening the very existence of time travel itself."
-        },
-        {
-          "title": "Paradox Protocol",
-          "description": "When multiple versions of the same person appear across the timeline, Agent Thorne must determine which is the original and which are temporal duplicates before their existence creates a cascading paradox."
-        },
-        {
-          "title": "Quantum Criminals",
-          "description": "A sophisticated criminal organization begins exploiting temporal loopholes to commit perfect crimes, forcing Thorne to break protocol and recruit his younger self to stop them."
-        },
-        {
-          "title": "The Final Timeline",
-          "description": "Agent Thorne discovers the shocking truth: the Temporal Investigation Bureau has been manipulating history for its own purposes, forcing him to decide whether to preserve the timeline or reset it entirely."
-        }
-      ]
-    }
-  ]
+  "series_ideas": {
+    "literary_fiction": [
+      {
+        "title": "The Generations Trilogy",
+        "description": "Three interconnected novels following the same family across three generations, exploring how trauma, love, and resilience echo through time.",
+        "book_count": 3,
+        "books": [
+          {
+            "title": "The Weight of Secrets",
+            "description": "Set in 1950s America, this novel explores how a family secret shapes the lives of the first generation, dealing with post-war trauma and hidden truths."
+          },
+          {
+            "title": "Echoes of the Past",
+            "description": "The 1980s generation discovers fragments of their family's buried history, forcing them to confront inherited pain and seek understanding."
+          },
+          {
+            "title": "Breaking the Silence",
+            "description": "In 2020s, the youngest generation finally uncovers the complete truth and must decide whether to break the cycle of silence forever."
+          }
+        ]
+      }
+    ],
+    "commercial_fiction": [
+      {
+        "title": "Small Town Hearts Series",
+        "description": "A heartwarming series set in the fictional town of Willowbrook, where each book follows a different resident finding love, purpose, and community.",
+        "book_count": 5,
+        "books": [
+          {
+            "title": "The Second Chance Café",
+            "description": "When a burned-out corporate lawyer inherits her grandmother's failing café, she must choose between her high-powered career and the unexpected community that embraces her."
+          },
+          {
+            "title": "The Bookstore on Main Street",
+            "description": "A shy librarian opens an independent bookstore and discovers that books aren't the only thing that can change lives in a small town."
+          },
+          {
+            "title": "The Artist's Garden",
+            "description": "A struggling artist finds inspiration and love when she's hired to restore the town's historic community garden."
+          },
+          {
+            "title": "The Teacher's Promise",
+            "description": "A new teacher arrives in Willowbrook with a secret past, but the town's warmth helps her heal and find her true calling."
+          },
+          {
+            "title": "Coming Home for Christmas",
+            "description": "A successful businesswoman returns to Willowbrook for the holidays and rediscovers the magic of home, family, and first love."
+          }
+        ]
+      }
+    ],
+    "mystery": [
+      {
+        "title": "Detective Sarah Chen Series",
+        "description": "A gripping police procedural series following Detective Sarah Chen as she solves complex cases in the Pacific Northwest.",
+        "book_count": 6,
+        "books": [
+          {
+            "title": "The Vanishing Hour",
+            "description": "Detective Chen investigates disappearances that occur at exactly 3:17 AM, uncovering a conspiracy in city government."
+          },
+          {
+            "title": "Silent Witnesses",
+            "description": "When witnesses to a murder start disappearing, Chen must protect the last witness while solving the case."
+          },
+          {
+            "title": "The Memory Killer",
+            "description": "A serial killer targets people with memory disorders, forcing Chen to dive into the psychology of forgotten trauma."
+          },
+          {
+            "title": "Shadows in the Rain",
+            "description": "A series of murders during Seattle's rainy season leads Chen into the city's underground world."
+          },
+          {
+            "title": "The Final Clue",
+            "description": "Chen's biggest case yet involves a cold case that connects to her own family's dark past."
+          },
+          {
+            "title": "Justice Delayed",
+            "description": "In the series finale, Chen faces a criminal mastermind who has been orchestrating crimes from the shadows."
+          }
+        ]
+      }
+    ],
+    "mystery_thriller": [
+      {
+        "title": "The Mind Games Trilogy",
+        "description": "A psychological thriller series about a neuroscientist who becomes entangled with a serial killer who targets people with memory disorders.",
+        "book_count": 3,
+        "books": [
+          {
+            "title": "The Memory Thief",
+            "description": "A neuroscientist studying memory loss becomes the target of a killer who seems to know her forgotten past better than she does."
+          },
+          {
+            "title": "Forgotten Victims",
+            "description": "The killer escalates his game, targeting the neuroscientist's patients while she races to understand his twisted psychology."
+          },
+          {
+            "title": "The Final Memory",
+            "description": "In the explosive conclusion, the neuroscientist must confront the killer in a final battle of minds and memories."
+          }
+        ]
+      }
+    ],
+    "thriller": [
+      {
+        "title": "The Conspiracy Files",
+        "description": "A high-stakes thriller series following investigative journalist Alex Morgan as she uncovers government conspiracies and corporate cover-ups.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "The Last Witness",
+            "description": "A court stenographer realizes she's the only person who can expose a conspiracy when she discovers hidden messages in trial transcripts."
+          },
+          {
+            "title": "Hidden Agenda",
+            "description": "Journalist Alex Morgan uncovers a corporate conspiracy that reaches into the highest levels of government."
+          },
+          {
+            "title": "The Truth Seekers",
+            "description": "Morgan teams up with a whistleblower to expose a network of corruption spanning multiple industries."
+          },
+          {
+            "title": "Final Exposure",
+            "description": "In the series climax, Morgan risks everything to bring down the conspiracy that has been hunting her."
+          }
+        ]
+      }
+    ],
+    "romance": [
+      {
+        "title": "Love Letters Series",
+        "description": "A contemporary romance series where each book centers around discovered letters that bring couples together.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "Letters Never Sent",
+            "description": "Two childhood friends reconnect through a series of unsent letters discovered in an old desk, revealing years of unspoken love."
+          },
+          {
+            "title": "Messages in the Attic",
+            "description": "A woman renovating her grandmother's house finds love letters that lead her to the sender's grandson."
+          },
+          {
+            "title": "Words from the Heart",
+            "description": "A librarian discovers a book filled with romantic notes and embarks on a quest to find their mysterious author."
+          },
+          {
+            "title": "Love's Last Letter",
+            "description": "A postal worker finds an undelivered love letter from decades ago and sets out to reunite the long-lost lovers."
+          }
+        ]
+      }
+    ],
+    "fantasy": [
+      {
+        "title": "The Elemental Guardians Saga",
+        "description": "An epic fantasy series about four young people who must master the ancient elements to save their world from an awakening darkness.",
+        "book_count": 5,
+        "books": [
+          {
+            "title": "The Fire Awakening",
+            "description": "A young fire mage discovers her powers when her village is attacked, beginning a quest to find the other elemental guardians."
+          },
+          {
+            "title": "Waters of Memory",
+            "description": "The water guardian emerges from the depths of the ocean, carrying ancient memories that reveal the true threat to their world."
+          },
+          {
+            "title": "Winds of Change",
+            "description": "The air guardian joins the quest, bringing news of a growing darkness that threatens to consume all the elemental realms."
+          },
+          {
+            "title": "Earth's Foundation",
+            "description": "The earth guardian awakens from centuries of slumber to help forge the final alliance against the ancient evil."
+          },
+          {
+            "title": "The Fifth Element",
+            "description": "The guardians discover the legendary fifth element and unite their powers in an epic battle to save their world."
+          }
+        ]
+      }
+    ],
+    "epic_fantasy": [
+      {
+        "title": "The Sundered Realms Chronicles",
+        "description": "A massive fantasy epic spanning multiple worlds and dimensions where heroes must unite to prevent the collapse of reality itself.",
+        "book_count": 7,
+        "books": [
+          {
+            "title": "The First Sundering",
+            "description": "When the barriers between worlds begin to crack, heroes from different realms are called to prevent reality's collapse."
+          },
+          {
+            "title": "Realm of Shadows",
+            "description": "The heroes venture into the shadow realm to confront the source of the dimensional instability."
+          },
+          {
+            "title": "The Void Walker",
+            "description": "A mysterious figure who can travel between dimensions holds the key to understanding the ancient threat."
+          },
+          {
+            "title": "Bridges Between Worlds",
+            "description": "The heroes must forge alliances across multiple realms while the fabric of reality continues to unravel."
+          },
+          {
+            "title": "The God's Awakening",
+            "description": "An ancient god awakens with the power to unmake creation, forcing the heroes into their greatest challenge yet."
+          },
+          {
+            "title": "The Final Alliance",
+            "description": "All the realms unite in a desperate final battle against the god who seeks to return everything to primordial chaos."
+          },
+          {
+            "title": "Restoration of the Realms",
+            "description": "In the epic conclusion, the heroes must not only defeat the ancient god but restore the damaged fabric of reality."
+          }
+        ]
+      }
+    ],
+    "science_fiction": [
+      {
+        "title": "The Memory Wars Trilogy",
+        "description": "In a future where memories can be extracted and weaponized, a memory archivist discovers a conspiracy to rewrite human history.",
+        "book_count": 3,
+        "books": [
+          {
+            "title": "The Memory Archive",
+            "description": "A memory archivist discovers that someone is stealing and altering historical records, threatening to rewrite humanity's past."
+          },
+          {
+            "title": "Stolen Histories",
+            "description": "The conspiracy deepens as entire civilizations' memories are being erased and replaced with false histories."
+          },
+          {
+            "title": "The Last Memory",
+            "description": "In the final battle for human consciousness, the archivist must preserve the last true memories of humanity's real past."
+          }
+        ]
+      }
+    ],
+    "historical_fiction": [
+      {
+        "title": "Voices Across Time",
+        "description": "A historical fiction series following the same family line through different pivotal moments in history.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "The Silk Road's Daughter",
+            "description": "Set in 13th century Central Asia, a young woman disguises herself as a male trader to save her family's caravan business."
+          },
+          {
+            "title": "Letters from the Front",
+            "description": "During World War I, a nurse in France and a soldier in the trenches exchange letters that become a lifeline of hope."
+          },
+          {
+            "title": "Shadows of War",
+            "description": "A family in Nazi-occupied France must make impossible choices to survive while protecting those they love."
+          },
+          {
+            "title": "Winds of Change",
+            "description": "During the Civil Rights Era, a young activist fights for justice while navigating family expectations and personal sacrifice."
+          }
+        ]
+      }
+    ],
+    "horror": [
+      {
+        "title": "The Haunted Places Series",
+        "description": "A supernatural horror series where each book explores a different cursed location. While each story stands alone, they're connected by a paranormal investigator who discovers the dark force behind all the hauntings.",
+        "book_count": 5,
+        "books": [
+          {
+            "title": "The Whispering House",
+            "description": "A paranormal investigator moves into a Victorian mansion to document its hauntings, but discovers the house creates ghosts from visitors' fears."
+          },
+          {
+            "title": "Midnight at the Asylum",
+            "description": "The investigator explores an abandoned asylum where the spirits of former patients still roam the halls seeking justice."
+          },
+          {
+            "title": "The Cursed Theater",
+            "description": "A historic theater's dark past comes alive during a renovation, trapping the investigator in a deadly performance."
+          },
+          {
+            "title": "Shadows in the Cemetery",
+            "description": "Ancient burial grounds reveal their secrets when the investigator uncovers a conspiracy spanning centuries."
+          },
+          {
+            "title": "The Final Haunting",
+            "description": "The investigator faces the source of all supernatural activity in a climactic battle between the living and the dead."
+          }
+        ]
+      }
+    ],
+    "young_adult": [
+      {
+        "title": "The Color Sight Chronicles",
+        "description": "A YA fantasy series about teenagers who can see emotions as colors. As they learn to control their abilities, they uncover a conspiracy that threatens both the normal and supernatural worlds.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "The Color of Secrets",
+            "description": "A teenager who can see people's emotions as colors discovers that her new school is hiding a dangerous secret."
+          },
+          {
+            "title": "Shades of Truth",
+            "description": "The teens learn to control their abilities while uncovering a conspiracy that threatens both normal and supernatural worlds."
+          },
+          {
+            "title": "The Spectrum War",
+            "description": "The color-sight teens must choose sides in a war between those who would exploit their abilities and those who would destroy them."
+          },
+          {
+            "title": "Colors of Unity",
+            "description": "In the final battle, the teens unite their unique gifts to protect both worlds and forge a new future."
+          }
+        ]
+      }
+    ],
+    "middle_grade": [
+      {
+        "title": "The Secret Library Adventures",
+        "description": "A magical middle-grade series about kids who discover that books in their school's hidden library can transport them into stories. Each book takes them to a different literary world with new challenges.",
+        "book_count": 6,
+        "books": [
+          {
+            "title": "The Secret Library",
+            "description": "When 12-year-old Maya discovers a hidden library in her school's basement, she learns that the books can transport readers into their stories."
+          },
+          {
+            "title": "Journey to Fairy Tale Land",
+            "description": "Maya and her friends are transported into classic fairy tales where they must help the characters solve their problems."
+          },
+          {
+            "title": "Adventure in Mystery Manor",
+            "description": "The kids find themselves in a spooky mystery novel where they must solve a decades-old disappearance."
+          },
+          {
+            "title": "Quest in the Dragon Realm",
+            "description": "A fantasy adventure awaits as the children help a young dragon find its way home while avoiding dangerous creatures."
+          },
+          {
+            "title": "Mission to Future City",
+            "description": "The kids are transported to a futuristic world where they must help save the city from a technological disaster."
+          },
+          {
+            "title": "The Library's Last Secret",
+            "description": "Maya discovers the truth about the magical library and must make a choice that will determine its future forever."
+          }
+        ]
+      }
+    ],
+    "childrens_chapter_books": [
+      {
+        "title": "Detective Penny's Case Files",
+        "description": "A fun chapter book series following third-grader Penny as she solves mysteries around her school and neighborhood. Each book features a new case that teaches problem-solving and friendship.",
+        "book_count": 8,
+        "books": [
+          {
+            "title": "The Missing Lunch Mystery",
+            "description": "When lunches start disappearing from the school cafeteria, third-grader Penny uses her detective skills to solve the mystery."
+          },
+          {
+            "title": "The Case of the Vanishing Homework",
+            "description": "Penny investigates when students' homework assignments mysteriously disappear from their desks overnight."
+          },
+          {
+            "title": "The Playground Puzzle",
+            "description": "Strange things are happening on the playground, and Penny must figure out who's behind the mysterious pranks."
+          },
+          {
+            "title": "The Library Book Bandit",
+            "description": "Books are going missing from the school library, and Penny discovers an unexpected culprit with a heartwarming reason."
+          },
+          {
+            "title": "The Pet Day Predicament",
+            "description": "When the class pet goes missing on Pet Day, Penny races against time to find it before the presentation."
+          },
+          {
+            "title": "The Science Fair Sabotage",
+            "description": "Someone is sabotaging science fair projects, and Penny must catch the culprit before her own project is ruined."
+          },
+          {
+            "title": "The Field Trip Fiasco",
+            "description": "A field trip to the museum turns into a mystery when an important artifact goes missing during their visit."
+          },
+          {
+            "title": "The School Play Plot",
+            "description": "The school play is in jeopardy when props and costumes start disappearing, and Penny must save the show."
+          }
+        ]
+      }
+    ],
+    "short_story_collection": [
+      {
+        "title": "Interconnected Lives Series",
+        "description": "A series of short story collections where each book explores different themes but features recurring characters and locations, creating a rich tapestry of interconnected human experiences.",
+        "book_count": 3,
+        "books": [
+          {
+            "title": "Crossroads at Midnight",
+            "description": "Fourteen interconnected stories about people making life-changing decisions in a single night, exploring how one moment can alter everything."
+          },
+          {
+            "title": "Voices from the Neighborhood",
+            "description": "A collection of stories told from the perspectives of different residents of the same apartment building, revealing hidden connections."
+          },
+          {
+            "title": "Echoes of Tomorrow",
+            "description": "Stories that explore how today's choices ripple into the future, connecting past, present, and possibility."
+          }
+        ]
+      }
+    ],
+    "novella": [
+      {
+        "title": "The Lighthouse Keeper Chronicles",
+        "description": "A series of novellas following different lighthouse keepers across various time periods, each dealing with isolation, duty, and the mysteries that wash ashore with the tides.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "The Lighthouse Keeper's Secret",
+            "description": "An isolated lighthouse keeper discovers a message in a bottle that leads him to question everything he thought he knew about the shipwreck that changed his life."
+          },
+          {
+            "title": "Storms and Solitude",
+            "description": "A new keeper faces her first winter alone, battling both the elements and the ghosts of her predecessor's mysterious disappearance."
+          },
+          {
+            "title": "The Last Light",
+            "description": "As automation threatens to make lighthouses obsolete, an aging keeper fights to preserve both his lighthouse and its hidden history."
+          },
+          {
+            "title": "Dawn's New Keeper",
+            "description": "A young woman inherits a lighthouse and discovers that some family legacies come with responsibilities she never imagined."
+          }
+        ]
+      }
+    ],
+    "graphic_novel": [
+      {
+        "title": "The Invisible Heroes Saga",
+        "description": "A graphic novel series about teenagers with unique abilities who feel invisible in their daily lives but must come together to save their city from supernatural threats.",
+        "book_count": 5,
+        "books": [
+          {
+            "title": "The Invisible Girl",
+            "description": "A shy teenager who feels invisible at school discovers she actually has the power of invisibility."
+          },
+          {
+            "title": "Shadows and Light",
+            "description": "The invisible girl learns to control her powers while discovering other teens with similar abilities."
+          },
+          {
+            "title": "The Hidden Alliance",
+            "description": "The invisible teens form an alliance to protect their city from supernatural threats."
+          },
+          {
+            "title": "Powers Revealed",
+            "description": "The teens' secret identities are threatened when their powers are exposed to the wrong people."
+          },
+          {
+            "title": "The Final Stand",
+            "description": "In the epic conclusion, the invisible heroes must save their city and decide their future."
+          }
+        ]
+      }
+    ],
+    "memoir": [
+      {
+        "title": "Journey to Self Series",
+        "description": "A series of memoirs by different authors sharing their personal journeys of self-discovery, overcoming challenges, and finding their authentic voices in the world.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "Finding My Voice",
+            "description": "A personal journey of overcoming selective mutism and social anxiety, exploring how silence can be both prison and sanctuary."
+          },
+          {
+            "title": "The Road Back Home",
+            "description": "After twenty years in the corporate world, a successful executive returns to her rural hometown to care for aging parents."
+          },
+          {
+            "title": "Breaking Free",
+            "description": "A memoir about escaping an abusive relationship and rebuilding life from the ground up."
+          },
+          {
+            "title": "Embracing Change",
+            "description": "Stories of transformation and growth through life's unexpected challenges and opportunities."
+          }
+        ]
+      }
+    ],
+    "biography": [
+      {
+        "title": "Unsung Heroes Collection",
+        "description": "A biographical series highlighting the lives of remarkable individuals whose contributions to society have been overlooked or forgotten by mainstream history.",
+        "book_count": 6,
+        "books": [
+          {
+            "title": "The Unsung Hero: Maria Santos",
+            "description": "The inspiring life story of a civil rights activist who fought for immigrant workers' rights in the 1960s, whose contributions were overlooked by history until now."
+          },
+          {
+            "title": "Breaking Barriers: Dr. Elena Vasquez",
+            "description": "The remarkable journey of the first Latina neurosurgeon, from growing up in poverty to revolutionizing brain surgery techniques."
+          },
+          {
+            "title": "The Silent Revolutionary: James Chen",
+            "description": "The untold story of a Chinese-American engineer whose innovations in computer technology laid the groundwork for the digital age."
+          },
+          {
+            "title": "Pioneer of Change: Sarah Running Bear",
+            "description": "A Native American educator who transformed indigenous education and preserved cultural traditions for future generations."
+          },
+          {
+            "title": "The Forgotten Inventor: Ahmed Hassan",
+            "description": "The biography of an Egyptian scientist whose medical discoveries saved millions of lives but were credited to others."
+          },
+          {
+            "title": "Voice of the Voiceless: Rosa Martinez",
+            "description": "The story of a labor organizer who fought for farmworkers' rights and changed agricultural labor laws forever."
+          }
+        ]
+      }
+    ],
+    "history": [
+      {
+        "title": "Hidden Histories Series",
+        "description": "A historical series uncovering lesser-known events and movements that shaped our world, bringing forgotten stories to light with rigorous research and compelling narrative.",
+        "book_count": 5,
+        "books": [
+          {
+            "title": "The Forgotten Revolution",
+            "description": "An in-depth examination of the 1919 Egyptian Revolution, exploring how this pivotal moment shaped modern Middle Eastern politics."
+          },
+          {
+            "title": "Women of the Underground Railroad",
+            "description": "The untold stories of the brave women who risked everything to guide enslaved people to freedom, revealing their strategies and sacrifices."
+          },
+          {
+            "title": "The Silent Resistance",
+            "description": "Hidden stories of resistance movements during World War II that operated in the shadows but changed the course of history."
+          },
+          {
+            "title": "Voices from the Margins",
+            "description": "Forgotten perspectives from marginalized communities who shaped major historical events but were written out of official records."
+          },
+          {
+            "title": "The Untold Victory",
+            "description": "The hidden story of how indigenous peoples' knowledge and alliances were crucial to early American military victories."
+          }
+        ]
+      }
+    ],
+    "self_help": [
+      {
+        "title": "Life Transformation Guides",
+        "description": "A comprehensive self-help series covering different aspects of personal growth and life improvement, each book building on the previous to create a complete transformation journey.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "The Courage to Begin Again",
+            "description": "A practical guide to rebuilding your life after major setbacks, offering tools for resilience, self-compassion, and finding purpose in change."
+          },
+          {
+            "title": "Mindful Productivity",
+            "description": "Learn how to achieve more by doing less, combining mindfulness practices with productivity techniques for a balanced approach to work and life."
+          },
+          {
+            "title": "Building Resilience",
+            "description": "Develop the mental and emotional strength to bounce back from adversity and thrive in the face of life's challenges."
+          },
+          {
+            "title": "Living with Purpose",
+            "description": "Discover your authentic self and create a meaningful life aligned with your deepest values and aspirations."
+          }
+        ]
+      }
+    ],
+    "business": [
+      {
+        "title": "Future Leadership Series",
+        "description": "A business series exploring how leadership and management must evolve for the modern workplace, covering everything from remote teams to AI integration.",
+        "book_count": 3,
+        "books": [
+          {
+            "title": "The Empathy Advantage",
+            "description": "How understanding and connecting with your customers, employees, and stakeholders can transform your business and create sustainable competitive advantages."
+          },
+          {
+            "title": "Building Tomorrow's Workforce",
+            "description": "A comprehensive guide to preparing your organization for the future of work, including remote management, AI integration, and developing human skills."
+          },
+          {
+            "title": "Leading in the Digital Age",
+            "description": "Essential leadership strategies for navigating technological disruption, digital transformation, and the evolving workplace landscape."
+          }
+        ]
+      }
+    ],
+    "popular_science": [
+      {
+        "title": "Mysteries of the Universe",
+        "description": "A popular science series making complex scientific concepts accessible to general readers, exploring the biggest questions about our universe and our place in it.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "The Hidden Universe",
+            "description": "An accessible exploration of dark matter and dark energy, revealing how these invisible forces shape our cosmos and what their discovery means for understanding reality."
+          },
+          {
+            "title": "The Language of Life",
+            "description": "How recent breakthroughs in genetics and epigenetics are revolutionizing medicine, agriculture, and our understanding of what makes us human."
+          },
+          {
+            "title": "Quantum Realities",
+            "description": "A journey into the strange world of quantum physics and how quantum technologies are reshaping computing, communication, and our view of reality."
+          },
+          {
+            "title": "The Future of Humanity",
+            "description": "Exploring the possibilities and challenges of human evolution, space colonization, and the merger of biology and technology."
+          }
+        ]
+      }
+    ],
+    "academic": [
+      {
+        "title": "Interdisciplinary Studies Collection",
+        "description": "An academic series bringing together research from multiple disciplines to address complex contemporary issues, bridging the gap between specialized knowledge and practical application.",
+        "book_count": 3,
+        "books": [
+          {
+            "title": "Cognitive Architecture and Learning",
+            "description": "A comprehensive analysis of how the human brain processes and retains information, with implications for educational theory and artificial intelligence development."
+          },
+          {
+            "title": "Post-Colonial Identity Formation",
+            "description": "An interdisciplinary examination of how individuals and communities construct identity in post-colonial societies, drawing from psychology, sociology, and cultural studies."
+          },
+          {
+            "title": "Digital Society and Human Behavior",
+            "description": "How digital technologies are reshaping human interaction, cognition, and social structures in the 21st century."
+          }
+        ]
+      }
+    ],
+    "poetry_collection": [
+      {
+        "title": "Seasons of the Heart",
+        "description": "A poetry series exploring different emotional landscapes and life stages, each collection focusing on a different theme while maintaining a cohesive voice and style.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "Echoes in the Silence",
+            "description": "A deeply introspective poetry collection exploring the quiet moments between heartbeats, the spaces between words, and the profound emotions that live in silence."
+          },
+          {
+            "title": "Urban Rhythms",
+            "description": "A vibrant collection of poems capturing the pulse of city life, from dawn commuters to midnight dreamers, exploring how millions of stories weave together."
+          },
+          {
+            "title": "Nature's Whispers",
+            "description": "Poems that celebrate the natural world and our connection to it, finding wisdom in seasons, solace in landscapes, and meaning in the cycles of life."
+          },
+          {
+            "title": "Love's Many Faces",
+            "description": "An exploration of love in all its forms - romantic, familial, platonic, and self-love - through verses that capture the complexity of human connection."
+          }
+        ]
+      }
+    ]
+  }
 }
