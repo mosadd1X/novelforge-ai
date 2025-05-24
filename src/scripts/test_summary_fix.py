@@ -3,7 +3,6 @@ Test script to verify the chapter summary generation fix.
 """
 
 import sys
-import os
 sys.path.append('..')
 
 from rich.console import Console

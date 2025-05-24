@@ -60,6 +60,32 @@
         "description": "A grief counselor who has never fully processed her own loss meets a widowed artist, and together they learn that healing doesn't mean forgetting—it means learning to love again."
       }
     ],
+    "contemporary_romance": [
+      {
+        "title": "Hearts in Mumbai Monsoon",
+        "description": "A successful marketing executive returns to Mumbai from New York and finds herself working with her college sweetheart, now a renowned architect. As they collaborate on a cultural center project, they must navigate family expectations, career ambitions, and the love they never forgot."
+      },
+      {
+        "title": "The Arranged Love Story",
+        "description": "When tech entrepreneur Arjun Sharma agrees to an arranged marriage to please his traditional family, he doesn't expect to fall for his independent-minded bride Kavya, a doctor who has her own reasons for accepting the arrangement. Their modern love story unfolds against the backdrop of contemporary Indian family dynamics."
+      },
+      {
+        "title": "Bollywood Dreams and Delhi Nights",
+        "description": "Aspiring filmmaker Priya Patel moves to Delhi to pursue her dreams, where she meets Rohan Malhotra, a successful but disillusioned Bollywood actor. As they work together on an indie film, they discover that sometimes the best love stories happen off-camera."
+      },
+      {
+        "title": "Sari and Stilettos",
+        "description": "Fashion designer Meera Agarwal struggles to balance her modern career with traditional family values when she falls for Vikram Singh, a progressive lawyer who challenges everything she thought she knew about love, success, and staying true to herself."
+      },
+      {
+        "title": "Festival of Hearts",
+        "description": "During the vibrant festival season in Jaipur, event planner Ishita Joshi and celebrity chef Aarav Kapoor are forced to work together on a high-profile wedding. Their professional rivalry turns into unexpected romance as they discover that the best recipes for love can't be planned."
+      },
+      {
+        "title": "Digital Hearts",
+        "description": "Software developer Ananya Sharma and social media influencer Karan Gupta meet through a dating app, but their online chemistry doesn't immediately translate to real life. As they navigate modern dating, family pressure, and social media expectations, they learn that authentic love requires logging off and being present."
+      }
+    ],
     "fantasy": [
       {
         "title": "The Shattered Crown",

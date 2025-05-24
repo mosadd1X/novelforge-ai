@@ -8,11 +8,10 @@ sys.path.append('..')
 
 from rich.console import Console
 from rich.panel import Panel
-from rich.text import Text
 
 # Import the logging system
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
-from src.utils.logger import init_logger, get_logger, close_logger, log_info, log_error, log_debug, log_warning
+from src.utils.logger import init_logger, close_logger, log_info, log_error, log_debug, log_warning
 
 console = Console(markup=True)
 

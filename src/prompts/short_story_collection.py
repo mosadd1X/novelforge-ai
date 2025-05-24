@@ -109,6 +109,62 @@ class ShortStoryCollectionPrompts(SpecialFormatBasePrompts):
 '''
         return base_prompt + short_story_collection_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a shortstorycollection-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        shortstorycollection_series_additions = """
+
+## ShortStoryCollection Series-Specific Planning Elements
+
+### Artistic Progression for ShortStoryCollection
+- **Format Mastery**: Show increasing sophistication in shortstorycollection techniques across volumes
+- **Creative Evolution**: Plan how the artistic vision develops throughout the shortstorycollection series
+- **Thematic Development**: Create themes that deepen and evolve through the shortstorycollection format
+- **Artistic Cohesion**: Maintain unified artistic vision while allowing creative growth
+- **Format Innovation**: Explore different aspects of shortstorycollection across the series
+
+### ShortStoryCollection Series Continuity
+- **Style Consistency**: Maintain recognizable artistic voice across shortstorycollection volumes
+- **Technical Standards**: Maintain quality standards appropriate for shortstorycollection
+- **Creative Connections**: Create meaningful artistic links between shortstorycollection volumes
+- **Format Exploration**: Continue exploring the possibilities of shortstorycollection format
+- **Reader Experience**: Create engaging progression for shortstorycollection enthusiasts
+
+Create a shortstorycollection series that showcases artistic development and format mastery across multiple volumes.
+"""
+
+        return base_prompt + shortstorycollection_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a shortstorycollection-specific individual volume prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        shortstorycollection_book_additions = """
+
+## ShortStoryCollection Series Volume Integration
+
+### ShortStoryCollection Artistic Continuity
+- **Style Consistency**: Maintain the artistic voice established in previous shortstorycollection volumes
+- **Technical Standards**: Maintain quality standards established in the shortstorycollection series
+- **Creative Evolution**: Show artistic growth from previous shortstorycollection volumes
+- **Format Mastery**: Build upon shortstorycollection techniques established in the series
+- **Thematic Connections**: Continue developing themes from earlier shortstorycollection works
+
+### Volume-Specific ShortStoryCollection Focus
+- **Artistic Objectives**: What specific shortstorycollection artistic goals will this volume achieve?
+- **Format Innovation**: What new shortstorycollection techniques or approaches will be introduced?
+- **Creative Development**: How will this volume advance the artistic vision of the series?
+- **Series Integration**: How does this volume connect meaningfully to other shortstorycollection works in the series?
+- **Artistic Value**: What unique shortstorycollection artistic value does this volume add to the series?
+
+Ensure this volume demonstrates shortstorycollection mastery while serving as an integral part of the artistic series.
+"""
+
+        return base_prompt + shortstorycollection_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return ShortStoryCollectionPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -123,3 +179,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return ShortStoryCollectionPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return ShortStoryCollectionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return ShortStoryCollectionPrompts.get_series_book_prompt(**kwargs)

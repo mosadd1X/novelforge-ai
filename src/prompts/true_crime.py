@@ -109,6 +109,62 @@ class TrueCrimePrompts(NonFictionBasePrompts):
 '''
         return base_prompt + true_crime_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a truecrime-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        truecrime_series_additions = """
+
+## TrueCrime Series-Specific Planning Elements
+
+### Educational Progression for TrueCrime
+- **Knowledge Building**: Structure learning progression appropriate for truecrime topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of truecrime subjects
+- **Practical Applications**: Include actionable insights specific to truecrime throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for truecrime authority
+- **Reader Value**: Ensure each book provides significant truecrime value while building series knowledge
+
+### TrueCrime Series Continuity
+- **Subject Consistency**: Maintain consistent approach to truecrime topics across books
+- **Authority Building**: Establish and maintain credibility in truecrime throughout the series
+- **Information Architecture**: Structure information flow appropriate for truecrime learning
+- **Cross-References**: Create meaningful connections between truecrime concepts across books
+- **Updated Knowledge**: Plan for incorporating new truecrime research and developments
+
+Create a truecrime series that provides comprehensive education with authoritative, well-researched content.
+"""
+
+        return base_prompt + truecrime_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a truecrime-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        truecrime_book_additions = """
+
+## TrueCrime Series Book Integration
+
+### TrueCrime Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon truecrime concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous truecrime books when relevant
+- **Knowledge Progression**: Advance reader understanding of truecrime topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the truecrime series
+
+### Book-Specific TrueCrime Focus
+- **Educational Objectives**: What specific truecrime knowledge will readers gain from this book?
+- **Practical Applications**: What actionable truecrime insights will be provided?
+- **Research Integration**: How will new truecrime research be incorporated?
+- **Series Advancement**: How does this book advance the overall truecrime education series?
+- **Reader Value**: What unique truecrime value does this book add to the series?
+
+Ensure this book provides comprehensive truecrime education while serving as an integral part of the learning series.
+"""
+
+        return base_prompt + truecrime_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return TrueCrimePrompts.get_writer_profile_prompt(**kwargs)
 
@@ -123,3 +179,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return TrueCrimePrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return TrueCrimePrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return TrueCrimePrompts.get_series_book_prompt(**kwargs)

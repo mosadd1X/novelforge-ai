@@ -108,6 +108,63 @@ class PhilosophyPrompts(NonFictionBasePrompts):
 '''
         return base_prompt + philosophy_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a philosophy-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        philosophy_series_additions = """
+
+## Philosophy Series-Specific Planning Elements
+
+### Educational Progression for Philosophy
+- **Knowledge Building**: Structure learning progression appropriate for philosophy topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of philosophy subjects
+- **Practical Applications**: Include actionable insights specific to philosophy throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for philosophy authority
+- **Reader Value**: Ensure each book provides significant philosophy value while building series knowledge
+
+### Philosophy Series Continuity
+- **Subject Consistency**: Maintain consistent approach to philosophy topics across books
+- **Authority Building**: Establish and maintain credibility in philosophy throughout the series
+- **Information Architecture**: Structure information flow appropriate for philosophy learning
+- **Cross-References**: Create meaningful connections between philosophy concepts across books
+- **Updated Knowledge**: Plan for incorporating new philosophy research and developments
+
+Create a philosophy series that provides comprehensive education with authoritative, well-researched content.
+"""
+        
+        return base_prompt + philosophy_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a philosophy-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        philosophy_book_additions = """
+
+## Philosophy Series Book Integration
+
+### Philosophy Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon philosophy concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous philosophy books when relevant
+- **Knowledge Progression**: Advance reader understanding of philosophy topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the philosophy series
+
+### Book-Specific Philosophy Focus
+- **Educational Objectives**: What specific philosophy knowledge will readers gain from this book?
+- **Practical Applications**: What actionable philosophy insights will be provided?
+- **Research Integration**: How will new philosophy research be incorporated?
+- **Series Advancement**: How does this book advance the overall philosophy education series?
+- **Reader Value**: What unique philosophy value does this book add to the series?
+
+Ensure this book provides comprehensive philosophy education while serving as an integral part of the learning series.
+"""
+        
+        return base_prompt + philosophy_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return PhilosophyPrompts.get_writer_profile_prompt(**kwargs)
@@ -123,3 +180,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return PhilosophyPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return PhilosophyPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return PhilosophyPrompts.get_series_book_prompt(**kwargs)

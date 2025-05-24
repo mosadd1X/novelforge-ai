@@ -3,12 +3,10 @@ Test script to demonstrate the improved UI for handling many chapters.
 """
 
 import sys
-import time
 import random
 sys.path.append('..')
 
 from rich.console import Console
-from rich.live import Live
 from rich.panel import Panel
 from rich.text import Text
 from rich.table import Table

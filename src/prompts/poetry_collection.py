@@ -104,6 +104,62 @@ class PoetryCollectionPrompts(SpecialFormatBasePrompts):
 '''
         return base_prompt + poetry_collection_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a poetrycollection-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        poetrycollection_series_additions = """
+
+## PoetryCollection Series-Specific Planning Elements
+
+### Artistic Progression for PoetryCollection
+- **Format Mastery**: Show increasing sophistication in poetrycollection techniques across volumes
+- **Creative Evolution**: Plan how the artistic vision develops throughout the poetrycollection series
+- **Thematic Development**: Create themes that deepen and evolve through the poetrycollection format
+- **Artistic Cohesion**: Maintain unified artistic vision while allowing creative growth
+- **Format Innovation**: Explore different aspects of poetrycollection across the series
+
+### PoetryCollection Series Continuity
+- **Style Consistency**: Maintain recognizable artistic voice across poetrycollection volumes
+- **Technical Standards**: Maintain quality standards appropriate for poetrycollection
+- **Creative Connections**: Create meaningful artistic links between poetrycollection volumes
+- **Format Exploration**: Continue exploring the possibilities of poetrycollection format
+- **Reader Experience**: Create engaging progression for poetrycollection enthusiasts
+
+Create a poetrycollection series that showcases artistic development and format mastery across multiple volumes.
+"""
+
+        return base_prompt + poetrycollection_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a poetrycollection-specific individual volume prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        poetrycollection_book_additions = """
+
+## PoetryCollection Series Volume Integration
+
+### PoetryCollection Artistic Continuity
+- **Style Consistency**: Maintain the artistic voice established in previous poetrycollection volumes
+- **Technical Standards**: Maintain quality standards established in the poetrycollection series
+- **Creative Evolution**: Show artistic growth from previous poetrycollection volumes
+- **Format Mastery**: Build upon poetrycollection techniques established in the series
+- **Thematic Connections**: Continue developing themes from earlier poetrycollection works
+
+### Volume-Specific PoetryCollection Focus
+- **Artistic Objectives**: What specific poetrycollection artistic goals will this volume achieve?
+- **Format Innovation**: What new poetrycollection techniques or approaches will be introduced?
+- **Creative Development**: How will this volume advance the artistic vision of the series?
+- **Series Integration**: How does this volume connect meaningfully to other poetrycollection works in the series?
+- **Artistic Value**: What unique poetrycollection artistic value does this volume add to the series?
+
+Ensure this volume demonstrates poetrycollection mastery while serving as an integral part of the artistic series.
+"""
+
+        return base_prompt + poetrycollection_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return PoetryCollectionPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -118,3 +174,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return PoetryCollectionPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return PoetryCollectionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return PoetryCollectionPrompts.get_series_book_prompt(**kwargs)

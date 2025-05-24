@@ -16,23 +16,21 @@ import os
 import sys
 import json
 import datetime
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any
 
 # Third-party imports
 import questionary
 from rich.console import Console
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
 from rich.table import Table
-from rich.live import Live
 from rich import box
 
 # Local application imports
 from src.core.novel_generator import NovelGenerator
 from src.formatters.epub_formatter import EpubFormatter
-from src.utils.file_handler import create_output_directory, save_novel_json, create_series_directory
+from src.utils.file_handler import create_output_directory, save_novel_json
 from src.core.series_manager import SeriesManager
 from src.core.series_generator import SeriesGenerator
-from src.utils.logger import init_logger, get_logger, close_logger, log_info, log_error, log_debug, log_warning
+from src.utils.logger import init_logger, get_logger, close_logger, log_info, log_error, log_debug, log_warning, log_critical
 from src.ui.terminal_ui import (
     clear_screen,
     display_title,
@@ -43,12 +41,11 @@ from src.ui.terminal_ui import (
     confirm_generation,
     get_custom_generation_options,
     generation_timer,
-    display_character_development,
-    display_plot_arcs,
-    display_timeline,
+
     generate_cover,
     custom_style
 )
+
 
 # Optional imports
 try:
@@ -60,62 +57,360 @@ except ImportError:
 console = Console(markup=True)
 
 
-def should_generate_characters(genre: str) -> bool:
+# Character generation function moved to src.utils.genre_utils
+from src.utils.genre_utils import should_generate_characters
+
+
+def main_with_advanced_options(advanced_options: Dict[str, Any]) -> None:
     """
-    Determine if character generation is needed for a given genre.
+    Generate a novel using advanced generation options.
+
+    This function takes the results from the advanced generation options
+    and uses them to create a novel with the specified parameters.
 
     Args:
-        genre: The genre of the book
-
-    Returns:
-        bool: True if characters should be generated, False otherwise
+        advanced_options: Dictionary containing advanced generation parameters
     """
-    # Fiction genres that need characters (narrative content)
-    fiction_genres = [
-        "literary fiction", "commercial fiction", "mystery", "mystery thriller",
-        "thriller", "romance", "fantasy", "epic fantasy", "science fiction",
-        "historical fiction", "horror", "young adult", "middle grade",
-        "children's chapter books", "speculative fiction", "alternate history",
-        "contemporary fiction", "paranormal romance", "urban fantasy", "dystopian",
-        "test"  # Include test genre for development
-    ]
+    # Initialize logging system
+    logger = init_logger("DEBUG")
 
-    # Non-fiction genres that don't need characters (informational content)
-    non_fiction_genres = [
-        "memoir", "biography", "history", "self help", "business",
-        "popular science", "academic", "travel", "cookbook", "how to",
-        "philosophy", "true crime"
-    ]
+    try:
+        log_info("=== ADVANCED GENERATION SESSION STARTED ===")
+        log_info("Starting advanced generation with preset options", mode=advanced_options.get("mode"))
 
-    # Special formats that don't need traditional characters
-    special_format_genres = [
-        "short story collection", "novella", "graphic novel",
-        "essay collection", "poetry collection", "creative non fiction"
-    ]
+        # Clear screen and display title
+        clear_screen()
+        display_title()
 
-    # Normalize genre name for comparison
-    genre_normalized = genre.lower().strip()
+        # Display the advanced generation mode
+        mode = advanced_options.get("mode", "unknown")
+        mode_display = {
+            "surprise_me": "Surprise Me Mode",
+            "author_focus": "Author Focus Mode",
+            "cultural_journey": "Cultural Journey Mode",
+            "genre_fusion": "Genre Fusion Mode"
+        }
 
-    # Check if it's a fiction genre that needs characters
-    # First check for exact matches
-    for fiction_genre in fiction_genres:
-        if fiction_genre.lower() == genre_normalized:
-            return True
+        console.print(f"[bold cyan]{mode_display.get(mode, 'Advanced Generation')}[/bold cyan]")
+        console.print("Generating your book with the selected advanced options...\n")
 
-    # Then check for partial matches, but be very careful
-    for fiction_genre in fiction_genres:
-        # Only allow partial matches if the genre is clearly contained
-        if genre_normalized in fiction_genre.lower() and len(genre_normalized) > 3:
-            # Avoid false positives like "history" matching fiction genres
-            if genre_normalized == "history" and ("historical" in fiction_genre.lower() or "alternate" in fiction_genre.lower()):
-                continue
-            if genre_normalized == "science" and "science fiction" in fiction_genre.lower():
-                continue
-            return True
+        # Extract novel information from advanced options
+        novel_info = {
+            "title": advanced_options.get("title", "Advanced Generated Novel"),
+            "author": advanced_options.get("author", "AI Author"),
+            "description": advanced_options.get("description", "An AI-generated novel."),
+            "genre": advanced_options.get("genre", "Literary Fiction"),
+            "target_audience": "Adult (18+)"  # Default for advanced options
+        }
 
-    # All other genres (non-fiction and special formats) don't need characters
-    return False
+        # Extract generation options
+        generation_options = {
+            "themes": advanced_options.get("themes", []),
+            "writing_style": advanced_options.get("writing_style", "descriptive"),
+            "target_length": advanced_options.get("target_length", "medium")
+        }
 
+        # Display the selected options
+        console.print(f"[bold green]Selected Options:[/bold green]")
+        console.print(f"  Title: [cyan]{novel_info['title']}[/cyan]")
+        console.print(f"  Genre: [cyan]{novel_info['genre']}[/cyan]")
+        console.print(f"  Author: [cyan]{novel_info['author']}[/cyan]")
+        console.print(f"  Themes: [cyan]{', '.join(generation_options['themes'])}[/cyan]")
+        console.print(f"  Style: [cyan]{generation_options['writing_style']}[/cyan]")
+        console.print(f"  Length: [cyan]{generation_options['target_length']}[/cyan]")
+
+        # Show mode-specific information
+        if mode == "author_focus":
+            console.print(f"  Focus Author: [cyan]{advanced_options.get('focus_author')}[/cyan]")
+        elif mode == "cultural_journey":
+            console.print(f"  Cultural Region: [cyan]{advanced_options.get('cultural_region')}[/cyan]")
+            console.print(f"  Cultural Background: [cyan]{advanced_options.get('cultural_background')}[/cyan]")
+        elif mode == "genre_fusion":
+            console.print(f"  Fusion Type: [cyan]{advanced_options.get('fusion_type')}[/cyan]")
+            console.print(f"  Primary Genre: [cyan]{advanced_options.get('primary_genre')}[/cyan]")
+            console.print(f"  Secondary Genre: [cyan]{advanced_options.get('secondary_genre')}[/cyan]")
+
+        # Create output directory
+        output_dir = create_output_directory(novel_info["title"])
+        output_dir = output_dir.replace('\\', '/')
+
+        # Initialize novel generator
+        generator = NovelGenerator()
+        memory_manager = generator.initialize_novel(
+            title=novel_info["title"],
+            author=novel_info["author"],
+            description=novel_info["description"],
+            genre=novel_info["genre"],
+            target_audience=novel_info["target_audience"],
+            output_dir=output_dir
+        )
+
+        # Set generation options
+        generator.set_generation_options(generation_options)
+
+        # Check API connection
+        console.print("\n[bold cyan]Checking API connection...[/bold cyan]")
+        api_status = generator.gemini.check_api_connection(check_all_keys=True)
+
+        if not api_status["success"]:
+            console.print("[bold red]Error: Unable to connect to the Gemini API.[/bold red]")
+            return
+
+        console.print(f"[bold green]✓[/bold green] API connection successful!")
+
+        # Start generation timer
+        generation_timer.start()
+        console.print("\n[bold cyan]Advanced generation started![/bold cyan]")
+
+        # Use the pre-selected writer profile from advanced options
+        writer_profile = advanced_options.get("selected_profile")
+        if writer_profile:
+            author_name = writer_profile.get("name", "Unknown Author")
+            console.print(f"[bold green]✓[/bold green] Using fictional author: [bold cyan]{author_name}[/bold cyan]")
+        else:
+            # Fallback to automatic selection
+            from src.utils.writer_profile_manager import WriterProfileManager
+            profile_manager = WriterProfileManager()
+            writer_profile = profile_manager.get_auto_selected_profile_for_book(
+                genre=novel_info["genre"],
+                themes=generation_options.get("themes"),
+                writing_style=generation_options.get("writing_style"),
+                target_length=generation_options.get("target_length")
+            )
+
+            if writer_profile:
+                author_name = writer_profile.get("name", "Unknown Author")
+                console.print(f"[bold green]✓[/bold green] Auto-selected fictional author: [bold cyan]{author_name}[/bold cyan]")
+            else:
+                console.print("[bold yellow]Using fallback profile generation...")
+                writer_profile = generator.generate_writer_profile()
+
+        # Continue with the standard generation process
+        # (The rest follows the same pattern as the main() function)
+
+        # Generate novel outline
+        console.print("[bold cyan]Generating novel outline...[/bold cyan]")
+        chapter_outlines, chapter_count = generator.generate_novel_outline(writer_profile)
+
+        if chapter_count == 0 or not chapter_outlines:
+            console.print("[bold red]Failed to generate a proper novel outline.[/bold red]")
+            return
+
+        console.print(f"[bold green]✓[/bold green] Novel outline with {chapter_count} chapters generated")
+
+        # Generate characters if needed
+        characters = []
+        if should_generate_characters(novel_info["genre"]):
+            console.print("[bold cyan]Generating characters...[/bold cyan]")
+            characters = generator.generate_characters()
+            console.print(f"[bold green]✓[/bold green] {len(characters)} characters generated")
+        else:
+            console.print(f"[bold yellow]Skipping character generation (not needed for {novel_info['genre']})")
+
+        # Continue with full chapter generation process
+        console.print("\n[bold cyan]Generating and enhancing chapters...[/bold cyan]")
+        chapters = []
+
+        # Start the generation timer
+        start_time = datetime.datetime.now()
+
+        # Create a dictionary to store word counts
+        chapter_word_counts = {}
+
+        # Generate chapters with progress display
+        from rich.live import Live
+        from rich.table import Table
+
+        def generate_chapter_display():
+            current_time = datetime.datetime.now()
+            elapsed = current_time - start_time
+            elapsed_str = str(elapsed).split('.')[0]
+
+            table = Table(title=f"Chapter Generation Progress - {elapsed_str}")
+            table.add_column("Chapter", style="cyan", width=8)
+            table.add_column("Title", style="green", width=30)
+            table.add_column("Status", style="yellow", width=12)
+            table.add_column("Words", style="magenta", width=8)
+
+            for i in range(1, chapter_count + 1):
+                if i <= len(chapters):
+                    chapter = chapters[i-1]
+                    title = chapter.get("title", "Untitled")[:27] + "..." if len(chapter.get("title", "")) > 30 else chapter.get("title", "Untitled")
+                    status = "Complete"
+                    words = str(chapter_word_counts.get(i, 0))
+                elif i == len(chapters) + 1:
+                    title = chapter_outlines[i-1].get("title", "Generating...")[:27] + "..." if len(chapter_outlines[i-1].get("title", "")) > 30 else chapter_outlines[i-1].get("title", "Generating...")
+                    status = "Writing..."
+                    words = "-"
+                else:
+                    title = chapter_outlines[i-1].get("title", "Pending")[:27] + "..." if len(chapter_outlines[i-1].get("title", "")) > 30 else chapter_outlines[i-1].get("title", "Pending")
+                    status = "Pending"
+                    words = "-"
+
+                table.add_row(f"Ch {i}", title, status, words)
+
+            return table
+
+        # Generate chapters with live progress display
+        with Live(generate_chapter_display(), refresh_per_second=1) as live:
+            for i, chapter_outline in enumerate(chapter_outlines, 1):
+                try:
+                    live.update(generate_chapter_display())
+
+                    chapter = generator.generate_chapter(
+                        chapter_outline=chapter_outline,
+                        chapter_number=i,
+                        writer_profile=writer_profile,
+                        characters=characters
+                    )
+
+                    if chapter:
+                        chapters.append(chapter)
+                        word_count = len(chapter.get("content", "").split())
+                        chapter_word_counts[i] = word_count
+                        log_info(f"Chapter {i} generated successfully",
+                                chapter_number=i,
+                                word_count=word_count,
+                                title=chapter.get("title", "Untitled"))
+                    else:
+                        log_error(f"Failed to generate chapter {i}")
+                        console.print(f"[bold red]Failed to generate chapter {i}[/bold red]")
+                        break
+
+                    live.update(generate_chapter_display())
+
+                except Exception as e:
+                    log_error(f"Error generating chapter {i}", exception=e, chapter_number=i)
+                    console.print(f"[bold red]Error generating chapter {i}: {e}[/bold red]")
+                    break
+
+        # Check if all chapters were generated
+        if len(chapters) != chapter_count:
+            console.print(f"[bold red]Generation incomplete: {len(chapters)}/{chapter_count} chapters generated[/bold red]")
+            return
+
+        # Calculate total word count
+        total_words = sum(chapter_word_counts.values())
+        console.print(f"\n[bold green]✓[/bold green] All {chapter_count} chapters generated successfully!")
+        console.print(f"[bold cyan]Total word count:[/bold cyan] {total_words:,} words")
+
+        # Format and save the novel
+        console.print("\n[bold cyan]Formatting and saving novel...[/bold cyan]")
+
+        # Create EPUB
+        epub_path = os.path.join(output_dir, f"{novel_info['title']}.epub")
+
+        try:
+            from src.core.epub_formatter import EPUBFormatter
+            formatter = EPUBFormatter()
+
+            formatter.create_epub(
+                title=novel_info["title"],
+                author=novel_info["author"],
+                chapters=chapters,
+                output_path=epub_path,
+                description=novel_info["description"],
+                genre=novel_info["genre"],
+                target_audience=novel_info["target_audience"]
+            )
+
+            console.print(f"[bold green]✓[/bold green] EPUB created: {epub_path}")
+
+        except Exception as e:
+            log_error("EPUB creation failed", exception=e)
+            console.print(f"[bold red]Failed to create EPUB: {e}[/bold red]")
+
+        # Stop the timer
+        generation_timer.stop()
+
+        # Register content for quality tracking and offer feedback
+        try:
+            from src.quality.content_quality_system import quality_system, ContentMetadata
+            from src.ui.feedback_system import feedback_ui
+            import hashlib
+
+            # Create content ID
+            content_id = hashlib.md5(f"{novel_info['title']}_{datetime.datetime.now().isoformat()}".encode()).hexdigest()[:16]
+
+            # Register content metadata
+            metadata = ContentMetadata(
+                content_id=content_id,
+                title=novel_info["title"],
+                fictional_author=writer_profile.get("name", "Unknown Author"),
+                genre=novel_info["genre"],
+                themes=generation_options.get("themes", []),
+                writing_style=generation_options.get("writing_style", ""),
+                target_length=generation_options.get("target_length", ""),
+                word_count=total_words,
+                generation_time=generation_timer.elapsed_time,
+                enhancement_used=bool("_enhancement" in writer_profile),
+                timestamp=datetime.datetime.now()
+            )
+
+            quality_system.register_content(metadata)
+
+            # Assess content quality
+            console.print("[bold cyan]Analyzing content quality...[/bold cyan]")
+            full_content = "\n\n".join(chapter.get("content", "") for chapter in chapters)
+            quality_assessment = quality_system.assess_content_quality(
+                content_id=content_id,
+                content=full_content,
+                fictional_author=writer_profile.get("name", "Unknown Author"),
+                genre=novel_info["genre"]
+            )
+            console.print("[bold green]✓[/bold green] Quality analysis completed")
+
+            # Offer feedback collection
+            console.print(f"\n[bold cyan]Content Feedback[/bold cyan]")
+            collect_feedback = questionary.confirm(
+                "Would you like to provide feedback on this generated content?",
+                default=True,
+                style=custom_style
+            ).ask()
+
+            if collect_feedback:
+                feedback_ui.collect_content_feedback(
+                    content_id=content_id,
+                    title=novel_info["title"],
+                    fictional_author=writer_profile.get("name", "Unknown Author"),
+                    genre=novel_info["genre"]
+                )
+            else:
+                # Offer quick rating as alternative
+                quick_rating = questionary.confirm(
+                    "Would you like to give a quick 1-5 star rating?",
+                    default=True,
+                    style=custom_style
+                ).ask()
+
+                if quick_rating:
+                    feedback_ui.quick_rating(content_id, novel_info["title"])
+
+        except Exception as e:
+            console.print(f"[yellow]Note: Quality tracking unavailable: {e}[/yellow]")
+
+        # Display completion message
+        abs_path = os.path.abspath(epub_path)
+        console.print(f"\n[bold green]Advanced generation mode '{mode}' completed successfully![/bold green]")
+        console.print(f"[bold green]✓ Novel saved to:[/bold green] [bold cyan]{abs_path}[/bold cyan]")
+        console.print(f"[bold green]✓ Total generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
+        console.print(f"[bold green]✓ Total word count:[/bold green] [bold cyan]{total_words:,} words[/bold cyan]")
+
+        log_info("Advanced generation completed successfully",
+                mode=mode,
+                title=novel_info["title"],
+                total_words=total_words,
+                generation_time=generation_timer.elapsed_time)
+
+    except Exception as e:
+        log_error("Advanced generation failed", exception=e, mode=advanced_options.get("mode"))
+        console.print(f"[bold red]Advanced generation failed: {e}[/bold red]")
+        raise
+    finally:
+        try:
+            close_logger()
+        except:
+            pass
 
 def auto_generate_series() -> None:
     """
@@ -318,13 +613,37 @@ def main() -> None:
             console.print("[bold yellow]Novel generation cancelled.[/bold yellow]")
             return
 
-        # Check API connection before starting
-        console.print("[bold cyan]Checking API connection...[/bold cyan]")
+        # Check API connection and network status before starting
+        console.print("[bold cyan]Checking API connection and network status...[/bold cyan]")
+
+        # Initialize network resilience system
+        try:
+            from src.utils.network_resilience import get_network_manager
+            network_manager = get_network_manager()
+
+            # Force a connectivity check
+            is_connected = network_manager.force_connectivity_check()
+            if not is_connected:
+                console.print("[bold yellow]⚠️ Network connectivity issues detected[/bold yellow]")
+                console.print("[yellow]The system will use enhanced retry logic and queue failed requests[/yellow]")
+            else:
+                console.print("[bold green]✅ Network connection is stable[/bold green]")
+        except Exception as e:
+            console.print(f"[yellow]Warning: Could not initialize network resilience: {e}[/yellow]")
+
         api_status = generator.gemini.check_api_connection(check_all_keys=True)
 
         if not api_status["success"]:
             console.print("[bold red]Error: Unable to connect to the Gemini API.[/bold red]")
-            console.print("[yellow]Please check your internet connection and API keys before trying again.[/yellow]")
+            console.print("[yellow]This could be due to network issues or API key problems.[/yellow]")
+            console.print("[yellow]The system will automatically retry when network connectivity improves.[/yellow]")
+
+            # Show network troubleshooting tips
+            console.print("\n[bold cyan]💡 Troubleshooting Tips:[/bold cyan]")
+            console.print("• Check your internet connection")
+            console.print("• Verify your API keys are correct")
+            console.print("• Try moving closer to your WiFi router")
+            console.print("• Wait a few minutes and try again")
             return
 
         # Display API key information
@@ -341,16 +660,53 @@ def main() -> None:
         console.print("\n[bold cyan]Generation started![/bold cyan]")
         console.print(f"[dim]Started: {generation_timer.get_start_datetime()}[/dim]", justify="right")
 
-        # Generate writer profile
-        log_info("Starting writer profile generation", genre=novel_info["genre"])
-        console.print("[bold cyan]Generating writer profile...[/bold cyan]")
-        try:
-            writer_profile = generator.generate_writer_profile()
-            log_info("Writer profile generated successfully", profile_length=len(writer_profile) if writer_profile else 0)
-            console.print("[bold green]✓[/bold green] Writer profile generated successfully")
-        except Exception as e:
-            log_error("Failed to generate writer profile", exception=e)
-            raise
+        # Automatic fictional author selection and enhancement
+        log_info("Starting automatic fictional author selection", genre=novel_info["genre"])
+        console.print("[bold cyan]Automatically selecting fictional author...[/bold cyan]")
+
+        # Initialize writer profile manager for automatic selection
+        from src.utils.writer_profile_manager import WriterProfileManager
+        profile_manager = WriterProfileManager()
+
+        # Get generation options for enhancement
+        themes = generation_options.get('themes', []) if generation_options else []
+        writing_style = generation_options.get('writing_style') if generation_options else None
+        target_length = generation_options.get('target_length') if generation_options else None
+
+        # Automatically select and enhance fictional author profile
+        writer_profile = profile_manager.get_auto_selected_profile_for_book(
+            genre=novel_info["genre"],
+            themes=themes,
+            writing_style=writing_style,
+            target_length=target_length
+        )
+
+        if writer_profile:
+            author_name = writer_profile.get("name", "Unknown Author")
+            console.print(f"[bold green]✓[/bold green] Selected fictional author: [bold cyan]{author_name}[/bold cyan]")
+
+            # Update the novel_info with the selected fictional author
+            novel_info["author"] = author_name
+
+            # Check if profile was enhanced
+            if "_enhancement" in writer_profile:
+                console.print("[bold green]Profile enhanced with AI for this specific book")
+
+            # Log the automatic selection
+            log_info("Fictional author automatically selected",
+                    author=author_name,
+                    genre=novel_info["genre"],
+                    enhanced=bool("_enhancement" in writer_profile))
+        else:
+            # Fallback to traditional generation if no fictional author available
+            console.print("[bold yellow]No fictional author available, generating custom profile...")
+            try:
+                writer_profile = generator.generate_writer_profile()
+                log_info("Custom writer profile generated as fallback", profile_length=len(writer_profile) if writer_profile else 0)
+                console.print("[bold green]✓[/bold green] Custom writer profile generated successfully")
+            except Exception as e:
+                log_error("Failed to generate fallback writer profile", exception=e)
+                raise
 
         # Generate novel outline
         log_info("Starting novel outline generation", genre=novel_info["genre"])
@@ -384,7 +740,7 @@ def main() -> None:
             characters = generator.generate_characters()
             console.print(f"[bold green]✓[/bold green] {len(characters)} characters generated successfully")
         else:
-            console.print(f"[bold yellow]⏭️[/bold yellow] Skipping character generation (not needed for {novel_info['genre']})")
+            console.print(f"[bold yellow]Skipping character generation (not needed for {novel_info['genre']})")
             # Create empty character list for non-fiction and special formats
             characters = []
 
@@ -423,7 +779,6 @@ def main() -> None:
         def generate_compact_progress(elapsed_str):
             """Generate a compact progress display for many chapters."""
             from rich.panel import Panel
-            from rich.columns import Columns
             from rich.text import Text
 
             # Calculate statistics
@@ -645,6 +1000,7 @@ def main() -> None:
         novel = {
             "metadata": memory_manager.metadata,
             "writer_profile": writer_profile,
+            "generation_options": generation_options,
             "outline": chapter_outlines,
             "characters": characters,
             "chapters": chapters,
@@ -657,13 +1013,82 @@ def main() -> None:
         # Generate cover with manual selection for single novels
         cover_path = generate_cover(novel, output_dir, auto_mode=False)
 
-        # Format and save as EPUB
-        console.print("[bold cyan]Formatting EPUB...[/bold cyan]")
-        formatter = EpubFormatter(novel)
-        epub_path = formatter.save_epub(output_dir, cover_path)
+        # Format and save as EPUB with writer profile
+        console.print("[bold cyan]Formatting EPUB with front/back matter...[/bold cyan]")
+        formatter = EpubFormatter(novel, writer_profile=writer_profile)
+        epub_path = formatter.save_epub(output_dir, cover_path, writer_profile)
 
         # Stop the timer
         generation_timer.stop()
+
+        # Register content for quality tracking and offer feedback
+        try:
+            from src.quality.content_quality_system import quality_system, ContentMetadata
+            from src.ui.feedback_system import feedback_ui
+            import hashlib
+
+            # Create content ID
+            content_id = hashlib.md5(f"{novel_info['title']}_{datetime.now().isoformat()}".encode()).hexdigest()[:16]
+
+            # Calculate total word count
+            total_word_count = sum(len(chapter.get("content", "").split()) for chapter in chapters)
+
+            # Register content metadata
+            metadata = ContentMetadata(
+                content_id=content_id,
+                title=novel_info["title"],
+                fictional_author=writer_profile.get("name", "Unknown Author"),
+                genre=novel_info["genre"],
+                themes=generation_options.get("themes", []) if generation_options else [],
+                writing_style=generation_options.get("writing_style", "") if generation_options else "",
+                target_length=generation_options.get("target_length", "") if generation_options else "",
+                word_count=total_word_count,
+                generation_time=generation_timer.elapsed_time,
+                enhancement_used=bool("_enhancement" in writer_profile),
+                timestamp=datetime.now()
+            )
+
+            quality_system.register_content(metadata)
+
+            # Assess content quality
+            console.print("[bold cyan]📊 Analyzing content quality...[/bold cyan]")
+            full_content = "\n\n".join(chapter.get("content", "") for chapter in chapters)
+            quality_assessment = quality_system.assess_content_quality(
+                content_id=content_id,
+                content=full_content,
+                fictional_author=writer_profile.get("name", "Unknown Author"),
+                genre=novel_info["genre"]
+            )
+            console.print("[bold green]✓[/bold green] Quality analysis completed")
+
+            # Offer feedback collection
+            console.print(f"\n[bold cyan]📝 Content Feedback[/bold cyan]")
+            collect_feedback = questionary.confirm(
+                "Would you like to provide feedback on this generated content?",
+                default=True,
+                style=custom_style
+            ).ask()
+
+            if collect_feedback:
+                feedback_ui.collect_content_feedback(
+                    content_id=content_id,
+                    title=novel_info["title"],
+                    fictional_author=writer_profile.get("name", "Unknown Author"),
+                    genre=novel_info["genre"]
+                )
+            else:
+                # Offer quick rating as alternative
+                quick_rating = questionary.confirm(
+                    "Would you like to give a quick 1-5 star rating?",
+                    default=True,
+                    style=custom_style
+                ).ask()
+
+                if quick_rating:
+                    feedback_ui.quick_rating(content_id, novel_info["title"])
+
+        except Exception as e:
+            console.print(f"[yellow]Note: Quality tracking unavailable: {e}[/yellow]")
 
         # Display completion message with absolute path
         abs_path = os.path.abspath(epub_path)
@@ -754,7 +1179,13 @@ if __name__ == "__main__":
                 menu_choices.append("Series Management Menu")
             if book_management_menu:
                 menu_choices.append("Book Management Menu")
-            menu_choices.extend(["Generate Single Book (Classic)", "Exit"])
+            menu_choices.extend([
+                "Generate Single Book (Classic)",
+                "Advanced Generation Options",
+                "Content Quality & Feedback",
+                "API Key Management",
+                "Exit"
+            ])
 
             selected_menu = questionary.select(
                 "What would you like to do?",
@@ -776,6 +1207,43 @@ if __name__ == "__main__":
                     except:
                         pass
                     raise
+            elif "Advanced Generation Options" in selected_menu:
+                try:
+                    from src.ui.advanced_generation_options import advanced_options
+                    advanced_result = advanced_options.show_advanced_options_menu()
+
+                    if advanced_result:
+                        # Use the advanced options to generate a book
+                        console.print(f"\n[bold green]Starting Advanced Generation![/bold green]")
+                        try:
+                            main_with_advanced_options(advanced_result)
+                        except Exception as e:
+                            try:
+                                log_critical("Uncaught exception in advanced generation", exception=e)
+                                close_logger()
+                            except:
+                                pass
+                            raise
+                except ImportError:
+                    console.print("[red]Advanced generation options not available[/red]")
+                except Exception as e:
+                    console.print(f"[red]Error accessing advanced options: {e}[/red]")
+            elif selected_menu == "Content Quality & Feedback":
+                try:
+                    from src.ui.feedback_system import feedback_ui
+                    feedback_ui.feedback_menu()
+                except ImportError:
+                    console.print("[red]Feedback system not available[/red]")
+                except Exception as e:
+                    console.print(f"[red]Error accessing feedback system: {e}[/red]")
+            elif selected_menu == "API Key Management":
+                try:
+                    from src.utils.api_key_manager import show_api_key_management_menu
+                    show_api_key_management_menu()
+                except ImportError:
+                    console.print("[red]API Key Management system not available[/red]")
+                except Exception as e:
+                    console.print(f"[red]Error accessing API Key Management: {e}[/red]")
             elif selected_menu == "Exit":
                 console.print("[bold cyan]Thank you for using the Novel Generation System![/bold cyan]")
         else:

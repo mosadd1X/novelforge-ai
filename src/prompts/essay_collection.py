@@ -106,6 +106,62 @@ class EssayCollectionPrompts(SpecialFormatBasePrompts):
 '''
         return base_prompt + essay_collection_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a essaycollection-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        essaycollection_series_additions = """
+
+## EssayCollection Series-Specific Planning Elements
+
+### Artistic Progression for EssayCollection
+- **Format Mastery**: Show increasing sophistication in essaycollection techniques across volumes
+- **Creative Evolution**: Plan how the artistic vision develops throughout the essaycollection series
+- **Thematic Development**: Create themes that deepen and evolve through the essaycollection format
+- **Artistic Cohesion**: Maintain unified artistic vision while allowing creative growth
+- **Format Innovation**: Explore different aspects of essaycollection across the series
+
+### EssayCollection Series Continuity
+- **Style Consistency**: Maintain recognizable artistic voice across essaycollection volumes
+- **Technical Standards**: Maintain quality standards appropriate for essaycollection
+- **Creative Connections**: Create meaningful artistic links between essaycollection volumes
+- **Format Exploration**: Continue exploring the possibilities of essaycollection format
+- **Reader Experience**: Create engaging progression for essaycollection enthusiasts
+
+Create a essaycollection series that showcases artistic development and format mastery across multiple volumes.
+"""
+
+        return base_prompt + essaycollection_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a essaycollection-specific individual volume prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        essaycollection_book_additions = """
+
+## EssayCollection Series Volume Integration
+
+### EssayCollection Artistic Continuity
+- **Style Consistency**: Maintain the artistic voice established in previous essaycollection volumes
+- **Technical Standards**: Maintain quality standards established in the essaycollection series
+- **Creative Evolution**: Show artistic growth from previous essaycollection volumes
+- **Format Mastery**: Build upon essaycollection techniques established in the series
+- **Thematic Connections**: Continue developing themes from earlier essaycollection works
+
+### Volume-Specific EssayCollection Focus
+- **Artistic Objectives**: What specific essaycollection artistic goals will this volume achieve?
+- **Format Innovation**: What new essaycollection techniques or approaches will be introduced?
+- **Creative Development**: How will this volume advance the artistic vision of the series?
+- **Series Integration**: How does this volume connect meaningfully to other essaycollection works in the series?
+- **Artistic Value**: What unique essaycollection artistic value does this volume add to the series?
+
+Ensure this volume demonstrates essaycollection mastery while serving as an integral part of the artistic series.
+"""
+
+        return base_prompt + essaycollection_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return EssayCollectionPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -120,3 +176,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return EssayCollectionPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return EssayCollectionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return EssayCollectionPrompts.get_series_book_prompt(**kwargs)

@@ -105,6 +105,62 @@ class UrbanFantasyPrompts(FictionBasePrompts):
 '''
         return base_prompt + urban_fantasy_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a urbanfantasy-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        urbanfantasy_series_additions = """
+
+## UrbanFantasy Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **UrbanFantasy Conventions**: Ensure each book fulfills urbanfantasy reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to urbanfantasy
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to urbanfantasy
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore urbanfantasy themes with increasing depth and complexity
+
+### UrbanFantasy Series Continuity
+- **Genre Elements**: Maintain consistent urbanfantasy elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy urbanfantasy readers
+- **Series Identity**: Establish a strong series identity that feels authentically urbanfantasy
+- **World Building**: Develop the story world in ways that enhance the urbanfantasy experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the urbanfantasy genre
+
+Create a urbanfantasy series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+
+        return base_prompt + urbanfantasy_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a urbanfantasy-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        urbanfantasy_book_additions = """
+
+## UrbanFantasy Series Book Integration
+
+### UrbanFantasy Continuity for This Book
+- **Genre Consistency**: Maintain established urbanfantasy elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to urbanfantasy
+- **Plot Advancement**: Continue series plot threads while telling a complete urbanfantasy story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill urbanfantasy reader expectations while advancing the series narrative
+
+### Book-Specific UrbanFantasy Focus
+- **Central Conflict**: What urbanfantasy-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new urbanfantasy elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent urbanfantasy while serving the series?
+
+Ensure this book feels like an authentic continuation of the urbanfantasy series while telling a complete, satisfying story.
+"""
+
+        return base_prompt + urbanfantasy_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return UrbanFantasyPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -119,3 +175,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return UrbanFantasyPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return UrbanFantasyPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return UrbanFantasyPrompts.get_series_book_prompt(**kwargs)

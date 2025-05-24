@@ -3,13 +3,16 @@ EPUB formatter for converting novel content to EPUB format.
 """
 import os
 import uuid
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from datetime import datetime
 import markdown2
 from bs4 import BeautifulSoup
 from ebooklib import epub
 
 from src.utils.file_handler import sanitize_filename
+from src.utils.front_matter_generator import FrontMatterGenerator
+from src.utils.back_matter_generator import BackMatterGenerator
+from src.utils.writer_profile_manager import WriterProfileManager
 
 
 class EpubFormatter:
@@ -17,16 +20,37 @@ class EpubFormatter:
     Formatter for converting novel content to EPUB format.
     """
 
-    def __init__(self, novel_data: Dict[str, Any]):
+    def __init__(
+        self,
+        novel_data: Dict[str, Any],
+        writer_profile: Dict[str, Any] = None,
+        include_front_matter: bool = True,
+        include_back_matter: bool = True
+    ):
         """
         Initialize the EPUB formatter.
 
         Args:
             novel_data: Dictionary containing novel data
+            writer_profile: Writer profile information (optional)
+            include_front_matter: Whether to include front matter sections
+            include_back_matter: Whether to include back matter sections
         """
         self.novel_data = novel_data
+        self.writer_profile = writer_profile
+        self.include_front_matter = include_front_matter
+        self.include_back_matter = include_back_matter
         self.book = epub.EpubBook()
         self.chapters = []
+        self.front_matter_sections = []
+        self.back_matter_sections = []
+
+        # Initialize generators
+        if self.include_front_matter:
+            self.front_matter_generator = FrontMatterGenerator(novel_data, writer_profile)
+        if self.include_back_matter:
+            profile_manager = WriterProfileManager()
+            self.back_matter_generator = BackMatterGenerator(novel_data, writer_profile, profile_manager)
 
     def _setup_metadata(self) -> None:
         """Set up the EPUB metadata."""
@@ -139,6 +163,79 @@ class EpubFormatter:
             color: #666;
             margin-top: 2em;
             font-size: 1.1em;
+        }
+
+        /* Front Matter and Back Matter Styles */
+        .title-page {
+            text-align: center;
+            padding-top: 20%;
+        }
+
+        .title-content {
+            margin: 0 auto;
+            max-width: 80%;
+        }
+
+        .book-title {
+            font-size: 3em;
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+
+        .author-name {
+            font-size: 2em;
+            margin-top: 1em;
+            font-weight: normal;
+        }
+
+        .ai-attribution {
+            font-style: italic;
+            margin-top: 2em;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .copyright-page h1,
+        .introduction h1,
+        .about-generation h1,
+        .writer-profile h1,
+        .series-information h1,
+        .genre-recommendations h1,
+        .technical-details h1 {
+            margin-bottom: 2em;
+        }
+
+        .writer-profile h2,
+        .series-information h2,
+        .genre-recommendations h2,
+        .technical-details h2,
+        .about-generation h2 {
+            text-align: left;
+            margin-top: 1.5em;
+            margin-bottom: 0.8em;
+            font-size: 1.3em;
+        }
+
+        .writer-profile ul,
+        .series-information ul,
+        .genre-recommendations ul,
+        .technical-details ul,
+        .about-generation ul,
+        .writer-profile ol,
+        .series-information ol,
+        .genre-recommendations ol,
+        .technical-details ol,
+        .about-generation ol {
+            margin-left: 2em;
+            margin-bottom: 1em;
+        }
+
+        .writer-profile li,
+        .series-information li,
+        .genre-recommendations li,
+        .technical-details li,
+        .about-generation li {
+            margin-bottom: 0.5em;
         }
         """
 
@@ -259,6 +356,88 @@ class EpubFormatter:
 
         return copyright_page
 
+    def _create_front_matter_sections(self) -> List[epub.EpubHtml]:
+        """
+        Create all front matter sections.
+
+        Returns:
+            List of EpubHtml objects for front matter
+        """
+        if not self.include_front_matter:
+            return []
+
+        sections = []
+        front_matter_content = self.front_matter_generator.get_all_front_matter()
+
+        # Create each front matter section
+        for section_name, content in front_matter_content.items():
+            if content:  # Only create if content exists
+                section = epub.EpubHtml(
+                    title=section_name.replace('_', ' ').title(),
+                    file_name=f"{section_name}.xhtml",
+                    lang="en"
+                )
+
+                # Wrap content in proper HTML structure
+                section.content = f"""
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                    <title>{section_name.replace('_', ' ').title()}</title>
+                    <link rel="stylesheet" type="text/css" href="style/style.css" />
+                </head>
+                <body>
+                    {content}
+                </body>
+                </html>
+                """
+
+                self.book.add_item(section)
+                sections.append(section)
+                self.front_matter_sections.append(section)
+
+        return sections
+
+    def _create_back_matter_sections(self) -> List[epub.EpubHtml]:
+        """
+        Create all back matter sections.
+
+        Returns:
+            List of EpubHtml objects for back matter
+        """
+        if not self.include_back_matter:
+            return []
+
+        sections = []
+        back_matter_content = self.back_matter_generator.get_all_back_matter()
+
+        # Create each back matter section
+        for section_name, content in back_matter_content.items():
+            if content:  # Only create if content exists
+                section = epub.EpubHtml(
+                    title=section_name.replace('_', ' ').title(),
+                    file_name=f"{section_name}.xhtml",
+                    lang="en"
+                )
+
+                # Wrap content in proper HTML structure
+                section.content = f"""
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                    <title>{section_name.replace('_', ' ').title()}</title>
+                    <link rel="stylesheet" type="text/css" href="style/style.css" />
+                </head>
+                <body>
+                    {content}
+                </body>
+                </html>
+                """
+
+                self.book.add_item(section)
+                sections.append(section)
+                self.back_matter_sections.append(section)
+
+        return sections
+
     def _create_chapter(self, chapter: Dict[str, Any]) -> epub.EpubHtml:
         """
         Create an EPUB chapter.
@@ -360,25 +539,53 @@ class EpubFormatter:
             # Set cover image
             self.book.set_cover("images/cover.jpg", cover_content)
 
-        # Create title page
-        title_page = self._create_title_page()
+        # Create front matter sections (replaces old title/copyright pages)
+        front_matter_sections = self._create_front_matter_sections()
 
-        # Create copyright page
-        copyright_page = self._create_copyright_page()
+        # Create legacy title and copyright pages if front matter is disabled
+        if not self.include_front_matter:
+            title_page = self._create_title_page()
+            copyright_page = self._create_copyright_page()
+        else:
+            title_page = None
+            copyright_page = None
 
         # Create chapters
         for chapter in self.novel_data["chapters"]:
             self._create_chapter(chapter)
 
+        # Create back matter sections
+        back_matter_sections = self._create_back_matter_sections()
+
         # Create table of contents
-        self.book.toc = [
-            epub.Link("title_page.xhtml", "Title Page", "title_page"),
-            epub.Link("copyright.xhtml", "Copyright", "copyright"),
-            (
-                epub.Section("Chapters"),
-                self.chapters
-            )
-        ]
+        toc_items = []
+
+        # Add front matter to TOC
+        if self.include_front_matter and front_matter_sections:
+            front_matter_toc = []
+            for section in front_matter_sections:
+                section_title = section.title
+                if section_title.lower() == "title page":
+                    continue  # Skip title page in TOC
+                front_matter_toc.append(section)
+
+            if front_matter_toc:
+                toc_items.append((epub.Section("Front Matter"), front_matter_toc))
+        else:
+            # Legacy front matter
+            if title_page:
+                toc_items.append(epub.Link("title_page.xhtml", "Title Page", "title_page"))
+            if copyright_page:
+                toc_items.append(epub.Link("copyright.xhtml", "Copyright", "copyright"))
+
+        # Add chapters
+        toc_items.append((epub.Section("Chapters"), self.chapters))
+
+        # Add back matter to TOC
+        if self.include_back_matter and back_matter_sections:
+            toc_items.append((epub.Section("Additional Information"), back_matter_sections))
+
+        self.book.toc = toc_items
 
         # Add navigation files
         self.book.add_item(epub.EpubNcx())
@@ -393,11 +600,22 @@ class EpubFormatter:
         if hasattr(self, 'cover_page'):
             spine.append(self.cover_page)
 
-        # Add title and copyright pages
-        spine.extend([title_page, copyright_page])
+        # Add front matter sections
+        if self.include_front_matter and front_matter_sections:
+            spine.extend(front_matter_sections)
+        else:
+            # Add legacy title and copyright pages
+            if title_page:
+                spine.append(title_page)
+            if copyright_page:
+                spine.append(copyright_page)
 
         # Add chapters
         spine.extend(self.chapters)
+
+        # Add back matter sections
+        if self.include_back_matter and back_matter_sections:
+            spine.extend(back_matter_sections)
 
         # Set the spine
         self.book.spine = spine
@@ -418,17 +636,27 @@ class EpubFormatter:
 
         return self.book
 
-    def save_epub(self, output_dir: str, cover_path: str = None) -> str:
+    def save_epub(self, output_dir: str, cover_path: str = None, writer_profile: Dict[str, Any] = None) -> str:
         """
         Save the EPUB file.
 
         Args:
             output_dir: Directory to save the file in
             cover_path: Path to cover image (optional)
+            writer_profile: Writer profile for back matter (optional)
 
         Returns:
             Path to the saved file
         """
+        # Update writer profile if provided
+        if writer_profile and not self.writer_profile:
+            self.writer_profile = writer_profile
+            # Reinitialize generators with the profile
+            if self.include_front_matter:
+                self.front_matter_generator = FrontMatterGenerator(self.novel_data, writer_profile)
+            if self.include_back_matter:
+                profile_manager = WriterProfileManager()
+                self.back_matter_generator = BackMatterGenerator(self.novel_data, writer_profile, profile_manager)
         # Create the output directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
 

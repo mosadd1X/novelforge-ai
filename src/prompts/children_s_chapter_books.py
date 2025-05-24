@@ -164,6 +164,63 @@ class ChildrenSChapterBooksPrompts(FictionBasePrompts):
 '''
         return base_prompt + children_s_chapter_books_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a childrenschapterbooks-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        childrenschapterbooks_series_additions = """
+
+## ChildrenSChapterBooks Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **ChildrenSChapterBooks Conventions**: Ensure each book fulfills childrenschapterbooks reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to childrenschapterbooks
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to childrenschapterbooks
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore childrenschapterbooks themes with increasing depth and complexity
+
+### ChildrenSChapterBooks Series Continuity
+- **Genre Elements**: Maintain consistent childrenschapterbooks elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy childrenschapterbooks readers
+- **Series Identity**: Establish a strong series identity that feels authentically childrenschapterbooks
+- **World Building**: Develop the story world in ways that enhance the childrenschapterbooks experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the childrenschapterbooks genre
+
+Create a childrenschapterbooks series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+        
+        return base_prompt + childrenschapterbooks_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a childrenschapterbooks-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        childrenschapterbooks_book_additions = """
+
+## ChildrenSChapterBooks Series Book Integration
+
+### ChildrenSChapterBooks Continuity for This Book
+- **Genre Consistency**: Maintain established childrenschapterbooks elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to childrenschapterbooks
+- **Plot Advancement**: Continue series plot threads while telling a complete childrenschapterbooks story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill childrenschapterbooks reader expectations while advancing the series narrative
+
+### Book-Specific ChildrenSChapterBooks Focus
+- **Central Conflict**: What childrenschapterbooks-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new childrenschapterbooks elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent childrenschapterbooks while serving the series?
+
+Ensure this book feels like an authentic continuation of the childrenschapterbooks series while telling a complete, satisfying story.
+"""
+        
+        return base_prompt + childrenschapterbooks_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return ChildrenSChapterBooksPrompts.get_writer_profile_prompt(**kwargs)
@@ -179,3 +236,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return ChildrenSChapterBooksPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_series_book_prompt(**kwargs)

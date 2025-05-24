@@ -105,6 +105,62 @@ class YoungAdultPrompts(FictionBasePrompts):
 '''
         return base_prompt + young_adult_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a youngadult-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        youngadult_series_additions = """
+
+## YoungAdult Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **YoungAdult Conventions**: Ensure each book fulfills youngadult reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to youngadult
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to youngadult
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore youngadult themes with increasing depth and complexity
+
+### YoungAdult Series Continuity
+- **Genre Elements**: Maintain consistent youngadult elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy youngadult readers
+- **Series Identity**: Establish a strong series identity that feels authentically youngadult
+- **World Building**: Develop the story world in ways that enhance the youngadult experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the youngadult genre
+
+Create a youngadult series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+
+        return base_prompt + youngadult_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a youngadult-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        youngadult_book_additions = """
+
+## YoungAdult Series Book Integration
+
+### YoungAdult Continuity for This Book
+- **Genre Consistency**: Maintain established youngadult elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to youngadult
+- **Plot Advancement**: Continue series plot threads while telling a complete youngadult story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill youngadult reader expectations while advancing the series narrative
+
+### Book-Specific YoungAdult Focus
+- **Central Conflict**: What youngadult-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new youngadult elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent youngadult while serving the series?
+
+Ensure this book feels like an authentic continuation of the youngadult series while telling a complete, satisfying story.
+"""
+
+        return base_prompt + youngadult_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return YoungAdultPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -119,3 +175,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return YoungAdultPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return YoungAdultPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return YoungAdultPrompts.get_series_book_prompt(**kwargs)

@@ -3,7 +3,7 @@ Utility functions for planning chapters based on genre.
 """
 import os
 import re
-from typing import Dict, Tuple, List, Optional
+from typing import Dict, Tuple, List
 
 
 def get_genre_guidelines(genre: str) -> Dict[str, any]:

@@ -19,13 +19,8 @@ from rich.logging import RichHandler
 from rich.panel import Panel
 from rich.text import Text
 from rich.table import Table
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
-from rich.live import Live
-from rich.align import Align
-from rich.columns import Columns
-from rich.tree import Tree
+from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
 from rich import box
-from rich.syntax import Syntax
 
 class EbookLogger:
     """Beautiful Rich-enhanced logger for the Ebook Generator with stunning terminal output."""

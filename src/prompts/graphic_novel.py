@@ -109,6 +109,62 @@ class GraphicNovelPrompts(SpecialFormatBasePrompts):
 '''
         return base_prompt + graphic_novel_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a graphicnovel-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        graphicnovel_series_additions = """
+
+## GraphicNovel Series-Specific Planning Elements
+
+### Artistic Progression for GraphicNovel
+- **Format Mastery**: Show increasing sophistication in graphicnovel techniques across volumes
+- **Creative Evolution**: Plan how the artistic vision develops throughout the graphicnovel series
+- **Thematic Development**: Create themes that deepen and evolve through the graphicnovel format
+- **Artistic Cohesion**: Maintain unified artistic vision while allowing creative growth
+- **Format Innovation**: Explore different aspects of graphicnovel across the series
+
+### GraphicNovel Series Continuity
+- **Style Consistency**: Maintain recognizable artistic voice across graphicnovel volumes
+- **Technical Standards**: Maintain quality standards appropriate for graphicnovel
+- **Creative Connections**: Create meaningful artistic links between graphicnovel volumes
+- **Format Exploration**: Continue exploring the possibilities of graphicnovel format
+- **Reader Experience**: Create engaging progression for graphicnovel enthusiasts
+
+Create a graphicnovel series that showcases artistic development and format mastery across multiple volumes.
+"""
+
+        return base_prompt + graphicnovel_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a graphicnovel-specific individual volume prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        graphicnovel_book_additions = """
+
+## GraphicNovel Series Volume Integration
+
+### GraphicNovel Artistic Continuity
+- **Style Consistency**: Maintain the artistic voice established in previous graphicnovel volumes
+- **Technical Standards**: Maintain quality standards established in the graphicnovel series
+- **Creative Evolution**: Show artistic growth from previous graphicnovel volumes
+- **Format Mastery**: Build upon graphicnovel techniques established in the series
+- **Thematic Connections**: Continue developing themes from earlier graphicnovel works
+
+### Volume-Specific GraphicNovel Focus
+- **Artistic Objectives**: What specific graphicnovel artistic goals will this volume achieve?
+- **Format Innovation**: What new graphicnovel techniques or approaches will be introduced?
+- **Creative Development**: How will this volume advance the artistic vision of the series?
+- **Series Integration**: How does this volume connect meaningfully to other graphicnovel works in the series?
+- **Artistic Value**: What unique graphicnovel artistic value does this volume add to the series?
+
+Ensure this volume demonstrates graphicnovel mastery while serving as an integral part of the artistic series.
+"""
+
+        return base_prompt + graphicnovel_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return GraphicNovelPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -123,3 +179,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return GraphicNovelPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return GraphicNovelPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return GraphicNovelPrompts.get_series_book_prompt(**kwargs)

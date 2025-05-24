@@ -6,16 +6,16 @@ import json
 import subprocess
 from typing import List, Dict, Any, Optional
 from datetime import datetime
-from rich.console import Console
 from rich.table import Table
 from rich import box
 import questionary
 
 # Local imports
 from src.core.novel_generator import NovelGenerator
+from src.core.ideas_manager import IdeasManager
 from src.formatters.epub_formatter import EpubFormatter
-from src.utils.file_handler import create_output_directory, save_novel_json, sanitize_filename, load_novel_json
-from src.utils.genre_defaults import get_all_genres
+from src.utils.file_handler import create_output_directory, save_novel_json, sanitize_filename
+from src.utils.genre_defaults import get_genre_defaults
 from src.ui.terminal_ui import (
     clear_screen,
     display_title,
@@ -26,7 +26,7 @@ from src.ui.terminal_ui import (
     custom_style,
     console
 )
-from src.core.gemini_client import GeminiClient
+from src.core.resilient_gemini_client import ResilientGeminiClient
 
 def get_existing_books() -> List[Dict[str, Any]]:
     """
@@ -248,10 +248,39 @@ def create_new_book() -> Optional[Dict[str, Any]]:
         generation_timer.start()
         console.print("\n[bold cyan]Generation started![/bold cyan]")
 
-        # Generate the novel (using the same process as main())
-        console.print("[bold cyan]Generating writer profile...[/bold cyan]")
-        writer_profile = generator.generate_writer_profile()
-        console.print("[bold green]✓[/bold green] Writer profile generated")
+        # Generate the novel using automatic fictional author selection
+        console.print("[bold cyan]🎭 Automatically selecting fictional author...[/bold cyan]")
+
+        # Initialize writer profile manager for automatic selection
+        from src.utils.writer_profile_manager import WriterProfileManager
+        profile_manager = WriterProfileManager()
+
+        # Get generation options for enhancement
+        generation_options = get_genre_defaults(book_info["genre"])
+        themes = generation_options.get('themes', []) if generation_options else []
+        writing_style = generation_options.get('writing_style') if generation_options else None
+        target_length = generation_options.get('target_length') if generation_options else None
+
+        # Automatically select and enhance fictional author profile
+        writer_profile = profile_manager.get_auto_selected_profile_for_book(
+            genre=book_info["genre"],
+            themes=themes,
+            writing_style=writing_style,
+            target_length=target_length
+        )
+
+        if writer_profile:
+            author_name = writer_profile.get("name", "Unknown Author")
+            console.print(f"[bold green]✓[/bold green] Selected fictional author: [bold cyan]{author_name}[/bold cyan]")
+
+            # Check if profile was enhanced
+            if "_enhancement" in writer_profile:
+                console.print("[bold green]✨[/bold green] Profile enhanced with AI for this specific book")
+        else:
+            # Fallback to traditional generation
+            console.print("[bold yellow]⚠️[/bold yellow] No fictional author available, generating custom profile...")
+            writer_profile = generator.generate_writer_profile()
+            console.print("[bold green]✓[/bold green] Custom writer profile generated")
 
         console.print("[bold cyan]Generating novel outline...[/bold cyan]")
         chapter_outlines, chapter_count = generator.generate_novel_outline(writer_profile)
@@ -307,6 +336,211 @@ def create_new_book() -> Optional[Dict[str, Any]]:
         console.print(f"[bold red]Error during generation: {str(e)}[/bold red]")
         return None
 
+def create_book_from_idea() -> Optional[Dict[str, Any]]:
+    """
+    Create a new book from a pre-defined idea.
+
+    Returns:
+        Book information dictionary or None if cancelled
+    """
+    clear_screen()
+    display_title()
+
+    console.print("[bold cyan]Import Book from Ideas[/bold cyan]\n")
+
+    # Initialize ideas manager
+    ideas_manager = IdeasManager()
+
+    # Select a book idea
+    selected_idea = ideas_manager.select_book_idea()
+    if not selected_idea:
+        return None
+
+    # Display the selected idea
+    console.print()
+    ideas_manager.display_selected_book_idea(selected_idea)
+
+    # Confirm the selection
+    confirm = questionary.confirm(
+        "Would you like to create a book using this idea?",
+        default=True,
+        style=custom_style
+    ).ask()
+
+    if not confirm:
+        return None
+
+    # Get additional information from user
+    console.print("\n[bold cyan]Additional Book Information[/bold cyan]")
+    console.print("[dim]Note: A fictional author will be automatically selected based on the genre.[/dim]")
+
+    # Get publisher/creator name (not the fictional author)
+    author = questionary.text(
+        "Publisher/Creator name (for metadata):",
+        default="AI Generated",
+        style=custom_style
+    ).ask()
+
+    if not author:
+        return None
+
+    # Get target audience
+    target_audience = questionary.select(
+        "Target audience:",
+        choices=["Adult", "Young Adult", "Middle Grade", "Children"],
+        default="Adult",
+        style=custom_style
+    ).ask()
+
+    if not target_audience:
+        return None
+
+    # Allow user to modify the title if desired
+    original_title = selected_idea.get('title', 'Untitled')
+    title = questionary.text(
+        "Book title:",
+        default=original_title,
+        style=custom_style
+    ).ask()
+
+    if not title:
+        return None
+
+    # Allow user to modify the description if desired
+    original_description = selected_idea.get('description', '')
+    description = questionary.text(
+        "Book description:",
+        default=original_description,
+        style=custom_style
+    ).ask()
+
+    if not description:
+        return None
+
+    # Convert genre format
+    genre = selected_idea.get('genre', 'literary_fiction')
+    genre_display = genre.replace('_', ' ').title()
+
+    # Create novel info dictionary (fictional author will be auto-selected)
+    novel_info = {
+        "title": title,
+        "author": author,  # This is the publisher/creator, not the fictional author
+        "description": description,
+        "genre": genre_display,
+        "target_audience": target_audience
+    }
+
+    # Create output directory
+    output_dir = create_output_directory(novel_info["title"])
+    output_dir = output_dir.replace('\\', '/')
+
+    # Initialize novel generator
+    generator = NovelGenerator()
+    memory_manager = generator.initialize_novel(
+        title=novel_info["title"],
+        author=novel_info["author"],
+        description=novel_info["description"],
+        genre=novel_info["genre"],
+        target_audience=novel_info["target_audience"],
+        output_dir=output_dir
+    )
+
+    try:
+        # Start generation timer
+        generation_timer.start()
+        console.print("\n[bold cyan]Generation started![/bold cyan]")
+        console.print(f"[bold green]📖 Using idea:[/bold green] {selected_idea.get('title', 'Unknown')}")
+
+        # Generate the novel using automatic fictional author selection
+        console.print("[bold cyan]🎭 Automatically selecting fictional author...[/bold cyan]")
+
+        # Initialize writer profile manager for automatic selection
+        from src.utils.writer_profile_manager import WriterProfileManager
+        profile_manager = WriterProfileManager()
+
+        # Get generation options for enhancement
+        generation_options = get_genre_defaults(novel_info["genre"])
+        themes = generation_options.get('themes', []) if generation_options else []
+        writing_style = generation_options.get('writing_style') if generation_options else None
+        target_length = generation_options.get('target_length') if generation_options else None
+
+        # Automatically select and enhance fictional author profile
+        writer_profile = profile_manager.get_auto_selected_profile_for_book(
+            genre=novel_info["genre"],
+            themes=themes,
+            writing_style=writing_style,
+            target_length=target_length
+        )
+
+        if writer_profile:
+            author_name = writer_profile.get("name", "Unknown Author")
+            console.print(f"[bold green]✓[/bold green] Selected fictional author: [bold cyan]{author_name}[/bold cyan]")
+
+            # Check if profile was enhanced
+            if "_enhancement" in writer_profile:
+                console.print("[bold green]✨[/bold green] Profile enhanced with AI for this specific book")
+        else:
+            # Fallback to traditional generation
+            console.print("[bold yellow]⚠️[/bold yellow] No fictional author available, generating custom profile...")
+            writer_profile = generator.generate_writer_profile()
+            console.print("[bold green]✓[/bold green] Custom writer profile generated")
+
+        console.print("[bold cyan]Generating novel outline...[/bold cyan]")
+        chapter_outlines, chapter_count = generator.generate_novel_outline(writer_profile)
+        console.print(f"[bold green]✓[/bold green] Novel outline generated ({chapter_count} chapters)")
+
+        console.print("[bold cyan]Generating characters...[/bold cyan]")
+        characters = generator.generate_characters()
+        console.print(f"[bold green]✓[/bold green] Characters generated ({len(characters)} characters)")
+
+        # Generate chapters
+        chapters = generator.generate_complete_novel()
+        console.print(f"[bold green]✓[/bold green] All chapters generated")
+
+        # Compile novel data
+        novel = memory_manager.compile_novel_data()
+
+        # Save novel as JSON
+        save_novel_json(novel, output_dir)
+
+        # Generate cover
+        cover_path = generate_cover(novel, output_dir, auto_mode=False)
+
+        # Format and save as EPUB
+        console.print("[bold cyan]Formatting EPUB...[/bold cyan]")
+        formatter = EpubFormatter(novel)
+        epub_path = formatter.save_epub(output_dir, cover_path)
+
+        # Stop timer
+        generation_timer.stop()
+
+        # Display completion
+        console.print("\n[bold green]✓ Book generation complete![/bold green]")
+        console.print(f"[bold green]✓ Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
+        console.print(f"[bold green]✓ Book saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
+        console.print(f"[bold green]✓ Based on idea:[/bold green] [bold cyan]{selected_idea.get('title', 'Unknown')}[/bold cyan]")
+
+        # Create book info for return
+        book_info = {
+            "title": novel_info["title"],
+            "author": novel_info["author"],
+            "genre": novel_info["genre"],
+            "target_audience": novel_info["target_audience"],
+            "description": novel_info["description"],
+            "created_at": datetime.now().isoformat(),
+            "word_count": novel["metadata"].get("word_count", 0),
+            "chapter_count": len(novel.get("chapters", [])),
+            "directory": output_dir,
+            "json_path": os.path.join(output_dir, "novel_data.json"),
+            "source_idea": selected_idea  # Store the original idea for reference
+        }
+
+        return book_info
+
+    except Exception as e:
+        console.print(f"[bold red]Error during generation: {str(e)}[/bold red]")
+        return None
+
 def generate_book_cover(book_info: Dict[str, Any]) -> None:
     """
     Generate a new cover for an existing book.
@@ -339,6 +573,23 @@ def generate_book_cover(book_info: Dict[str, Any]) -> None:
 
     except Exception as e:
         console.print(f"[bold red]Error generating cover: {str(e)}[/bold red]")
+
+def manage_cover_images(book_info: Dict[str, Any]) -> None:
+    """
+    Manage cover images for a book.
+
+    Args:
+        book_info: Book information dictionary
+    """
+    try:
+        from src.utils.cover_image_manager import CoverImageManager
+
+        cover_manager = CoverImageManager()
+        cover_manager.manage_book_cover_images(book_info)
+
+    except Exception as e:
+        console.print(f"[bold red]Error managing cover images: {str(e)}[/bold red]")
+        input("\nPress Enter to continue...")
 
 def export_book_formats(book_info: Dict[str, Any]) -> None:
     """
@@ -457,7 +708,7 @@ def check_api_key_status() -> None:
     """Check and display API key status."""
     try:
         # Initialize the Gemini client
-        gemini_client = GeminiClient()
+        gemini_client = ResilientGeminiClient()
 
         # Display API key status
         from src.ui.terminal_ui import display_api_key_status
@@ -484,6 +735,7 @@ def book_options_menu(book_info: Dict[str, Any]) -> None:
         # Book options
         choices = [
             "Generate New Cover",
+            "Manage Cover Images",
             "Export to Different Formats",
             "View Book Files",
             "API Key Status",
@@ -499,6 +751,9 @@ def book_options_menu(book_info: Dict[str, Any]) -> None:
         if selected == "Generate New Cover":
             generate_book_cover(book_info)
             input("\nPress Enter to continue...")
+
+        elif selected == "Manage Cover Images":
+            manage_cover_images(book_info)
 
         elif selected == "Export to Different Formats":
             export_book_formats(book_info)
@@ -775,6 +1030,7 @@ def book_management_menu() -> None:
         # Main menu options
         choices = [
             "Create New Book",
+            "Import Book from Ideas",
             "Work with Existing Books",
             "Browse Book Library",
             "Exit"
@@ -788,6 +1044,19 @@ def book_management_menu() -> None:
 
         if selected == "Create New Book":
             book_info = create_new_book()
+            if book_info:
+                # Ask if user wants to do anything else with the new book
+                post_creation = questionary.confirm(
+                    "Would you like to perform additional actions on this book?",
+                    default=False,
+                    style=custom_style
+                ).ask()
+
+                if post_creation:
+                    book_options_menu(book_info)
+
+        elif selected == "Import Book from Ideas":
+            book_info = create_book_from_idea()
             if book_info:
                 # Ask if user wants to do anything else with the new book
                 post_creation = questionary.confirm(

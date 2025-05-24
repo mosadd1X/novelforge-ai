@@ -3,7 +3,7 @@ Series manager for maintaining context and continuity across multiple books in a
 """
 import json
 import os
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any, Optional
 from datetime import datetime
 from src.utils.file_handler import sanitize_filename
 

@@ -105,6 +105,63 @@ class BiographyPrompts(NonFictionBasePrompts):
 '''
         return base_prompt + biography_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a biography-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        biography_series_additions = """
+
+## Biography Series-Specific Planning Elements
+
+### Educational Progression for Biography
+- **Knowledge Building**: Structure learning progression appropriate for biography topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of biography subjects
+- **Practical Applications**: Include actionable insights specific to biography throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for biography authority
+- **Reader Value**: Ensure each book provides significant biography value while building series knowledge
+
+### Biography Series Continuity
+- **Subject Consistency**: Maintain consistent approach to biography topics across books
+- **Authority Building**: Establish and maintain credibility in biography throughout the series
+- **Information Architecture**: Structure information flow appropriate for biography learning
+- **Cross-References**: Create meaningful connections between biography concepts across books
+- **Updated Knowledge**: Plan for incorporating new biography research and developments
+
+Create a biography series that provides comprehensive education with authoritative, well-researched content.
+"""
+        
+        return base_prompt + biography_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a biography-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        biography_book_additions = """
+
+## Biography Series Book Integration
+
+### Biography Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon biography concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous biography books when relevant
+- **Knowledge Progression**: Advance reader understanding of biography topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the biography series
+
+### Book-Specific Biography Focus
+- **Educational Objectives**: What specific biography knowledge will readers gain from this book?
+- **Practical Applications**: What actionable biography insights will be provided?
+- **Research Integration**: How will new biography research be incorporated?
+- **Series Advancement**: How does this book advance the overall biography education series?
+- **Reader Value**: What unique biography value does this book add to the series?
+
+Ensure this book provides comprehensive biography education while serving as an integral part of the learning series.
+"""
+        
+        return base_prompt + biography_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return BiographyPrompts.get_writer_profile_prompt(**kwargs)
@@ -120,3 +177,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return BiographyPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return BiographyPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return BiographyPrompts.get_series_book_prompt(**kwargs)

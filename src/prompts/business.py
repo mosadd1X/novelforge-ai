@@ -104,6 +104,63 @@ class BusinessPrompts(NonFictionBasePrompts):
 '''
         return base_prompt + business_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a business-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        business_series_additions = """
+
+## Business Series-Specific Planning Elements
+
+### Educational Progression for Business
+- **Knowledge Building**: Structure learning progression appropriate for business topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of business subjects
+- **Practical Applications**: Include actionable insights specific to business throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for business authority
+- **Reader Value**: Ensure each book provides significant business value while building series knowledge
+
+### Business Series Continuity
+- **Subject Consistency**: Maintain consistent approach to business topics across books
+- **Authority Building**: Establish and maintain credibility in business throughout the series
+- **Information Architecture**: Structure information flow appropriate for business learning
+- **Cross-References**: Create meaningful connections between business concepts across books
+- **Updated Knowledge**: Plan for incorporating new business research and developments
+
+Create a business series that provides comprehensive education with authoritative, well-researched content.
+"""
+        
+        return base_prompt + business_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a business-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        business_book_additions = """
+
+## Business Series Book Integration
+
+### Business Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon business concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous business books when relevant
+- **Knowledge Progression**: Advance reader understanding of business topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the business series
+
+### Book-Specific Business Focus
+- **Educational Objectives**: What specific business knowledge will readers gain from this book?
+- **Practical Applications**: What actionable business insights will be provided?
+- **Research Integration**: How will new business research be incorporated?
+- **Series Advancement**: How does this book advance the overall business education series?
+- **Reader Value**: What unique business value does this book add to the series?
+
+Ensure this book provides comprehensive business education while serving as an integral part of the learning series.
+"""
+        
+        return base_prompt + business_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return BusinessPrompts.get_writer_profile_prompt(**kwargs)
@@ -119,3 +176,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return BusinessPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return BusinessPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return BusinessPrompts.get_series_book_prompt(**kwargs)

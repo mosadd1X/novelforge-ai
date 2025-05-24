@@ -106,6 +106,62 @@ class NovellaPrompts(SpecialFormatBasePrompts):
 '''
         return base_prompt + novella_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a novella-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        novella_series_additions = """
+
+## Novella Series-Specific Planning Elements
+
+### Artistic Progression for Novella
+- **Format Mastery**: Show increasing sophistication in novella techniques across volumes
+- **Creative Evolution**: Plan how the artistic vision develops throughout the novella series
+- **Thematic Development**: Create themes that deepen and evolve through the novella format
+- **Artistic Cohesion**: Maintain unified artistic vision while allowing creative growth
+- **Format Innovation**: Explore different aspects of novella across the series
+
+### Novella Series Continuity
+- **Style Consistency**: Maintain recognizable artistic voice across novella volumes
+- **Technical Standards**: Maintain quality standards appropriate for novella
+- **Creative Connections**: Create meaningful artistic links between novella volumes
+- **Format Exploration**: Continue exploring the possibilities of novella format
+- **Reader Experience**: Create engaging progression for novella enthusiasts
+
+Create a novella series that showcases artistic development and format mastery across multiple volumes.
+"""
+
+        return base_prompt + novella_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a novella-specific individual volume prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        novella_book_additions = """
+
+## Novella Series Volume Integration
+
+### Novella Artistic Continuity
+- **Style Consistency**: Maintain the artistic voice established in previous novella volumes
+- **Technical Standards**: Maintain quality standards established in the novella series
+- **Creative Evolution**: Show artistic growth from previous novella volumes
+- **Format Mastery**: Build upon novella techniques established in the series
+- **Thematic Connections**: Continue developing themes from earlier novella works
+
+### Volume-Specific Novella Focus
+- **Artistic Objectives**: What specific novella artistic goals will this volume achieve?
+- **Format Innovation**: What new novella techniques or approaches will be introduced?
+- **Creative Development**: How will this volume advance the artistic vision of the series?
+- **Series Integration**: How does this volume connect meaningfully to other novella works in the series?
+- **Artistic Value**: What unique novella artistic value does this volume add to the series?
+
+Ensure this volume demonstrates novella mastery while serving as an integral part of the artistic series.
+"""
+
+        return base_prompt + novella_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return NovellaPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -120,3 +176,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return NovellaPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return NovellaPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return NovellaPrompts.get_series_book_prompt(**kwargs)

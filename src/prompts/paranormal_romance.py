@@ -120,6 +120,63 @@ class ParanormalRomancePrompts(FictionBasePrompts):
 '''
         return base_prompt + paranormal_romance_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a paranormalromance-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        paranormalromance_series_additions = """
+
+## ParanormalRomance Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **ParanormalRomance Conventions**: Ensure each book fulfills paranormalromance reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to paranormalromance
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to paranormalromance
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore paranormalromance themes with increasing depth and complexity
+
+### ParanormalRomance Series Continuity
+- **Genre Elements**: Maintain consistent paranormalromance elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy paranormalromance readers
+- **Series Identity**: Establish a strong series identity that feels authentically paranormalromance
+- **World Building**: Develop the story world in ways that enhance the paranormalromance experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the paranormalromance genre
+
+Create a paranormalromance series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+        
+        return base_prompt + paranormalromance_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a paranormalromance-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        paranormalromance_book_additions = """
+
+## ParanormalRomance Series Book Integration
+
+### ParanormalRomance Continuity for This Book
+- **Genre Consistency**: Maintain established paranormalromance elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to paranormalromance
+- **Plot Advancement**: Continue series plot threads while telling a complete paranormalromance story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill paranormalromance reader expectations while advancing the series narrative
+
+### Book-Specific ParanormalRomance Focus
+- **Central Conflict**: What paranormalromance-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new paranormalromance elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent paranormalromance while serving the series?
+
+Ensure this book feels like an authentic continuation of the paranormalromance series while telling a complete, satisfying story.
+"""
+        
+        return base_prompt + paranormalromance_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return ParanormalRomancePrompts.get_writer_profile_prompt(**kwargs)
@@ -135,3 +192,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return ParanormalRomancePrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return ParanormalRomancePrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return ParanormalRomancePrompts.get_series_book_prompt(**kwargs)

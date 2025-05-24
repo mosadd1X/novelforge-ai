@@ -129,7 +129,57 @@
         ]
       }
     ],
-    "romance": [
+    "contemporary_romance": [
+      {
+        "title": "Unheard",
+        "description": "A deeply emotional contemporary romance series set in modern India, following Arman Hussain — a reserved, self-taught software developer from Assam preparing for JEE — and Ananya Sharma — a spiritual, mute CA aspirant from Uttar Pradesh who communicates through sign language and notes. What begins as a quiet connection on Telegram turns into a complex journey of longing, unrequited love, healing, and silent devotion. Through years of distance, heartbreak, and personal evolution, both learn that not all love needs to be returned to be real.",
+        "book_count": 5,
+        "books": [
+          {
+            "title": "The First Word Was Never Yours",
+            "description": "Arman, a 19-year-old JEE dropper from Guwahati, stumbles upon Ananya in a Telegram group for students. Her calm, poetic presence draws him in. Over months of late-night chats, he opens up more than ever before — about his father's quiet prejudice, his mother's disapproval of business, and his dream of becoming a self-taught coder. Ananya, a first-year CA student from UP, shares little — only her thoughts on Osho, silence, and detachment. Slowly, he falls for her — not for what she says, but for how she makes him feel. After five months, he confesses. She replies: 'But my answer will always be No. Mere andar feelings nhi h tumhare liye 0/.' He doesn't understand why, but he respects it. Yet, he keeps talking to her — just so she isn't alone."
+          },
+          {
+            "title": "I Stayed Just So You Wouldn't Be Alone",
+            "description": "Despite her rejection, Arman continues being part of Ananya's life — silently. They become friends, though she remains emotionally distant. He learns to read between her lines, her pauses, the way she signs things when she forgets herself. He moves to Delhi for college while she stays in UP. They talk daily, yet rarely about love. One day, she shows him her journal — filled with sketches, quotes, and one line: 'I'm afraid if I let someone in, I'll lose myself.' He realizes she isn't rejecting him — she's afraid of attachment. Still, he stays — not asking for anything, just being there. But as he grows closer to her world, he starts questioning whether his love is helping or hurting her."
+          },
+          {
+            "title": "When Silence Spoke Louder Than Love",
+            "description": "Years pass. Arman becomes a successful freelance developer; Ananya finishes her CA and works at a firm in Mumbai. Their conversations have grown rare. When tragedy strikes — Ananya's grandmother passes away — Arman travels to UP to find her. He meets her family, sees her grief, and watches her struggle to express sorrow without words. For the first time, she cries in front of him. He holds her hand — not romantically, but like someone who finally understands that love isn't always touch or kiss. It's showing up when no one else does. She writes in her notebook: 'You were never supposed to stay. But somehow, you always did.'"
+          },
+          {
+            "title": "We Found Ourselves in Each Other",
+            "description": "It's been five years since Arman and Ananya last met in person. He's now running a successful ethical tech startup in Bangalore, building tools for people with speech impairments — inspired by her. She's working abroad, but for the first time, she feels at peace with herself. When her grandmother's house in UP is sold, she returns to clear out old belongings — and finds a box filled with messages from Arman, saved in notebooks, Telegram chats, and even printed emails. On the same trip, they meet again — not as people longing for what could've been, but as friends who helped each other heal. They talk about everything: his father's slow acceptance of his choices, her journey toward self-love, and how silence once protected her — but now, it no longer scares her. She signs something new: 'You taught me that I can let someone stay — without losing myself.' He smiles. No confessions. No promises. Just gratitude. As she boards her flight, he watches her go — not with pain, but with pride. Because the girl who never wanted love taught him how to give it selflessly. And the boy who waited silently taught her that not all love needs to be spoken to be real."
+          },
+          {
+            "title": "Before You Said No",
+            "description": "A prequel told entirely from Ananya's perspective. This intimate, deeply moving story reveals her childhood trauma — the moment she lost her voice after witnessing a painful event, her early fear of closeness, and how she built emotional walls around herself. Through diary entries, sketchbook pages, and flashbacks, readers see how she observed Arman's kindness even when she refused to acknowledge it. She writes: 'I didn't say yes because I was scared to break him. But maybe he broke me in the best way.' The book ends with her reading one of his old messages again — 'I don't need you to love me back. I just want you to know you're not alone.' She closes the notebook. Finally, she believes it."
+          }
+        ]
+      },
+      {
+        "title": "The Quiet Sacrifice",
+        "description": "A haunting, emotionally devastating saga about a love that was never meant to be — but never stopped being. It follows Ayaan Raza, who silently loves Anika Malhotra for over a decade, watching her run from pain, grief, and the idea of being loved. He gives everything — time, dreams, peace — without ever asking for anything in return. This is not a story about happily ever after. It's about loving someone so deeply that you disappear into their shadow.",
+        "book_count": 4,
+        "books": [
+          {
+            "title": "I Loved You in Silence",
+            "description": "In college, Ayaan falls for Anika — a girl whose laughter hides years of grief after her father's death. He writes poems about her, leaves them in books she reads, draws her in margins — all anonymously. One day, she finds out it's him. She doesn't reject him — but she doesn't accept him either. She walks away, afraid to let anyone love her when she can't love herself."
+          },
+          {
+            "title": "I Stayed Just to Be Near You",
+            "description": "Years later, Ayaan tracks down Anika to a remote village in Himachal Pradesh where she works at an orphanage. He moves nearby, becomes a teacher, and starts helping the kids — quietly, invisibly. He fixes the school roof, paints murals, donates books — always avoiding her gaze. When they finally meet again, she asks why he came. He says nothing. He didn't come for her to know. He came just to be near her."
+          },
+          {
+            "title": "I Let You Go Because I Loved You",
+            "description": "Anika disappears again. Years pass. Ayaan becomes a grief counselor, helping children deal with loss. He meets Sia — a rebellious teen mourning her mother. Through her, he begins to heal. But one day, he receives a letter from Anika's mother — Anika is gone. The final chapters show Ayaan visiting the hill where they once sat together. He reads her last letter aloud to the wind, then lets it go — finally letting himself grieve a love that never truly belonged to him."
+          },
+          {
+            "title": "I Was Always Saying Goodbye",
+            "description": "This prequel tells Anika's story — her childhood with her father, his sudden death, and how it broke her. Through diary entries, readers see her inner turmoil — how she noticed Ayaan's love, how it scared her, and how she chose to leave before he could lose her. She never stopped loving him. She just couldn't bear to make him suffer."
+          }
+        ]
+      },
       {
         "title": "Love Letters Series",
         "description": "A contemporary romance series where each book centers around discovered letters that bring couples together.",

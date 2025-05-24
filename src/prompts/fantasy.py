@@ -6,10 +6,10 @@ from .base_prompts import FictionBasePrompts
 
 class FantasyPrompts(FictionBasePrompts):
     """Fantasy-specific prompts for novel generation."""
-    
+
     GENRE_NAME = "Fantasy"
     GENRE_DESCRIPTION = "A genre featuring magical elements, mythical creatures, and imaginary worlds"
-    
+
     GENRE_CHARACTERISTICS = [
         "Rich world-building with detailed magical systems",
         "Mythical creatures and fantastical beings",
@@ -20,7 +20,7 @@ class FantasyPrompts(FictionBasePrompts):
         "Coming-of-age themes and personal growth",
         "Detailed descriptions of magical phenomena"
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "Magic systems with clear rules and limitations",
         "Fantastical creatures (dragons, elves, dwarves, etc.)",
@@ -38,7 +38,7 @@ class FantasyPrompts(FictionBasePrompts):
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         """Generate a fantasy-specific writer profile prompt."""
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         fantasy_additions = """
 
 ## Fantasy-Specific Writing Considerations
@@ -56,14 +56,14 @@ class FantasyPrompts(FictionBasePrompts):
 - Epic conflicts with high stakes and meaningful resolutions
 - Immersive descriptions that transport readers to another world
 """
-        
+
         return base_prompt + fantasy_additions
 
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         """Generate a fantasy-specific outline prompt."""
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         fantasy_additions = """
 
 ## Fantasy-Specific Outline Requirements
@@ -85,14 +85,14 @@ class FantasyPrompts(FictionBasePrompts):
 
 Ensure the outline creates a compelling fantasy adventure with rich world-building and character development.
 """
-        
+
         return base_prompt + fantasy_additions
 
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
         """Generate a fantasy-specific character development prompt."""
         base_prompt = super().get_character_prompt(**kwargs)
-        
+
         fantasy_additions = """
 
 ## Fantasy Character Archetypes and Roles
@@ -124,14 +124,14 @@ Consider giving characters:
 
 Create characters that feel authentic to the fantasy genre while avoiding tired clichés.
 """
-        
+
         return base_prompt + fantasy_additions
 
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         """Generate a fantasy-specific chapter writing prompt."""
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         fantasy_additions = """
 
 ## Fantasy Writing Techniques
@@ -158,8 +158,85 @@ Create characters that feel authentic to the fantasy genre while avoiding tired 
 
 Write with rich, immersive prose that transports readers into a believable magical world.
 """
-        
+
         return base_prompt + fantasy_additions
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a fantasy-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        fantasy_series_additions = """
+
+## Fantasy Series-Specific Planning Elements
+
+### World-Building Across the Series
+- **Expanding Magic System**: Reveal deeper layers of magic and its consequences across books
+- **Geographic Exploration**: Gradually explore different regions, realms, or dimensions
+- **Historical Depth**: Uncover ancient events, prophecies, and their modern implications
+- **Cultural Evolution**: Show how societies change in response to series events
+- **Magical Consequences**: Explore long-term effects of magical events from previous books
+
+### Character Development Across Fantasy Series
+- **Power Progression**: Show characters growing in magical ability and wisdom
+- **Relationship Dynamics**: Develop complex relationships between different fantasy races/cultures
+- **Moral Complexity**: Explore how power and responsibility affect character choices
+- **Legacy Characters**: Introduce descendants, students, or inheritors of previous characters
+- **Cross-Book Character Arcs**: Plan character development that spans multiple books
+
+### Fantasy Series Plot Threads
+- **Ancient Prophecies**: Multi-book prophecies that unfold gradually
+- **Magical Artifacts**: Powerful items whose significance grows across the series
+- **Rising Dark Forces**: Escalating supernatural threats that build across books
+- **Political Intrigue**: Complex political situations that develop over time
+- **World-Changing Events**: Major magical events that reshape the world
+
+### Fantasy Series Themes
+- **Power and Responsibility**: How characters handle increasing magical power
+- **Good vs. Evil**: Evolving understanding of morality and conflict
+- **Sacrifice and Heroism**: What characters are willing to give up for others
+- **Unity vs. Division**: How different peoples come together or fall apart
+- **Tradition vs. Change**: Balancing ancient ways with necessary evolution
+
+Create a fantasy series that builds an epic, immersive world with compelling character arcs and escalating magical conflicts.
+"""
+
+        return base_prompt + fantasy_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a fantasy-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        fantasy_book_additions = """
+
+## Fantasy Series Book Integration
+
+### World Continuity for This Book
+- **Magic System Consistency**: Maintain established magical rules while potentially revealing new aspects
+- **Geographic Accuracy**: Use established locations correctly and introduce new areas logically
+- **Cultural Continuity**: Keep established societies consistent while showing natural evolution
+- **Timeline Accuracy**: Maintain proper chronology and show realistic passage of time
+- **Character Knowledge**: Respect what characters have learned and experienced
+
+### Fantasy-Specific Book Elements
+- **Magical Progression**: Show how characters' magical abilities have developed since previous books
+- **New Magical Elements**: Introduce new spells, creatures, or magical phenomena that fit the established world
+- **Political Developments**: Continue political storylines and show consequences of previous events
+- **Relationship Evolution**: Develop relationships between characters, especially across different fantasy races
+- **World Impact**: Show how events from previous books have affected the broader world
+
+### Book-Specific Fantasy Focus
+- **Central Magical Conflict**: What magical threat or mystery drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Discoveries**: What new aspects of the world, magic, or history will be revealed?
+- **Escalating Stakes**: How do the stakes increase from previous books while remaining believable?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+
+Ensure this book feels like an authentic continuation of the fantasy world while telling a complete, satisfying story.
+"""
+
+        return base_prompt + fantasy_book_additions
 
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
@@ -176,3 +253,9 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return FantasyPrompts.get_enhancement_prompt(**kwargs)
+
+def get_series_plan_prompt(**kwargs) -> str:
+    return FantasyPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return FantasyPrompts.get_series_book_prompt(**kwargs)

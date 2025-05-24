@@ -104,6 +104,63 @@ class HorrorPrompts(FictionBasePrompts):
 '''
         return base_prompt + horror_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a horror-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        horror_series_additions = """
+
+## Horror Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **Horror Conventions**: Ensure each book fulfills horror reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to horror
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to horror
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore horror themes with increasing depth and complexity
+
+### Horror Series Continuity
+- **Genre Elements**: Maintain consistent horror elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy horror readers
+- **Series Identity**: Establish a strong series identity that feels authentically horror
+- **World Building**: Develop the story world in ways that enhance the horror experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the horror genre
+
+Create a horror series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+        
+        return base_prompt + horror_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a horror-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        horror_book_additions = """
+
+## Horror Series Book Integration
+
+### Horror Continuity for This Book
+- **Genre Consistency**: Maintain established horror elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to horror
+- **Plot Advancement**: Continue series plot threads while telling a complete horror story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill horror reader expectations while advancing the series narrative
+
+### Book-Specific Horror Focus
+- **Central Conflict**: What horror-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new horror elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent horror while serving the series?
+
+Ensure this book feels like an authentic continuation of the horror series while telling a complete, satisfying story.
+"""
+        
+        return base_prompt + horror_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return HorrorPrompts.get_writer_profile_prompt(**kwargs)
@@ -119,3 +176,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return HorrorPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return HorrorPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return HorrorPrompts.get_series_book_prompt(**kwargs)

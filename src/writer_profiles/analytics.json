@@ -1,0 +1,192 @@
+{
+  "profile_usage": {},
+  "genre_preferences": {
+    "Literary Fiction": {
+      "recommendation_requests": 39,
+      "profiles_selected": {}
+    },
+    "Test": {
+      "recommendation_requests": 8,
+      "profiles_selected": {}
+    },
+    "Children'S Chapter Books": {
+      "recommendation_requests": 2,
+      "profiles_selected": {}
+    },
+    "Non-Existent Genre": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Commercial Fiction": {
+      "recommendation_requests": 2,
+      "profiles_selected": {}
+    },
+    "Mystery": {
+      "recommendation_requests": 4,
+      "profiles_selected": {}
+    },
+    "Mystery/Thriller": {
+      "recommendation_requests": 2,
+      "profiles_selected": {}
+    },
+    "Thriller": {
+      "recommendation_requests": 2,
+      "profiles_selected": {}
+    },
+    "Romance": {
+      "recommendation_requests": 16,
+      "profiles_selected": {}
+    },
+    "Fantasy": {
+      "recommendation_requests": 4,
+      "profiles_selected": {}
+    },
+    "Epic Fantasy": {
+      "recommendation_requests": 2,
+      "profiles_selected": {}
+    },
+    "Science Fiction": {
+      "recommendation_requests": 4,
+      "profiles_selected": {}
+    },
+    "Historical Fiction": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Horror": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Young Adult": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Middle Grade": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Short Story Collection": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Novella": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Graphic Novel": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Memoir": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Biography": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "History": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Self-Help": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Business": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Popular Science": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Academic": {
+      "recommendation_requests": 4,
+      "profiles_selected": {}
+    },
+    "Travel": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Cookbook": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "How-To": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Essay Collection": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Philosophy": {
+      "recommendation_requests": 4,
+      "profiles_selected": {}
+    },
+    "True Crime": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Poetry Collection": {
+      "recommendation_requests": 14,
+      "profiles_selected": {}
+    },
+    "Creative Non-Fiction": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Speculative Fiction": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Alternate History": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Contemporary Fiction": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Paranormal Romance": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "Urban Fantasy": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "NonExistentGenre": {
+      "recommendation_requests": 3,
+      "profiles_selected": {}
+    },
+    "": {
+      "recommendation_requests": 3,
+      "profiles_selected": {}
+    },
+    "null": {
+      "recommendation_requests": 1,
+      "profiles_selected": {}
+    },
+    "InvalidGenre": {
+      "recommendation_requests": 2,
+      "profiles_selected": {}
+    },
+    "Contemporary Romance": {
+      "recommendation_requests": 9,
+      "profiles_selected": {}
+    }
+  },
+  "creation_stats": {
+    "total_profiles_created": 0,
+    "profiles_by_genre": {},
+    "profiles_by_month": {}
+  },
+  "performance_metrics": {
+    "most_used_profiles": [],
+    "genre_popularity": {},
+    "user_satisfaction": {}
+  },
+  "last_updated": "2025-05-24T15:51:33.737023"
+}

@@ -6,7 +6,7 @@ types of content: Fiction (narrative), Non-Fiction (informational), and
 Special Formats (unique structures).
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 
 class BasePrompts:
     """Base class for all genre-specific prompts."""
@@ -68,14 +68,37 @@ Return the writer profile as a detailed description focusing on the narrative ap
         description = kwargs.get("description", "")
         writer_profile = kwargs.get("writer_profile", "")
         target_length = kwargs.get("target_length", "medium")
+        chapter_count = kwargs.get("chapter_count", 0)
+        target_word_count = kwargs.get("target_word_count", 0)
 
-        # Determine chapter count based on target length
-        chapter_counts = {
-            "short": "8-12",
-            "medium": "15-20",
-            "long": "25-30"
-        }
-        chapter_range = chapter_counts.get(target_length, "15-20")
+        # Use specific chapter count if provided, otherwise use target length ranges
+        if chapter_count and chapter_count > 0:
+            chapter_range = str(chapter_count)  # Use exact count
+        else:
+            # Determine chapter count based on target length
+            chapter_counts = {
+                "short": "8-12",
+                "medium": "15-20",
+                "long": "25-30"
+            }
+            chapter_range = chapter_counts.get(target_length, "15-20")
+
+        # Create word count instruction
+        word_count_instruction = ""
+        if target_word_count and target_word_count > 0:
+            word_count_instruction = f"- Target Word Count: {target_word_count:,} words"
+            word_count_format = f"{target_word_count:,} words"
+        else:
+            word_count_instruction = f"- Target Word Count: Appropriate for {target_length} length"
+            word_count_format = f"appropriate for {target_length} length"
+
+        # Create chapter count instruction
+        if chapter_count and chapter_count > 0:
+            chapter_instruction = f"- Required Chapters: EXACTLY {chapter_count} chapters"
+            format_instruction = f"- recommended_chapter_count: {chapter_count} (MUST be exactly this number)"
+        else:
+            chapter_instruction = f"- Recommended Chapters: {chapter_range}"
+            format_instruction = f"- recommended_chapter_count: Number (within the {chapter_range} range)"
 
         return f"""
 # {cls.GENRE_NAME} Fiction Novel Outline Generation
@@ -88,7 +111,8 @@ Create a detailed narrative outline for a {cls.GENRE_NAME.lower()} novel titled 
 - Genre: {cls.GENRE_NAME}
 - Content Type: Narrative Fiction
 - Target Length: {target_length.title()}
-- Recommended Chapters: {chapter_range}
+{chapter_instruction}
+{word_count_instruction}
 
 ## Writer Profile
 {writer_profile}
@@ -109,8 +133,8 @@ Create a comprehensive narrative outline that includes:
 
 ## Format Requirements
 Return as a JSON object with:
-- recommended_chapter_count: Number (within the {chapter_range} range)
-- target_word_count: Number (appropriate for {target_length} length)
+{format_instruction}
+- target_word_count: Number ({word_count_format})
 - chapters: Array of chapter objects with "title" and "summary" fields
 - key_themes: Array of main themes
 - character_arcs: Object describing main character development
@@ -173,7 +197,26 @@ Create detailed character profiles that include:
 - Dialogue should reflect each character's unique voice and background
 - Characters should fit naturally within {cls.GENRE_NAME.lower()} conventions
 
-Return detailed character descriptions that will bring this {cls.GENRE_NAME.lower()} story to life with memorable, three-dimensional characters.
+## Format Requirements
+Return as a JSON array of character objects. Each character should be a complete JSON object with all the required fields.
+
+Example format:
+[
+    {{
+        "name": "Character Name",
+        "role": "Protagonist",
+        "appearance": "Physical description...",
+        "personality": "Personality traits...",
+        "background": "Character background...",
+        "goals": "Character goals...",
+        "arc": "Character development arc...",
+        "relationships": "Relationships with others...",
+        "strengths": "Character strengths...",
+        "voice": "How they speak..."
+    }}
+]
+
+Return only the JSON array, no additional text or explanation.
 """
 
     @classmethod
@@ -261,6 +304,128 @@ Enhance the chapter by:
 - Add subtext and depth to character interactions
 
 Return the enhanced chapter that exemplifies excellent {cls.GENRE_NAME.lower()} fiction writing while maintaining the original story structure.
+"""
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a series planning prompt for fiction genres."""
+        series_title = kwargs.get("series_title", "Untitled Series")
+        series_description = kwargs.get("series_description", "")
+        planned_books = kwargs.get("planned_books", 3)
+        target_audience = kwargs.get("target_audience", "Adult")
+
+        return f"""
+# Fiction Series Planning for {cls.GENRE_NAME}
+
+Create a comprehensive plan for a {planned_books}-book {cls.GENRE_NAME.lower()} series titled "{series_title}" for {target_audience} audience.
+
+## Series Information
+- Title: {series_title}
+- Description: {series_description}
+- Genre: {cls.GENRE_NAME}
+- Planned Books: {planned_books}
+- Target Audience: {target_audience}
+
+## {cls.GENRE_NAME} Series Characteristics
+{chr(10).join(f"- {char}" for char in cls.GENRE_CHARACTERISTICS)}
+
+## Series Planning Requirements
+
+### Overarching Plot Structure
+1. **Series Arc**: Create a compelling overarching narrative that spans all {planned_books} books
+2. **Individual Book Arcs**: Each book should have a complete story while contributing to the series arc
+3. **Escalating Stakes**: Build tension and stakes progressively across the series
+4. **Satisfying Conclusion**: Plan for a meaningful resolution to the series arc
+
+### Character Development Across Books
+1. **Character Growth**: Show meaningful character development across multiple books
+2. **Relationship Evolution**: Develop relationships that change and deepen over time
+3. **Character Consistency**: Maintain character voice and personality while allowing growth
+4. **New Characters**: Introduce new characters that enhance rather than overshadow existing ones
+
+### World-Building Continuity
+1. **Consistent World Rules**: Maintain consistent magic systems, technology, or world mechanics
+2. **Expanding World**: Gradually reveal new aspects of the world across books
+3. **Cultural Depth**: Develop societies, customs, and histories that feel authentic
+4. **Geographic Consistency**: Maintain consistent geography and locations
+
+### Series-Specific Elements for {cls.GENRE_NAME}
+1. **Genre Conventions**: Ensure each book fulfills {cls.GENRE_NAME.lower()} reader expectations
+2. **Thematic Continuity**: Develop themes that resonate throughout the series
+3. **Tone Consistency**: Maintain appropriate tone and atmosphere across all books
+4. **Reader Engagement**: Create compelling cliffhangers and book-to-book connections
+
+## Output Format
+Provide a detailed series plan with:
+- Series overview and central conflict
+- Book-by-book breakdown with titles, descriptions, and main plot points
+- Character development arcs across the series
+- World-building elements and their progression
+- Key themes and how they develop
+- Series timeline and major events
+
+Create a series plan that will engage {cls.GENRE_NAME.lower()} readers and keep them invested across all {planned_books} books.
+"""
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a prompt for creating individual books within a series context."""
+        book_number = kwargs.get("book_number", 1)
+        book_title = kwargs.get("book_title", "Untitled Book")
+        series_title = kwargs.get("series_title", "Untitled Series")
+        series_context = kwargs.get("series_context", {})
+        previous_books = kwargs.get("previous_books", [])
+
+        return f"""
+# Fiction Series Book Generation for {cls.GENRE_NAME}
+
+Generate Book {book_number}: "{book_title}" in the {cls.GENRE_NAME.lower()} series "{series_title}".
+
+## Series Context
+- Series: {series_title}
+- Current Book: {book_number} - {book_title}
+- Genre: {cls.GENRE_NAME}
+
+## Previous Books Summary
+{chr(10).join(f"- Book {i+1}: {book.get('title', 'Unknown')}" for i, book in enumerate(previous_books))}
+
+## {cls.GENRE_NAME} Series Requirements
+{chr(10).join(f"- {char}" for char in cls.GENRE_CHARACTERISTICS)}
+
+## Series Continuity Requirements
+
+### Character Continuity
+1. **Returning Characters**: Maintain consistency with established character personalities and growth
+2. **Character Relationships**: Continue developing relationships established in previous books
+3. **Character Knowledge**: Respect what characters know and have experienced
+4. **Character Growth**: Show meaningful development from previous books
+
+### Plot Continuity
+1. **Series Arc Progression**: Advance the overarching series plot meaningfully
+2. **Unresolved Threads**: Address or develop plot threads from previous books
+3. **New Conflicts**: Introduce new challenges that fit the series narrative
+4. **Consequences**: Show realistic consequences of events from previous books
+
+### World Continuity
+1. **Established Rules**: Maintain consistency with world-building from previous books
+2. **Geographic Consistency**: Use established locations accurately
+3. **Cultural Elements**: Continue developing established societies and customs
+4. **Timeline Consistency**: Maintain accurate chronology and character ages
+
+### {cls.GENRE_NAME} Series Elements
+1. **Genre Expectations**: Fulfill reader expectations for {cls.GENRE_NAME.lower()} while advancing series
+2. **Escalating Stakes**: Increase tension and stakes appropriate for book {book_number}
+3. **Series Themes**: Continue developing themes established in the series
+4. **Reader Engagement**: Create satisfying book conclusion while advancing series arc
+
+## Book {book_number} Specific Requirements
+1. **Complete Story Arc**: This book should have a satisfying beginning, middle, and end
+2. **Series Integration**: Seamlessly integrate with the overall series narrative
+3. **Character Focus**: Determine which characters should be the focus of this book
+4. **New Elements**: Introduce new characters, locations, or plot elements as appropriate
+5. **Cliffhanger/Connection**: Create compelling connections to the next book (if not the final book)
+
+Generate a detailed plan for Book {book_number} that serves both as a standalone {cls.GENRE_NAME.lower()} novel and as an integral part of the "{series_title}" series.
 """
 
 
@@ -420,7 +585,30 @@ Create detailed profiles for:
 - Case studies should be engaging while remaining informative
 - Sources should be current, credible, and properly attributable
 
-Return detailed subject profiles that will support and enhance this {cls.GENRE_NAME.lower()} book with authoritative, well-researched content.
+## Format Requirements
+Return as a JSON array of subject/expert objects. Each object should contain all the required fields.
+
+Example format:
+[
+    {{
+        "name": "Expert Name",
+        "type": "expert",
+        "credentials": "Expert credentials...",
+        "expertise": "Area of expertise...",
+        "insights": "Key insights...",
+        "role": "How they support the book..."
+    }},
+    {{
+        "name": "Case Study Name",
+        "type": "case_study",
+        "background": "Background context...",
+        "details": "Relevant details...",
+        "lessons": "Lessons learned...",
+        "relevance": "How it supports themes..."
+    }}
+]
+
+Return only the JSON array, no additional text or explanation.
 """
 
     @classmethod
@@ -508,6 +696,130 @@ Enhance the chapter by:
 - Add practical applications and actionable advice where appropriate
 
 Return the enhanced chapter that exemplifies excellent {cls.GENRE_NAME.lower()} non-fiction writing while maintaining accuracy and credibility.
+"""
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a series planning prompt for non-fiction genres."""
+        series_title = kwargs.get("series_title", "Untitled Series")
+        series_description = kwargs.get("series_description", "")
+        planned_books = kwargs.get("planned_books", 3)
+        target_audience = kwargs.get("target_audience", "Adult")
+
+        return f"""
+# Non-Fiction Series Planning for {cls.GENRE_NAME}
+
+Create a comprehensive plan for a {planned_books}-book {cls.GENRE_NAME.lower()} series titled "{series_title}" for {target_audience} audience.
+
+## Series Information
+- Title: {series_title}
+- Description: {series_description}
+- Genre: {cls.GENRE_NAME}
+- Planned Books: {planned_books}
+- Target Audience: {target_audience}
+- Content Type: Informational Non-Fiction
+
+## {cls.GENRE_NAME} Series Characteristics
+{chr(10).join(f"- {char}" for char in cls.GENRE_CHARACTERISTICS)}
+
+## Non-Fiction Series Planning Requirements
+
+### Knowledge Progression Structure
+1. **Learning Pathway**: Create a logical progression of knowledge across all {planned_books} books
+2. **Skill Building**: Each book should build upon concepts from previous books
+3. **Expertise Development**: Guide readers from beginner to advanced understanding
+4. **Practical Application**: Show how knowledge compounds across the series
+
+### Content Continuity and Development
+1. **Topic Evolution**: Develop themes and subjects with increasing depth and complexity
+2. **Reference Integration**: Create cross-references and connections between books
+3. **Consistent Methodology**: Maintain research standards and presentation style
+4. **Updated Information**: Plan for incorporating new research and developments
+
+### Educational Value Across Books
+1. **Comprehensive Coverage**: Ensure the series covers the subject thoroughly
+2. **Avoiding Redundancy**: Minimize repetition while reinforcing key concepts
+3. **Standalone Value**: Each book should provide value independently
+4. **Series Synergy**: Books should be more valuable together than separately
+
+### Series-Specific Elements for {cls.GENRE_NAME}
+1. **Authority Building**: Establish and maintain credibility throughout the series
+2. **Research Depth**: Plan for comprehensive research across all volumes
+3. **Practical Applications**: Include actionable insights in each book
+4. **Reader Engagement**: Maintain interest across informational content
+
+## Output Format
+Provide a detailed series plan with:
+- Series overview and educational objectives
+- Book-by-book breakdown with titles, descriptions, and learning outcomes
+- Knowledge progression map across the series
+- Research requirements and source planning
+- Key concepts and how they develop
+- Practical applications and skill development
+
+Create a series plan that will educate {cls.GENRE_NAME.lower()} readers and provide comprehensive knowledge across all {planned_books} books.
+"""
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a prompt for creating individual non-fiction books within a series context."""
+        book_number = kwargs.get("book_number", 1)
+        book_title = kwargs.get("book_title", "Untitled Book")
+        series_title = kwargs.get("series_title", "Untitled Series")
+        series_context = kwargs.get("series_context", {})
+        previous_books = kwargs.get("previous_books", [])
+
+        return f"""
+# Non-Fiction Series Book Generation for {cls.GENRE_NAME}
+
+Generate Book {book_number}: "{book_title}" in the {cls.GENRE_NAME.lower()} series "{series_title}".
+
+## Series Context
+- Series: {series_title}
+- Current Book: {book_number} - {book_title}
+- Genre: {cls.GENRE_NAME}
+- Content Type: Informational Non-Fiction
+
+## Previous Books Summary
+{chr(10).join(f"- Book {i+1}: {book.get('title', 'Unknown')}" for i, book in enumerate(previous_books))}
+
+## {cls.GENRE_NAME} Series Requirements
+{chr(10).join(f"- {char}" for char in cls.GENRE_CHARACTERISTICS)}
+
+## Series Continuity Requirements
+
+### Knowledge Continuity
+1. **Building on Previous Learning**: Reference and build upon concepts from earlier books
+2. **Consistent Terminology**: Use established definitions and terminology from the series
+3. **Cross-References**: Include appropriate references to previous books when relevant
+4. **Knowledge Gaps**: Address any gaps in understanding from previous volumes
+
+### Research and Authority Continuity
+1. **Source Consistency**: Maintain research standards established in previous books
+2. **Expert Perspectives**: Continue relationships with established authorities
+3. **Methodology**: Use consistent research and presentation approaches
+4. **Credibility**: Maintain the authoritative voice established in the series
+
+### Educational Progression
+1. **Skill Development**: Advance reader capabilities from previous books
+2. **Complexity Increase**: Introduce more advanced concepts appropriate for book {book_number}
+3. **Practical Applications**: Build on practical skills from earlier volumes
+4. **Assessment Integration**: Help readers evaluate their progress through the series
+
+### {cls.GENRE_NAME} Series Elements
+1. **Genre Expectations**: Fulfill reader expectations for {cls.GENRE_NAME.lower()} while advancing knowledge
+2. **Information Depth**: Provide appropriate depth for book {book_number} in the sequence
+3. **Series Themes**: Continue developing educational themes established in the series
+4. **Reader Value**: Ensure this book adds significant value to the overall series
+
+## Book {book_number} Specific Requirements
+1. **Complete Educational Arc**: This book should provide complete learning on its topics
+2. **Series Integration**: Seamlessly integrate with the overall educational journey
+3. **Knowledge Focus**: Determine which concepts should be the focus of this book
+4. **New Information**: Introduce new research, examples, or perspectives as appropriate
+5. **Forward Preparation**: Prepare readers for concepts that will appear in later books
+
+Generate a detailed plan for Book {book_number} that serves both as a standalone {cls.GENRE_NAME.lower()} educational resource and as an integral part of the "{series_title}" learning series.
 """
 
 
@@ -754,4 +1066,128 @@ Enhance the section by:
 - Balance tradition with innovation in format approach
 
 Return the enhanced section that exemplifies excellent {cls.GENRE_NAME.lower()} craft while maintaining the original artistic vision.
+"""
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a series planning prompt for special format genres."""
+        series_title = kwargs.get("series_title", "Untitled Series")
+        series_description = kwargs.get("series_description", "")
+        planned_books = kwargs.get("planned_books", 3)
+        target_audience = kwargs.get("target_audience", "Adult")
+
+        return f"""
+# Special Format Series Planning for {cls.GENRE_NAME}
+
+Create a comprehensive plan for a {planned_books}-volume {cls.GENRE_NAME.lower()} series titled "{series_title}" for {target_audience} audience.
+
+## Series Information
+- Title: {series_title}
+- Description: {series_description}
+- Genre: {cls.GENRE_NAME}
+- Planned Volumes: {planned_books}
+- Target Audience: {target_audience}
+- Content Type: Special Format
+
+## {cls.GENRE_NAME} Series Characteristics
+{chr(10).join(f"- {char}" for char in cls.GENRE_CHARACTERISTICS)}
+
+## Special Format Series Planning Requirements
+
+### Artistic Progression Structure
+1. **Creative Evolution**: Plan how the artistic vision develops across all {planned_books} volumes
+2. **Format Mastery**: Show increasing sophistication in format techniques
+3. **Thematic Development**: Create themes that deepen and evolve through the series
+4. **Artistic Cohesion**: Maintain a unified artistic vision while allowing growth
+
+### Format Continuity and Innovation
+1. **Style Consistency**: Maintain recognizable artistic voice across volumes
+2. **Technical Evolution**: Show development in format-specific skills
+3. **Creative Connections**: Create meaningful links between volumes
+4. **Format Exploration**: Explore different aspects of the format across the series
+
+### Artistic Value Across Volumes
+1. **Individual Merit**: Each volume should stand alone as quality {cls.GENRE_NAME.lower()}
+2. **Series Enhancement**: Volumes should gain additional meaning when read together
+3. **Creative Risk**: Plan for artistic growth and experimentation
+4. **Format Innovation**: Push boundaries while respecting format traditions
+
+### Series-Specific Elements for {cls.GENRE_NAME}
+1. **Format Conventions**: Honor {cls.GENRE_NAME.lower()} traditions while innovating
+2. **Artistic Depth**: Increase complexity and sophistication across volumes
+3. **Creative Themes**: Develop artistic themes that resonate throughout
+4. **Reader Experience**: Create engaging progression for format enthusiasts
+
+## Output Format
+Provide a detailed series plan with:
+- Series overview and artistic vision
+- Volume-by-volume breakdown with titles, descriptions, and artistic focus
+- Thematic progression across the series
+- Format technique development plan
+- Creative connections between volumes
+- Artistic goals and innovations
+
+Create a series plan that will engage {cls.GENRE_NAME.lower()} enthusiasts and showcase artistic development across all {planned_books} volumes.
+"""
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a prompt for creating individual special format works within a series context."""
+        book_number = kwargs.get("book_number", 1)
+        book_title = kwargs.get("book_title", "Untitled Volume")
+        series_title = kwargs.get("series_title", "Untitled Series")
+        series_context = kwargs.get("series_context", {})
+        previous_books = kwargs.get("previous_books", [])
+
+        return f"""
+# Special Format Series Volume Generation for {cls.GENRE_NAME}
+
+Generate Volume {book_number}: "{book_title}" in the {cls.GENRE_NAME.lower()} series "{series_title}".
+
+## Series Context
+- Series: {series_title}
+- Current Volume: {book_number} - {book_title}
+- Genre: {cls.GENRE_NAME}
+- Content Type: Special Format
+
+## Previous Volumes Summary
+{chr(10).join(f"- Volume {i+1}: {book.get('title', 'Unknown')}" for i, book in enumerate(previous_books))}
+
+## {cls.GENRE_NAME} Series Requirements
+{chr(10).join(f"- {char}" for char in cls.GENRE_CHARACTERISTICS)}
+
+## Series Continuity Requirements
+
+### Artistic Continuity
+1. **Style Consistency**: Maintain the artistic voice established in previous volumes
+2. **Thematic Connections**: Continue developing themes from earlier works
+3. **Creative Evolution**: Show artistic growth from previous volumes
+4. **Format Mastery**: Build upon format techniques established in the series
+
+### Creative Progression
+1. **Artistic Development**: Advance the creative vision from previous volumes
+2. **Technical Growth**: Show increased sophistication in format techniques
+3. **Thematic Depth**: Deepen themes and concepts from earlier works
+4. **Innovation Balance**: Introduce new elements while maintaining series identity
+
+### Format Continuity
+1. **Technical Standards**: Maintain quality standards established in previous volumes
+2. **Format Exploration**: Continue exploring the possibilities of {cls.GENRE_NAME.lower()}
+3. **Creative Connections**: Create meaningful links to previous volumes
+4. **Artistic Integrity**: Maintain the artistic vision of the series
+
+### {cls.GENRE_NAME} Series Elements
+1. **Format Excellence**: Demonstrate mastery of {cls.GENRE_NAME.lower()} appropriate for volume {book_number}
+2. **Artistic Sophistication**: Show appropriate complexity for this point in the series
+3. **Creative Themes**: Continue developing artistic themes established in the series
+4. **Reader Engagement**: Create compelling content for format enthusiasts
+
+## Volume {book_number} Specific Requirements
+1. **Artistic Completeness**: This volume should be a complete artistic statement
+2. **Series Integration**: Seamlessly integrate with the overall artistic vision
+3. **Creative Focus**: Determine which artistic elements should be emphasized
+4. **Format Innovation**: Introduce new techniques or approaches as appropriate
+5. **Artistic Connection**: Create meaningful connections to other volumes in the series
+
+Generate a detailed plan for Volume {book_number} that serves both as a standalone {cls.GENRE_NAME.lower()} work and as an integral part of the "{series_title}" artistic series.
 """

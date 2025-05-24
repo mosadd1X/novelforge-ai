@@ -106,6 +106,62 @@ class SelfHelpPrompts(NonFictionBasePrompts):
 '''
         return base_prompt + self_help_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a selfhelp-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        selfhelp_series_additions = """
+
+## SelfHelp Series-Specific Planning Elements
+
+### Educational Progression for SelfHelp
+- **Knowledge Building**: Structure learning progression appropriate for selfhelp topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of selfhelp subjects
+- **Practical Applications**: Include actionable insights specific to selfhelp throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for selfhelp authority
+- **Reader Value**: Ensure each book provides significant selfhelp value while building series knowledge
+
+### SelfHelp Series Continuity
+- **Subject Consistency**: Maintain consistent approach to selfhelp topics across books
+- **Authority Building**: Establish and maintain credibility in selfhelp throughout the series
+- **Information Architecture**: Structure information flow appropriate for selfhelp learning
+- **Cross-References**: Create meaningful connections between selfhelp concepts across books
+- **Updated Knowledge**: Plan for incorporating new selfhelp research and developments
+
+Create a selfhelp series that provides comprehensive education with authoritative, well-researched content.
+"""
+
+        return base_prompt + selfhelp_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a selfhelp-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        selfhelp_book_additions = """
+
+## SelfHelp Series Book Integration
+
+### SelfHelp Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon selfhelp concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous selfhelp books when relevant
+- **Knowledge Progression**: Advance reader understanding of selfhelp topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the selfhelp series
+
+### Book-Specific SelfHelp Focus
+- **Educational Objectives**: What specific selfhelp knowledge will readers gain from this book?
+- **Practical Applications**: What actionable selfhelp insights will be provided?
+- **Research Integration**: How will new selfhelp research be incorporated?
+- **Series Advancement**: How does this book advance the overall selfhelp education series?
+- **Reader Value**: What unique selfhelp value does this book add to the series?
+
+Ensure this book provides comprehensive selfhelp education while serving as an integral part of the learning series.
+"""
+
+        return base_prompt + selfhelp_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return SelfHelpPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -120,3 +176,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return SelfHelpPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return SelfHelpPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return SelfHelpPrompts.get_series_book_prompt(**kwargs)

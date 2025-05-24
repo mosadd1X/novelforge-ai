@@ -23,10 +23,8 @@ from src.main import main
 from src.ui.terminal_ui import (
     clear_screen,
     display_title,
-    display_api_key_status,
     custom_style
 )
-from src.core.gemini_client import GeminiClient
 
 # Import series menu
 try:
@@ -39,6 +37,18 @@ try:
     from src.ui.book_menu import book_management_menu
 except ImportError:
     book_management_menu = None
+
+# Import advanced generation options
+try:
+    from src.ui.advanced_generation_options import advanced_options
+except ImportError:
+    advanced_options = None
+
+# Import feedback system
+try:
+    from src.ui.feedback_system import feedback_ui
+except ImportError:
+    feedback_ui = None
 
 # Create console with markup enabled
 console = Console(markup=True)
@@ -97,29 +107,137 @@ def manage_books():
         console.print("[bold red]Error: Book management functionality not available.[/bold red]")
         input("\nPress Enter to continue...")
 
-def check_api_key_status():
+def advanced_generation():
     """
-    Check and display API key status.
+    Run the advanced generation options functionality.
 
-    This function displays information about all configured API keys,
-    including their validity, usage statistics, and rate limit status.
-    It helps users troubleshoot API key issues and monitor usage.
+    This function provides access to smart generation presets including:
+    - Surprise Me Mode (full automation)
+    - Author Focus Mode (explore specific fictional authors)
+    - Cultural Journey Mode (explore different cultural perspectives)
+    - Genre Fusion Mode (blend multiple genres)
+
+    If the advanced generation functionality is not available, it displays
+    an error message with troubleshooting information.
+
+    Returns:
+        None
+    """
+    if advanced_options:
+        try:
+            # Get advanced generation options from user
+            advanced_result = advanced_options.show_advanced_options_menu()
+
+            if advanced_result:
+                # Use the advanced options to generate a book
+                console.print(f"\n[bold green]Starting Advanced Generation![/bold green]")
+
+                # Import the advanced generation function
+                from src.main import main_with_advanced_options
+                main_with_advanced_options(advanced_result)
+
+        except Exception as e:
+            console.print(f"[bold red]Error in advanced generation: {str(e)}[/bold red]")
+            input("\nPress Enter to continue...")
+    else:
+        console.print("[bold red]Error: Advanced generation functionality not available.[/bold red]")
+        input("\nPress Enter to continue...")
+
+def quality_and_feedback():
+    """
+    Run the content quality and feedback functionality.
+
+    This function provides access to:
+    - Content quality metrics and analytics
+    - User feedback collection and analysis
+    - Author performance comparisons
+    - Quality improvement recommendations
+
+    If the feedback functionality is not available, it displays
+    an error message with troubleshooting information.
+
+    Returns:
+        None
+    """
+    if feedback_ui:
+        try:
+            feedback_ui.feedback_menu()
+        except Exception as e:
+            console.print(f"[bold red]Error in feedback system: {str(e)}[/bold red]")
+            input("\nPress Enter to continue...")
+    else:
+        console.print("[bold red]Error: Feedback system functionality not available.[/bold red]")
+        input("\nPress Enter to continue...")
+
+def api_key_management():
+    """
+    Run the API Key Management functionality.
+
+    This function provides access to comprehensive API key management including:
+    - Adding new API keys with automatic rotation
+    - Viewing all configured API keys
+    - Removing backup API keys
+    - Promoting backup keys to main
+    - Testing API key functionality
+    - Real-time status monitoring
 
     The function handles exceptions gracefully and provides helpful
-    error messages if API keys are not properly configured.
+    error messages if the API key management system is not available.
 
     Returns:
         None
     """
     try:
-        # Initialize the Gemini client
-        gemini_client = GeminiClient()
+        # Import the API key management menu
+        from src.utils.api_key_manager import show_api_key_management_menu
 
-        # Display API key status
-        display_api_key_status(gemini_client)
+        # Show the API key management menu
+        show_api_key_management_menu()
+
+    except ImportError:
+        console.print("[bold red]Error: API Key Management system not available.[/bold red]")
+        console.print("[yellow]The API key management functionality could not be loaded.[/yellow]")
+        input("\nPress Enter to continue...")
     except Exception as e:
-        console.print(f"[bold red]Error checking API key status: {str(e)}[/bold red]")
-        console.print("[yellow]Make sure your API keys are properly configured in the .env file.[/yellow]")
+        console.print(f"[bold red]Error in API Key Management: {str(e)}[/bold red]")
+        console.print("[yellow]Make sure your system is properly configured.[/yellow]")
+        input("\nPress Enter to continue...")
+
+def network_status_and_diagnostics():
+    """
+    Run the Network Status and Diagnostics functionality.
+
+    This function provides access to comprehensive network monitoring including:
+    - Real-time network status monitoring
+    - Connection history and metrics
+    - Network diagnostics and troubleshooting
+    - Circuit breaker status
+    - Live monitoring capabilities
+    - Network resilience configuration
+
+    The function handles exceptions gracefully and provides helpful
+    error messages if the network monitoring system is not available.
+
+    Returns:
+        None
+    """
+    try:
+        # Import the network status UI
+        from src.ui.network_status_ui import NetworkStatusUI
+
+        # Create and show the network status menu
+        network_ui = NetworkStatusUI()
+        network_ui.interactive_menu()
+
+    except ImportError:
+        console.print("[bold red]Error: Network Status system not available.[/bold red]")
+        console.print("[yellow]The network monitoring functionality could not be loaded.[/yellow]")
+        console.print("[yellow]Make sure the required dependencies are installed:[/yellow]")
+        console.print("• pip install requests psutil")
+        input("\nPress Enter to continue...")
+    except Exception as e:
+        console.print(f"[bold red]Error in Network Status system: {str(e)}[/bold red]")
+        console.print("[yellow]Make sure your system is properly configured.[/yellow]")
         input("\nPress Enter to continue...")
 
 def main_menu():
@@ -146,8 +264,11 @@ def main_menu():
             "1. Generate a Book",
             "2. Generate a Series",
             "3. Manage Books",
-            "4. API Key Status",
-            "5. Exit"
+            "4. Advanced Generation Options",
+            "5. Content Quality & Feedback",
+            "6. API Key Management",
+            "7. Network Status & Diagnostics",
+            "8. Exit"
         ]
 
         selected = questionary.select(
@@ -162,9 +283,15 @@ def main_menu():
             generate_series()
         elif selected == "3. Manage Books":
             manage_books()
-        elif selected == "4. API Key Status":
-            check_api_key_status()
-        elif selected == "5. Exit":
+        elif selected == "4. Advanced Generation Options":
+            advanced_generation()
+        elif selected == "5. Content Quality & Feedback":
+            quality_and_feedback()
+        elif selected == "6. API Key Management":
+            api_key_management()
+        elif selected == "7. Network Status & Diagnostics":
+            network_status_and_diagnostics()
+        elif selected == "8. Exit":
             console.print("[bold green]Thank you for using the Ebook Generator. Goodbye![/bold green]")
             sys.exit(0)
 

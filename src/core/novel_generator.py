@@ -3,16 +3,21 @@ Core novel generation functionality.
 """
 import os
 import json
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Tuple
 from datetime import datetime
 from rich.console import Console
 from rich.progress import Progress
 
-from src.core.gemini_client import GeminiClient
+from src.core.resilient_gemini_client import ResilientGeminiClient
 from src.core.memory_manager import MemoryManager
 from src.utils.word_counter import count_words
-from src.utils.genre_defaults import get_genre_defaults, create_flexible_pov_structure, determine_character_gender, assign_chapter_pov
-from src.utils.logger import get_logger, log_info, log_error, log_debug, log_warning
+from src.utils.genre_defaults import create_flexible_pov_structure, determine_character_gender, assign_chapter_pov
+from src.utils.logger import log_info, log_error, log_debug, log_warning
+from src.prompts import get_prompt
+
+# Import standardized error handling
+from src.core.exceptions import GenerationError, APIError
+from src.utils.error_handler import handle_error, display_warning
 
 # Import SeriesManager conditionally to avoid circular imports
 try:
@@ -30,9 +35,10 @@ class NovelGenerator:
 
     def __init__(self):
         """Initialize the novel generator."""
-        self.gemini = GeminiClient()
+        self.gemini = ResilientGeminiClient()
         self.memory_manager = None
         self.generation_options = None
+        self.series_prompt_manager = None  # For enhanced series prompts
 
     def initialize_novel(
         self, title: str, author: str, description: str, genre: str, target_audience: str,
@@ -98,6 +104,15 @@ class NovelGenerator:
         """
         self.generation_options = options
 
+    def set_series_prompt_manager(self, series_prompt_manager) -> None:
+        """
+        Set the series prompt manager for enhanced series-aware prompts.
+
+        Args:
+            series_prompt_manager: SeriesPromptManager instance
+        """
+        self.series_prompt_manager = series_prompt_manager
+
     def generate_writer_profile(self) -> Dict[str, Any]:
         """
         Generate a writer profile based on the novel metadata.
@@ -112,21 +127,34 @@ class NovelGenerator:
                 genre=self.memory_manager.metadata.get('genre', 'Unknown'),
                 title=self.memory_manager.metadata.get('title', 'Unknown'))
 
-        prompt = f"""
-        Create a detailed writer profile for an author who would write a {self.memory_manager.metadata['genre']} novel
-        titled "{self.memory_manager.metadata['title']}" for {self.memory_manager.metadata['target_audience']} audience.
+        # Try to get genre-specific writer profile prompt
+        genre = self.memory_manager.metadata['genre']
+        prompt = get_prompt(
+            genre=genre,
+            prompt_type="writer_profile",
+            title=self.memory_manager.metadata['title'],
+            description=self.memory_manager.metadata['description'],
+            target_audience=self.memory_manager.metadata['target_audience']
+        )
 
-        The novel is described as: {self.memory_manager.metadata['description']}
+        # Fallback to generic prompt if genre-specific not available
+        if not prompt:
+            log_warning("Genre-specific writer profile prompt not found, using fallback", genre=genre)
+            prompt = f"""
+            Create a detailed writer profile for an author who would write a {self.memory_manager.metadata['genre']} novel
+            titled "{self.memory_manager.metadata['title']}" for {self.memory_manager.metadata['target_audience']} audience.
 
-        Include the following in your response:
-        1. Writing style and voice
-        2. Literary influences
-        3. Thematic focuses
-        4. Narrative techniques
-        5. Strengths as a writer
+            The novel is described as: {self.memory_manager.metadata['description']}
 
-        Format your response as a JSON object with these fields.
-        """
+            Include the following in your response:
+            1. Writing style and voice
+            2. Literary influences
+            3. Thematic focuses
+            4. Narrative techniques
+            5. Strengths as a writer
+
+            Format your response as a JSON object with these fields.
+            """
 
         log_debug("Sending writer profile prompt to Gemini API", prompt_length=len(prompt))
         try:
@@ -201,9 +229,19 @@ class NovelGenerator:
             console.print("[yellow]Test genre detected - generating simplified outline[/yellow]")
             return self._generate_test_genre_outline()
 
+        # Extract writer profile data properly (handle both enhanced and simple profiles)
+        profile_data = writer_profile
+        if isinstance(writer_profile, dict) and 'profile_data' in writer_profile:
+            # Enhanced profile from automatic selection
+            profile_data = writer_profile['profile_data']
+
+        # Get genre defaults for prioritization
+        from src.utils.genre_defaults import get_genre_defaults
+        genre_defaults = get_genre_defaults(genre)
+
         # Use generation options if available
         target_length = "medium"
-        writing_style = writer_profile.get('writing_style', 'Detailed and engaging')
+        writing_style = profile_data.get('writing_style', 'Detailed and engaging') if isinstance(profile_data, dict) else 'Detailed and engaging'
         pov = "Third person limited"
         themes = []
         chapter_count = 0
@@ -217,52 +255,132 @@ class NovelGenerator:
             chapter_count = self.generation_options.get('chapter_count', 0)
             target_word_count = self.generation_options.get('target_word_count', 0)
 
-        # Create themes string
-        themes_str = ", ".join(themes) if themes else writer_profile.get('thematic_focuses', 'Various themes')
+        # Apply genre-first priority for Romance and other specified genres
+        # These genres will prioritize genre defaults over writer profile themes/counts
+        genre_first_priority = [
+            'romance',
+            'paranormal romance',
+            # Add more genres here as needed for full customization control
+        ]
 
-        # Add specific instructions based on options
-        length_instruction = f"This should be a {target_length} length novel."
-        count_instruction = ""
-        if chapter_count and target_word_count:
-            count_instruction = f"Aim for approximately {chapter_count} chapters and {target_word_count:,} total words."
+        # Theme priority system
+        if themes:
+            # User custom themes (highest priority)
+            themes_str = ", ".join(themes)
+        elif genre.lower() in genre_first_priority and genre_defaults.get('themes'):
+            # Genre default themes (for Romance and specified genres)
+            themes_str = ", ".join(genre_defaults['themes'])
+        else:
+            # Writer profile themes (fallback)
+            thematic_focuses = 'Various themes'
+            if isinstance(profile_data, dict):
+                thematic_focuses = profile_data.get('thematic_focuses', 'Various themes')
+            themes_str = thematic_focuses
 
-        prompt = f"""
-        Create a detailed chapter-by-chapter outline for a {genre} novel titled
-        "{self.memory_manager.metadata['title']}" for {target_audience} audience.
+        # Chapter count priority system (same logic)
+        if chapter_count == 0:  # No user-specified chapter count
+            if genre.lower() in genre_first_priority:
+                # Use genre defaults for Romance
+                chapter_count = genre_defaults.get('chapter_count', 0)
+            # If still 0, it will be determined by AI
 
-        The novel is described as: {self.memory_manager.metadata['description']}
+        # Target word count priority system (same logic)
+        if target_word_count == 0:  # No user-specified word count
+            if genre.lower() in genre_first_priority:
+                # Use genre defaults for Romance
+                target_word_count = genre_defaults.get('target_word_count', 0)
+            # If still 0, it will be determined by AI
 
-        The author's writing style is: {writing_style}
-        The author's thematic focuses are: {themes_str}
-        Point of view: {pov}
+        # Format writer profile for prompt (convert to string if needed)
+        writer_profile_str = ""
+        if isinstance(writer_profile, dict):
+            if 'profile_data' in writer_profile:
+                # Enhanced profile - extract key information
+                profile_data = writer_profile['profile_data']
+                author_name = writer_profile.get('name', 'Unknown Author')
+                writer_profile_str = f"""
+Writer: {author_name}
+Writing Style: {profile_data.get('writing_style', 'Not specified')}
+Literary Influences: {profile_data.get('literary_influences', 'Not specified')}
+Thematic Focuses: {profile_data.get('thematic_focuses', 'Not specified')}
+Narrative Techniques: {profile_data.get('narrative_techniques', 'Not specified')}
+Strengths: {profile_data.get('strengths', 'Not specified')}
+"""
+                # Add enhancement information if available
+                if '_enhancement' in writer_profile:
+                    enhancement = writer_profile['_enhancement']
+                    writer_profile_str += f"\nEnhanced for: {enhancement.get('enhanced_for_genre', 'this work')}"
+                    if enhancement.get('enhancement_text'):
+                        writer_profile_str += f"\nSpecific Enhancements: {enhancement['enhancement_text'][:200]}..."
+            else:
+                # Simple profile dictionary
+                writer_profile_str = str(writer_profile)
+        else:
+            # Already a string
+            writer_profile_str = str(writer_profile)
 
-        {length_instruction}
-        {count_instruction}
+        # Try to get genre-specific outline prompt
+        prompt = get_prompt(
+            genre=genre,
+            prompt_type="outline",
+            title=self.memory_manager.metadata['title'],
+            description=self.memory_manager.metadata['description'],
+            writer_profile=writer_profile_str,
+            target_length=target_length,
+            writing_style=writing_style,
+            themes=themes_str,
+            pov=pov,
+            chapter_count=chapter_count,
+            target_word_count=target_word_count,
+            target_audience=target_audience
+        )
 
-        IMPORTANT NARRATIVE GUIDELINES:
-        1. Develop a cohesive main plot with 2-3 well-integrated subplots that are introduced early and developed throughout
-        2. Ensure all subplots connect meaningfully to the main narrative and themes
-        3. Foreshadow major plot developments and twists at least 3-4 chapters before they occur
-        4. Balance character development with plot progression in each chapter
-        5. Maintain consistent thematic elements throughout the narrative
-        6. Ensure each subplot has a clear arc with setup, development, and resolution
+        # Fallback to generic prompt if genre-specific not available
+        if not prompt:
+            log_warning("Genre-specific outline prompt not found, using fallback", genre=genre)
+            # Add specific instructions based on options
+            length_instruction = f"This should be a {target_length} length novel."
+            count_instruction = ""
+            if chapter_count and target_word_count:
+                count_instruction = f"Aim for approximately {chapter_count} chapters and {target_word_count:,} total words."
 
-        For each chapter, provide:
-        1. Chapter title
-        2. Brief summary (2-3 sentences)
-        3. Key plot points or character developments
-        4. Which subplot elements appear and how they connect to the main plot
-        5. Character development moments
-        6. Thematic elements explored
+            prompt = f"""
+            Create a detailed chapter-by-chapter outline for a {genre} novel titled
+            "{self.memory_manager.metadata['title']}" for {target_audience} audience.
 
-        Format your response as a JSON object with these fields:
-        - recommended_chapter_count: number
-        - target_word_count: number
-        - main_plot: object with setup, development, climax, and resolution fields
-        - subplots: array of subplot objects, each with name, description, and arc fields
-        - themes: array of theme objects with name and development fields
-        - chapters: array of objects with title, summary, key_points, plot_threads, character_development, and thematic_elements fields
-        """
+            The novel is described as: {self.memory_manager.metadata['description']}
+
+            The author's writing style is: {writing_style}
+            The author's thematic focuses are: {themes_str}
+            Point of view: {pov}
+
+            {length_instruction}
+            {count_instruction}
+
+            IMPORTANT NARRATIVE GUIDELINES:
+            1. Develop a cohesive main plot with 2-3 well-integrated subplots that are introduced early and developed throughout
+            2. Ensure all subplots connect meaningfully to the main narrative and themes
+            3. Foreshadow major plot developments and twists at least 3-4 chapters before they occur
+            4. Balance character development with plot progression in each chapter
+            5. Maintain consistent thematic elements throughout the narrative
+            6. Ensure each subplot has a clear arc with setup, development, and resolution
+
+            For each chapter, provide:
+            1. Chapter title
+            2. Brief summary (2-3 sentences)
+            3. Key plot points or character developments
+            4. Which subplot elements appear and how they connect to the main plot
+            5. Character development moments
+            6. Thematic elements explored
+
+            Format your response as a JSON object with these fields:
+            - recommended_chapter_count: number
+            - target_word_count: number
+            - main_plot: object with setup, development, climax, and resolution fields
+            - subplots: array of subplot objects, each with name, description, and arc fields
+            - themes: array of theme objects with name and development fields
+            - chapters: array of objects with title, summary, key_points, plot_threads, character_development, and thematic_elements fields
+            """
 
         log_debug("Sending novel outline prompt to Gemini API",
                  prompt_length=len(prompt),
@@ -275,6 +393,20 @@ class NovelGenerator:
                     genre=genre)
         except Exception as e:
             log_error("Failed to get novel outline from Gemini API", exception=e, genre=genre)
+            # Create standardized API error
+            api_error = APIError(
+                message=f"Failed to get novel outline from Gemini API: {str(e)}",
+                api_service="Gemini",
+                user_message="Failed to generate novel outline",
+                details={'genre': genre, 'original_error': str(e)},
+                recovery_suggestions=[
+                    "Check your internet connection",
+                    "Verify your Gemini API key is valid",
+                    "Try again in a few moments",
+                    "Simplify your novel description if it's very complex"
+                ]
+            )
+            handle_error(api_error, "Novel outline generation")
             raise
 
         # Try to parse the response as JSON
@@ -300,14 +432,22 @@ class NovelGenerator:
             if start_idx >= 0 and end_idx > start_idx:
                 json_str = response_text[start_idx:end_idx]
                 log_debug("Attempting to parse JSON", json_length=len(json_str))
+
+                # Try to clean common JSON issues
+                json_str = self._clean_json_string(json_str)
+
                 outline_data = json.loads(json_str)
                 log_info("Successfully parsed outline JSON",
                         has_chapters=bool(outline_data.get('chapters')),
                         chapter_count=len(outline_data.get('chapters', [])),
                         recommended_count=outline_data.get('recommended_chapter_count', 0))
 
-                # Extract chapter outlines
+                # Extract chapter outlines (handle both "chapters" and "sections" for special formats)
                 chapters = outline_data.get('chapters', [])
+
+                # For special formats like Poetry Collection, check for "sections" instead
+                if not chapters:
+                    chapters = outline_data.get('sections', [])
 
                 if not chapters and isinstance(outline_data, list):
                     # Handle case where the response is a list of chapters directly
@@ -323,7 +463,8 @@ class NovelGenerator:
                 for i, ch in enumerate(chapters):
                     if isinstance(ch, dict):
                         title = ch.get('title', f'Chapter {i+1}')
-                        summary = ch.get('summary', '')
+                        # Handle both "summary" and "description" fields
+                        summary = ch.get('summary', '') or ch.get('description', '')
 
                         # Store additional narrative data
                         plot_threads = ch.get('plot_threads', {})
@@ -346,8 +487,10 @@ class NovelGenerator:
                     elif isinstance(ch, str):
                         chapter_outlines.append(ch)
 
-                # Get recommended chapter count
-                recommended_chapter_count = outline_data.get('recommended_chapter_count', len(chapters))
+                # Get recommended chapter count (handle both chapter and section counts)
+                recommended_chapter_count = outline_data.get('recommended_chapter_count', 0)
+                if recommended_chapter_count == 0:
+                    recommended_chapter_count = outline_data.get('recommended_section_count', len(chapters))
                 if recommended_chapter_count == 0:
                     recommended_chapter_count = len(chapters)
 
@@ -402,14 +545,75 @@ class NovelGenerator:
                     return self._fallback_outline_parsing(response)
 
         except json.JSONDecodeError as e:
-            # Fallback if JSON parsing fails
-            log_error("JSON parsing error in outline generation", exception=e, response_preview=response[:300] if response else "None")
-            console.print(f"[yellow]JSON parsing error: {e}. Using fallback method.[/yellow]")
+            # Create standardized generation error for JSON parsing
+            json_error = GenerationError(
+                message=f"JSON parsing error in outline generation: {str(e)}",
+                generation_type="outline",
+                user_message="Failed to parse the generated outline format",
+                details={'json_error': str(e), 'response_preview': response[:300] if response else "None"},
+                recovery_suggestions=[
+                    "The AI response will be processed using fallback method",
+                    "Try regenerating if the fallback doesn't work well",
+                    "Consider simplifying your novel description",
+                    "Check if your prompt is too complex"
+                ]
+            )
+            handle_error(json_error, "Outline JSON parsing", show_suggestions=False)
+            display_warning("JSON parsing failed, using fallback method to extract outline")
             return self._fallback_outline_parsing(response)
         except Exception as e:
-            log_error("Unexpected error in outline generation", exception=e, response_preview=response[:300] if response else "None")
-            console.print(f"[yellow]Error parsing outline: {e}. Using fallback method.[/yellow]")
+            # Create standardized generation error for unexpected errors
+            unexpected_error = GenerationError(
+                message=f"Unexpected error in outline generation: {str(e)}",
+                generation_type="outline",
+                user_message="Unexpected error during outline processing",
+                details={'error_type': type(e).__name__, 'response_preview': response[:300] if response else "None"},
+                recovery_suggestions=[
+                    "The system will try to extract outline using fallback method",
+                    "Try regenerating the outline",
+                    "Check your input parameters",
+                    "Contact support if this error persists"
+                ]
+            )
+            handle_error(unexpected_error, "Outline generation processing", show_suggestions=False)
+            display_warning("Unexpected error occurred, using fallback method to extract outline")
             return self._fallback_outline_parsing(response)
+
+    def _clean_json_string(self, json_str: str) -> str:
+        """
+        Clean common JSON formatting issues that cause parsing errors.
+
+        Args:
+            json_str: Raw JSON string from AI
+
+        Returns:
+            Cleaned JSON string
+        """
+        import re
+
+        # Remove any trailing commas before closing braces/brackets
+        json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
+
+        # Remove any comments (// or /* */) that AI might add
+        json_str = re.sub(r'//.*?\n', '\n', json_str)
+        json_str = re.sub(r'/\*.*?\*/', '', json_str, flags=re.DOTALL)
+
+        # Fix common quote issues in JSON strings
+        # Replace smart quotes with regular quotes
+        json_str = json_str.replace('"', '"').replace('"', '"')
+        json_str = json_str.replace(''', "'").replace(''', "'")
+
+        # Remove any non-JSON content at the end
+        json_str = json_str.strip()
+        if not json_str.endswith('}') and not json_str.endswith(']'):
+            # Find the last valid JSON closing
+            last_brace = json_str.rfind('}')
+            last_bracket = json_str.rfind(']')
+            last_valid = max(last_brace, last_bracket)
+            if last_valid > 0:
+                json_str = json_str[:last_valid + 1]
+
+        return json_str
 
     def _generate_test_genre_outline(self) -> Tuple[List[str], int]:
         """
@@ -607,67 +811,88 @@ class NovelGenerator:
                     subplot_desc = subplot.get("description", "")
                     subplot_info += f"- {subplot_name}: {subplot_desc}\n"
 
-        # Create a structured prompt for character generation with improved depth requirements
-        prompt = f"""
-        Create a set of well-developed characters for a {genre} novel titled "{title}" for {target_audience}.
+        # Try to get genre-specific character prompt
+        prompt = get_prompt(
+            genre=genre,
+            prompt_type="character",
+            title=title,
+            description=description,
+            outline=outline_str,
+            target_audience=target_audience,
+            subplot_info=subplot_info
+        )
 
-        The novel is described as: {description}
+        # Fallback to generic prompt if genre-specific not available
+        if not prompt:
+            log_warning("Genre-specific character prompt not found, using fallback", genre=genre)
+            prompt = f"""
+            Create a set of well-developed characters for a {genre} novel titled "{title}" for {target_audience}.
 
-        Novel outline:
-        {outline_str}
+            The novel is described as: {description}
 
-        {subplot_info}
+            Novel outline:
+            {outline_str}
 
-        IMPORTANT CHARACTER DEVELOPMENT GUIDELINES:
-        1. Create psychologically complex characters with clear motivations and internal conflicts
-        2. Develop ALL characters with depth, including antagonists and supporting characters
-        3. Give each character a distinct voice, speech patterns, and mannerisms
-        4. Create meaningful relationships and dynamics between characters
-        5. Ensure antagonists have understandable motivations, not just generic evil
-        6. Include flaws and vulnerabilities for all characters, especially protagonists
-        7. Develop backstories that directly influence present actions and decisions
-        8. Create secondary characters with their own goals independent of the protagonist
-        9. Ensure character arcs show meaningful growth or change throughout the story
-        10. Include diverse personalities, backgrounds, and perspectives
+            {subplot_info}
 
-        For each character, provide the following fields in a JSON object:
-        - "name": (string) Character's full name
-        - "role": (string) Their role (protagonist, antagonist, supporting, etc.)
-        - "appearance": (string) Detailed physical description including distinctive features
-        - "personality": (string) Comprehensive personality profile including traits, values, and contradictions
-        - "background": (string) Detailed backstory that explains motivations and shapes current actions
-        - "goals": (string) Primary and secondary goals, both external and internal
-        - "arc": (string) Specific growth or change throughout the story
-        - "relationships": (string) How they relate to other characters
-        - "strengths": (string) Their key abilities or positive traits
-        - "flaws": (string) Their weaknesses, blind spots, or negative traits
-        - "voice": (string) Their speech patterns, vocabulary, and communication style
+            IMPORTANT CHARACTER DEVELOPMENT GUIDELINES:
+            1. Create psychologically complex characters with clear motivations and internal conflicts
+            2. Develop ALL characters with depth, including antagonists and supporting characters
+            3. Give each character a distinct voice, speech patterns, and mannerisms
+            4. Create meaningful relationships and dynamics between characters
+            5. Ensure antagonists have understandable motivations, not just generic evil
+            6. Include flaws and vulnerabilities for all characters, especially protagonists
+            7. Develop backstories that directly influence present actions and decisions
+            8. Create secondary characters with their own goals independent of the protagonist
+            9. Ensure character arcs show meaningful growth or change throughout the story
+            10. Include diverse personalities, backgrounds, and perspectives
 
-        Create characters with these guidelines:
-        1. Include 1-2 main protagonists with complex internal conflicts
-        2. Include 1-2 antagonists with understandable motivations and depth
-        3. Include 3-4 supporting characters with their own arcs and purposes
-        4. Ensure all characters have meaningful relationships and dynamics
-        5. Make sure their goals and flaws create natural conflict
+            For each character, provide the following fields in a JSON object:
+            - "name": (string) Character's full name
+            - "role": (string) Their role (protagonist, antagonist, supporting, etc.)
+            - "appearance": (string) Detailed physical description including distinctive features
+            - "personality": (string) Comprehensive personality profile including traits, values, and contradictions
+            - "background": (string) Detailed backstory that explains motivations and shapes current actions
+            - "goals": (string) Primary and secondary goals, both external and internal
+            - "arc": (string) Specific growth or change throughout the story
+            - "relationships": (string) How they relate to other characters
+            - "strengths": (string) Their key abilities or positive traits
+            - "flaws": (string) Their weaknesses, blind spots, or negative traits
+            - "voice": (string) Their speech patterns, vocabulary, and communication style
 
-        Return ONLY a valid JSON array of character objects, nothing else.
-        Example format:
-        [
-          {{
-            "name": "John Doe",
-            "role": "protagonist",
-            "appearance": "Tall with brown hair and green eyes",
-            "personality": "Brave but impulsive, with a strong sense of justice",
-            "background": "Grew up in a small town, joined the police force to make a difference",
-            "goals": "Wants to solve the case and bring the criminal to justice",
-            "arc": "Learns to work with others and trust his team"
-          }}
-        ]
-        """
+            Create characters with these guidelines:
+            1. Include 1-2 main protagonists with complex internal conflicts
+            2. Include 1-2 antagonists with understandable motivations and depth
+            3. Include 3-4 supporting characters with their own arcs and purposes
+            4. Ensure all characters have meaningful relationships and dynamics
+            5. Make sure their goals and flaws create natural conflict
+
+            Return ONLY a valid JSON array of character objects, nothing else.
+            Example format:
+            [
+              {{
+                "name": "John Doe",
+                "role": "protagonist",
+                "appearance": "Tall with brown hair and green eyes",
+                "personality": "Brave but impulsive, with a strong sense of justice",
+                "background": "Grew up in a small town, joined the police force to make a difference",
+                "goals": "Wants to solve the case and bring the criminal to justice",
+                "arc": "Learns to work with others and trust his team"
+              }}
+            ]
+            """
 
         try:
             # Get response from Gemini
             response = self.gemini.generate_content(prompt, temperature=0.7)
+
+            # Check if response is empty or None
+            if not response or not response.strip():
+                console.print("[yellow]Empty response from Gemini API for character generation[/yellow]")
+                log_warning("Empty response from Gemini API for character generation")
+                return self._fallback_character_parsing("Empty response")
+
+            log_debug("Starting JSON parsing of character response", response_preview=response[:200] if response else "None")
 
             # Clean the response to extract just the JSON part
             response_text = response.strip()
@@ -675,11 +900,29 @@ class NovelGenerator:
             # Remove markdown code block markers if present
             if response_text.startswith('```json'):
                 response_text = response_text[7:]
+                log_debug("Removed JSON markdown markers from character response")
             if response_text.endswith('```'):
                 response_text = response_text[:-3]
 
-            # Parse the JSON response
-            characters = json.loads(response_text)
+            # Find JSON array content in the response (looking for [ and ])
+            start_idx = response_text.find('[')
+            end_idx = response_text.rfind(']') + 1
+
+            log_debug("Character JSON parsing indices", start_idx=start_idx, end_idx=end_idx)
+
+            if start_idx >= 0 and end_idx > start_idx:
+                json_str = response_text[start_idx:end_idx]
+                log_debug("Attempting to parse character JSON", json_length=len(json_str))
+
+                # Try to clean common JSON issues
+                json_str = self._clean_json_string(json_str)
+
+                # Parse the JSON response
+                characters = json.loads(json_str)
+                log_info("Successfully parsed character JSON", character_count=len(characters) if isinstance(characters, list) else 0)
+            else:
+                log_warning("No JSON array structure found in character response", response_preview=response_text[:300])
+                raise ValueError("No JSON array structure found in response")
 
             # Validate the characters
             if not isinstance(characters, list):
@@ -742,17 +985,21 @@ class NovelGenerator:
             return characters
 
         except json.JSONDecodeError as e:
+            log_error("JSON parsing error in character generation", exception=e, response_preview=response[:300] if response else "None")
             console.print(f"[bold red]Error parsing character JSON: {e}[/bold red]")
             console.print("[yellow]Attempting to fix malformed JSON...[/yellow]")
 
-            # Try to extract JSON from malformed response
+            # Try to extract JSON from malformed response using multiple strategies
             try:
-                # Look for JSON-like content between square brackets
+                # Strategy 1: Look for JSON-like content between square brackets
                 import re
                 json_match = re.search(r'\[.*\]', response_text, re.DOTALL)
                 if json_match:
                     fixed_json = json_match.group(0)
+                    # Clean the extracted JSON
+                    fixed_json = self._clean_json_string(fixed_json)
                     characters = json.loads(fixed_json)
+                    log_info("Successfully recovered character JSON using regex extraction", character_count=len(characters))
 
                     # Validate and add characters
                     required_fields = ["name", "role", "appearance", "personality", "background", "goals", "arc"]
@@ -764,13 +1011,38 @@ class NovelGenerator:
 
                     return characters
                 else:
+                    # Strategy 2: Try to find individual character objects
+                    char_objects = re.findall(r'\{[^{}]*\}', response_text, re.DOTALL)
+                    if char_objects:
+                        characters = []
+                        for char_str in char_objects:
+                            try:
+                                char_str = self._clean_json_string(char_str)
+                                char = json.loads(char_str)
+                                characters.append(char)
+                            except:
+                                continue
+
+                        if characters:
+                            log_info("Successfully recovered character JSON using object extraction", character_count=len(characters))
+                            # Validate and add characters
+                            required_fields = ["name", "role", "appearance", "personality", "background", "goals", "arc"]
+                            for char in characters:
+                                for field in required_fields:
+                                    if field not in char:
+                                        char[field] = "Not specified"
+                                self.memory_manager.add_character(char)
+                            return characters
+
                     raise ValueError("Could not extract JSON from response")
 
             except Exception as e2:
+                log_error("Failed to recover character JSON", exception=e2, response_preview=response_text[:300] if response_text else "None")
                 console.print(f"[bold red]Failed to fix JSON: {e2}[/bold red]")
                 return self._fallback_character_parsing(response_text)
 
         except Exception as e:
+            log_error("Unexpected error in character generation", exception=e, response_preview=response[:300] if response else "None")
             console.print(f"[bold red]Error generating characters: {e}[/bold red]")
             return self._fallback_character_parsing(str(e))
 
@@ -786,7 +1058,100 @@ class NovelGenerator:
         """
         console.print("[yellow]Falling back to basic character parsing...[/yellow]")
 
-        # Try to extract character information from the text
+        # Get genre for genre-appropriate character creation
+        genre = self.memory_manager.metadata.get("genre", "fiction") if self.memory_manager else "fiction"
+
+        # Create default characters based on genre
+        if genre.lower() == "romance":
+            characters = self._create_default_romance_characters()
+        else:
+            characters = self._create_default_generic_characters()
+
+        # Try to extract any character information from the text if available
+        if response_text and len(response_text.strip()) > 10:
+            extracted_chars = self._extract_characters_from_text(response_text)
+            if extracted_chars:
+                characters = extracted_chars
+
+        # Ensure all required fields are present
+        required_fields = ["name", "role", "appearance", "personality", "background", "goals", "arc"]
+        for char in characters:
+            for field in required_fields:
+                if field not in char or not char[field]:
+                    char[field] = self._get_default_field_value(field, char.get("role", "character"))
+
+            # Add character to memory manager
+            if self.memory_manager:
+                self.memory_manager.add_character(char)
+
+        return characters
+
+    def _create_default_romance_characters(self) -> List[Dict[str, Any]]:
+        """Create default Romance characters when generation fails."""
+        return [
+            {
+                "name": "Arjun Sharma",
+                "role": "male protagonist",
+                "appearance": "Tall with dark hair and expressive brown eyes, carries himself with quiet confidence",
+                "personality": "Thoughtful and introspective, with a dry sense of humor and deep emotional intelligence",
+                "background": "A successful architect who has focused on his career at the expense of personal relationships",
+                "goals": "To find genuine connection and learn to open his heart again",
+                "arc": "Learns to balance professional success with emotional vulnerability and love",
+                "gender": "male",
+                "pov_character": True,
+                "pov_order": 1
+            },
+            {
+                "name": "Nisha Patel",
+                "role": "female protagonist",
+                "appearance": "Petite with long black hair and intelligent dark eyes, has an infectious smile",
+                "personality": "Independent and passionate, with a strong sense of justice and hidden vulnerabilities",
+                "background": "A dedicated social worker who has built walls around her heart after past disappointments",
+                "goals": "To make a difference in the world while learning to trust in love again",
+                "arc": "Discovers that strength comes from vulnerability and allowing others to support her",
+                "gender": "female",
+                "pov_character": True,
+                "pov_order": 2
+            },
+            {
+                "name": "Kavya Nair",
+                "role": "supporting character",
+                "appearance": "Medium height with curly hair and warm brown eyes, always impeccably dressed",
+                "personality": "Wise and nurturing, serves as a mentor figure with a romantic heart",
+                "background": "Arjun's older sister who has a happy marriage and wants the same for her brother",
+                "goals": "To help her brother find happiness and love",
+                "arc": "Learns when to step back and let love find its own way",
+                "gender": "female"
+            }
+        ]
+
+    def _create_default_generic_characters(self) -> List[Dict[str, Any]]:
+        """Create default generic characters when generation fails."""
+        return [
+            {
+                "name": "Alex Morgan",
+                "role": "protagonist",
+                "appearance": "Average height with brown hair and determined eyes",
+                "personality": "Brave and resourceful, with a strong moral compass",
+                "background": "An ordinary person thrust into extraordinary circumstances",
+                "goals": "To overcome the central conflict and grow as a person",
+                "arc": "Learns to believe in themselves and their abilities",
+                "gender": "neutral"
+            },
+            {
+                "name": "Jordan Blake",
+                "role": "supporting character",
+                "appearance": "Tall with blonde hair and friendly demeanor",
+                "personality": "Loyal and supportive, provides comic relief and wisdom",
+                "background": "A close friend who stands by the protagonist",
+                "goals": "To support the protagonist and provide guidance",
+                "arc": "Grows in confidence and finds their own strength",
+                "gender": "neutral"
+            }
+        ]
+
+    def _extract_characters_from_text(self, response_text: str) -> List[Dict[str, Any]]:
+        """Extract character information from text response."""
         characters = []
         current_char = {}
 
@@ -817,18 +1182,18 @@ class NovelGenerator:
         if current_char and 'name' in current_char:
             characters.append(current_char)
 
-        # Ensure all required fields are present
-        required_fields = ["name", "role", "appearance", "personality", "background", "goals", "arc"]
-        for char in characters:
-            for field in required_fields:
-                if field not in char:
-                    char[field] = f"Not specified ({field.replace('_', ' ')})"
+        return characters if characters else []
 
-            # Add character to memory manager
-            if self.memory_manager:
-                self.memory_manager.add_character(char)
-
-        return characters
+    def _get_default_field_value(self, field: str, role: str) -> str:
+        """Get default value for a character field."""
+        defaults = {
+            "appearance": f"A {role} with distinctive features that reflect their personality",
+            "personality": f"Complex and well-developed {role} with clear motivations",
+            "background": f"Rich backstory that informs the {role}'s actions and decisions",
+            "goals": f"Clear objectives that drive the {role}'s actions in the story",
+            "arc": f"Meaningful character development throughout the narrative"
+        }
+        return defaults.get(field, f"To be developed ({field.replace('_', ' ')})")
 
     def _generate_test_genre_characters(self, title: str, description: str) -> List[Dict[str, Any]]:
         """
@@ -996,8 +1361,23 @@ class NovelGenerator:
         else:
             # Calculate max_tokens based on minimum chapter length
             # Use a multiplier to ensure we have enough tokens (approx 4 tokens per word + buffer)
-            max_tokens = max(20000, min_chapter_length * 5)
-            chapter_text = self.gemini.generate_content(prompt, temperature=0.8, max_tokens=max_tokens)
+            base_tokens = min_chapter_length * 5
+
+            # Romance and similar genres need SIGNIFICANTLY more tokens for emotional depth and longer scenes
+            if genre.lower() in ['romance', 'contemporary romance', 'paranormal romance']:
+                # ULTRA-AGGRESSIVE token allocation for Romance: aim for 6,000+ words = ~30,000 tokens + massive buffer
+                max_tokens = max(40000, base_tokens + 15000)  # Even more massive buffer to reduce extensions
+            else:
+                # Improved token allocation for all other genres to reduce extensions
+                max_tokens = max(25000, base_tokens + 5000)  # Increased from 20,000 to 25,000 + buffer
+
+            # Improved generation settings for better length consistency across all genres
+            if genre.lower() in ['romance', 'contemporary romance', 'paranormal romance']:
+                # Even lower temperature for Romance to encourage following word count instructions more precisely
+                chapter_text = self.gemini.generate_content(prompt, temperature=0.6, max_tokens=max_tokens)
+            else:
+                # Slightly lower temperature for all other genres to improve instruction following
+                chapter_text = self.gemini.generate_content(prompt, temperature=0.7, max_tokens=max_tokens)
 
         # Clean up the response
         chapter_text = self.gemini.clean_response(chapter_text)
@@ -1017,9 +1397,17 @@ class NovelGenerator:
                        content_words=content_word_count,
                        chapter_preview=chapter_text[:200] + "..." if len(chapter_text) > 200 else chapter_text)
 
-        # Check if we need to extend the chapter to meet minimum word count
-        if word_count < min_chapter_length:
-            console.print(f"[yellow]Chapter {chapter_num} is only {word_count} words (minimum: {min_chapter_length}). Extending...[/yellow]")
+        # Implement universal tolerance system for all genres
+        # Accept chapters that are 500 words below minimum to reduce API usage
+        tolerance_threshold = 500
+
+        # Calculate effective minimum with tolerance for all genres
+        effective_minimum = min_chapter_length - tolerance_threshold
+        tolerance_info = f" (tolerance: {effective_minimum}+ words accepted)"
+
+        # Check if we need to extend the chapter to meet effective minimum word count
+        if word_count < effective_minimum:
+            console.print(f"[yellow]Chapter {chapter_num} is only {word_count} words (minimum: {min_chapter_length}{tolerance_info}). Extending...[/yellow]")
 
             # Create a prompt to extend the chapter
             # Request more words than actually needed to ensure we meet the minimum
@@ -1052,6 +1440,12 @@ class NovelGenerator:
             # Recount words
             word_count = count_words(chapter_text)
             console.print(f"[green]Chapter extended to {word_count} words[/green]")
+        else:
+            # Chapter meets effective minimum - show acceptance message for all genres
+            if word_count < min_chapter_length:
+                console.print(f"[green]Chapter {chapter_num} accepted with {word_count} words (within tolerance of {min_chapter_length} minimum)[/green]")
+            else:
+                console.print(f"[green]Chapter {chapter_num} meets requirements with {word_count} words[/green]")
 
         # Create a summary for memory
         # Use more content for summary if chapter is short, or if first 2000 chars don't contain much content
@@ -1180,7 +1574,11 @@ class NovelGenerator:
 
                 if pov_structure:
                     # Use the new flexible POV assignment
-                    chapter_outline_text = chapter_outline if isinstance(chapter_outline, str) else ""
+                    # Get chapter outline from context
+                    chapter_outline_text = context.get("chapter_title", "")
+                    if chapter_num <= len(context["structure"]["outline"]):
+                        chapter_outline_text = context["structure"]["outline"][chapter_num - 1]
+
                     pov_character = assign_chapter_pov(
                         chapter_num=chapter_num,
                         pov_structure=pov_structure,
@@ -1226,7 +1624,15 @@ class NovelGenerator:
         if self.generation_options:
             if 'chapter_length' in self.generation_options:
                 chapter_length = self.generation_options['chapter_length']
-                target_chapter_length = f"{chapter_length-500:,}-{chapter_length+500:,}"
+                # For Romance and similar genres, use a much wider upper range to encourage longer chapters
+                if genre.lower() in ['romance', 'contemporary romance', 'paranormal romance']:
+                    # ULTRA-AGGRESSIVE Romance: aim much higher to ensure we hit 4,000+ words minimum
+                    # Target 5,500-7,000 words to consistently hit 4,000+ on first try
+                    target_chapter_length = f"{chapter_length+500:,}-{chapter_length+2000:,}"  # e.g., 5,500-7,000
+                else:
+                    # Improved target range for all other genres to reduce extensions
+                    # Aim higher than minimum to account for tolerance system
+                    target_chapter_length = f"{chapter_length:,}-{chapter_length+1000:,}"  # e.g., 3,500-4,500
 
             if 'min_chapter_length' in self.generation_options:
                 min_chapter_length = self.generation_options['min_chapter_length']
@@ -1358,110 +1764,138 @@ class NovelGenerator:
                     for element, details in universe["world_building"].items():
                         series_info += f"- {element}: {details}\n"
 
-        # Create the prompt
-        prompt = f"""
-        You are writing Chapter {chapter_num}: "{chapter_title}" of a {metadata['genre']} novel titled "{metadata['title']}"
-        for {metadata['target_audience']} audience.
+        # Try to get genre-specific chapter prompt
+        prompt = get_prompt(
+            genre=metadata['genre'],
+            prompt_type="chapter",
+            chapter_num=chapter_num,
+            chapter_title=chapter_title,
+            title=metadata['title'],
+            description=metadata['description'],
+            target_audience=metadata['target_audience'],
+            character_info=character_info,
+            previous_chapters=previous_chapter_info,
+            writing_style=writing_style,
+            pov=pov,
+            pov_instructions=pov_instructions,
+            series_info=series_info,
+            character_state_info=character_state_info,
+            relationship_info=relationship_info,
+            plot_thread_info=plot_thread_info,
+            unresolved_info=unresolved_info,
+            setting_info=setting_info,
+            thematic_info=thematic_info,
+            continuity_info=continuity_info,
+            target_chapter_length=target_chapter_length,
+            min_chapter_length=min_chapter_length
+        )
 
-        Novel description: {metadata['description']}
+        # Fallback to generic prompt if genre-specific not available
+        if not prompt:
+            log_warning("Genre-specific chapter prompt not found, using fallback", genre=metadata['genre'])
+            prompt = f"""
+            You are writing Chapter {chapter_num}: "{chapter_title}" of a {metadata['genre']} novel titled "{metadata['title']}"
+            for {metadata['target_audience']} audience.
 
-        Key characters:
-        {character_info}
+            Novel description: {metadata['description']}
 
-        Previous chapters:
-        {previous_chapter_info}
+            Key characters:
+            {character_info}
 
-        Writing style: {writing_style}
-        Point of view: {pov}
-        {pov_instructions}
+            Previous chapters:
+            {previous_chapter_info}
 
-        {series_info}
+            Writing style: {writing_style}
+            Point of view: {pov}
+            {pov_instructions}
 
-        # Current Narrative State
-        """
+            {series_info}
 
-        # Add narrative context sections if they have content
-        if character_state_info:
+            # Current Narrative State
+            """
+
+            # Add narrative context sections if they have content (only for fallback)
+            if character_state_info:
+                prompt += f"""
+            ## Character States
+            {character_state_info}
+            """
+
+            if relationship_info:
+                prompt += f"""
+            ## Relationships
+            {relationship_info}
+            """
+
+            if plot_thread_info:
+                prompt += f"""
+            ## Active Plot Threads
+            {plot_thread_info}
+            """
+
+            if unresolved_info:
+                prompt += f"""
+            ## Unresolved Questions
+            {unresolved_info}
+            """
+
+            if setting_info:
+                prompt += f"""
+            ## Current Setting
+            {setting_info}
+            """
+
+            if thematic_info:
+                prompt += f"""
+            ## Themes and Symbols
+            {thematic_info}
+            """
+
+            if continuity_info:
+                prompt += f"""
+            ## Continuity Elements
+            {continuity_info}
+            """
+
+            # Add guidelines for fallback
             prompt += f"""
-        ## Character States
-        {character_state_info}
-        """
+            # Guidelines for this chapter:
+            1. Write in the specified style and point of view
+            2. Maintain consistent character voices and personalities
+            3. Advance the plot while developing characters
+            4. Show, don't tell - demonstrate emotions through actions and dialogue
+            5. Include balanced dialogue, description, and action
+            6. End with a hook that leads to the next chapter
+            7. Aim for approximately {target_chapter_length} words
+            8. IMPORTANT: The chapter MUST be at least {min_chapter_length} words long - shorter chapters will not be accepted
+            9. Maintain narrative consistency with the Current Narrative State information provided
+            10. Address or develop at least one unresolved question if any are listed
 
-        if relationship_info:
-            prompt += f"""
-        ## Relationships
-        {relationship_info}
-        """
+            # IMPORTANT WRITING QUALITY GUIDELINES:
+            1. AVOID REPETITIVE INTERNAL MONOLOGUES - vary the character's thoughts and emotional responses
+            2. Use specific, vivid details for settings and cultural elements - avoid generic placeholders
+            3. Vary sentence structure and paragraph length for better pacing
+            4. Integrate subplot elements naturally into the main narrative
+            5. Ensure thematic elements are woven subtly into the narrative
+            6. Limit melodramatic prose - use restraint with emotional descriptions
+            7. Develop secondary characters with clear motivations and distinct personalities
+            8. Use concrete cultural and setting details that feel authentic to the world
+            9. Maintain consistent character voices based on their established personalities
+            10. Foreshadow future developments without being heavy-handed
 
-        if plot_thread_info:
-            prompt += f"""
-        ## Active Plot Threads
-        {plot_thread_info}
-        """
+            Write the complete chapter, including the chapter title. Format the chapter with proper paragraphs,
+            dialogue formatting, and scene breaks where appropriate.
 
-        if unresolved_info:
-            prompt += f"""
-        ## Unresolved Questions
-        {unresolved_info}
-        """
+            IMPORTANT WORD COUNT REQUIREMENTS:
+            - Your chapter MUST be at least {min_chapter_length} words long
+            - Do not stop writing until you have reached at least {min_chapter_length} words
+            - Include detailed descriptions and fully developed scenes
+            - A typical scene is 800-1,200 words
+            - Include enough scenes to reach the minimum word count
+            - Do not summarize or rush the narrative
 
-        if setting_info:
-            prompt += f"""
-        ## Current Setting
-        {setting_info}
-        """
-
-        if thematic_info:
-            prompt += f"""
-        ## Themes and Symbols
-        {thematic_info}
-        """
-
-        if continuity_info:
-            prompt += f"""
-        ## Continuity Elements
-        {continuity_info}
-        """
-
-        # Add guidelines
-        prompt += f"""
-        # Guidelines for this chapter:
-        1. Write in the specified style and point of view
-        2. Maintain consistent character voices and personalities
-        3. Advance the plot while developing characters
-        4. Show, don't tell - demonstrate emotions through actions and dialogue
-        5. Include balanced dialogue, description, and action
-        6. End with a hook that leads to the next chapter
-        7. Aim for approximately {target_chapter_length} words
-        8. IMPORTANT: The chapter MUST be at least {min_chapter_length} words long - shorter chapters will not be accepted
-        9. Maintain narrative consistency with the Current Narrative State information provided
-        10. Address or develop at least one unresolved question if any are listed
-
-        # IMPORTANT WRITING QUALITY GUIDELINES:
-        1. AVOID REPETITIVE INTERNAL MONOLOGUES - vary the character's thoughts and emotional responses
-        2. Use specific, vivid details for settings and cultural elements - avoid generic placeholders
-        3. Vary sentence structure and paragraph length for better pacing
-        4. Integrate subplot elements naturally into the main narrative
-        5. Ensure thematic elements are woven subtly into the narrative
-        6. Limit melodramatic prose - use restraint with emotional descriptions
-        7. Develop secondary characters with clear motivations and distinct personalities
-        8. Use concrete cultural and setting details that feel authentic to the world
-        9. Maintain consistent character voices based on their established personalities
-        10. Foreshadow future developments without being heavy-handed
-
-        Write the complete chapter, including the chapter title. Format the chapter with proper paragraphs,
-        dialogue formatting, and scene breaks where appropriate.
-
-        IMPORTANT WORD COUNT REQUIREMENTS:
-        - Your chapter MUST be at least {min_chapter_length} words long
-        - Do not stop writing until you have reached at least {min_chapter_length} words
-        - Include detailed descriptions and fully developed scenes
-        - A typical scene is 800-1,200 words
-        - Include enough scenes to reach the minimum word count
-        - Do not summarize or rush the narrative
-
-        Your entire response should be at least {min_chapter_length} words.
-        """
+            Your entire response should be at least {min_chapter_length} words.
+            """
 
         return prompt
 
@@ -1602,88 +2036,103 @@ class NovelGenerator:
             if "voice" in char and char["voice"]:
                 character_voices += f"{char['name']}: {char['voice']}\n"
 
-        # Create enhancement prompt with focus on addressing common flaws
-        enhancement_prompt = f"""
-        # Content Enhancement Request for Novel Chapter
+        # Try to get genre-specific enhancement prompt
+        enhancement_prompt = get_prompt(
+            genre=context['metadata']['genre'],
+            prompt_type="enhancement",
+            chapter_text=chapter_text,
+            chapter_num=chapter_num,
+            chapter_title=chapter_title,
+            previous_chapter_info=previous_chapter_info,
+            pov_character=pov_character.get('name') if pov_character else 'Third person limited',
+            character_voices=character_voices,
+            target_audience=context['metadata']['target_audience']
+        )
 
-        ## Current Chapter Context
-        Chapter {chapter_num}: "{chapter_title}"
-        Previous chapter summary: {previous_chapter_info}
-        POV Character: {pov_character.get('name') if pov_character else 'Third person limited'}
+        # Fallback to generic prompt if genre-specific not available
+        if not enhancement_prompt:
+            log_warning("Genre-specific enhancement prompt not found, using fallback", genre=context['metadata']['genre'])
+            enhancement_prompt = f"""
+            # Content Enhancement Request for Novel Chapter
 
-        ## CRITICAL IMPROVEMENT AREAS
+            ## Current Chapter Context
+            Chapter {chapter_num}: "{chapter_title}"
+            Previous chapter summary: {previous_chapter_info}
+            POV Character: {pov_character.get('name') if pov_character else 'Third person limited'}
 
-        ### Prose Quality Improvements
-        - REDUCE VERBOSE AND MELODRAMATIC PROSE - use concise, impactful language instead of flowery excess
-        - Avoid long, convoluted sentences that slow pacing - aim for clarity and impact
-        - Eliminate redundant descriptions and unnecessary adverbs
-        - Replace generic metaphors with fresh, specific imagery relevant to the story world
-        - Vary paragraph length for better pacing - use short paragraphs for emphasis
+            ## CRITICAL IMPROVEMENT AREAS
 
-        ### Internal Monologue Improvements
-        - REDUCE REPETITIVE INTERNAL MONOLOGUES - vary the character's thoughts and emotional responses
-        - Limit internal monologues to key moments of character development
-        - Show emotions through physical reactions and dialogue instead of explicit thought
-        - Ensure each internal thought adds new information or perspective
-        - Avoid repeating the same emotional beats multiple times
+            ### Prose Quality Improvements
+            - REDUCE VERBOSE AND MELODRAMATIC PROSE - use concise, impactful language instead of flowery excess
+            - Avoid long, convoluted sentences that slow pacing - aim for clarity and impact
+            - Eliminate redundant descriptions and unnecessary adverbs
+            - Replace generic metaphors with fresh, specific imagery relevant to the story world
+            - Vary paragraph length for better pacing - use short paragraphs for emphasis
 
-        ### Setting and Cultural Detail Improvements
-        - REPLACE GENERIC CULTURAL AND SETTING DETAILS with vivid, specific elements
-        - Add authentic sensory details that ground scenes in the specific location
-        - Include cultural nuances that feel researched and authentic
-        - Create a sense of place through specific environmental details
-        - Ensure setting descriptions serve the story and mood
+            ### Internal Monologue Improvements
+            - REDUCE REPETITIVE INTERNAL MONOLOGUES - vary the character's thoughts and emotional responses
+            - Limit internal monologues to key moments of character development
+            - Show emotions through physical reactions and dialogue instead of explicit thought
+            - Ensure each internal thought adds new information or perspective
+            - Avoid repeating the same emotional beats multiple times
 
-        ### Character Voice Improvements
-        - Ensure each character has a DISTINCT VOICE based on their background and personality
-        - Use the following character voice guidelines:
-        {character_voices}
-        - Develop secondary characters with clear motivations and personalities
-        - Show character relationships through meaningful interactions
+            ### Setting and Cultural Detail Improvements
+            - REPLACE GENERIC CULTURAL AND SETTING DETAILS with vivid, specific elements
+            - Add authentic sensory details that ground scenes in the specific location
+            - Include cultural nuances that feel researched and authentic
+            - Create a sense of place through specific environmental details
+            - Ensure setting descriptions serve the story and mood
 
-        ### Subplot Integration Improvements
-        - Weave subplot elements naturally into the main narrative
-        - Ensure thematic consistency throughout the chapter
-        - Connect character moments to larger themes
-        - Balance multiple narrative threads without losing focus
+            ### Character Voice Improvements
+            - Ensure each character has a DISTINCT VOICE based on their background and personality
+            - Use the following character voice guidelines:
+            {character_voices}
+            - Develop secondary characters with clear motivations and personalities
+            - Show character relationships through meaningful interactions
 
-        ## Additional Enhancement Instructions
+            ### Subplot Integration Improvements
+            - Weave subplot elements naturally into the main narrative
+            - Ensure thematic consistency throughout the chapter
+            - Connect character moments to larger themes
+            - Balance multiple narrative threads without losing focus
 
-        ### Author Style Emulation
-        - Vary sentence length with a mix of short, punchy sentences and longer, flowing ones
-        - Use distinctive transitional phrases that feel natural and authentic
-        - Balance dialogue-to-narration ratio appropriate for {context['metadata']['genre']}
-        - Employ varied dialogue tags beyond "said" and "asked"
-        - Integrate sensory details across all five senses
+            ## Additional Enhancement Instructions
 
-        ### Narrative Enhancement
-        - Improve pacing by creating clear tension-and-release patterns
-        - Enhance scene transitions to flow naturally between settings and time periods
-        - Add meaningful subtext to dialogue exchanges
-        - Incorporate subtle foreshadowing that connects to future plot points
-        - Balance exposition with action and dialogue
+            ### Author Style Emulation
+            - Vary sentence length with a mix of short, punchy sentences and longer, flowing ones
+            - Use distinctive transitional phrases that feel natural and authentic
+            - Balance dialogue-to-narration ratio appropriate for {context['metadata']['genre']}
+            - Employ varied dialogue tags beyond "said" and "asked"
+            - Integrate sensory details across all five senses
 
-        ### Humanization Elements
-        - Add small imperfections in dialogue (occasional interruptions, realistic hesitations)
-        - Include subtle character quirks and habits that feel authentic
-        - Incorporate moments of unexpected emotion or humor
-        - Add small sensory details that ground the scene in reality
-        - Include brief moments of introspection that reveal character depth
-        - Ensure characters react authentically to events based on their established personalities
+            ### Narrative Enhancement
+            - Improve pacing by creating clear tension-and-release patterns
+            - Enhance scene transitions to flow naturally between settings and time periods
+            - Add meaningful subtext to dialogue exchanges
+            - Incorporate subtle foreshadowing that connects to future plot points
+            - Balance exposition with action and dialogue
 
-        ### Technical Requirements
-        - Maintain approximately 3000-4000 words
-        - Ensure POV consistency from {pov_character.get('name') if pov_character else 'the main character'}'s perspective only
-        - Balance paragraph lengths for readability
-        - Use appropriate scene breaks where needed
-        - Maintain consistent tense throughout
+            ### Humanization Elements
+            - Add small imperfections in dialogue (occasional interruptions, realistic hesitations)
+            - Include subtle character quirks and habits that feel authentic
+            - Incorporate moments of unexpected emotion or humor
+            - Add small sensory details that ground the scene in reality
+            - Include brief moments of introspection that reveal character depth
+            - Ensure characters react authentically to events based on their established personalities
 
-        ## Original Chapter Text
-        {chapter_text}
+            ### Technical Requirements
+            - Maintain approximately 3000-4000 words
+            - Ensure POV consistency from {pov_character.get('name') if pov_character else 'the main character'}'s perspective only
+            - Balance paragraph lengths for readability
+            - Use appropriate scene breaks where needed
+            - Maintain consistent tense throughout
 
-        ## Output Format
-        Please provide the enhanced chapter as a complete text, maintaining the original chapter title and number. Include any scene breaks with appropriate formatting.
-        """
+            ## Original Chapter Text
+            {chapter_text}
+
+            ## Output Format
+            Please provide the enhanced chapter as a complete text, maintaining the original chapter title and number. Include any scene breaks with appropriate formatting.
+            """
 
 
 
@@ -1823,10 +2272,50 @@ class NovelGenerator:
         novel = {
             "metadata": self.memory_manager.metadata,
             "writer_profile": writer_profile,
+            "generation_options": self.generation_options or {},
             "outline": chapter_outlines,
             "characters": characters,
             "chapters": chapters,
             "word_count": self.memory_manager.structure["current_word_count"]
         }
 
+        # Generate cover prompt after novel completion
+        self._generate_cover_prompt_after_completion(novel)
+
         return novel
+
+    def _generate_cover_prompt_after_completion(self, novel: Dict[str, Any]) -> None:
+        """
+        Generate cover prompt after novel completion.
+
+        Args:
+            novel: Complete novel data
+        """
+        try:
+            from src.utils.cover_prompt_generator import CoverPromptGenerator
+
+            # Get output directory from memory manager
+            output_dir = os.path.dirname(self.memory_manager.memory_file) if self.memory_manager.memory_file else "."
+
+            # Check if this is part of a series
+            series_info = None
+            if (self.memory_manager.metadata.get("series") and
+                self.memory_manager.metadata["series"].get("series_title")):
+                series_info = {
+                    "series_title": self.memory_manager.metadata["series"]["series_title"],
+                    "book_number": self.memory_manager.metadata["series"].get("book_number", 1)
+                }
+
+            # Generate the cover prompt
+            console.print("[bold cyan]Generating cover prompt...[/bold cyan]")
+            prompt_generator = CoverPromptGenerator()
+            prompt_path = prompt_generator.generate_cover_prompt(
+                novel_data=novel,
+                output_dir=output_dir,
+                series_info=series_info
+            )
+
+            console.print(f"[bold green]✓[/bold green] Cover prompt saved to: [bold cyan]{prompt_path}[/bold cyan]")
+
+        except Exception as e:
+            console.print(f"[bold yellow]Warning: Could not generate cover prompt: {str(e)}[/bold yellow]")

@@ -102,6 +102,62 @@ class AcademicPrompts(NonFictionBasePrompts):
 '''
         return base_prompt + academic_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a academic-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        academic_series_additions = """
+
+## Academic Series-Specific Planning Elements
+
+### Educational Progression for Academic
+- **Knowledge Building**: Structure learning progression appropriate for academic topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of academic subjects
+- **Practical Applications**: Include actionable insights specific to academic throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for academic authority
+- **Reader Value**: Ensure each book provides significant academic value while building series knowledge
+
+### Academic Series Continuity
+- **Subject Consistency**: Maintain consistent approach to academic topics across books
+- **Authority Building**: Establish and maintain credibility in academic throughout the series
+- **Information Architecture**: Structure information flow appropriate for academic learning
+- **Cross-References**: Create meaningful connections between academic concepts across books
+- **Updated Knowledge**: Plan for incorporating new academic research and developments
+
+Create a academic series that provides comprehensive education with authoritative, well-researched content.
+"""
+
+        return base_prompt + academic_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a academic-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        academic_book_additions = """
+
+## Academic Series Book Integration
+
+### Academic Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon academic concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous academic books when relevant
+- **Knowledge Progression**: Advance reader understanding of academic topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the academic series
+
+### Book-Specific Academic Focus
+- **Educational Objectives**: What specific academic knowledge will readers gain from this book?
+- **Practical Applications**: What actionable academic insights will be provided?
+- **Research Integration**: How will new academic research be incorporated?
+- **Series Advancement**: How does this book advance the overall academic education series?
+- **Reader Value**: What unique academic value does this book add to the series?
+
+Ensure this book provides comprehensive academic education while serving as an integral part of the learning series.
+"""
+
+        return base_prompt + academic_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return AcademicPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -116,3 +172,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return AcademicPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return AcademicPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return AcademicPrompts.get_series_book_prompt(**kwargs)

@@ -104,6 +104,62 @@ class HistoryPrompts(NonFictionBasePrompts):
 '''
         return base_prompt + history_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a history-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        history_series_additions = """
+
+## History Series-Specific Planning Elements
+
+### Educational Progression for History
+- **Knowledge Building**: Structure learning progression appropriate for history topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of history subjects
+- **Practical Applications**: Include actionable insights specific to history throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for history authority
+- **Reader Value**: Ensure each book provides significant history value while building series knowledge
+
+### History Series Continuity
+- **Subject Consistency**: Maintain consistent approach to history topics across books
+- **Authority Building**: Establish and maintain credibility in history throughout the series
+- **Information Architecture**: Structure information flow appropriate for history learning
+- **Cross-References**: Create meaningful connections between history concepts across books
+- **Updated Knowledge**: Plan for incorporating new history research and developments
+
+Create a history series that provides comprehensive education with authoritative, well-researched content.
+"""
+
+        return base_prompt + history_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a history-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        history_book_additions = """
+
+## History Series Book Integration
+
+### History Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon history concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous history books when relevant
+- **Knowledge Progression**: Advance reader understanding of history topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the history series
+
+### Book-Specific History Focus
+- **Educational Objectives**: What specific history knowledge will readers gain from this book?
+- **Practical Applications**: What actionable history insights will be provided?
+- **Research Integration**: How will new history research be incorporated?
+- **Series Advancement**: How does this book advance the overall history education series?
+- **Reader Value**: What unique history value does this book add to the series?
+
+Ensure this book provides comprehensive history education while serving as an integral part of the learning series.
+"""
+
+        return base_prompt + history_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return HistoryPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -118,3 +174,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return HistoryPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return HistoryPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return HistoryPrompts.get_series_book_prompt(**kwargs)

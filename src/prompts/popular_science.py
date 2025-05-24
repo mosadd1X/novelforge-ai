@@ -110,6 +110,63 @@ class PopularSciencePrompts(NonFictionBasePrompts):
 '''
         return base_prompt + popular_science_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a popularscience-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        popularscience_series_additions = """
+
+## PopularScience Series-Specific Planning Elements
+
+### Educational Progression for PopularScience
+- **Knowledge Building**: Structure learning progression appropriate for popularscience topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of popularscience subjects
+- **Practical Applications**: Include actionable insights specific to popularscience throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for popularscience authority
+- **Reader Value**: Ensure each book provides significant popularscience value while building series knowledge
+
+### PopularScience Series Continuity
+- **Subject Consistency**: Maintain consistent approach to popularscience topics across books
+- **Authority Building**: Establish and maintain credibility in popularscience throughout the series
+- **Information Architecture**: Structure information flow appropriate for popularscience learning
+- **Cross-References**: Create meaningful connections between popularscience concepts across books
+- **Updated Knowledge**: Plan for incorporating new popularscience research and developments
+
+Create a popularscience series that provides comprehensive education with authoritative, well-researched content.
+"""
+        
+        return base_prompt + popularscience_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a popularscience-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        popularscience_book_additions = """
+
+## PopularScience Series Book Integration
+
+### PopularScience Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon popularscience concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous popularscience books when relevant
+- **Knowledge Progression**: Advance reader understanding of popularscience topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the popularscience series
+
+### Book-Specific PopularScience Focus
+- **Educational Objectives**: What specific popularscience knowledge will readers gain from this book?
+- **Practical Applications**: What actionable popularscience insights will be provided?
+- **Research Integration**: How will new popularscience research be incorporated?
+- **Series Advancement**: How does this book advance the overall popularscience education series?
+- **Reader Value**: What unique popularscience value does this book add to the series?
+
+Ensure this book provides comprehensive popularscience education while serving as an integral part of the learning series.
+"""
+        
+        return base_prompt + popularscience_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return PopularSciencePrompts.get_writer_profile_prompt(**kwargs)
@@ -125,3 +182,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return PopularSciencePrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return PopularSciencePrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return PopularSciencePrompts.get_series_book_prompt(**kwargs)

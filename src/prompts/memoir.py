@@ -104,6 +104,62 @@ class MemoirPrompts(NonFictionBasePrompts):
 '''
         return base_prompt + memoir_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a memoir-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        memoir_series_additions = """
+
+## Memoir Series-Specific Planning Elements
+
+### Educational Progression for Memoir
+- **Knowledge Building**: Structure learning progression appropriate for memoir topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of memoir subjects
+- **Practical Applications**: Include actionable insights specific to memoir throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for memoir authority
+- **Reader Value**: Ensure each book provides significant memoir value while building series knowledge
+
+### Memoir Series Continuity
+- **Subject Consistency**: Maintain consistent approach to memoir topics across books
+- **Authority Building**: Establish and maintain credibility in memoir throughout the series
+- **Information Architecture**: Structure information flow appropriate for memoir learning
+- **Cross-References**: Create meaningful connections between memoir concepts across books
+- **Updated Knowledge**: Plan for incorporating new memoir research and developments
+
+Create a memoir series that provides comprehensive education with authoritative, well-researched content.
+"""
+
+        return base_prompt + memoir_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a memoir-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        memoir_book_additions = """
+
+## Memoir Series Book Integration
+
+### Memoir Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon memoir concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous memoir books when relevant
+- **Knowledge Progression**: Advance reader understanding of memoir topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the memoir series
+
+### Book-Specific Memoir Focus
+- **Educational Objectives**: What specific memoir knowledge will readers gain from this book?
+- **Practical Applications**: What actionable memoir insights will be provided?
+- **Research Integration**: How will new memoir research be incorporated?
+- **Series Advancement**: How does this book advance the overall memoir education series?
+- **Reader Value**: What unique memoir value does this book add to the series?
+
+Ensure this book provides comprehensive memoir education while serving as an integral part of the learning series.
+"""
+
+        return base_prompt + memoir_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return MemoirPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -118,3 +174,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return MemoirPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return MemoirPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return MemoirPrompts.get_series_book_prompt(**kwargs)

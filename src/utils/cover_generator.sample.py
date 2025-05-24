@@ -5,11 +5,9 @@ This module creates book covers using programmatic elements with techniques like
 dynamic typography, color gradients, patterns, and embossed effects.
 """
 import os
-import math
-import random
 import numpy as np
-from typing import Tuple, Optional, List, Dict, Any
-from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops
+from typing import Tuple, Optional, List, Dict
+from PIL import Image, ImageDraw, ImageFont, ImageChops
 import logging
 
 # Set up logging

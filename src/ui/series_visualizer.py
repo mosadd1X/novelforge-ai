@@ -1,12 +1,9 @@
 """
 Visualization tools for series data.
 """
-import os
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from rich.console import Console
 from rich.table import Table
-from rich.panel import Panel
-from rich.text import Text
 from rich.tree import Tree
 from rich import box
 from rich.progress import BarColumn, Progress

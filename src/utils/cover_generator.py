@@ -10,7 +10,7 @@ import math
 import random
 import numpy as np
 from typing import Tuple, Optional, List, Dict, Any
-from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops, ImageOps, ImageEnhance
+from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageChops, ImageEnhance
 from rich.console import Console
 import logging
 
@@ -543,6 +543,105 @@ class CoverGenerator:
 
         return identified_themes
 
+    def _process_provided_themes(self, themes: List[str]) -> List[str]:
+        """
+        Process provided themes to extract visual theme keywords.
+
+        Args:
+            themes: List of theme strings from novel data or genre defaults
+
+        Returns:
+            List of processed theme keywords for visual elements
+        """
+        if not themes:
+            return []
+
+        processed_themes = []
+
+        # Map complex theme descriptions to visual theme keywords
+        theme_mapping = {
+            # Romance themes
+            "love": ["love", "romance", "hearts"],
+            "relationships": ["love", "romance", "hearts"],
+            "unspoken love": ["love", "romance", "mystery"],
+            "emotional sacrifice": ["love", "drama"],
+            "communication beyond words": ["love", "mystery"],
+            "cultural identity": ["historical", "family"],
+            "family expectations": ["family", "historical"],
+            "personal growth": ["nature", "adventure"],
+            "modern love": ["love", "contemporary"],
+            "career vs relationships": ["love", "contemporary"],
+
+            # Fantasy themes
+            "good vs evil": ["magic", "war"],
+            "power": ["magic", "war"],
+            "magic": ["magic"],
+            "supernatural": ["magic"],
+
+            # Mystery/Thriller themes
+            "secrets": ["mystery"],
+            "deception": ["mystery"],
+            "justice": ["mystery", "war"],
+
+            # General themes
+            "identity": ["adventure"],
+            "self-discovery": ["adventure", "nature"],
+            "survival": ["adventure", "war"],
+            "technology": ["technology"],
+            "space": ["space"],
+            "historical": ["historical"],
+            "nature": ["nature"],
+            "horror": ["horror"],
+        }
+
+        for theme in themes:
+            theme_lower = theme.lower()
+
+            # Check for direct matches or partial matches
+            for key, visual_themes in theme_mapping.items():
+                if key in theme_lower or any(word in theme_lower for word in key.split()):
+                    processed_themes.extend(visual_themes)
+
+        # Remove duplicates while preserving order
+        seen = set()
+        unique_themes = []
+        for theme in processed_themes:
+            if theme not in seen:
+                seen.add(theme)
+                unique_themes.append(theme)
+
+        return unique_themes
+
+    def _get_genre_default_themes(self, genre: str) -> List[str]:
+        """
+        Get default themes for a genre as fallback.
+
+        Args:
+            genre: Book genre
+
+        Returns:
+            List of default visual themes for the genre
+        """
+        genre_theme_defaults = {
+            "romance": ["love", "romance"],
+            "contemporary romance": ["love", "romance"],
+            "fantasy": ["magic", "adventure"],
+            "mystery": ["mystery"],
+            "thriller": ["mystery", "adventure"],
+            "science fiction": ["technology", "space"],
+            "historical fiction": ["historical"],
+            "horror": ["horror"],
+            "adventure": ["adventure"],
+            "literary fiction": ["nature"],
+        }
+
+        genre_lower = genre.lower()
+        for key, themes in genre_theme_defaults.items():
+            if key in genre_lower or genre_lower in key:
+                return themes
+
+        return []
+
     def _create_advanced_gradient(self, width: int, height: int, colors: List[Tuple[int, int, int]],
                                   style: str = "linear") -> Image.Image:
         """Create sophisticated gradient backgrounds."""
@@ -980,7 +1079,7 @@ class CoverGenerator:
     def generate_cover(self, title: str, author: str, genre: str = "fantasy",
                       subtitle: str = None, series_info: Dict[str, Any] = None,
                       design_style: str = None, output_path: Optional[str] = None,
-                      description: str = "") -> str:
+                      description: str = "", themes: List[str] = None) -> str:
         """
         Generate an enhanced cover for a book with advanced variations.
 
@@ -993,15 +1092,30 @@ class CoverGenerator:
             design_style: Cover design style (optional) - one of the enhanced styles
             output_path: Path to save the cover image, if None generates a path
             description: Book description for content analysis (optional)
+            themes: List of themes from novel data, genre defaults, or series config (optional)
 
         Returns:
             Path to the generated cover image
         """
         console.print(f"[bold cyan]Generating enhanced cover for '[/bold cyan][bold yellow]{title}[/bold yellow][bold cyan]' by {author}[/bold cyan]")
 
-        # Analyze content for intelligent palette and style selection
-        themes = self._analyze_content_themes(title, description)
-        console.print(f"[dim]Detected themes: {', '.join(themes) if themes else 'None'}[/dim]")
+        # Use provided themes or analyze content for intelligent palette and style selection
+        if themes:
+            # Use provided themes (from genre defaults, series config, or novel data)
+            detected_themes = self._process_provided_themes(themes)
+            console.print(f"[dim]Using provided themes: {', '.join(detected_themes) if detected_themes else 'None'}[/dim]")
+        else:
+            # Fallback to content analysis
+            detected_themes = self._analyze_content_themes(title, description)
+            console.print(f"[dim]Detected themes from content: {', '.join(detected_themes) if detected_themes else 'None'}[/dim]")
+
+        # If no themes detected, try to get genre default themes as final fallback
+        if not detected_themes:
+            detected_themes = self._get_genre_default_themes(genre)
+            if detected_themes:
+                console.print(f"[dim]Using genre default themes: {', '.join(detected_themes)}[/dim]")
+            else:
+                console.print(f"[dim]No themes available for cover generation[/dim]")
 
         # Select palette variation based on content analysis
         palette = self._select_palette_variation(genre, title, description)
@@ -1030,7 +1144,7 @@ class CoverGenerator:
         if design_style in ["modern", "artistic", "dramatic", "elegant", "vintage", "bold"]:
             # Use advanced background creation for new styles
             base_img = self._create_advanced_background(
-                self.width, self.height, palette, design_style, themes
+                self.width, self.height, palette, design_style, detected_themes
             )
         elif design_style == "gradient":
             # Enhanced gradient with more variation

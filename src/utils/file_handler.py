@@ -4,9 +4,8 @@ Utility functions for file operations.
 import os
 import json
 import zipfile
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List, Tuple
 from datetime import datetime
-from pathlib import Path
 
 # Import SeriesManager conditionally to avoid circular imports
 try:

@@ -1,5 +1,6 @@
 """
 Client for interacting with the Gemini 2.0 Flash API.
+Enhanced with network resilience capabilities and standardized error handling.
 """
 import os
 import time
@@ -7,8 +8,14 @@ import random
 import socket
 import google.generativeai as genai
 from dotenv import load_dotenv
-from typing import Dict, List, Optional, Any, Union
+from typing import Dict, List, Any
 from requests.exceptions import RequestException, Timeout, ConnectionError
+
+# Import standardized error handling
+from src.core.exceptions import (
+    create_api_rate_limit_error, create_network_timeout_error
+)
+from src.utils.error_handler import handle_error
 
 # Load environment variables
 load_dotenv()
@@ -53,7 +60,8 @@ class GeminiClient:
         """
         Load API keys from environment variables.
 
-        Looks for GEMINI_API_KEY and GEMINI_API_KEY_1, GEMINI_API_KEY_2, etc.
+        Dynamically discovers all GEMINI_API_KEY and GEMINI_API_KEY_* variables.
+        No arbitrary limits - supports unlimited API keys.
 
         Returns:
             List of valid API keys
@@ -65,11 +73,35 @@ class GeminiClient:
         if main_key and main_key.strip():
             api_keys.append(main_key.strip())
 
-        # Try to get numbered API keys (GEMINI_API_KEY_1, GEMINI_API_KEY_2, etc.)
-        for i in range(1, 11):  # Support up to 10 additional keys
-            key = os.getenv(f"GEMINI_API_KEY_{i}")
-            if key and key.strip():
-                api_keys.append(key.strip())
+        # Dynamically discover all numbered API keys
+        # Check environment variables for GEMINI_API_KEY_* pattern
+        discovered_keys = {}
+
+        for env_var in os.environ:
+            if env_var.startswith("GEMINI_API_KEY_") and env_var != "GEMINI_API_KEY":
+                try:
+                    # Extract the number from the variable name
+                    number_part = env_var.split("GEMINI_API_KEY_")[1]
+                    key_number = int(number_part)
+
+                    # Get the key value
+                    key_value = os.getenv(env_var)
+                    if key_value and key_value.strip():
+                        discovered_keys[key_number] = key_value.strip()
+
+                except (ValueError, IndexError):
+                    # Skip invalid variable names
+                    continue
+
+        # Add discovered keys in numerical order
+        for key_number in sorted(discovered_keys.keys()):
+            api_keys.append(discovered_keys[key_number])
+
+        # Log the number of keys loaded
+        if len(api_keys) > 11:
+            print(f"INFO: Loaded {len(api_keys)} API keys (unlimited support enabled)")
+        elif len(api_keys) > 1:
+            print(f"INFO: Loaded {len(api_keys)} API keys for rotation")
 
         return api_keys
 
@@ -168,7 +200,7 @@ class GeminiClient:
                     "error": str(e)
                 }
         else:
-            # Check all keys
+            # Sequential fallback approach: test keys one by one until we find a working one
             working_keys = 0
             key_statuses = {}
             original_key_index = self.current_key_index
@@ -190,15 +222,27 @@ class GeminiClient:
                         initial_retry_delay=1.0
                     )
                     success = "Error generating content" not in response
-                    if success:
-                        working_keys += 1
 
                     # Mask the key for security
                     masked_key = f"{key[:4]}...{key[-4:]}" if len(key) > 8 else "****"
-                    key_statuses[masked_key] = {
-                        "working": success,
-                        "index": i + 1  # 1-based for display
-                    }
+
+                    if success:
+                        working_keys += 1
+                        key_statuses[masked_key] = {
+                            "working": True,
+                            "index": i + 1  # 1-based for display
+                        }
+                        print(f"✓ API key {i+1} is working - using this key")
+                        # Found a working key, stop testing others
+                        break
+                    else:
+                        key_statuses[masked_key] = {
+                            "working": False,
+                            "index": i + 1,
+                            "error": "Test failed"
+                        }
+                        print(f"✗ API key {i+1} failed - trying next key")
+
                 except Exception as e:
                     # Mask the key for security
                     masked_key = f"{key[:4]}...{key[-4:]}" if len(key) > 8 else "****"
@@ -207,11 +251,14 @@ class GeminiClient:
                         "index": i + 1,  # 1-based for display
                         "error": str(e)
                     }
+                    print(f"✗ API key {i+1} error: {str(e)[:50]}... - trying next key")
 
-            # Restore the original key
-            self.current_key_index = original_key_index
-            self._configure_current_api_key()
-            self.model = genai.GenerativeModel(MODEL)
+            # If no working key found, restore original key index
+            if working_keys == 0:
+                self.current_key_index = original_key_index
+                self._configure_current_api_key()
+                self.model = genai.GenerativeModel(MODEL)
+            # If we found a working key, we're already using it (no need to restore)
 
             return {
                 "success": working_keys > 0,
@@ -292,16 +339,46 @@ class GeminiClient:
                 retry_count += 1
 
                 if retry_count <= max_retries:
+                    # Enhanced error messaging for different network issues
+                    error_type = type(e).__name__
+                    if "timeout" in str(e).lower():
+                        error_msg = "Request timed out - your connection may be slow"
+                    elif "connection" in str(e).lower():
+                        error_msg = "Connection failed - check your internet connection"
+                    elif "dns" in str(e).lower() or "name resolution" in str(e).lower():
+                        error_msg = "DNS resolution failed - check your network settings"
+                    else:
+                        error_msg = f"Network error ({error_type})"
+
                     # Add jitter to retry delay to prevent thundering herd problem
                     jitter = random.uniform(0.1, 0.3) * retry_delay
                     sleep_time = retry_delay + jitter
-                    print(f"Network error: {e}. Retrying in {sleep_time:.1f} seconds...")
-                    time.sleep(sleep_time)
-                    # Exponential backoff
-                    retry_delay *= 2
+
+                    print(f"🌐 {error_msg}. Retrying in {sleep_time:.1f} seconds... (attempt {retry_count}/{max_retries})")
+
+                    # Show progress indicator for longer waits
+                    if sleep_time > 10:
+                        print(f"⏳ Waiting {sleep_time:.0f}s for network recovery...")
+                        for i in range(int(sleep_time)):
+                            time.sleep(1)
+                            if i % 5 == 0 and i > 0:
+                                print(f"   Still waiting... {int(sleep_time) - i}s remaining")
+                    else:
+                        time.sleep(sleep_time)
+
+                    # Exponential backoff with cap
+                    retry_delay = min(retry_delay * 2, 300)  # Cap at 5 minutes
                 else:
-                    print(f"Maximum retries ({max_retries}) exceeded. Last error: {e}")
-                    return f"Error generating content after {max_retries} retries. Network issues detected. Please check your internet connection. Details: {str(e)}"
+                    # Create standardized network timeout error
+                    timeout_error = create_network_timeout_error(retry_delay * max_retries)
+                    timeout_error.user_message = f"Network request failed after {max_retries} retries"
+                    timeout_error.details.update({
+                        'max_retries': max_retries,
+                        'last_error': str(e),
+                        'error_type': type(e).__name__
+                    })
+                    handle_error(timeout_error, "Content generation network failure")
+                    return f"Error generating content after {max_retries} retries. Network issues detected. Please check your internet connection and try again. Details: {str(e)}"
 
             except Exception as e:
                 error_str = str(e)
@@ -310,7 +387,10 @@ class GeminiClient:
                 # Check if this is a rate limit error
                 if self.is_rate_limit_error(error_str) and key_rotation_attempts < max_key_rotations:
                     key_rotation_attempts += 1
-                    print(f"Rate limit detected. Rotating API key...")
+
+                    # Create standardized rate limit error
+                    rate_limit_error = create_api_rate_limit_error("Gemini")
+                    handle_error(rate_limit_error, "API key rotation", show_suggestions=False)
 
                     # Rotate to the next API key
                     if self.rotate_api_key():
@@ -322,6 +402,15 @@ class GeminiClient:
                         continue
                     else:
                         # If we couldn't rotate to a new key, all keys are rate limited
+                        all_keys_error = create_api_rate_limit_error("Gemini")
+                        all_keys_error.user_message = "All API keys have reached their rate limits"
+                        all_keys_error.recovery_suggestions = [
+                            "Wait for rate limits to reset (usually 1 minute)",
+                            "Add more API keys to your configuration",
+                            "Reduce the frequency of requests",
+                            "Try again later"
+                        ]
+                        handle_error(all_keys_error, "All API keys rate limited")
                         return f"Error: All API keys have reached their rate limits. Please try again later."
 
                 # For non-rate-limit errors, return the error message
@@ -408,16 +497,43 @@ class GeminiClient:
                 retry_count += 1
 
                 if retry_count <= max_retries:
+                    # Enhanced error messaging for different network issues
+                    error_type = type(e).__name__
+                    if "timeout" in str(e).lower():
+                        error_msg = "Request timed out - your connection may be slow"
+                    elif "connection" in str(e).lower():
+                        error_msg = "Connection failed - check your internet connection"
+                    elif "dns" in str(e).lower() or "name resolution" in str(e).lower():
+                        error_msg = "DNS resolution failed - check your network settings"
+                    else:
+                        error_msg = f"Network error ({error_type})"
+
                     # Add jitter to retry delay to prevent thundering herd problem
                     jitter = random.uniform(0.1, 0.3) * retry_delay
                     sleep_time = retry_delay + jitter
-                    print(f"Network error: {e}. Retrying in {sleep_time:.1f} seconds...")
-                    time.sleep(sleep_time)
-                    # Exponential backoff
-                    retry_delay *= 2
+
+                    print(f"🌐 {error_msg}. Retrying context generation in {sleep_time:.1f} seconds... (attempt {retry_count}/{max_retries})")
+
+                    # Show progress indicator for longer waits
+                    if sleep_time > 10:
+                        print(f"⏳ Waiting {sleep_time:.0f}s for network recovery...")
+                        for i in range(int(sleep_time)):
+                            time.sleep(1)
+                            if i % 5 == 0 and i > 0:
+                                print(f"   Still waiting... {int(sleep_time) - i}s remaining")
+                    else:
+                        time.sleep(sleep_time)
+
+                    # Exponential backoff with cap
+                    retry_delay = min(retry_delay * 2, 300)  # Cap at 5 minutes
                 else:
-                    print(f"Maximum retries ({max_retries}) exceeded. Last error: {e}")
-                    return f"Error generating content with context after {max_retries} retries. Network issues detected. Please check your internet connection. Details: {str(e)}"
+                    print(f"❌ Maximum retries ({max_retries}) exceeded. Last error: {e}")
+                    print("💡 Troubleshooting tips:")
+                    print("   • Check your WiFi connection")
+                    print("   • Try moving closer to your router")
+                    print("   • Restart your network connection")
+                    print("   • Wait a few minutes and try again")
+                    return f"Error generating content with context after {max_retries} retries. Network issues detected. Please check your internet connection and try again. Details: {str(e)}"
 
             except Exception as e:
                 error_str = str(e)

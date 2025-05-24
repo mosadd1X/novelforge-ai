@@ -107,6 +107,63 @@ class HowToPrompts(NonFictionBasePrompts):
 '''
         return base_prompt + how_to_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a howto-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        howto_series_additions = """
+
+## HowTo Series-Specific Planning Elements
+
+### Educational Progression for HowTo
+- **Knowledge Building**: Structure learning progression appropriate for howto topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of howto subjects
+- **Practical Applications**: Include actionable insights specific to howto throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for howto authority
+- **Reader Value**: Ensure each book provides significant howto value while building series knowledge
+
+### HowTo Series Continuity
+- **Subject Consistency**: Maintain consistent approach to howto topics across books
+- **Authority Building**: Establish and maintain credibility in howto throughout the series
+- **Information Architecture**: Structure information flow appropriate for howto learning
+- **Cross-References**: Create meaningful connections between howto concepts across books
+- **Updated Knowledge**: Plan for incorporating new howto research and developments
+
+Create a howto series that provides comprehensive education with authoritative, well-researched content.
+"""
+        
+        return base_prompt + howto_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a howto-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        howto_book_additions = """
+
+## HowTo Series Book Integration
+
+### HowTo Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon howto concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous howto books when relevant
+- **Knowledge Progression**: Advance reader understanding of howto topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the howto series
+
+### Book-Specific HowTo Focus
+- **Educational Objectives**: What specific howto knowledge will readers gain from this book?
+- **Practical Applications**: What actionable howto insights will be provided?
+- **Research Integration**: How will new howto research be incorporated?
+- **Series Advancement**: How does this book advance the overall howto education series?
+- **Reader Value**: What unique howto value does this book add to the series?
+
+Ensure this book provides comprehensive howto education while serving as an integral part of the learning series.
+"""
+        
+        return base_prompt + howto_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return HowToPrompts.get_writer_profile_prompt(**kwargs)
@@ -122,3 +179,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return HowToPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return HowToPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return HowToPrompts.get_series_book_prompt(**kwargs)

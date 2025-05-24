@@ -57,3 +57,4 @@ logs/
 
 # Local development files
 local_settings.py
+ignore.pdf

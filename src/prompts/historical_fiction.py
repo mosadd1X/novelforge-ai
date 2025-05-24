@@ -110,6 +110,62 @@ class HistoricalFictionPrompts(FictionBasePrompts):
 '''
         return base_prompt + historical_fiction_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a historicalfiction-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        historicalfiction_series_additions = """
+
+## HistoricalFiction Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **HistoricalFiction Conventions**: Ensure each book fulfills historicalfiction reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to historicalfiction
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to historicalfiction
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore historicalfiction themes with increasing depth and complexity
+
+### HistoricalFiction Series Continuity
+- **Genre Elements**: Maintain consistent historicalfiction elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy historicalfiction readers
+- **Series Identity**: Establish a strong series identity that feels authentically historicalfiction
+- **World Building**: Develop the story world in ways that enhance the historicalfiction experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the historicalfiction genre
+
+Create a historicalfiction series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+
+        return base_prompt + historicalfiction_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a historicalfiction-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        historicalfiction_book_additions = """
+
+## HistoricalFiction Series Book Integration
+
+### HistoricalFiction Continuity for This Book
+- **Genre Consistency**: Maintain established historicalfiction elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to historicalfiction
+- **Plot Advancement**: Continue series plot threads while telling a complete historicalfiction story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill historicalfiction reader expectations while advancing the series narrative
+
+### Book-Specific HistoricalFiction Focus
+- **Central Conflict**: What historicalfiction-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new historicalfiction elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent historicalfiction while serving the series?
+
+Ensure this book feels like an authentic continuation of the historicalfiction series while telling a complete, satisfying story.
+"""
+
+        return base_prompt + historicalfiction_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return HistoricalFictionPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -124,3 +180,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return HistoricalFictionPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return HistoricalFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return HistoricalFictionPrompts.get_series_book_prompt(**kwargs)

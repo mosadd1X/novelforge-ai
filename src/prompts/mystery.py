@@ -187,6 +187,63 @@ Write with careful attention to logic, fair play, and maintaining reader engagem
         
         return base_prompt + mystery_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a mystery-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        mystery_series_additions = """
+
+## Mystery Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **Mystery Conventions**: Ensure each book fulfills mystery reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to mystery
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to mystery
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore mystery themes with increasing depth and complexity
+
+### Mystery Series Continuity
+- **Genre Elements**: Maintain consistent mystery elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy mystery readers
+- **Series Identity**: Establish a strong series identity that feels authentically mystery
+- **World Building**: Develop the story world in ways that enhance the mystery experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the mystery genre
+
+Create a mystery series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+        
+        return base_prompt + mystery_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a mystery-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        mystery_book_additions = """
+
+## Mystery Series Book Integration
+
+### Mystery Continuity for This Book
+- **Genre Consistency**: Maintain established mystery elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to mystery
+- **Plot Advancement**: Continue series plot threads while telling a complete mystery story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill mystery reader expectations while advancing the series narrative
+
+### Book-Specific Mystery Focus
+- **Central Conflict**: What mystery-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new mystery elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent mystery while serving the series?
+
+Ensure this book feels like an authentic continuation of the mystery series while telling a complete, satisfying story.
+"""
+        
+        return base_prompt + mystery_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return MysteryPrompts.get_writer_profile_prompt(**kwargs)
@@ -202,3 +259,9 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return MysteryPrompts.get_enhancement_prompt(**kwargs)
+
+def get_series_plan_prompt(**kwargs) -> str:
+    return MysteryPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return MysteryPrompts.get_series_book_prompt(**kwargs)

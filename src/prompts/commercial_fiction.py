@@ -128,6 +128,63 @@ class CommercialFictionPrompts(FictionBasePrompts):
         return base_prompt + commercial_fiction_additions
 
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a commercialfiction-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        commercialfiction_series_additions = """
+
+## CommercialFiction Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **CommercialFiction Conventions**: Ensure each book fulfills commercialfiction reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to commercialfiction
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to commercialfiction
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore commercialfiction themes with increasing depth and complexity
+
+### CommercialFiction Series Continuity
+- **Genre Elements**: Maintain consistent commercialfiction elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy commercialfiction readers
+- **Series Identity**: Establish a strong series identity that feels authentically commercialfiction
+- **World Building**: Develop the story world in ways that enhance the commercialfiction experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the commercialfiction genre
+
+Create a commercialfiction series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+        
+        return base_prompt + commercialfiction_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a commercialfiction-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        commercialfiction_book_additions = """
+
+## CommercialFiction Series Book Integration
+
+### CommercialFiction Continuity for This Book
+- **Genre Consistency**: Maintain established commercialfiction elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to commercialfiction
+- **Plot Advancement**: Continue series plot threads while telling a complete commercialfiction story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill commercialfiction reader expectations while advancing the series narrative
+
+### Book-Specific CommercialFiction Focus
+- **Central Conflict**: What commercialfiction-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new commercialfiction elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent commercialfiction while serving the series?
+
+Ensure this book feels like an authentic continuation of the commercialfiction series while telling a complete, satisfying story.
+"""
+        
+        return base_prompt + commercialfiction_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return CommercialFictionPrompts.get_writer_profile_prompt(**kwargs)
@@ -143,3 +200,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return CommercialFictionPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return CommercialFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return CommercialFictionPrompts.get_series_book_prompt(**kwargs)

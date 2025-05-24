@@ -44,7 +44,7 @@ Chapter Parameters:
 - min_chapter_length: Minimum words per chapter to avoid excessive chapter splitting
 """
 import re
-from typing import Dict, Any, List, Optional, Tuple, Set
+from typing import Dict, Any, List, Optional, Tuple
 
 
 def get_genre_defaults(genre: str) -> Dict[str, Any]:
@@ -133,15 +133,16 @@ def get_genre_defaults(genre: str) -> Dict[str, Any]:
             "min_chapter_length": 2000,
         },
         "romance": {
-            "target_length": "medium",
+            "target_length": "long",
             "writing_style": "Descriptive and detailed",
             "pov": "Alternating POVs",
-            "themes": [ "Unspoken love and silent longing", "Grief and the weight of memory", "Emotional sacrifice and selflessness", "Love shaped by loss", "The fragility of human connection", "Identity beyond the past", "Forgiveness — of others and oneself", "Healing without forgetting", "The silence between words unsaid", "Ambition vs. emotional fulfillment", "Time as both healer and destroyer", "The complexity of second chances", "Cultural expectations and personal choices", "Mental health and invisible wounds", "The quiet power of presence" ],
+            # "themes": [ "Unspoken love and silent longing", "Grief and the weight of memory", "Emotional sacrifice and selflessness", "Love shaped by loss", "The fragility of human connection", "Identity beyond the past", "Forgiveness — of others and oneself", "Healing without forgetting", "The silence between words unsaid", "Ambition vs. emotional fulfillment", "Time as both healer and destroyer", "The complexity of second chances", "Cultural expectations and personal choices", "Mental health and invisible wounds", "The quiet power of presence" ],
             # "themes": ["Unspoken Love", "Emotional Sacrifice", "Mental Health Struggles", "Longing Without Receiving", "Love That Goes Unnoticed", "Letting Go When It Hurts the Most"],
-            "chapter_count": 25,
-            "target_word_count": 90000,
-            "chapter_length": 3100,
-            "min_chapter_length": 3600,
+            "themes": ["Unspoken love and silent longing","Emotional sacrifice and selflessness","Communication beyond words","Faith, spirituality, and inner peace","Cultural identity and family expectations","Personal growth through pain","The complexity of saying 'No' and meaning 'Not now'","Love that evolves without possession","Introversion and finding voice in silence","Dreams vs. duty"],
+            "chapter_count": 22,  # Reduced from 25 to align with optimized chapter length (22 × 5000 = 110,000 words)
+            "target_word_count": 110000,  # Increased to match aggressive chapter length targets
+            "chapter_length": 5000,  # High target to ensure 4,000+ word generation on first attempt
+            "min_chapter_length": 4000,  # Extension threshold - no extension needed if ≥4,000 words
             "pov_structure": "flexible_alternating",
             "pov_pattern": "story_driven",
             "pov_characters": ["male_protagonist", "female_protagonist"],
@@ -394,9 +395,9 @@ def get_genre_defaults(genre: str) -> Dict[str, Any]:
             "writing_style": "Poetic and lyrical",
             "pov": "Varied",
             "themes": ["Varied themes", "Emotional depth", "Imagery"],
-            "chapter_count": 70,
-            "target_word_count": 35000,
-            "chapter_length": 500,
+            "chapter_count": 6,  # Sections, not individual poems (AI determines actual count: 5-8 for short)
+            "target_word_count": 5000,  # More realistic for poetry collections
+            "chapter_length": 800,  # Average words per section
             "min_chapter_length": 300,
         },
         "creative non-fiction": {
@@ -439,8 +440,22 @@ def get_genre_defaults(genre: str) -> Dict[str, Any]:
             "chapter_length": 3200,
             "min_chapter_length": 3000,
         },
+        "contemporary romance": {
+            "target_length": "long",
+            "writing_style": "Emotionally rich and culturally authentic",
+            "pov": "Alternating POVs",
+            "themes": ["Modern Love", "Cultural Identity", "Career vs. Relationships", "Family Expectations", "Personal Growth Through Love", "Contemporary Social Issues"],
+            "chapter_count": 22,  # Optimized for efficient generation (22 × 5000 = 110,000 words)
+            "target_word_count": 110000,  # Contemporary Romance novel length
+            "chapter_length": 5000,  # High target to ensure 4,000+ word generation on first attempt
+            "min_chapter_length": 4000,  # Extension threshold - no extension needed if ≥4,000 words
+            "pov_structure": "flexible_alternating",
+            "pov_pattern": "story_driven",
+            "pov_characters": ["male_protagonist", "female_protagonist"],
+            "pov_strategy": "balanced_with_story_focus",
+        },
         "paranormal romance": {
-            "target_length": "medium",
+            "target_length": "long",
             "writing_style": "Descriptive and detailed",
             "pov": "Alternating POVs",
             "themes": ["Supernatural elements", "Romance", "Personal growth"],
@@ -696,6 +711,7 @@ def get_all_genres() -> List[str]:
         "speculative fiction": {},
         "alternate history": {},
         "contemporary fiction": {},
+        "contemporary romance": {},
         "paranormal romance": {},
         "urban fantasy": {},
         "dystopian": {},

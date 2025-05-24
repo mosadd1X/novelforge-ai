@@ -3,8 +3,7 @@ Series generator for auto-generating a complete series of novels.
 """
 import os
 import json
-from typing import Dict, List, Any, Optional
-from datetime import datetime
+from typing import Dict, List, Any
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
 
@@ -14,6 +13,9 @@ from src.utils.file_handler import create_output_directory, save_novel_json, cre
 from src.ui.terminal_ui import generate_cover
 from src.core.series_manager import SeriesManager
 from src.utils.genre_defaults import get_genre_defaults
+from src.prompts import get_prompt
+from src.utils.series_continuity import SeriesContinuityManager
+from src.utils.series_prompt_manager import SeriesPromptManager
 
 console = Console(markup=True)
 
@@ -30,6 +32,8 @@ class SeriesGenerator:
         self.series_metadata = {}
         self.book_templates = []
         self.generation_options = None
+        self.continuity_manager = None
+        self.series_prompt_manager = None
 
     def initialize_series(
         self, series_title: str, series_description: str, genre: str, target_audience: str,
@@ -71,6 +75,12 @@ class SeriesGenerator:
             "author": author
         }
 
+        # Initialize continuity management
+        series_dir = create_series_directory(series_title)
+        self.continuity_manager = SeriesContinuityManager(series_title, series_dir)
+        self.continuity_manager.total_books_planned = planned_books
+        self.series_prompt_manager = SeriesPromptManager(self.continuity_manager)
+
         return self.series_manager
 
     def generate_series_plan(self) -> List[Dict[str, Any]]:
@@ -90,30 +100,52 @@ class SeriesGenerator:
         target_audience = self.series_metadata["target_audience"]
         planned_books = self.series_metadata["planned_books"]
 
-        console.print("[bold cyan]Generating series plan...[/bold cyan]")
+        console.print("[bold cyan]Generating enhanced series plan with continuity tracking...[/bold cyan]")
 
-        # Create a prompt for the series plan
-        prompt = f"""
-        Create a detailed plan for a {genre} book series titled "{series_title}" for {target_audience} audience.
+        # Use enhanced series prompt manager for better continuity
+        if self.series_prompt_manager:
+            prompt = self.series_prompt_manager.get_enhanced_series_plan_prompt(
+                genre=genre,
+                series_title=series_title,
+                series_description=series_description,
+                planned_books=planned_books,
+                target_audience=target_audience
+            )
+        else:
+            # Fallback to basic genre-specific prompt
+            prompt = get_prompt(
+                genre=genre,
+                prompt_type="series_plan",
+                series_title=series_title,
+                series_description=series_description,
+                planned_books=planned_books,
+                target_audience=target_audience
+            )
 
-        Series description: {series_description}
+        # Final fallback to generic prompt if nothing else works
+        if not prompt:
+            console.print("[bold yellow]Enhanced series prompt not available, using fallback...[/bold yellow]")
+            prompt = f"""
+            Create a detailed plan for a {genre} book series titled "{series_title}" for {target_audience} audience.
 
-        The series will consist of {planned_books} books. For each book, provide:
-        1. Book title
-        2. Brief description (2-3 sentences)
-        3. Main plot arc for this book
-        4. How this book fits into the overall series arc
-        5. Key character developments in this book
+            Series description: {series_description}
 
-        Format your response as a JSON array of book objects with these fields:
-        - title: The book title
-        - description: Brief description
-        - main_plot: Main plot arc for this book
-        - series_connection: How this book fits into the overall series
-        - character_developments: Key character developments
+            The series will consist of {planned_books} books. For each book, provide:
+            1. Book title
+            2. Brief description (2-3 sentences)
+            3. Main plot arc for this book
+            4. How this book fits into the overall series arc
+            5. Key character developments in this book
 
-        Also include a "series_arcs" array with the major plot arcs that span the entire series.
-        """
+            Format your response as a JSON array of book objects with these fields:
+            - title: The book title
+            - description: Brief description
+            - main_plot: Main plot arc for this book
+            - series_connection: How this book fits into the overall series
+            - character_developments: Key character developments
+
+            Also include a "series_arcs" array with the major plot arcs that span the entire series.
+            """
 
         # Generate the series plan
         response = self.novel_generator.gemini.generate_content(prompt, temperature=0.7)
@@ -203,6 +235,11 @@ class SeriesGenerator:
 
         console.print(f"\n[bold cyan]Generating Book {book_number}: {book_title}[/bold cyan]")
 
+        # Initialize continuity tracking for this book
+        if self.continuity_manager:
+            self.continuity_manager.start_new_book(book_number)
+            console.print("[bold cyan]Continuity tracking initialized for this book[/bold cyan]")
+
         # Create output directory for this book
         output_dir = create_output_directory(
             book_title,
@@ -211,9 +248,10 @@ class SeriesGenerator:
         )
 
         # Initialize novel generator with output directory for memory files
+        # Use placeholder author initially - will be replaced by fictional author selection
         memory_manager = self.novel_generator.initialize_novel(
             title=book_title,
-            author=self.series_metadata["author"],
+            author="AI Author",  # Placeholder - will be replaced by fictional author
             description=book_description,
             genre=self.series_metadata["genre"],
             target_audience=self.series_metadata["target_audience"],
@@ -229,20 +267,62 @@ class SeriesGenerator:
         # Set generation options
         self.novel_generator.set_generation_options(self.generation_options)
 
-        # Generate writer profile
-        console.print("[bold cyan]Generating writer profile...[/bold cyan]")
-        writer_profile = self.novel_generator.generate_writer_profile()
-        console.print("[bold green]✓[/bold green] Writer profile generated successfully")
+        # Set series prompt manager for enhanced prompts
+        if self.series_prompt_manager:
+            self.novel_generator.set_series_prompt_manager(self.series_prompt_manager)
+
+        # Automatically select fictional author for series
+        console.print("[bold cyan]Automatically selecting fictional author for series...[/bold cyan]")
+
+        # Initialize writer profile manager for automatic selection
+        from src.utils.writer_profile_manager import WriterProfileManager
+        profile_manager = WriterProfileManager()
+
+        # Get series themes for enhancement
+        series_themes = self.series_metadata.get("themes", [])
+        book_count = len(self.series_plan) if hasattr(self, 'series_plan') else 1
+
+        # Automatically select and enhance fictional author profile for series
+        writer_profile = profile_manager.get_auto_selected_profile_for_series(
+            genre=self.series_metadata["genre"],
+            series_themes=series_themes,
+            book_count=book_count
+        )
+
+        if writer_profile:
+            author_name = writer_profile.get("name", "Unknown Author")
+            console.print(f"[bold green]✓[/bold green] Selected fictional author for series: [bold cyan]{author_name}[/bold cyan]")
+
+            # Update the memory manager with the selected fictional author
+            memory_manager.metadata["author"] = author_name
+
+            # Check if profile was enhanced for series
+            if "_series_enhancement" in writer_profile:
+                console.print("[bold green]Profile enhanced with AI for series writing")
+        else:
+            # Fallback to traditional generation
+            console.print("[bold yellow]No fictional author available, generating custom profile...")
+            writer_profile = self.novel_generator.generate_writer_profile()
+            console.print("[bold green]✓[/bold green] Custom writer profile generated successfully")
 
         # Generate novel outline
         console.print("[bold cyan]Generating novel outline...[/bold cyan]")
         chapter_outlines, chapter_count = self.novel_generator.generate_novel_outline(writer_profile)
         console.print(f"[bold green]✓[/bold green] Novel outline with {chapter_count} chapters generated successfully")
 
-        # Generate characters
-        console.print("[bold cyan]Generating characters...[/bold cyan]")
-        characters = self.novel_generator.generate_characters()
-        console.print(f"[bold green]✓[/bold green] {len(characters)} characters generated successfully")
+        # Generate characters only for content types that need them
+        from src.utils.genre_utils import should_generate_characters
+        characters = []
+        genre = self.series_metadata["genre"]
+
+        if should_generate_characters(genre):
+            console.print("[bold cyan]Generating characters...[/bold cyan]")
+            characters = self.novel_generator.generate_characters()
+            console.print(f"[bold green]✓[/bold green] {len(characters)} characters generated successfully")
+        else:
+            console.print(f"[bold yellow]Skipping character generation (not needed for {genre})")
+            # Create empty character list for non-fiction and special formats
+            characters = []
 
         # Generate chapters
         console.print("[bold cyan]Generating and enhancing chapters...[/bold cyan]")
@@ -308,6 +388,7 @@ class SeriesGenerator:
         novel = {
             "metadata": memory_manager.metadata,
             "writer_profile": writer_profile,
+            "generation_options": self.generation_options or {},
             "outline": chapter_outlines,
             "characters": characters,
             "chapters": chapters,
@@ -316,6 +397,19 @@ class SeriesGenerator:
 
         # Save novel as JSON
         save_novel_json(novel, output_dir)
+
+        # Generate cover prompt for series book
+        self._generate_series_cover_prompt(novel, output_dir, book_number)
+
+        # Update continuity tracking with completed book data
+        if self.series_prompt_manager:
+            try:
+                console.print("[bold cyan]Updating series continuity tracking...[/bold cyan]")
+                self.series_prompt_manager.update_continuity_from_book(novel, book_number)
+                console.print("[bold green]✓[/bold green] Series continuity updated")
+            except Exception as e:
+                console.print(f"[bold yellow]Warning: Series continuity tracking failed: {str(e)}[/bold yellow]")
+                console.print("[dim]Continuing with book generation...[/dim]")
 
         # Generate cover automatically in series mode
         cover_path = generate_cover(novel, output_dir, auto_mode=True)
@@ -330,3 +424,35 @@ class SeriesGenerator:
         console.print(f"[bold green]✓[/bold green] Book {book_number}: {book_title} saved to: [bold cyan]{abs_path}[/bold cyan]")
 
         return abs_path
+
+    def _generate_series_cover_prompt(self, novel: Dict[str, Any], output_dir: str, book_number: int) -> None:
+        """
+        Generate cover prompt for a series book.
+
+        Args:
+            novel: Complete novel data
+            output_dir: Output directory for the book
+            book_number: Book number in the series
+        """
+        try:
+            from src.utils.cover_prompt_generator import CoverPromptGenerator
+
+            # Get series information
+            series_info = {
+                "series_title": self.series_metadata["title"],
+                "book_number": book_number
+            }
+
+            # Generate the cover prompt
+            console.print("[bold cyan]Generating cover prompt...[/bold cyan]")
+            prompt_generator = CoverPromptGenerator()
+            prompt_path = prompt_generator.generate_cover_prompt(
+                novel_data=novel,
+                output_dir=output_dir,
+                series_info=series_info
+            )
+
+            console.print(f"[bold green]✓[/bold green] Cover prompt saved to: [bold cyan]{prompt_path}[/bold cyan]")
+
+        except Exception as e:
+            console.print(f"[bold yellow]Warning: Could not generate cover prompt: {str(e)}[/bold yellow]")

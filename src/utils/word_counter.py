@@ -2,7 +2,6 @@
 Utility functions for counting words in text.
 """
 import re
-from typing import List
 
 
 def count_words(text: str) -> int:

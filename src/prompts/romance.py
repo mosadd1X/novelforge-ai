@@ -6,10 +6,10 @@ from .base_prompts import FictionBasePrompts
 
 class RomancePrompts(FictionBasePrompts):
     """Romance-specific prompts for novel generation."""
-    
+
     GENRE_NAME = "Romance"
     GENRE_DESCRIPTION = "A genre focused on romantic relationships and emotional connections between characters"
-    
+
     GENRE_CHARACTERISTICS = [
         "Central romantic relationship drives the plot",
         "Emotional character development and growth",
@@ -20,7 +20,7 @@ class RomancePrompts(FictionBasePrompts):
         "Chemistry and attraction between main characters",
         "Exploration of love, commitment, and relationships"
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "Meet-cute or compelling first encounter",
         "Initial attraction or conflict between protagonists",
@@ -38,7 +38,7 @@ class RomancePrompts(FictionBasePrompts):
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         """Generate a romance-specific writer profile prompt."""
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         romance_additions = """
 
 ## Romance-Specific Writing Considerations
@@ -57,14 +57,14 @@ class RomancePrompts(FictionBasePrompts):
 - Happy ending or hopeful resolution for the romantic couple
 - Believable obstacles that create tension without feeling contrived
 """
-        
+
         return base_prompt + romance_additions
 
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         """Generate a romance-specific outline prompt."""
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         romance_additions = """
 
 ## Romance-Specific Outline Requirements
@@ -103,15 +103,35 @@ class RomancePrompts(FictionBasePrompts):
 
 Create a romance outline that provides emotional satisfaction and authentic relationship development.
 """
-        
+
         return base_prompt + romance_additions
 
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
         """Generate a romance-specific character development prompt."""
         base_prompt = super().get_character_prompt(**kwargs)
-        
-        romance_additions = """
+
+        # Extract context for cultural authenticity
+        title = kwargs.get("title", "")
+        description = kwargs.get("description", "")
+
+        romance_additions = f"""
+
+## 🚨 ROMANCE CHARACTER NAMING - CULTURAL AUTHENTICITY REQUIRED 🚨
+**CRITICAL**: Create characters with authentic Indian/South Asian names that reflect the cultural setting.
+
+### MANDATORY CHARACTER NAMING GUIDELINES
+- **Indian Male Names**: Ayaan, Arjun, Rohan, Vikram, Aarav, Karan, Dev, Ravi, Aditya, Ishaan
+- **Indian Female Names**: Priya, Ananya, Kavya, Meera, Ishita, Rhea, Aditi, Shreya, Diya, Naina
+- **Family Names**: Sharma, Gupta, Patel, Singh, Agarwal, Joshi, Malhotra, Kapoor, Verma, Rao
+- **NO WESTERN NAMES**: Do NOT use names like Amelia, Sarah, John, Michael, Emma, etc.
+- **Cultural Context**: Names should reflect the story setting: "{title}" - {description}
+
+### CHARACTER VERIFICATION CHECKLIST
+✓ All character names are authentically Indian/South Asian
+✓ Names match the cultural setting of the story
+✓ No Western or non-Indian names have been used
+✓ Characters reflect contemporary Indian society
 
 ## Romance Character Archetypes and Roles
 - **The Romantic Leads**: Two protagonists whose relationship drives the story
@@ -159,15 +179,51 @@ For each protagonist, establish:
 
 Create characters whose romantic journey feels authentic and emotionally satisfying.
 """
-        
+
         return base_prompt + romance_additions
 
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         """Generate a romance-specific chapter writing prompt."""
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
-        romance_additions = """
+
+        # Extract word count parameters for emphasis
+        target_chapter_length = kwargs.get("target_chapter_length", "4,000-5,000")
+        min_chapter_length = kwargs.get("min_chapter_length", 4000)
+
+        # Extract character information for emphasis
+        character_info = kwargs.get("character_info", "")
+
+        romance_additions = f"""
+
+## CRITICAL ROMANCE CHAPTER REQUIREMENTS - MANDATORY COMPLIANCE
+- **MINIMUM WORD COUNT**: This chapter MUST be AT LEAST {min_chapter_length:,} words - NO EXCEPTIONS
+- **ABSOLUTE MINIMUM**: This chapter MUST be AT LEAST {min_chapter_length:,} words - NO EXCEPTIONS
+- **OPTIMAL TARGET**: Write {target_chapter_length} words for perfect Romance pacing
+- **WORD COUNT PRIORITY**: Meeting word count is MORE IMPORTANT than rushing to plot points
+- **SCENE REQUIREMENT**: Include 4-5 fully developed scenes (800-1,000 words each minimum)
+- **EMOTIONAL EXPANSION**: Romance demands extensive emotional interiority - elaborate extensively
+- **DIALOGUE DEPTH**: Include substantial dialogue with subtext and emotional layers
+- **RELATIONSHIP FOCUS**: Dedicate 60%+ of word count to relationship development and emotional content
+
+## 🚨 CHARACTER NAME COMPLIANCE - USE THESE EXACT NAMES 🚨
+{character_info}
+**CRITICAL**: Use ONLY the character names listed above. Do NOT create new names like "Amelia" or "Sarah".
+The characters have been specifically created for this story - USE THEIR EXACT NAMES throughout the chapter.
+
+## ROMANCE CHAPTER STRUCTURE REQUIREMENTS (to ensure adequate length)
+1. **Opening Scene** (800-1,000 words): Establish mood, setting, character emotional state
+2. **Development Scene** (1,000-1,200 words): Advance relationship or create tension
+3. **Conflict/Tension Scene** (800-1,000 words): Introduce obstacles or deepen connection
+4. **Emotional Climax Scene** (800-1,000 words): Peak emotional moment for the chapter
+5. **Transition/Setup Scene** (600-800 words): Bridge to next chapter, leave reader wanting more
+
+## MANDATORY WORD COUNT VERIFICATION
+- Count your words as you write - aim for 4,500+ words minimum
+- Each scene should be substantial and fully developed
+- Do NOT summarize or rush through emotional moments
+- Expand on internal thoughts, feelings, and sensory details
+- Include rich descriptions of settings, characters, and emotions
 
 ## Romance Writing Techniques
 - **Emotional Interiority**: Show characters' internal thoughts and feelings
@@ -210,9 +266,97 @@ Create characters whose romantic journey feels authentic and emotionally satisfy
 - Respect character boundaries and relationship pacing
 
 Write with attention to emotional authenticity and relationship development that feels genuine and satisfying.
+
+## 🚨 FINAL ROMANCE CHAPTER CHECKLIST - MANDATORY VERIFICATION 🚨
+Before completing this chapter, VERIFY you have:
+✓ Written AT LEAST {min_chapter_length:,} words (COUNT EVERY WORD - this is critical!)
+✓ Included 4-5 fully-developed scenes (each 800+ words minimum)
+✓ Explored character emotions with extensive internal monologue
+✓ Included substantial dialogue with emotional subtext
+✓ Advanced romantic tension through detailed interactions
+✓ Described settings, emotions, and physical reactions in rich detail
+✓ Created natural pacing with NO rushed or summarized moments
+✓ Dedicated majority of word count to relationship development
+
+## CRITICAL WORD COUNT REMINDER
+- If your chapter is under {min_chapter_length:,} words, it is INCOMPLETE
+- Romance chapters MUST be substantial to satisfy readers
+- Better to write 5,000 words than risk a short chapter
+- Each emotional moment deserves full exploration
+- Every dialogue exchange should include internal reactions
+- Describe body language, facial expressions, and emotional responses in detail
+
+FINAL CHECK: Count your words one more time before submitting. Romance readers expect and deserve substantial, emotionally rich chapters that fully develop the romantic relationship.
+
+## 🚨 ULTRA-CRITICAL FINAL REQUIREMENTS 🚨
+1. **WORD COUNT VERIFICATION**: Your chapter MUST be {min_chapter_length:,}+ words. Count them!
+2. **CHARACTER NAME VERIFICATION**: Use ONLY the provided character names - no substitutions!
+3. **SCENE COUNT VERIFICATION**: Include 4-5 substantial scenes (800+ words each)
+4. **EMOTIONAL DEPTH VERIFICATION**: Every scene must have rich emotional content
+5. **ROMANCE FOCUS VERIFICATION**: 60%+ of content must focus on romantic relationship
+
+IF ANY OF THESE REQUIREMENTS ARE NOT MET, THE CHAPTER IS INCOMPLETE AND UNACCEPTABLE.
+Romance readers deserve substantial, emotionally rich content with proper character consistency.
 """
-        
+
         return base_prompt + romance_additions
+
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a romance-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        romance_series_additions = """
+
+## Romance Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **Romance Conventions**: Ensure each book fulfills romance reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to romance
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to romance
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore romance themes with increasing depth and complexity
+
+### Romance Series Continuity
+- **Genre Elements**: Maintain consistent romance elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy romance readers
+- **Series Identity**: Establish a strong series identity that feels authentically romance
+- **World Building**: Develop the story world in ways that enhance the romance experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the romance genre
+
+Create a romance series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+
+        return base_prompt + romance_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a romance-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        romance_book_additions = """
+
+## Romance Series Book Integration
+
+### Romance Continuity for This Book
+- **Genre Consistency**: Maintain established romance elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to romance
+- **Plot Advancement**: Continue series plot threads while telling a complete romance story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill romance reader expectations while advancing the series narrative
+
+### Book-Specific Romance Focus
+- **Central Conflict**: What romance-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new romance elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent romance while serving the series?
+
+Ensure this book feels like an authentic continuation of the romance series while telling a complete, satisfying story.
+"""
+
+        return base_prompt + romance_book_additions
 
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
@@ -229,3 +373,9 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return RomancePrompts.get_enhancement_prompt(**kwargs)
+
+def get_series_plan_prompt(**kwargs) -> str:
+    return RomancePrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return RomancePrompts.get_series_book_prompt(**kwargs)

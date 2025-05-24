@@ -5,8 +5,7 @@ Comprehensive review script to check all genre prompt files for quality and cons
 import os
 import sys
 import importlib
-import traceback
-from typing import Dict, List, Any
+from typing import Dict, Any
 
 # Add src to path
 sys.path.append('src')

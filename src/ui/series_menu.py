@@ -2,21 +2,17 @@
 Interactive menu system for series management.
 """
 import os
-import sys
 import json
 import subprocess
-from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime
-from rich.console import Console
-from rich.panel import Panel
+from typing import Dict, List, Any, Optional
 from rich.table import Table
 from rich import box
 import questionary
-from questionary import Style
 
 from src.core.series_manager import SeriesManager
 from src.core.series_generator import SeriesGenerator
-from src.utils.file_handler import create_output_directory, create_series_directory, sanitize_filename, zip_series_books, get_series_files
+from src.core.ideas_manager import IdeasManager
+from src.utils.file_handler import create_series_directory, sanitize_filename, zip_series_books, get_series_files
 from src.formatters.epub_formatter import EpubFormatter
 from src.utils.genre_defaults import get_all_genres
 from src.ui.terminal_ui import (
@@ -80,6 +76,7 @@ def create_new_series() -> SeriesManager:
         "Commercial Fiction",
         "Mystery/Thriller",
         "Romance",
+        "Contemporary Romance",
         "Fantasy",
         "Science Fiction",
         "Historical Fiction",
@@ -140,12 +137,9 @@ def create_new_series() -> SeriesManager:
         style=custom_style
     ).ask()
 
-    # Get author name
-    author = questionary.text(
-        "Who is the author?",
-        validate=lambda text: len(text) > 0,
-        style=custom_style
-    ).ask()
+    # Author will be automatically selected based on genre and series requirements
+    # This is now handled by the fictional author system during series generation
+    author = "AI Author"  # Placeholder - will be replaced by fictional author during generation
 
     # Create series manager
     series_manager = SeriesManager(series_title)
@@ -194,6 +188,184 @@ def create_new_series() -> SeriesManager:
     series_manager.save_series()
 
     console.print(f"[bold green]✓[/bold green] Series '{series_title}' created successfully with {planned_books} planned books")
+
+    return series_manager
+
+def create_series_from_idea() -> Optional[SeriesManager]:
+    """
+    Create a new series from a pre-defined idea.
+
+    Returns:
+        SeriesManager instance or None if cancelled
+    """
+    clear_screen()
+    display_title()
+
+    console.print("[bold cyan]Import Series from Ideas[/bold cyan]\n")
+
+    # Initialize ideas manager
+    ideas_manager = IdeasManager()
+
+    # Select a series idea
+    selected_idea = ideas_manager.select_series_idea()
+    if not selected_idea:
+        return None
+
+    # Display the selected idea
+    console.print()
+    ideas_manager.display_selected_series_idea(selected_idea)
+
+    # Confirm the selection
+    confirm = questionary.confirm(
+        "Would you like to create a series using this idea?",
+        default=True,
+        style=custom_style
+    ).ask()
+
+    if not confirm:
+        return None
+
+    # Get additional information from user
+    console.print("\n[bold cyan]Additional Series Information[/bold cyan]")
+    console.print("[dim]Note: Fictional authors will be automatically selected for each book based on the genre.[/dim]")
+
+    # Get series creator/publisher name (not the fictional author)
+    author = questionary.text(
+        "Series Creator/Publisher name (for metadata):",
+        default="AI Generated",
+        style=custom_style
+    ).ask()
+
+    if not author:
+        return None
+
+    # Get target audience
+    target_audience = questionary.select(
+        "Target audience:",
+        choices=[
+            "Children (8-12)",
+            "Middle Grade (10-14)",
+            "Young Adult (12-18)",
+            "New Adult (18-25)",
+            "Adult (18+)",
+            "All Ages"
+        ],
+        default="Adult (18+)",
+        style=custom_style
+    ).ask()
+
+    if not target_audience:
+        return None
+
+    # Allow user to modify the series title if desired
+    original_title = selected_idea.get('title', 'Untitled Series')
+    series_title = questionary.text(
+        "Series title:",
+        default=original_title,
+        style=custom_style
+    ).ask()
+
+    if not series_title:
+        return None
+
+    # Allow user to modify the series description if desired
+    original_description = selected_idea.get('description', '')
+    series_description = questionary.text(
+        "Series description:",
+        default=original_description,
+        style=custom_style
+    ).ask()
+
+    if not series_description:
+        return None
+
+    # Convert genre format
+    genre = selected_idea.get('genre', 'literary_fiction')
+    genre_display = genre.replace('_', ' ').title()
+
+    # Get book count from idea
+    planned_books = selected_idea.get('book_count', len(selected_idea.get('books', [])))
+
+    # Allow user to modify the book count if desired
+    book_count_str = questionary.text(
+        "Number of books in series:",
+        default=str(planned_books),
+        validate=lambda text: text.isdigit() and int(text) > 0,
+        style=custom_style
+    ).ask()
+
+    if not book_count_str:
+        return None
+
+    planned_books = int(book_count_str)
+
+    # Create series manager
+    series_manager = SeriesManager(series_title)
+
+    # Update series metadata
+    series_manager.update_metadata(
+        description=series_description,
+        genre=genre_display,
+        target_audience=target_audience,
+        planned_books=planned_books,
+        creator=author
+    )
+
+    # Get book information from the idea
+    idea_books = selected_idea.get('books', [])
+    books = []
+
+    # Use books from idea if available, otherwise ask user for book details
+    for i in range(planned_books):
+        console.print(f"\n[bold cyan]Book {i+1} Information[/bold cyan]")
+
+        if i < len(idea_books):
+            # Use book from idea as default
+            idea_book = idea_books[i]
+            default_title = idea_book.get('title', f'Book {i+1}')
+            default_description = idea_book.get('description', '')
+        else:
+            # No idea book available, use generic defaults
+            default_title = f'Book {i+1}'
+            default_description = ''
+
+        # Get book title (with default from idea)
+        book_title = questionary.text(
+            f"Title for Book {i+1}:",
+            default=default_title,
+            style=custom_style
+        ).ask()
+
+        if not book_title:
+            return None
+
+        # Get book description (with default from idea)
+        book_description = questionary.text(
+            f"Description for Book {i+1}:",
+            default=default_description,
+            style=custom_style
+        ).ask()
+
+        if not book_description:
+            return None
+
+        # Add book to list (fictional author will be auto-selected during generation)
+        books.append({
+            "title": book_title,
+            "description": book_description,
+            "author": author,  # This is the series creator, not the fictional author
+            "genre": genre_display,
+            "target_audience": target_audience
+        })
+
+    # Store book templates
+    series_manager.book_templates = books
+
+    # Save series
+    series_manager.save_series()
+
+    console.print(f"[bold green]✓[/bold green] Series '{series_title}' created successfully with {planned_books} planned books")
+    console.print(f"[bold green]✓ Based on idea:[/bold green] [bold cyan]{selected_idea.get('title', 'Unknown')}[/bold cyan]")
 
     return series_manager
 
@@ -459,12 +631,49 @@ def generate_series_covers(series_manager: SeriesManager) -> None:
                     formatter = EpubFormatter(novel_data)
                     formatter.save_epub(book_dir, cover_path)
                     console.print(f"[bold green]✓[/bold green] EPUB updated with new cover")
-    else:
-        # Extract book number from selection
-        book_num = int(selected_option.split(":")[0].replace("Book ", "").strip())
 
-        # Find the selected book
+def manage_series_cover_images(series_manager: SeriesManager) -> None:
+    """
+    Manage cover images for books in a series.
+
+    Args:
+        series_manager: SeriesManager instance
+    """
+    try:
+        from src.utils.cover_image_manager import CoverImageManager
+
+        # Scan for existing books
+        series_manager.scan_for_existing_books()
+
+        if not series_manager.books:
+            console.print("[yellow]No books found in this series.[/yellow]")
+            input("\nPress Enter to continue...")
+            return
+
+        # Display books and let user select one
+        console.print("\n[bold cyan]Select a book to manage cover images:[/bold cyan]")
+
+        book_choices = []
+        for book in series_manager.books:
+            book_num = book.get("book_number", "?")
+            title = book.get("title", "Untitled")
+            book_choices.append(f"Book {book_num}: {title}")
+
+        book_choices.append("← Back")
+
+        selected = questionary.select(
+            "Select a book:",
+            choices=book_choices,
+            style=custom_style
+        ).ask()
+
+        if selected == "← Back":
+            return
+
+        # Extract book number and find the book
+        book_num = int(selected.split(":")[0].replace("Book ", "").strip())
         selected_book = None
+
         for book in series_manager.books:
             if book.get("book_number", 0) == book_num:
                 selected_book = book
@@ -472,38 +681,39 @@ def generate_series_covers(series_manager: SeriesManager) -> None:
 
         if not selected_book:
             console.print("[bold red]Error: Book not found.[/bold red]")
+            input("\nPress Enter to continue...")
             return
 
+        # Create book info structure
         title = selected_book.get("title", "Untitled")
+        series_dir = create_series_directory(series_manager.series_title)
         book_dir = os.path.join(series_dir, f"book_{book_num:02d}_{sanitize_filename(title)}")
 
-        # Check if the book directory exists
+        book_info = {
+            "title": title,
+            "book_number": book_num,
+            "directory": book_dir,
+            "json_path": os.path.join(book_dir, "novel_data.json")
+        }
+
+        # Check if book directory and files exist
         if not os.path.exists(book_dir):
-            console.print(f"[yellow]Book directory not found for Book {book_num}: {title}[/yellow]")
+            console.print(f"[yellow]Book directory not found: {book_dir}[/yellow]")
+            input("\nPress Enter to continue...")
             return
 
-        # Check if novel_data.json exists
-        json_path = os.path.join(book_dir, "novel_data.json")
-        if not os.path.exists(json_path):
-            console.print(f"[yellow]Novel data not found for Book {book_num}: {title}[/yellow]")
+        if not os.path.exists(book_info["json_path"]):
+            console.print(f"[yellow]Book data not found: {book_info['json_path']}[/yellow]")
+            input("\nPress Enter to continue...")
             return
 
-        # Load the novel data
-        with open(json_path, 'r', encoding='utf-8') as f:
-            novel_data = json.load(f)
+        # Use the cover image manager
+        cover_manager = CoverImageManager()
+        cover_manager.manage_series_cover_images(series_manager, book_info)
 
-        # Generate cover
-        console.print(f"[bold cyan]Generating cover for Book {book_num}: {title}...[/bold cyan]")
-        cover_path = generate_cover(novel_data, book_dir)
-
-        # Update EPUB with cover if requested
-        if cover_path:
-            epub_path = os.path.join(book_dir, f"{sanitize_filename(title)}.epub")
-            if os.path.exists(epub_path):
-                console.print(f"[bold cyan]Updating EPUB with new cover...[/bold cyan]")
-                formatter = EpubFormatter(novel_data)
-                formatter.save_epub(book_dir, cover_path)
-                console.print(f"[bold green]✓[/bold green] EPUB updated with new cover")
+    except Exception as e:
+        console.print(f"[bold red]Error managing series cover images: {str(e)}[/bold red]")
+        input("\nPress Enter to continue...")
 
 def validate_epub_file(epub_path: str) -> bool:
     """
@@ -902,6 +1112,7 @@ def series_management_menu() -> None:
         # Main menu options
         choices = [
             "Create New Series",
+            "Import Series from Ideas",
             "Work with Existing Series",
             "Exit"
         ]
@@ -914,6 +1125,11 @@ def series_management_menu() -> None:
 
         if selected == "Create New Series":
             series_manager = create_new_series()
+            if series_manager:
+                series_options_menu(series_manager)
+
+        elif selected == "Import Series from Ideas":
+            series_manager = create_series_from_idea()
             if series_manager:
                 series_options_menu(series_manager)
 
@@ -944,6 +1160,7 @@ def series_options_menu(series_manager: SeriesManager) -> None:
             "Auto-Generate Entire Series",
             "Generate Books One by One",
             "Create Covers for Books",
+            "Manage Cover Images",
             "Export Books to Different Formats",
             "Zip Series Books",
             "API Key Status",
@@ -967,6 +1184,9 @@ def series_options_menu(series_manager: SeriesManager) -> None:
         elif selected == "Create Covers for Books":
             generate_series_covers(series_manager)
             input("\nPress Enter to continue...")
+
+        elif selected == "Manage Cover Images":
+            manage_series_cover_images(series_manager)
 
         elif selected == "Export Books to Different Formats":
             export_books(series_manager)

@@ -122,6 +122,63 @@ class SpeculativeFictionPrompts(FictionBasePrompts):
 
         return base_prompt + speculative_fiction_additions
 
+
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a speculativefiction-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+        
+        speculativefiction_series_additions = """
+
+## SpeculativeFiction Series-Specific Planning Elements
+
+### Genre-Specific Series Development
+- **SpeculativeFiction Conventions**: Ensure each book fulfills speculativefiction reader expectations while advancing the series
+- **Escalating Complexity**: Increase sophistication and depth across books appropriate to speculativefiction
+- **Character Arcs**: Develop character growth that spans multiple books in ways authentic to speculativefiction
+- **Plot Progression**: Create overarching plot threads that build tension and stakes across the series
+- **Thematic Development**: Explore speculativefiction themes with increasing depth and complexity
+
+### SpeculativeFiction Series Continuity
+- **Genre Elements**: Maintain consistent speculativefiction elements while introducing new aspects
+- **Reader Engagement**: Create compelling book-to-book connections that satisfy speculativefiction readers
+- **Series Identity**: Establish a strong series identity that feels authentically speculativefiction
+- **World Building**: Develop the story world in ways that enhance the speculativefiction experience
+- **Character Relationships**: Evolve relationships in ways that feel natural to the speculativefiction genre
+
+Create a speculativefiction series that builds compelling narratives with authentic genre elements and engaging character development.
+"""
+        
+        return base_prompt + speculativefiction_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a speculativefiction-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+        
+        speculativefiction_book_additions = """
+
+## SpeculativeFiction Series Book Integration
+
+### SpeculativeFiction Continuity for This Book
+- **Genre Consistency**: Maintain established speculativefiction elements while potentially introducing new aspects
+- **Character Development**: Show how characters have grown since previous books in ways authentic to speculativefiction
+- **Plot Advancement**: Continue series plot threads while telling a complete speculativefiction story
+- **World Consistency**: Maintain established world elements while expanding appropriately
+- **Reader Expectations**: Fulfill speculativefiction reader expectations while advancing the series narrative
+
+### Book-Specific SpeculativeFiction Focus
+- **Central Conflict**: What speculativefiction-appropriate conflict drives this book's plot?
+- **Character Growth**: Which characters will experience the most development in this book?
+- **New Elements**: What new speculativefiction elements will be introduced that fit the established series?
+- **Series Advancement**: How does this book move the overall series arc forward significantly?
+- **Genre Authenticity**: How does this book exemplify excellent speculativefiction while serving the series?
+
+Ensure this book feels like an authentic continuation of the speculativefiction series while telling a complete, satisfying story.
+"""
+        
+        return base_prompt + speculativefiction_book_additions
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return SpeculativeFictionPrompts.get_writer_profile_prompt(**kwargs)
@@ -137,3 +194,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return SpeculativeFictionPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return SpeculativeFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return SpeculativeFictionPrompts.get_series_book_prompt(**kwargs)

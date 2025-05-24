@@ -3,7 +3,7 @@ Memory manager for maintaining context and coherence across novel generation.
 """
 import json
 import os
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from datetime import datetime
 
 # Import SeriesManager conditionally to avoid circular imports
@@ -12,26 +12,32 @@ try:
 except ImportError:
     SeriesManager = None
 
+# Import limited collections to prevent memory leaks
+from src.utils.limited_dict import LimitedDict, LimitedList
+
 
 class MemoryManager:
     """
     Manages the memory and context for novel generation to ensure coherence.
     """
 
-    def __init__(self, novel_title: str, output_dir: str = None, series_manager=None, book_number: int = None):
+    def __init__(self, novel_title: str, output_dir: str = None, series_manager=None, book_number: int = None,
+                 max_memory_items: int = 1000):
         """
-        Initialize the memory manager.
+        Initialize the memory manager with memory leak prevention.
 
         Args:
             novel_title: The title of the novel being generated
             output_dir: Directory to save memory files (default: None, will use root directory)
             series_manager: Optional SeriesManager instance if this book is part of a series
             book_number: Book number in the series (if part of a series)
+            max_memory_items: Maximum items per tracking dictionary to prevent memory leaks
         """
         self.novel_title = novel_title
         self.output_dir = output_dir
         self.series_manager = series_manager
         self.book_number = book_number
+        self.max_memory_items = max_memory_items
 
         # Set memory file path
         memory_filename = f"memory_{self._sanitize_filename(novel_title)}.json"
@@ -80,50 +86,106 @@ class MemoryManager:
         # Chapter summaries
         self.chapter_summaries = []
 
-        # Enhanced narrative tracking system
+        # Enhanced narrative tracking system with memory leak prevention
         self.narrative_tracking = {
-            # Character development tracking
-            "character_arcs": {},           # Track character development over time
-            "character_emotions": {},       # Track emotional states of characters
-            "character_knowledge": {},      # Track what each character knows
-            "character_locations": {},      # Track where each character is at any point
+            # Character development tracking (using LimitedDict to prevent memory leaks)
+            "character_arcs": LimitedDict(max_memory_items),           # Track character development over time
+            "character_emotions": LimitedDict(max_memory_items),       # Track emotional states of characters
+            "character_knowledge": LimitedDict(max_memory_items),      # Track what each character knows
+            "character_locations": LimitedDict(max_memory_items),      # Track where each character is at any point
 
             # Relationship tracking
-            "relationships": {},            # Track relationships between characters
-            "relationship_development": {}, # Track how relationships change over time
+            "relationships": LimitedDict(max_memory_items),            # Track relationships between characters
+            "relationship_development": LimitedDict(max_memory_items), # Track how relationships change over time
 
             # Plot tracking
-            "plot_threads": {},             # Track ongoing plot threads
-            "unresolved_questions": [],     # Track unresolved plot points
-            "foreshadowing": [],            # Track foreshadowing elements
-            "callbacks": [],                # Track callbacks to earlier events
-            "plot_progression": {},         # Track progression of major plot arcs
+            "plot_threads": LimitedDict(max_memory_items),             # Track ongoing plot threads
+            "unresolved_questions": LimitedList(max_memory_items),     # Track unresolved plot points
+            "foreshadowing": LimitedList(max_memory_items),            # Track foreshadowing elements
+            "callbacks": LimitedList(max_memory_items),                # Track callbacks to earlier events
+            "plot_progression": LimitedDict(max_memory_items),         # Track progression of major plot arcs
 
             # World building
-            "world_building": {},           # Track world-building elements
-            "locations_visited": {},        # Track locations visited in each chapter
-            "objects_of_significance": {},  # Track important objects
+            "world_building": LimitedDict(max_memory_items),           # Track world-building elements
+            "locations_visited": LimitedDict(max_memory_items),        # Track locations visited in each chapter
+            "objects_of_significance": LimitedDict(max_memory_items),  # Track important objects
 
             # Narrative structure
-            "timeline": [],                 # Track chronological events
-            "pov_shifts": {},               # Track POV shifts between chapters
-            "chapter_connections": {},      # Track connections between chapters
-            "scene_transitions": {},        # Track transitions between scenes
+            "timeline": LimitedList(max_memory_items),                 # Track chronological events
+            "pov_shifts": LimitedDict(max_memory_items),               # Track POV shifts between chapters
+            "chapter_connections": LimitedDict(max_memory_items),      # Track connections between chapters
+            "scene_transitions": LimitedDict(max_memory_items),        # Track transitions between scenes
 
             # Thematic elements
-            "themes_and_motifs": {},        # Track recurring themes and motifs
-            "symbols": {},                  # Track symbolic elements
-            "tone_shifts": {},              # Track shifts in narrative tone
+            "themes_and_motifs": LimitedDict(max_memory_items),        # Track recurring themes and motifs
+            "symbols": LimitedDict(max_memory_items),                  # Track symbolic elements
+            "tone_shifts": LimitedDict(max_memory_items),              # Track shifts in narrative tone
 
             # Continuity tracking
-            "continuity_elements": {},      # Track elements that need continuity
-            "time_of_day": {},              # Track time of day in each chapter
-            "weather_conditions": {},       # Track weather conditions
-            "clothing_and_appearance": {},  # Track character clothing and appearance
+            "continuity_elements": LimitedDict(max_memory_items),      # Track elements that need continuity
+            "time_of_day": LimitedDict(max_memory_items),              # Track time of day in each chapter
+            "weather_conditions": LimitedDict(max_memory_items),       # Track weather conditions
+            "clothing_and_appearance": LimitedDict(max_memory_items),  # Track character clothing and appearance
         }
 
         # Load existing memory if available
         self.load_memory()
+
+    def get_memory_usage_info(self) -> Dict[str, Any]:
+        """
+        Get detailed memory usage information for monitoring and debugging.
+
+        Returns:
+            Dictionary containing memory usage statistics
+        """
+        memory_info = {
+            "total_tracking_categories": len(self.narrative_tracking),
+            "max_items_per_category": self.max_memory_items,
+            "category_usage": {},
+            "total_items": 0,
+            "memory_efficiency": {}
+        }
+
+        total_items = 0
+        for category, container in self.narrative_tracking.items():
+            if hasattr(container, 'get_memory_info'):
+                info = container.get_memory_info()
+                memory_info["category_usage"][category] = info
+                total_items += info["current_size"]
+            else:
+                # Fallback for regular containers
+                size = len(container) if hasattr(container, '__len__') else 0
+                memory_info["category_usage"][category] = {
+                    "current_size": size,
+                    "max_size": "unlimited",
+                    "usage_percentage": 0
+                }
+                total_items += size
+
+        memory_info["total_items"] = total_items
+        memory_info["average_usage_percentage"] = (
+            sum(info.get("usage_percentage", 0)
+                for info in memory_info["category_usage"].values()) /
+            len(memory_info["category_usage"])
+        )
+
+        return memory_info
+
+    def optimize_memory(self) -> None:
+        """
+        Manually trigger memory optimization for all tracking containers.
+
+        This can be called periodically during long generation sessions
+        to prevent memory buildup.
+        """
+        optimized_categories = []
+        for category, container in self.narrative_tracking.items():
+            if hasattr(container, 'optimize'):
+                container.optimize()
+                optimized_categories.append(category)
+
+        print(f"Memory optimization completed for {len(optimized_categories)} categories")
+        return optimized_categories
 
     def _sanitize_filename(self, filename: str) -> str:
         """
@@ -146,6 +208,25 @@ class MemoryManager:
         # Update the last_updated timestamp
         self.metadata["last_updated"] = datetime.now().isoformat()
 
+        # Convert LimitedDict and LimitedList objects to regular containers for JSON serialization
+        serializable_narrative_tracking = {}
+        for key, container in self.narrative_tracking.items():
+            if hasattr(container, '_data') and hasattr(container, 'keys'):
+                # LimitedDict - convert to regular dict
+                serializable_narrative_tracking[key] = dict(container._data)
+            elif hasattr(container, '_data') and hasattr(container, 'append'):
+                # LimitedList - convert to regular list
+                serializable_narrative_tracking[key] = list(container._data)
+            elif hasattr(container, 'items'):
+                # Regular dict
+                serializable_narrative_tracking[key] = dict(container)
+            elif hasattr(container, '__iter__'):
+                # Regular list or other iterable
+                serializable_narrative_tracking[key] = list(container)
+            else:
+                # Other types
+                serializable_narrative_tracking[key] = container
+
         # Prepare the memory data
         memory_data = {
             "metadata": self.metadata,
@@ -154,7 +235,11 @@ class MemoryManager:
             "settings": self.settings,
             "plot_points": self.plot_points,
             "chapter_summaries": self.chapter_summaries,
-            "narrative_tracking": self.narrative_tracking,
+            "narrative_tracking": serializable_narrative_tracking,
+            "memory_config": {
+                "max_memory_items": self.max_memory_items,
+                "version": "2.0_with_memory_limits"
+            }
         }
 
         # Save to file
@@ -259,7 +344,29 @@ class MemoryManager:
             self.settings = memory_data.get("settings", self.settings)
             self.plot_points = memory_data.get("plot_points", self.plot_points)
             self.chapter_summaries = memory_data.get("chapter_summaries", self.chapter_summaries)
-            self.narrative_tracking = memory_data.get("narrative_tracking", self.narrative_tracking)
+
+            # Load narrative tracking and restore LimitedDict/LimitedList objects
+            loaded_narrative_tracking = memory_data.get("narrative_tracking", {})
+
+            # Restore limited containers with loaded data
+            for key, container in self.narrative_tracking.items():
+                loaded_data = loaded_narrative_tracking.get(key, {})
+
+                if isinstance(container, LimitedDict):
+                    # Restore LimitedDict
+                    container.clear()
+                    if isinstance(loaded_data, dict):
+                        for k, v in loaded_data.items():
+                            container[k] = v
+                elif isinstance(container, LimitedList):
+                    # Restore LimitedList
+                    container.clear()
+                    if isinstance(loaded_data, list):
+                        for item in loaded_data:
+                            container.append(item)
+                else:
+                    # Regular container - direct assignment
+                    self.narrative_tracking[key] = loaded_data
 
             return True
         except Exception as e:

@@ -106,6 +106,62 @@ class CreativeNonFictionPrompts(SpecialFormatBasePrompts):
 '''
         return base_prompt + creative_non_fiction_additions
 
+    @classmethod
+    def get_series_plan_prompt(cls, **kwargs) -> str:
+        """Generate a creativenonfiction-specific series planning prompt."""
+        base_prompt = super().get_series_plan_prompt(**kwargs)
+
+        creativenonfiction_series_additions = """
+
+## CreativeNonFiction Series-Specific Planning Elements
+
+### Educational Progression for CreativeNonFiction
+- **Knowledge Building**: Structure learning progression appropriate for creativenonfiction topics
+- **Expertise Development**: Guide readers from basic to advanced understanding of creativenonfiction subjects
+- **Practical Applications**: Include actionable insights specific to creativenonfiction throughout the series
+- **Research Depth**: Plan comprehensive research appropriate for creativenonfiction authority
+- **Reader Value**: Ensure each book provides significant creativenonfiction value while building series knowledge
+
+### CreativeNonFiction Series Continuity
+- **Subject Consistency**: Maintain consistent approach to creativenonfiction topics across books
+- **Authority Building**: Establish and maintain credibility in creativenonfiction throughout the series
+- **Information Architecture**: Structure information flow appropriate for creativenonfiction learning
+- **Cross-References**: Create meaningful connections between creativenonfiction concepts across books
+- **Updated Knowledge**: Plan for incorporating new creativenonfiction research and developments
+
+Create a creativenonfiction series that provides comprehensive education with authoritative, well-researched content.
+"""
+
+        return base_prompt + creativenonfiction_series_additions
+
+    @classmethod
+    def get_series_book_prompt(cls, **kwargs) -> str:
+        """Generate a creativenonfiction-specific individual book prompt within series context."""
+        base_prompt = super().get_series_book_prompt(**kwargs)
+
+        creativenonfiction_book_additions = """
+
+## CreativeNonFiction Series Book Integration
+
+### CreativeNonFiction Knowledge Continuity
+- **Building on Previous Learning**: Reference and build upon creativenonfiction concepts from earlier books
+- **Consistent Methodology**: Maintain research and presentation standards established in the series
+- **Cross-References**: Include appropriate references to previous creativenonfiction books when relevant
+- **Knowledge Progression**: Advance reader understanding of creativenonfiction topics appropriately
+- **Authority Maintenance**: Continue the authoritative voice established in the creativenonfiction series
+
+### Book-Specific CreativeNonFiction Focus
+- **Educational Objectives**: What specific creativenonfiction knowledge will readers gain from this book?
+- **Practical Applications**: What actionable creativenonfiction insights will be provided?
+- **Research Integration**: How will new creativenonfiction research be incorporated?
+- **Series Advancement**: How does this book advance the overall creativenonfiction education series?
+- **Reader Value**: What unique creativenonfiction value does this book add to the series?
+
+Ensure this book provides comprehensive creativenonfiction education while serving as an integral part of the learning series.
+"""
+
+        return base_prompt + creativenonfiction_book_additions
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return CreativeNonFictionPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -120,3 +176,8 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return CreativeNonFictionPrompts.get_enhancement_prompt(**kwargs)
+def get_series_plan_prompt(**kwargs) -> str:
+    return CreativeNonFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_series_book_prompt(**kwargs) -> str:
+    return CreativeNonFictionPrompts.get_series_book_prompt(**kwargs)

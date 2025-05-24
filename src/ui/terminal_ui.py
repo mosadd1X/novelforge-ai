@@ -4,15 +4,12 @@ Terminal UI components for the novel generation system.
 import os
 import time
 import datetime
-from typing import Dict, List, Any, Optional, Callable, Union
+from typing import Dict, List, Any, Optional, Callable
 from rich.console import Console
 from rich.panel import Panel
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TimeElapsedColumn
 from rich.table import Table
-from rich.markdown import Markdown
-from rich.align import Align
 from rich.live import Live
-from rich.layout import Layout
 from rich.text import Text
 from rich import box
 import questionary
@@ -329,12 +326,9 @@ def get_novel_info(series_info: Dict[str, Any] = None) -> Dict[str, str]:
         style=custom_style
     ).ask()
 
-    # Get author
-    author = questionary.text(
-        "Who is the author?",
-        validate=lambda text: len(text) > 0,
-        style=custom_style
-    ).ask()
+    # Author will be automatically selected based on genre and other factors
+    # This is now handled by the fictional author system
+    author = "AI Author"  # Placeholder - will be replaced by fictional author
 
     # Get description
     description = questionary.text(
@@ -352,6 +346,7 @@ def get_novel_info(series_info: Dict[str, Any] = None) -> Dict[str, str]:
         "Commercial Fiction",
         "Mystery/Thriller",
         "Romance",
+        "Contemporary Romance",
         "Fantasy",
         "Science Fiction",
         "Historical Fiction",
@@ -471,7 +466,6 @@ def display_compact_outline(chapter_outlines: List[str], chapter_count: int) -> 
     """Display outline in a compact format for many chapters."""
     from rich.panel import Panel
     from rich.text import Text
-    from rich.columns import Columns
 
     # Show first 5 chapters
     console.print("[bold yellow]📖 First 5 Chapters:[/bold yellow]")
@@ -828,6 +822,24 @@ def generate_cover(novel_data: Dict[str, Any], output_dir: str, auto_mode: bool 
     # Get description for enhanced cover generation
     description = novel_data["metadata"].get("description", "")
 
+    # Extract themes from novel data for cover generation
+    themes = []
+
+    # Try to get themes from generation options in novel data
+    if "generation_options" in novel_data:
+        themes = novel_data["generation_options"].get("themes", [])
+
+    # If no themes in generation options, try to get from genre defaults
+    if not themes:
+        from src.utils.genre_defaults import get_genre_defaults
+        genre_defaults = get_genre_defaults(genre)
+        themes = genre_defaults.get("themes", [])
+
+    # If this is part of a series, try to get themes from series metadata
+    if not themes and series_info:
+        # This would require access to series manager, but for now we'll rely on genre defaults
+        pass
+
     # Generate the enhanced cover
     cover_path = cover_generator.generate_cover(
         title=title,
@@ -836,7 +848,8 @@ def generate_cover(novel_data: Dict[str, Any], output_dir: str, auto_mode: bool 
         subtitle=subtitle,
         series_info=series_info,
         design_style=design_style,
-        description=description
+        description=description,
+        themes=themes
     )
 
     if not auto_mode:
