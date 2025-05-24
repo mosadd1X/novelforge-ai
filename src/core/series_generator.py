@@ -414,10 +414,10 @@ class SeriesGenerator:
         # Generate cover automatically in series mode
         cover_path = generate_cover(novel, output_dir, auto_mode=True)
 
-        # Format and save as EPUB
+        # Format and save as EPUB with writer profile
         console.print("[bold cyan]Formatting EPUB...[/bold cyan]")
-        formatter = EpubFormatter(novel)
-        epub_path = formatter.save_epub(output_dir, cover_path)
+        formatter = EpubFormatter(novel, writer_profile=writer_profile)
+        epub_path = formatter.save_epub(output_dir, cover_path, writer_profile)
 
         # Display completion message with absolute path
         abs_path = os.path.abspath(epub_path)

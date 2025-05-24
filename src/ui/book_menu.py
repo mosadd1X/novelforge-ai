@@ -291,11 +291,48 @@ def create_new_book() -> Optional[Dict[str, Any]]:
         console.print(f"[bold green]✓[/bold green] Characters generated ({len(characters)} characters)")
 
         # Generate chapters
-        chapters = generator.generate_complete_novel()
-        console.print(f"[bold green]✓[/bold green] All chapters generated")
+        console.print("[bold cyan]Generating chapters...[/bold cyan]")
+        chapters = []
+
+        # Generate chapters one by one
+        for chapter_num in range(1, chapter_count + 1):
+            # Get chapter title
+            chapter_title = f"Chapter {chapter_num}"
+            if chapter_num <= len(chapter_outlines):
+                outline = chapter_outlines[chapter_num - 1]
+                if " - " in outline:
+                    chapter_title = outline.split(" - ")[0]
+                else:
+                    chapter_title = outline
+
+            console.print(f"[bold cyan]Generating Chapter {chapter_num}: {chapter_title}...[/bold cyan]")
+            chapter_text = generator.generate_chapter(chapter_num)
+
+            # Enhance the chapter
+            console.print(f"[bold cyan]Enhancing Chapter {chapter_num}...[/bold cyan]")
+            enhanced_text = generator.enhance_chapter(chapter_text, chapter_num, chapter_title)
+
+            # Add chapter to list
+            chapters.append({
+                "number": chapter_num,
+                "title": chapter_title,
+                "content": enhanced_text
+            })
+
+            console.print(f"[bold green]✓[/bold green] Chapter {chapter_num} completed")
+
+        console.print(f"[bold green]✓[/bold green] All {chapter_count} chapters generated")
 
         # Compile novel data
-        novel = memory_manager.compile_novel_data()
+        novel = {
+            "metadata": memory_manager.metadata,
+            "writer_profile": writer_profile,
+            "generation_options": get_genre_defaults(book_info["genre"]) or {},
+            "outline": chapter_outlines,
+            "characters": characters,
+            "chapters": chapters,
+            "word_count": memory_manager.structure["current_word_count"]
+        }
 
         # Save novel as JSON
         save_novel_json(novel, output_dir)
@@ -303,18 +340,18 @@ def create_new_book() -> Optional[Dict[str, Any]]:
         # Generate cover
         cover_path = generate_cover(novel, output_dir, auto_mode=False)
 
-        # Format and save as EPUB
+        # Format and save as EPUB with writer profile
         console.print("[bold cyan]Formatting EPUB...[/bold cyan]")
-        formatter = EpubFormatter(novel)
-        epub_path = formatter.save_epub(output_dir, cover_path)
+        formatter = EpubFormatter(novel, writer_profile=writer_profile)
+        epub_path = formatter.save_epub(output_dir, cover_path, writer_profile)
 
         # Stop timer
         generation_timer.stop()
 
         # Display completion
-        console.print("\n[bold green]✓ Book generation complete![/bold green]")
-        console.print(f"[bold green]✓ Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
-        console.print(f"[bold green]✓ Book saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
+        console.print("\n[bold green]Book generation complete![/bold green]")
+        console.print(f"[bold green]Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
+        console.print(f"[bold green]Book saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
 
         # Create book info for return
         book_info = {
@@ -494,11 +531,48 @@ def create_book_from_idea() -> Optional[Dict[str, Any]]:
         console.print(f"[bold green]✓[/bold green] Characters generated ({len(characters)} characters)")
 
         # Generate chapters
-        chapters = generator.generate_complete_novel()
-        console.print(f"[bold green]✓[/bold green] All chapters generated")
+        console.print("[bold cyan]Generating chapters...[/bold cyan]")
+        chapters = []
+
+        # Generate chapters one by one
+        for chapter_num in range(1, chapter_count + 1):
+            # Get chapter title
+            chapter_title = f"Chapter {chapter_num}"
+            if chapter_num <= len(chapter_outlines):
+                outline = chapter_outlines[chapter_num - 1]
+                if " - " in outline:
+                    chapter_title = outline.split(" - ")[0]
+                else:
+                    chapter_title = outline
+
+            console.print(f"[bold cyan]Generating Chapter {chapter_num}: {chapter_title}...[/bold cyan]")
+            chapter_text = generator.generate_chapter(chapter_num)
+
+            # Enhance the chapter
+            console.print(f"[bold cyan]Enhancing Chapter {chapter_num}...[/bold cyan]")
+            enhanced_text = generator.enhance_chapter(chapter_text, chapter_num, chapter_title)
+
+            # Add chapter to list
+            chapters.append({
+                "number": chapter_num,
+                "title": chapter_title,
+                "content": enhanced_text
+            })
+
+            console.print(f"[bold green]✓[/bold green] Chapter {chapter_num} completed")
+
+        console.print(f"[bold green]✓[/bold green] All {chapter_count} chapters generated")
 
         # Compile novel data
-        novel = memory_manager.compile_novel_data()
+        novel = {
+            "metadata": memory_manager.metadata,
+            "writer_profile": writer_profile,
+            "generation_options": get_genre_defaults(novel_info["genre"]) or {},
+            "outline": chapter_outlines,
+            "characters": characters,
+            "chapters": chapters,
+            "word_count": memory_manager.structure["current_word_count"]
+        }
 
         # Save novel as JSON
         save_novel_json(novel, output_dir)
@@ -506,19 +580,19 @@ def create_book_from_idea() -> Optional[Dict[str, Any]]:
         # Generate cover
         cover_path = generate_cover(novel, output_dir, auto_mode=False)
 
-        # Format and save as EPUB
+        # Format and save as EPUB with writer profile
         console.print("[bold cyan]Formatting EPUB...[/bold cyan]")
-        formatter = EpubFormatter(novel)
-        epub_path = formatter.save_epub(output_dir, cover_path)
+        formatter = EpubFormatter(novel, writer_profile=writer_profile)
+        epub_path = formatter.save_epub(output_dir, cover_path, writer_profile)
 
         # Stop timer
         generation_timer.stop()
 
         # Display completion
-        console.print("\n[bold green]✓ Book generation complete![/bold green]")
-        console.print(f"[bold green]✓ Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
-        console.print(f"[bold green]✓ Book saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
-        console.print(f"[bold green]✓ Based on idea:[/bold green] [bold cyan]{selected_idea.get('title', 'Unknown')}[/bold cyan]")
+        console.print("\n[bold green]Book generation complete![/bold green]")
+        console.print(f"[bold green]Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
+        console.print(f"[bold green]Book saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
+        console.print(f"[bold green]Based on idea:[/bold green] [bold cyan]{selected_idea.get('title', 'Unknown')}[/bold cyan]")
 
         # Create book info for return
         book_info = {
@@ -563,11 +637,15 @@ def generate_book_cover(book_info: Dict[str, Any]) -> None:
             epub_files = [f for f in os.listdir(book_info["directory"]) if f.endswith(".epub")]
             if epub_files:
                 console.print(f"[bold cyan]Updating EPUB with new cover...[/bold cyan]")
-                formatter = EpubFormatter(novel_data)
-                formatter.save_epub(book_info["directory"], cover_path)
-                console.print(f"[bold green]✓[/bold green] EPUB updated with new cover")
+
+                # Extract writer profile from novel data
+                writer_profile = novel_data.get("writer_profile")
+
+                formatter = EpubFormatter(novel_data, writer_profile=writer_profile)
+                formatter.save_epub(book_info["directory"], cover_path, writer_profile)
+                console.print(f"[bold green]EPUB updated with new cover[/bold green]")
             else:
-                console.print(f"[bold green]✓[/bold green] Cover generated: {cover_path}")
+                console.print(f"[bold green]Cover generated: {cover_path}[/bold green]")
         else:
             console.print("[yellow]Cover generation cancelled.[/yellow]")
 
@@ -629,7 +707,7 @@ def export_book_formats(book_info: Dict[str, Any]) -> None:
     console.print(f"[bold cyan]Found EPUB:[/bold cyan] {epub_files[0]}")
 
     # Ask which format to export to
-    format_choices = ["PDF", "MOBI", "AZW3", "DOCX", "All Formats", "← Back"]
+    format_choices = ["EPUB", "PDF", "MOBI", "AZW3", "DOCX", "All Formats", "← Back"]
     selected_format = questionary.select(
         "Select export format:",
         choices=format_choices,
@@ -637,6 +715,44 @@ def export_book_formats(book_info: Dict[str, Any]) -> None:
     ).ask()
 
     if selected_format == "← Back":
+        return
+
+    # Handle EPUB format (regenerate with proper content)
+    if selected_format == "EPUB":
+        console.print(f"[bold cyan]Regenerating EPUB with updated content...[/bold cyan]")
+
+        try:
+            # Load novel data from JSON
+            from src.utils.file_handler import load_novel_json
+            json_path = os.path.join(book_info["directory"], "novel_data.json")
+
+            if not os.path.exists(json_path):
+                console.print(f"[bold red]Error: novel_data.json not found in {book_info['directory']}[/bold red]")
+                return
+
+            novel_data = load_novel_json(json_path)
+
+            # Extract writer profile from novel data
+            writer_profile = novel_data.get("writer_profile")
+
+            # Find existing cover image
+            cover_path = None
+            cover_extensions = ['.jpg', '.jpeg', '.png', '.webp']
+            for file in os.listdir(book_info["directory"]):
+                if any(file.lower().endswith(ext) for ext in cover_extensions):
+                    cover_path = os.path.join(book_info["directory"], file)
+                    break
+
+            # Regenerate EPUB with proper content and writer profile
+            formatter = EpubFormatter(novel_data, writer_profile=writer_profile)
+            epub_path = formatter.save_epub(book_info["directory"], cover_path, writer_profile)
+
+            console.print(f"[bold green]EPUB regenerated successfully![/bold green]")
+            console.print(f"[bold green]Updated file: {epub_path}[/bold green]")
+
+        except Exception as e:
+            console.print(f"[bold red]Error regenerating EPUB: {str(e)}[/bold red]")
+
         return
 
     # Determine formats to convert
@@ -658,18 +774,18 @@ def export_book_formats(book_info: Dict[str, Any]) -> None:
             result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
 
             if result.returncode == 0:
-                console.print(f"[bold green]✓[/bold green] {fmt.upper()} conversion successful: {output_file}")
+                console.print(f"[bold green]{fmt.upper()} conversion successful: {output_file}[/bold green]")
             else:
-                console.print(f"[bold red]✗[/bold red] {fmt.upper()} conversion failed")
+                console.print(f"[bold red]{fmt.upper()} conversion failed[/bold red]")
                 if result.stderr:
                     console.print(f"[red]Error: {result.stderr}[/red]")
 
         except subprocess.TimeoutExpired:
-            console.print(f"[bold red]✗[/bold red] {fmt.upper()} conversion timed out")
+            console.print(f"[bold red]{fmt.upper()} conversion timed out[/bold red]")
         except Exception as e:
-            console.print(f"[bold red]✗[/bold red] {fmt.upper()} conversion error: {str(e)}")
+            console.print(f"[bold red]{fmt.upper()} conversion error: {str(e)}[/bold red]")
 
-    console.print(f"\n[bold green]✓ Export process completed![/bold green]")
+    console.print(f"\n[bold green]Export process completed![/bold green]")
 
 def show_calibre_installation_help() -> None:
     """Show detailed Calibre installation and troubleshooting help."""

@@ -47,52 +47,62 @@ class BackMatterGenerator:
         Returns:
             HTML content for the writer profile section
         """
-        if not self.writer_profile:
-            return self._generate_generic_profile_section()
+        try:
+            if not self.writer_profile:
+                return self._generate_generic_profile_section()
 
-        profile_name = self.writer_profile.get("name", "Custom AI Writer Profile")
+            profile_name = self.writer_profile.get("name", "Custom AI Writer Profile")
 
-        # Get profile image information
-        image_info = self.image_manager.get_writer_image_info(profile_name)
-        profile_image_html = ""
+            # Get profile image information
+            image_info = self.image_manager.get_writer_image_info(profile_name)
+            profile_image_html = ""
 
-        if image_info['has_image'] and image_info['base64_data']:
-            profile_image_html = f"""
-            <div class="profile-image">
-                <img src="{image_info['base64_data']}" alt="Portrait of {profile_name}"
-                     class="author-portrait" />
-                <p class="image-caption">Portrait of {profile_name}</p>
-            </div>
-            """
+            if image_info['has_image'] and image_info['base64_data']:
+                profile_image_html = f"""
+                <div class="profile-image">
+                    <img src="{image_info['base64_data']}" alt="Portrait of {profile_name}"
+                         class="author-portrait" />
+                    <p class="image-caption">Portrait of {profile_name}</p>
+                </div>
+                """
 
-        # Try to get the enhanced author biography
-        author_biography = self._get_enhanced_author_biography()
+            # Try to get the enhanced author biography
+            author_biography = self._get_enhanced_author_biography()
 
-        if author_biography:
-            # Use the enhanced biographical narrative
+            if author_biography:
+                # Use the enhanced biographical narrative
+                return f"""
+                <div class="writer-profile">
+                    <h1>About the Author</h1>
+
+                    {profile_image_html}
+
+                    <h2>{profile_name}</h2>
+
+                    <div class="author-biography">
+                        {self._format_biography_paragraphs(author_biography)}
+                    </div>
+
+                    <div class="fictional-author-notice">
+                        <p><em><strong>Important Note:</strong> {profile_name} is a fictional author persona.
+                        This profile draws inspiration from real literary techniques and styles but represents
+                        a completely original fictional identity. All books attributed to this name are
+                        AI-generated works.</em></p>
+                    </div>
+                </div>
+                """
+            else:
+                # Fallback to technical profile information
+                return self._generate_technical_profile_section(profile_image_html, profile_name)
+
+        except Exception as e:
+            # Return a basic fallback section
             return f"""
             <div class="writer-profile">
                 <h1>About the Author</h1>
-
-                {profile_image_html}
-
-                <h2>{profile_name}</h2>
-
-                <div class="author-biography">
-                    {self._format_biography_paragraphs(author_biography)}
-                </div>
-
-                <div class="fictional-author-notice">
-                    <p><em><strong>Important Note:</strong> {profile_name} is a fictional author persona.
-                    This profile draws inspiration from real literary techniques and styles but represents
-                    a completely original fictional identity. All books attributed to this name are
-                    AI-generated works.</em></p>
-                </div>
+                <p>This book was generated using AI technology.</p>
             </div>
             """
-        else:
-            # Fallback to technical profile information
-            return self._generate_technical_profile_section(profile_image_html, profile_name)
 
     def _get_enhanced_author_biography(self) -> Optional[str]:
         """

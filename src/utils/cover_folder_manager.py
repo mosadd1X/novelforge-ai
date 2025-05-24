@@ -96,12 +96,29 @@ class CoverFolderManager:
         cover_folder = self.create_cover_folder(title, series_info)
 
         if os.path.exists(cover_folder):
-            for file in os.listdir(cover_folder):
-                file_path = os.path.join(cover_folder, file)
-                if os.path.isfile(file_path):
-                    file_ext = os.path.splitext(file)[1].lower()
-                    if file_ext in self.supported_formats:
-                        found_images.append(file_path)
+            if series_info:
+                # For series books, look for the specific book number image
+                book_number = series_info.get('book_number', 1)
+                expected_filename = f"Book{book_number}"
+
+                for file in os.listdir(cover_folder):
+                    file_path = os.path.join(cover_folder, file)
+                    if os.path.isfile(file_path):
+                        file_ext = os.path.splitext(file)[1].lower()
+                        file_name_without_ext = os.path.splitext(file)[0]
+
+                        # Only include images that match the specific book number
+                        if (file_ext in self.supported_formats and
+                            file_name_without_ext == expected_filename):
+                            found_images.append(file_path)
+            else:
+                # For single books, include all valid images
+                for file in os.listdir(cover_folder):
+                    file_path = os.path.join(cover_folder, file)
+                    if os.path.isfile(file_path):
+                        file_ext = os.path.splitext(file)[1].lower()
+                        if file_ext in self.supported_formats:
+                            found_images.append(file_path)
 
         return found_images
 

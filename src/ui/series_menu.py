@@ -523,9 +523,9 @@ def generate_book_by_book(series_manager: SeriesManager) -> None:
     epub_path = series_generator.generate_book(book_templates[book_number - 1], book_number)
 
     # Display completion message
-    console.print("\n[bold green]✓ Book generation complete![/bold green]")
-    console.print(f"[bold green]✓ Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
-    console.print(f"[bold green]✓ Book saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
+    console.print("\n[bold green]Book generation complete![/bold green]")
+    console.print(f"[bold green]Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
+    console.print(f"[bold green]Book saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
 
 def create_covers(series_manager: SeriesManager) -> None:
     """
@@ -767,7 +767,7 @@ def manage_all_books_covers(series_manager: SeriesManager) -> None:
             # Check for cover images
             book_series_info = {**series_info, 'book_number': book_num}
             found_images = folder_manager.scan_for_cover_images(title, book_series_info)
-            cover_status = f"✓ {len(found_images)}" if found_images else "✗ None"
+            cover_status = f"Yes ({len(found_images)})" if found_images else "No"
 
             # Check for EPUB file
             series_dir = create_series_directory(series_manager.series_title)
@@ -775,7 +775,7 @@ def manage_all_books_covers(series_manager: SeriesManager) -> None:
             epub_files = []
             if os.path.exists(book_dir):
                 epub_files = [f for f in os.listdir(book_dir) if f.endswith(".epub")]
-            epub_status = "✓ Ready" if epub_files else "✗ Missing"
+            epub_status = "Ready" if epub_files else "Missing"
 
             books_table.add_row(f"Book {book_num}", title[:28] + "..." if len(title) > 28 else title, cover_status, epub_status)
 
@@ -866,12 +866,12 @@ def check_all_cover_images(valid_books: list, folder_manager, series_info: dict)
 
         console.print(f"\n[bold green]Book {book_num}: {title}[/bold green]")
         if found_images:
-            console.print(f"[green]✓[/green] Found {len(found_images)} cover image(s):")
+            console.print(f"[green]Found {len(found_images)} cover image(s):[/green]")
             for img in found_images:
                 console.print(f"  • [cyan]{os.path.basename(img)}[/cyan]")
             total_images += len(found_images)
         else:
-            console.print(f"[red]✗[/red] No cover images found")
+            console.print(f"[red]No cover images found[/red]")
             expected_path = folder_manager.get_expected_cover_path(title, book_series_info)
             console.print(f"  Expected: [yellow]{expected_path}[/yellow]")
 
@@ -943,7 +943,7 @@ def apply_covers_to_all_epubs(valid_books: list, folder_manager, series_info: di
             formatter = EpubFormatter(novel_data)
             epub_path = formatter.save_epub(book_dir, selected_image)
 
-            console.print(f"[green]✓[/green] Cover applied successfully")
+            console.print(f"[green]Cover applied successfully[/green]")
             applied_count += 1
 
         except Exception as e:
@@ -992,14 +992,14 @@ def generate_cover_status_report(valid_books: list, folder_manager, series_info:
 
         status_parts = []
         if book_info['has_epub']:
-            status_parts.append("[green]EPUB✓[/green]")
+            status_parts.append("[green]EPUB Ready[/green]")
         else:
-            status_parts.append("[red]EPUB✗[/red]")
+            status_parts.append("[red]EPUB Missing[/red]")
 
         if found_images:
-            status_parts.append(f"[green]Cover✓({len(found_images)})[/green]")
+            status_parts.append(f"[green]Cover Ready ({len(found_images)})[/green]")
         else:
-            status_parts.append("[red]Cover✗[/red]")
+            status_parts.append("[red]Cover Missing[/red]")
 
         status = " ".join(status_parts)
         console.print(f"[bold]Book {book_num}:[/bold] {title[:40]}{'...' if len(title) > 40 else ''} - {status}")
@@ -1153,7 +1153,7 @@ def export_books(series_manager: SeriesManager) -> None:
         console.print(f"[bold green]{i}.[/bold green] {os.path.basename(path)}")
 
     # Ask which format to export to
-    format_choices = ["PDF", "MOBI", "AZW3", "DOCX", "All Formats", "← Back"]
+    format_choices = ["EPUB", "PDF", "MOBI", "AZW3", "DOCX", "All Formats", "← Back"]
     selected_format = questionary.select(
         "Select export format:",
         choices=format_choices,
@@ -1161,6 +1161,62 @@ def export_books(series_manager: SeriesManager) -> None:
     ).ask()
 
     if selected_format == "← Back":
+        return
+
+    # Handle EPUB format (regenerate with proper content)
+    if selected_format == "EPUB":
+        console.print(f"[bold cyan]Regenerating {len(epub_files)} EPUB files with updated content...[/bold cyan]")
+
+        from src.utils.file_handler import load_novel_json
+
+        regenerated_count = 0
+        failed_count = 0
+
+        for epub_path in epub_files:
+            book_dir = os.path.dirname(epub_path)
+            book_name = os.path.basename(book_dir)
+
+            console.print(f"[cyan]Processing: {book_name}[/cyan]")
+
+            try:
+                # Load novel data from JSON
+                json_path = os.path.join(book_dir, "novel_data.json")
+
+                if not os.path.exists(json_path):
+                    console.print(f"  [red]Error: novel_data.json not found[/red]")
+                    failed_count += 1
+                    continue
+
+                novel_data = load_novel_json(json_path)
+
+                # Extract writer profile from novel data
+                writer_profile = novel_data.get("writer_profile")
+
+                # Find existing cover image
+                cover_path = None
+                cover_extensions = ['.jpg', '.jpeg', '.png', '.webp']
+                for file in os.listdir(book_dir):
+                    if any(file.lower().endswith(ext) for ext in cover_extensions):
+                        cover_path = os.path.join(book_dir, file)
+                        break
+
+                # Regenerate EPUB with proper content and writer profile
+                formatter = EpubFormatter(novel_data, writer_profile=writer_profile)
+                new_epub_path = formatter.save_epub(book_dir, cover_path, writer_profile)
+
+                console.print(f"  [green]Regenerated successfully[/green]")
+                regenerated_count += 1
+
+            except Exception as e:
+                console.print(f"  [red]Error: {str(e)}[/red]")
+                failed_count += 1
+
+        # Summary
+        console.print(f"\n[bold green]EPUB Regeneration Complete![/bold green]")
+        console.print(f"[bold green]Successfully regenerated: {regenerated_count}/{len(epub_files)} files[/bold green]")
+        if failed_count > 0:
+            console.print(f"[bold red]Failed: {failed_count} files[/bold red]")
+
         return
 
     # Map user-friendly format names to Calibre format names and file extensions
@@ -1221,7 +1277,7 @@ def export_books(series_manager: SeriesManager) -> None:
                 )
 
                 if result.returncode == 0:
-                    console.print(f"[bold green]✓[/bold green] Converted to: [bold cyan]{output_path_normalized}[/bold cyan]")
+                    console.print(f"[bold green]Converted to: [bold cyan]{output_path_normalized}[/bold cyan][/bold green]")
                     successful_conversions += 1
                 else:
                     console.print(f"[bold red]Error converting {os.path.basename(epub_path)} to {format_name}[/bold red]")
@@ -1242,11 +1298,11 @@ def export_books(series_manager: SeriesManager) -> None:
     # Summary
     format_text = "all formats" if selected_format == "All Formats" else selected_format
     if successful_conversions == total_conversions:
-        console.print(f"\n[bold green]✓ Export to {format_text} complete! ({successful_conversions}/{total_conversions} conversions successful)[/bold green]")
+        console.print(f"\n[bold green]Export to {format_text} complete! ({successful_conversions}/{total_conversions} conversions successful)[/bold green]")
     elif successful_conversions > 0:
-        console.print(f"\n[bold yellow]⚠ Export to {format_text} partially complete. ({successful_conversions}/{total_conversions} conversions successful)[/bold yellow]")
+        console.print(f"\n[bold yellow]Export to {format_text} partially complete. ({successful_conversions}/{total_conversions} conversions successful)[/bold yellow]")
     else:
-        console.print(f"\n[bold red]✗ Export to {format_text} failed. No conversions were successful.[/bold red]")
+        console.print(f"\n[bold red]Export to {format_text} failed. No conversions were successful.[/bold red]")
         console.print("[yellow]Common issues:[/yellow]")
         console.print("[yellow]  • Calibre not properly installed or not in PATH[/yellow]")
         console.print("[yellow]  • EPUB files may be corrupted or invalid[/yellow]")
@@ -1396,18 +1452,18 @@ def zip_series_books_menu(series_manager: SeriesManager) -> None:
     )
 
     if success:
-        console.print(f"\n[bold green]✓ {message}[/bold green]")
-        console.print(f"[bold green]✓ Zip file saved to: {output_path}[/bold green]")
+        console.print(f"\n[bold green]{message}[/bold green]")
+        console.print(f"[bold green]Zip file saved to: {output_path}[/bold green]")
 
         # Show file size
         try:
             file_size = os.path.getsize(output_path)
             size_mb = file_size / (1024 * 1024)
-            console.print(f"[bold green]✓ File size: {size_mb:.2f} MB[/bold green]")
+            console.print(f"[bold green]File size: {size_mb:.2f} MB[/bold green]")
         except:
             pass
     else:
-        console.print(f"\n[bold red]✗ {message}[/bold red]")
+        console.print(f"\n[bold red]{message}[/bold red]")
 
 def series_management_menu() -> None:
     """Main series management menu."""

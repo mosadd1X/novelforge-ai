@@ -317,7 +317,7 @@ class EpubFormatter:
         # Create chapter HTML with appropriate wrapper
         if self.format_type == "poetry":
             # Poetry collections use section terminology
-            chapter_html = f"""
+            inner_content = f"""
             <div class="poetry-section">
                 <h1 class="section-title">{chapter_title}</h1>
                 {processed_content}
@@ -326,17 +326,30 @@ class EpubFormatter:
             title_prefix = "Section"
         elif self.format_type in ["essay", "short_story"]:
             # Essays and short stories are self-contained
-            chapter_html = processed_content
+            inner_content = processed_content
             title_prefix = "Chapter"
         else:
             # Standard chapter formatting
-            chapter_html = f"""
+            inner_content = f"""
             <div class="chapter">
                 <h1 class="chapter-title">{chapter_title}</h1>
                 {processed_content}
             </div>
             """
             title_prefix = "Chapter"
+
+        # Wrap content in proper HTML structure like front/back matter
+        chapter_html = f"""
+        <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+            <title>{chapter_title}</title>
+            <link rel="stylesheet" type="text/css" href="style/style.css" />
+        </head>
+        <body>
+            {inner_content}
+        </body>
+        </html>
+        """
 
         # Create chapter
         epub_chapter = epub.EpubHtml(
@@ -366,7 +379,11 @@ class EpubFormatter:
         self._setup_metadata()
 
         # Create CSS
-        css = self._create_css()
+        self._create_css()
+
+        # Create chapters FIRST so they're available for front matter TOC generation
+        for chapter in self.novel_data["chapters"]:
+            self._create_chapter(chapter)
 
         # Add cover if provided
         if cover_path and os.path.exists(cover_path):
@@ -423,10 +440,6 @@ class EpubFormatter:
         else:
             title_page = None
             copyright_page = None
-
-        # Create chapters
-        for chapter in self.novel_data["chapters"]:
-            self._create_chapter(chapter)
 
         # Create back matter sections
         back_matter_sections = self._create_back_matter_sections()
