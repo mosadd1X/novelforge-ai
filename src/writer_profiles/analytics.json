@@ -66,7 +66,7 @@
       "profiles_selected": {}
     },
     "Short Story Collection": {
-      "recommendation_requests": 1,
+      "recommendation_requests": 2,
       "profiles_selected": {}
     },
     "Novella": {
@@ -192,7 +192,7 @@
     "genre_popularity": {},
     "user_satisfaction": {}
   },
-  "last_updated": "2025-05-25T00:09:21.935614",
+  "last_updated": "2025-05-25T00:19:20.823640",
   "style_selections": {
     "Romance_Master": {
       "count": 2,

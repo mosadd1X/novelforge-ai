@@ -7,7 +7,7 @@ from .base_prompts import SpecialFormatBasePrompts
 class GraphicNovelPrompts(SpecialFormatBasePrompts):
     GENRE_NAME = "Graphic Novel"
     GENRE_DESCRIPTION = "A graphic novel is a narrative told through sequential art, combining illustrations and text to create a cohesive and engaging story. It is a longer-form work, typically more complex and sophisticated than a comic book, often exploring mature themes and complex character development. The visual storytelling is as crucial as the written narrative, with panel layouts, character design, and visual metaphors contributing significantly to the overall meaning and impact."
-    
+
     GENRE_CHARACTERISTICS = [
         "Sequential Art: The story is told through a sequence of panels, each containing images and text that build upon each other to create a narrative flow.",
         "Panel Layout: The arrangement of panels on a page is a deliberate artistic choice that influences the pacing and emotional impact of the story.",
@@ -20,7 +20,7 @@ class GraphicNovelPrompts(SpecialFormatBasePrompts):
         "Genre Blending: Graphic novels can encompass a wide range of genres, from superhero stories and science fiction to historical fiction and memoirs.",
         "Target Audience: While often associated with younger readers, graphic novels cater to a diverse audience, including adults, with stories that address mature themes and complex issues."
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "Opening Scene: A visually compelling scene that introduces the main character(s) and establishes the setting and tone of the story.",
         "Inciting Incident: An event that disrupts the protagonist's normal life and sets them on a journey or quest.",
@@ -39,7 +39,7 @@ class GraphicNovelPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         graphic_novel_additions = '''
 ## Graphic Novel-Specific Writing Considerations
 - **Visual Storytelling Expertise**: Demonstrate a strong understanding of visual storytelling techniques, including panel layout, composition, and character design.  Explain your ability to convey emotion and information through images, not just words.
@@ -56,7 +56,7 @@ class GraphicNovelPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         graphic_novel_additions = '''
 ## Graphic Novel-Specific Outline Requirements
 - **Panel Breakdown**: Include a detailed breakdown of each chapter into individual panels, describing the visual content, dialogue, and narration for each panel.
@@ -74,26 +74,96 @@ class GraphicNovelPrompts(SpecialFormatBasePrompts):
 
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
-        base_prompt = super().get_character_prompt(**kwargs)
-        
-        graphic_novel_additions = '''
-## Graphic Novel-Specific Character Development
-- **Visual Representation**: Describe the character's physical appearance in detail, including their clothing, hairstyle, and any distinguishing features. Consider how their appearance reflects their personality and background.
-- **Facial Expressions and Body Language**: Outline the character's typical facial expressions and body language, and how these visual cues can be used to convey their emotions and intentions.
-- **Costume Design (if applicable)**: If the character wears a costume, provide a detailed description of its design, including its colors, materials, and any symbolic elements.
-- **Character Archetype**: Identify the character's archetype (e.g., hero, villain, mentor, sidekick) and how they embody the traits and characteristics associated with that archetype.
-- **Visual Motifs**: Establish visual motifs that are associated with the character, such as a specific color, symbol, or object, and explain their significance.
-- **Character Poses and Stances**: Describe the character's typical poses and stances, and how these visual cues can be used to convey their personality and attitude.
-- **Character Evolution (Visual)**: Outline how the character's appearance changes over the course of the story, reflecting their growth, experiences, and emotional state.
-- **Relationship to Visual Environment**: Describe how the character interacts with their environment and how their surroundings influence their appearance and behavior.
-- **Exaggeration and Caricature**: Consider whether to use exaggeration or caricature in the character's design to emphasize certain traits or create a humorous effect.
-'''
-        return base_prompt + graphic_novel_additions
+        """Generate a character development prompt specifically for graphic novels."""
+        title = kwargs.get("title", "Untitled")
+        description = kwargs.get("description", "")
+        outline = kwargs.get("outline", "")
+        target_audience = kwargs.get("target_audience", "Adult")
+        subplot_info = kwargs.get("subplot_info", "")
+
+        return f"""
+# Graphic Novel Character Development
+
+Create a set of visually compelling characters for the graphic novel "{title}" for {target_audience}.
+
+## Graphic Novel Information
+- Title: {title}
+- Description: {description}
+- Genre: Graphic Novel
+- Target Audience: {target_audience}
+
+## Story Outline
+{outline}
+
+{subplot_info}
+
+## Graphic Novel Character Requirements
+
+### Visual Character Guidelines
+1. **Visual Representation**: Characters must be designed for visual storytelling with distinctive, memorable appearances
+2. **Expressive Design**: Characters should be capable of conveying emotions through facial expressions and body language
+3. **Distinctive Silhouettes**: Each character should have a unique silhouette that makes them instantly recognizable
+4. **Visual Archetypes**: Characters should embody clear visual archetypes while maintaining originality
+5. **Costume/Clothing Design**: Outfits should reflect personality, role, and story context
+6. **Visual Motifs**: Each character should have associated visual elements (colors, symbols, objects)
+7. **Sequential Art Compatibility**: Characters must work well across multiple panels and pages
+
+### Character Types for Graphic Novels
+- **Protagonists**: 1-2 main characters with strong visual presence and clear character arcs
+- **Antagonists**: 1-2 opposing characters with compelling visual design and motivations
+- **Supporting Characters**: 3-4 characters who enhance the story and provide visual variety
+- **Visual Ensemble**: Characters should work together as a cohesive visual cast
+
+## Character Object Format
+For each character, provide the following fields in a JSON object:
+- "name": (string) Character's full name
+- "role": (string) Their role (protagonist, antagonist, supporting, etc.)
+- "appearance": (string) Detailed visual description including distinctive features, clothing, and design elements
+- "personality": (string) Key personality traits that can be expressed visually
+- "background": (string) Essential backstory that informs their visual design and motivations
+- "goals": (string) Primary objectives that drive their actions in the story
+- "arc": (string) Character development and how their appearance might evolve
+- "relationships": (string) How they relate to other characters visually and emotionally
+- "strengths": (string) Their abilities and positive traits
+- "flaws": (string) Their weaknesses and vulnerabilities
+- "voice": (string) Their speech patterns and dialogue style
+- "visual_motifs": (string) Colors, symbols, or design elements associated with this character
+- "expressions": (string) Typical facial expressions and body language
+- "costume_design": (string) Detailed description of their clothing/costume and its significance
+
+## Graphic Novel Guidelines
+- Characters should be visually distinctive and memorable
+- Each character should have a unique visual identity
+- Consider how characters will look in action sequences and quiet moments
+- Ensure characters can convey emotion through visual design
+- Plan for character interactions and visual chemistry
+
+Return ONLY a valid JSON array of character objects, nothing else.
+Example format:
+[
+  {{
+    "name": "Maya Chen",
+    "role": "protagonist",
+    "appearance": "Petite Asian woman in her late twenties with short, asymmetrical black hair with blue streaks. Wears practical dark clothing with tech accessories",
+    "personality": "Determined and tech-savvy, but struggles with trust and emotional vulnerability",
+    "background": "Former corporate hacker turned freelance investigator after exposing corruption",
+    "goals": "Wants to uncover the truth behind a conspiracy while protecting innocent people",
+    "arc": "Learns to trust others and work as part of a team rather than alone",
+    "relationships": "Initially distrustful but gradually opens up to allies",
+    "strengths": "Technical expertise, problem-solving, determination",
+    "flaws": "Paranoid, difficulty trusting others, tendency to work alone",
+    "voice": "Direct and precise, uses technical jargon when nervous",
+    "visual_motifs": "Blue color scheme, circuit patterns, geometric designs",
+    "expressions": "Intense focus when working, guarded expressions in social situations",
+    "costume_design": "Dark tactical clothing with blue accents, multiple pockets for tech gear, fingerless gloves"
+  }}
+]
+"""
 
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         graphic_novel_additions = '''
 ## Graphic Novel-Specific Chapter Writing
 - **Panel Composition**: Focus on creating visually dynamic and engaging panel compositions that guide the reader's eye and convey the intended mood and information.

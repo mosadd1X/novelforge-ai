@@ -7,7 +7,7 @@ from .base_prompts import SpecialFormatBasePrompts
 class ShortStoryCollectionPrompts(SpecialFormatBasePrompts):
     GENRE_NAME = "Short Story Collection"
     GENRE_DESCRIPTION = "A short story collection is a compilation of multiple short stories, typically sharing a common theme, setting, authorial voice, or exploring related ideas. The individual stories can stand alone, but the collection as a whole creates a larger, more nuanced reading experience. The strength of a collection lies in the diversity of its stories and the connections, both subtle and overt, that bind them together."
-    
+
     GENRE_CHARACTERISTICS = [
         "Thematic Cohesion: Stories often revolve around a central theme, idea, or motif, creating a unified reading experience.",
         "Varied Perspectives: The collection may explore a single theme from multiple viewpoints or character perspectives.",
@@ -20,7 +20,7 @@ class ShortStoryCollectionPrompts(SpecialFormatBasePrompts):
         "Cumulative Effect: The overall impact of the collection is greater than the sum of its individual stories, creating a richer and more complex reading experience.",
         "Focus on Character or Setting: Some collections prioritize character studies, while others focus on exploring a specific setting or environment."
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "A unifying theme or concept that ties the stories together.",
         "Diverse characters with unique motivations and backstories.",
@@ -39,7 +39,7 @@ class ShortStoryCollectionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         short_story_collection_additions = '''
 ## Short Story Collection-Specific Writing Considerations
 - **Thematic Resonance**: Consider how each story contributes to the overall theme of the collection. Ensure each piece resonates with the central idea, even if subtly.
@@ -56,7 +56,7 @@ class ShortStoryCollectionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         short_story_collection_additions = '''
 ## Short Story Collection-Specific Outline Requirements
 - **Overall Theme**: Define the overarching theme or concept that will unify the collection. This should be a clear and concise statement that guides the selection and development of individual stories.
@@ -77,25 +77,92 @@ class ShortStoryCollectionPrompts(SpecialFormatBasePrompts):
 
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
-        base_prompt = super().get_character_prompt(**kwargs)
-        
-        short_story_collection_additions = '''
-## Short Story Collection-Specific Character Development
-- **Character Focus**: In short stories, characters must be quickly established and relatable. Focus on a few key traits and motivations that drive their actions.
-- **Character Arc (Optional)**: While not always necessary, consider whether each character will undergo a significant change or transformation within the story.
-- **Character Diversity**: Ensure a diverse range of characters across the collection, representing different backgrounds, perspectives, and experiences.
-- **Recurring Characters (Optional)**: If using recurring characters, carefully plan their development and evolution across different stories.
-- **Character Relationships**: Explore the relationships between characters and how they influence each other's actions and decisions.
-- **Character Voice**: Develop a distinct voice for each character, using dialogue and internal monologue to reveal their personality and motivations.
-- **Character Flaws**: Give characters flaws and vulnerabilities to make them more relatable and believable.
-- **Character Motivation**: Clearly define each character's motivations and goals, and how they drive the plot forward.
-'''
-        return base_prompt + short_story_collection_additions
+        """Generate a character development prompt specifically for short story collections."""
+        title = kwargs.get("title", "Untitled")
+        description = kwargs.get("description", "")
+        outline = kwargs.get("outline", "")
+        target_audience = kwargs.get("target_audience", "Adult")
+        subplot_info = kwargs.get("subplot_info", "")
+
+        return f"""
+# Short Story Collection Character Development
+
+Create a set of well-developed characters for the short story collection "{title}" for {target_audience}.
+
+## Collection Information
+- Title: {title}
+- Description: {description}
+- Genre: Short Story Collection
+- Target Audience: {target_audience}
+
+## Collection Outline
+{outline}
+
+{subplot_info}
+
+## Short Story Collection Character Requirements
+
+### Character Development Guidelines
+1. **Quick Establishment**: Characters must be quickly established and relatable since short stories have limited space
+2. **Focused Traits**: Focus on a few key traits and motivations that drive their actions
+3. **Character Diversity**: Ensure diverse characters across the collection representing different backgrounds and perspectives
+4. **Recurring Potential**: Some characters may appear in multiple stories, plan their evolution carefully
+5. **Distinct Voices**: Each character should have a unique voice and speech pattern
+6. **Clear Motivations**: Define each character's goals and what drives them forward
+7. **Relatable Flaws**: Give characters vulnerabilities that make them believable and human
+
+### Character Types for Short Story Collections
+- **Protagonists**: 2-3 main characters who could anchor different stories
+- **Recurring Characters**: 1-2 characters who might appear across multiple stories
+- **Supporting Characters**: 3-4 characters who enhance specific stories
+- **Diverse Voices**: Characters from different backgrounds, ages, and perspectives
+
+## Character Object Format
+For each character, provide the following fields in a JSON object:
+- "name": (string) Character's full name
+- "role": (string) Their role (protagonist, recurring character, supporting, etc.)
+- "appearance": (string) Detailed physical description including distinctive features
+- "personality": (string) Key personality traits and characteristics (focus on 2-3 main traits)
+- "background": (string) Essential backstory that explains motivations
+- "goals": (string) Primary motivations and what they want to achieve
+- "arc": (string) Potential character development across stories (if applicable)
+- "relationships": (string) How they relate to other characters
+- "strengths": (string) Their key abilities or positive traits
+- "flaws": (string) Their weaknesses or vulnerabilities
+- "voice": (string) Their speech patterns, vocabulary, and communication style
+- "story_potential": (string) What types of stories this character could anchor or support
+
+## Short Story Collection Guidelines
+- Characters should work well in the compressed format of short stories
+- Each character should be memorable and distinctive
+- Consider how characters might connect across different stories
+- Focus on characters who can carry emotional weight quickly
+- Ensure characters represent diverse perspectives and experiences
+
+Return ONLY a valid JSON array of character objects, nothing else.
+Example format:
+[
+  {{
+    "name": "Maria Santos",
+    "role": "protagonist",
+    "appearance": "Mid-thirties with expressive dark eyes and calloused hands from years of gardening",
+    "personality": "Resilient and nurturing, but struggles with letting others help her",
+    "background": "Single mother who immigrated to start a new life, works multiple jobs",
+    "goals": "Wants to provide stability for her daughter while finding her own sense of belonging",
+    "arc": "Learns to accept help from her community and trust in relationships",
+    "relationships": "Protective of her daughter, slowly building friendships with neighbors",
+    "strengths": "Determination, empathy, practical problem-solving",
+    "flaws": "Stubborn independence, difficulty trusting others",
+    "voice": "Speaks with quiet authority, mixes English with Spanish when emotional",
+    "story_potential": "Stories about community, belonging, sacrifice, and finding home"
+  }}
+]
+"""
 
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         short_story_collection_additions = '''
 ## Short Story Collection-Specific Chapter Writing
 - **Conciseness**: Short stories demand conciseness. Every sentence should contribute to the plot, character development, or atmosphere.

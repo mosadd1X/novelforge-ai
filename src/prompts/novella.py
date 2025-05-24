@@ -7,7 +7,7 @@ from .base_prompts import SpecialFormatBasePrompts
 class NovellaPrompts(SpecialFormatBasePrompts):
     GENRE_NAME = "Novella"
     GENRE_DESCRIPTION = "A novella is a work of narrative prose fiction longer than a short story but shorter than a novel. Its length allows for more developed characters and plot than a short story, but it maintains a focused scope and intensity often absent in longer novels. Novellas often explore a single, significant event or theme in a character's life, leading to a concentrated and impactful reading experience."
-    
+
     GENRE_CHARACTERISTICS = [
         "Focused Scope: Novellas typically center on a single, significant event, conflict, or transformation in a character's life, avoiding sprawling subplots or multiple perspectives.",
         "Limited Cast: The number of characters is usually smaller compared to a novel, allowing for deeper exploration of their motivations and relationships.",
@@ -20,7 +20,7 @@ class NovellaPrompts(SpecialFormatBasePrompts):
         "Exploration of a Moral Dilemma: Novellas often present characters facing difficult moral choices, exploring the complexities of human nature.",
         "Subtle Symbolism: Novellas frequently employ symbolism to enrich the narrative and add layers of meaning."
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "A clear inciting incident that sets the plot in motion.",
         "A protagonist with a distinct flaw or vulnerability.",
@@ -39,7 +39,7 @@ class NovellaPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         novella_additions = '''
 ## Novella-Specific Writing Considerations
 - **Pacing and Economy**: Maintain a brisk pace, ensuring every scene and sentence contributes to the overall narrative. Avoid unnecessary exposition or digressions.
@@ -56,7 +56,7 @@ class NovellaPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         novella_additions = '''
 ## Novella-Specific Outline Requirements
 - **Inciting Incident**: Clearly define the event that sets the story in motion and disrupts the protagonist's status quo. This should occur early in the novella.
@@ -74,25 +74,96 @@ class NovellaPrompts(SpecialFormatBasePrompts):
 
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
-        base_prompt = super().get_character_prompt(**kwargs)
-        
-        novella_additions = '''
-## Novella-Specific Character Development
-- **Protagonist's Flaw**: Identify a specific flaw or vulnerability that makes the protagonist relatable and drives their character arc. This flaw should be central to the story's conflict.
-- **Limited Supporting Cast**: Focus on developing a small number of supporting characters who play crucial roles in the protagonist's journey. Avoid introducing unnecessary characters.
-- **Character Relationships**: Define the key relationships between the protagonist and the supporting characters, and how these relationships evolve throughout the story.
-- **Internal Motivations**: Explore the internal motivations and desires that drive each character's actions. What are they striving for, and what obstacles stand in their way?
-- **Backstory Relevance**: Only include backstory details that are directly relevant to the present-day plot and character motivations. Avoid lengthy or unnecessary exposition.
-- **Show, Don't Tell**: Use actions, dialogue, and internal monologue to reveal character traits and motivations, rather than simply stating them outright.
-- **Character Transformation**: Plan how the protagonist will change or grow throughout the story, and what events will trigger this transformation.
-- **Unique Voice**: Develop a distinct voice for each character, using dialogue and narration to differentiate them and make them memorable.
-'''
-        return base_prompt + novella_additions
+        """Generate a character development prompt specifically for novellas."""
+        title = kwargs.get("title", "Untitled")
+        description = kwargs.get("description", "")
+        outline = kwargs.get("outline", "")
+        target_audience = kwargs.get("target_audience", "Adult")
+        subplot_info = kwargs.get("subplot_info", "")
+
+        return f"""
+# Novella Character Development
+
+Create a focused set of characters for the novella "{title}" for {target_audience}.
+
+## Novella Information
+- Title: {title}
+- Description: {description}
+- Genre: Novella
+- Target Audience: {target_audience}
+
+## Story Outline
+{outline}
+
+{subplot_info}
+
+## Novella Character Requirements
+
+### Character Development Guidelines
+1. **Focused Cast**: Novellas require a small, focused cast of essential characters only
+2. **Protagonist's Central Flaw**: The main character should have a specific flaw that drives the story
+3. **Limited Supporting Cast**: Include only supporting characters crucial to the protagonist's journey
+4. **Clear Relationships**: Define key relationships and how they evolve throughout the story
+5. **Internal Motivations**: Explore what drives each character's actions and decisions
+6. **Relevant Backstory**: Include only backstory directly relevant to the plot and motivations
+7. **Character Transformation**: Plan clear character growth and what triggers it
+
+### Character Types for Novellas
+- **Protagonist**: 1 main character with a clear arc and central flaw
+- **Key Supporting Characters**: 2-3 characters essential to the protagonist's journey
+- **Antagonist/Obstacle**: 1 character or force that creates conflict
+- **Catalyst Character**: 1 character who triggers change or revelation
+
+## Character Object Format
+For each character, provide the following fields in a JSON object:
+- "name": (string) Character's full name
+- "role": (string) Their role (protagonist, supporting, antagonist, catalyst)
+- "appearance": (string) Concise but memorable physical description
+- "personality": (string) Key personality traits focused on story relevance
+- "background": (string) Essential backstory that directly impacts the plot
+- "goals": (string) What they want to achieve in the story
+- "arc": (string) How they change or develop throughout the novella
+- "relationships": (string) Key relationships with other characters
+- "strengths": (string) Their abilities and positive traits
+- "flaws": (string) Their central flaw or vulnerability (especially for protagonist)
+- "voice": (string) Their distinctive speech patterns and dialogue style
+- "motivation": (string) Internal drives and desires that fuel their actions
+- "obstacles": (string) What stands in their way or creates conflict
+- "transformation": (string) Specific events or realizations that trigger character growth
+
+## Novella Guidelines
+- Keep the cast small and focused on essential characters only
+- Each character should serve a specific purpose in the story
+- Focus on one main character arc with clear development
+- Ensure characters can be fully developed within the novella's length
+- Avoid unnecessary characters or subplots that don't serve the main story
+
+Return ONLY a valid JSON array of character objects, nothing else.
+Example format:
+[
+  {{
+    "name": "Elena Rodriguez",
+    "role": "protagonist",
+    "appearance": "A woman in her thirties with tired eyes and paint-stained fingers",
+    "personality": "Creative and passionate, but struggles with self-doubt and perfectionism",
+    "background": "Former art teacher who left her job to pursue painting full-time",
+    "goals": "To complete her first solo art exhibition and prove her worth as an artist",
+    "arc": "Learns to embrace imperfection and find confidence in her unique artistic voice",
+    "relationships": "Estranged from her practical sister, mentored by an elderly gallery owner",
+    "strengths": "Artistic talent, determination, empathy for others' struggles",
+    "flaws": "Perfectionism that paralyzes her creativity, fear of failure and judgment",
+    "voice": "Thoughtful and introspective, uses art metaphors when explaining emotions",
+    "motivation": "Deep need to prove she made the right choice leaving teaching",
+    "obstacles": "Financial pressure, self-doubt, competitive art world",
+    "transformation": "A failed painting leads her to discover beauty in imperfection"
+  }}
+]
+"""
 
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         novella_additions = '''
 ## Novella-Specific Chapter Writing
 - **Focused Scene Objectives**: Each chapter should have a clear objective that contributes to the overall plot and character development. Avoid aimless or meandering scenes.

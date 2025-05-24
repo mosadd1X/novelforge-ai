@@ -72,20 +72,87 @@ class PoetryCollectionPrompts(SpecialFormatBasePrompts):
 
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
-        base_prompt = super().get_character_prompt(**kwargs)
+        """Generate a character/persona development prompt specifically for poetry collections."""
+        title = kwargs.get("title", "Untitled")
+        description = kwargs.get("description", "")
+        outline = kwargs.get("outline", "")
+        target_audience = kwargs.get("target_audience", "Adult")
+        subplot_info = kwargs.get("subplot_info", "")
 
-        poetry_collection_additions = '''
-## Poetry Collection-Specific Character Development
-- **Character as Persona**: In poetry, characters often function as personae, representing aspects of the poet's own experiences or emotions. Consider how your characters can embody different facets of the human condition.
-- **Symbolic Representation**: Characters can also serve as symbols, representing abstract concepts or ideas. Think about how your characters can be used to explore themes like love, loss, or justice.
-- **Voice and Perspective**: Develop a distinct voice and perspective for each character. Consider their background, motivations, and beliefs.
-- **Emotional Depth**: Explore the emotional depth of your characters. Show their vulnerabilities, fears, and desires.
-- **Relationships**: Consider the relationships between your characters. How do they interact with each other? What conflicts or connections do they share?
-- **Character Arc**: While not always present in individual poems, consider if a character arc develops across multiple poems within the collection. How does the character change or evolve over time?
-- **Limited Detail**: Unlike novels, poetry often relies on suggestion rather than explicit detail. Use concise language and evocative imagery to create memorable characters.
-- **Focus on Internal Landscape**: Prioritize exploring the character's internal thoughts, feelings, and motivations rather than providing extensive physical descriptions.
-'''
-        return base_prompt + poetry_collection_additions
+        return f"""
+# Poetry Collection Persona and Voice Development
+
+Create poetic personas and voices for the poetry collection "{title}" for {target_audience}.
+
+## Collection Information
+- Title: {title}
+- Description: {description}
+- Genre: Poetry Collection
+- Target Audience: {target_audience}
+
+## Collection Outline
+{outline}
+
+{subplot_info}
+
+## Poetry Collection Persona Requirements
+
+### Poetic Persona Guidelines
+1. **Persona as Voice**: In poetry, characters function as personae - distinct voices that express different aspects of human experience
+2. **Symbolic Representation**: Personas can represent abstract concepts, emotions, or universal themes
+3. **Emotional Depth**: Focus on internal landscapes, feelings, and psychological states
+4. **Voice Distinctiveness**: Each persona should have a unique poetic voice and perspective
+5. **Thematic Connection**: Personas should connect to the collection's overall themes
+6. **Poetic Language**: Personas should speak in language appropriate for poetry - evocative, metaphorical, condensed
+7. **Universal Resonance**: While specific, personas should touch on universal human experiences
+
+### Persona Types for Poetry Collections
+- **Primary Voices**: 2-3 main personas who anchor major sections or themes
+- **Thematic Personas**: 2-3 voices that embody specific themes or emotions
+- **Narrative Voices**: 1-2 personas who might appear in narrative poems
+- **Symbolic Figures**: 1-2 archetypal or symbolic personas
+
+## Persona Object Format
+For each persona, provide the following fields in a JSON object:
+- "name": (string) Persona's name or title (can be symbolic like "The Wanderer" or "Night Voice")
+- "role": (string) Their function (primary voice, thematic persona, symbolic figure, etc.)
+- "appearance": (string) Poetic description focusing on symbolic or evocative details
+- "personality": (string) Emotional characteristics and psychological traits
+- "background": (string) Essential context that informs their voice and perspective
+- "goals": (string) What they seek to express or explore through poetry
+- "arc": (string) How their voice might evolve across the collection
+- "relationships": (string) How they relate to other personas or themes
+- "strengths": (string) Their emotional or spiritual strengths
+- "flaws": (string) Their vulnerabilities or shadows
+- "voice": (string) Their distinctive poetic voice and language patterns
+- "thematic_focus": (string) What themes or emotions this persona primarily explores
+
+## Poetry Collection Guidelines
+- Personas should work well in the compressed, metaphorical language of poetry
+- Each voice should be emotionally resonant and memorable
+- Consider how personas might dialogue with each other across poems
+- Focus on internal landscapes rather than external plot
+- Ensure personas can carry the weight of poetic expression
+
+Return ONLY a valid JSON array of persona objects, nothing else.
+Example format:
+[
+  {{
+    "name": "The Lighthouse Keeper",
+    "role": "primary voice",
+    "appearance": "Weathered hands that know the weight of solitude, eyes that have watched countless storms",
+    "personality": "Contemplative and steadfast, carries both wisdom and loneliness",
+    "background": "A guardian of safe passage who has spent years in isolation watching over others",
+    "goals": "To explore themes of duty, solitude, and the meaning found in service to others",
+    "arc": "Moves from isolation toward understanding connection across distance",
+    "relationships": "Speaks to the ships that pass, communes with the sea and storms",
+    "strengths": "Patience, dedication, deep observation of natural cycles",
+    "flaws": "Tendency toward isolation, difficulty with human intimacy",
+    "voice": "Measured and reflective, uses maritime and natural imagery",
+    "thematic_focus": "Solitude, duty, the relationship between isolation and service"
+  }}
+]
+"""
 
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:

@@ -7,7 +7,7 @@ from .base_prompts import SpecialFormatBasePrompts
 class EssayCollectionPrompts(SpecialFormatBasePrompts):
     GENRE_NAME = "Essay Collection"
     GENRE_DESCRIPTION = "An essay collection is a curated compilation of non-fiction essays, often exploring a central theme, authorial voice, or a range of interconnected subjects. The essays can vary in style, from personal and reflective to analytical and critical, but they are united by a common thread of intellectual curiosity and a desire to engage the reader in thoughtful exploration."
-    
+
     GENRE_CHARACTERISTICS = [
         "Strong Authorial Voice: The author's personality, perspective, and experiences are central to the collection's appeal.",
         "Thematic Cohesion: Essays are often linked by a unifying theme, idea, or subject matter, creating a cohesive reading experience.",
@@ -20,7 +20,7 @@ class EssayCollectionPrompts(SpecialFormatBasePrompts):
         "Emotional Honesty: Authors are willing to be vulnerable and honest about their experiences and perspectives.",
         "Sense of Discovery: The essays create a sense of discovery, both for the author and the reader, as they explore new ideas and insights."
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "Introduction: A preface or introduction that sets the stage for the collection, outlining its themes and purpose.",
         "Personal Essays: Essays that focus on the author's personal experiences, reflections, and insights.",
@@ -39,7 +39,7 @@ class EssayCollectionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         essay_collection_additions = '''
 ## Essay Collection-Specific Writing Considerations
 - **Authorial Voice**: Develop a distinct and consistent authorial voice that resonates throughout the collection. Consider your tone, perspective, and level of formality.
@@ -56,7 +56,7 @@ class EssayCollectionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         essay_collection_additions = '''
 ## Essay Collection-Specific Outline Requirements
 - **Collection Theme**: Clearly define the overarching theme or purpose of the essay collection. This will guide the selection and arrangement of individual essays.
@@ -72,25 +72,94 @@ class EssayCollectionPrompts(SpecialFormatBasePrompts):
 
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
-        base_prompt = super().get_character_prompt(**kwargs)
-        
-        essay_collection_additions = '''
-## Essay Collection-Specific Character Development
-- **The Author as Character**: In personal essays, the author themselves is a central character. Develop a nuanced and authentic portrayal of your own personality, experiences, and perspectives.
-- **Secondary Characters**: When writing about other people, develop them as characters with their own motivations, flaws, and complexities. Avoid reducing them to stereotypes or caricatures.
-- **Character Arc**: Consider the character arc of the author or other individuals featured in the essays. How do they change or evolve over the course of the narrative?
-- **Internal Conflict**: Explore the internal conflicts and struggles of the characters. This can add depth and emotional resonance to the essays.
-- **Relationships**: Examine the relationships between characters and how these relationships shape their experiences and perspectives.
-- **Voice and Dialogue**: Develop distinct voices for each character, including the author. Use dialogue to reveal character traits and advance the narrative.
-- **Ethical Considerations**: Be mindful of ethical considerations when writing about real people. Respect their privacy and avoid portraying them in a negative or misleading light.
-- **Authenticity**: Strive for authenticity in your character portrayals. Avoid embellishing or fabricating details to create a more dramatic or compelling narrative.
-'''
-        return base_prompt + essay_collection_additions
+        """Generate a character/subject development prompt specifically for essay collections."""
+        title = kwargs.get("title", "Untitled")
+        description = kwargs.get("description", "")
+        outline = kwargs.get("outline", "")
+        target_audience = kwargs.get("target_audience", "Adult")
+        subplot_info = kwargs.get("subplot_info", "")
+
+        return f"""
+# Essay Collection Character and Subject Development
+
+Create key figures and subjects for the essay collection "{title}" for {target_audience}.
+
+## Collection Information
+- Title: {title}
+- Description: {description}
+- Genre: Essay Collection
+- Target Audience: {target_audience}
+
+## Collection Outline
+{outline}
+
+{subplot_info}
+
+## Essay Collection Character Requirements
+
+### Character/Subject Guidelines
+1. **The Author as Central Figure**: The author/narrator is often the primary "character" in personal essays
+2. **Real People as Characters**: When writing about others, develop them with complexity and respect
+3. **Authentic Portrayal**: Characters should be based on real experiences and observations
+4. **Ethical Considerations**: Respect privacy and avoid harmful portrayals of real people
+5. **Character Evolution**: Show how people (including the author) change and grow across essays
+6. **Distinct Voices**: Each person should have a unique voice and perspective
+7. **Thematic Relevance**: Characters should connect to the collection's overall themes
+
+### Character Types for Essay Collections
+- **Author/Narrator**: The primary voice and perspective of the collection
+- **Family Members**: Parents, siblings, relatives who appear in personal essays
+- **Mentors/Influences**: Teachers, friends, or figures who shaped the author
+- **Subjects of Study**: People the author observes, interviews, or writes about
+
+## Character Object Format
+For each character/subject, provide the following fields in a JSON object:
+- "name": (string) Character's name (can be pseudonym for privacy)
+- "role": (string) Their role (author/narrator, family member, mentor, subject, etc.)
+- "appearance": (string) Physical description focusing on memorable, meaningful details
+- "personality": (string) Key personality traits and characteristics
+- "background": (string) Essential context about their life and experiences
+- "goals": (string) What they seek or represent in the essays
+- "arc": (string) How they develop or are revealed across the collection
+- "relationships": (string) How they relate to the author and other figures
+- "strengths": (string) Their positive qualities and contributions
+- "flaws": (string) Their human weaknesses and complexities
+- "voice": (string) How they speak and express themselves
+- "significance": (string) What they represent or teach in the collection
+- "ethical_considerations": (string) Privacy and portrayal considerations for this person
+
+## Essay Collection Guidelines
+- Characters should feel like real, complex human beings
+- Respect the privacy and dignity of real people being portrayed
+- Focus on authentic experiences and genuine insights
+- Consider how characters connect to the collection's themes
+- Balance honesty with compassion in character portrayal
+
+Return ONLY a valid JSON array of character objects, nothing else.
+Example format:
+[
+  {{
+    "name": "The Author",
+    "role": "author/narrator",
+    "appearance": "A middle-aged writer with graying hair and thoughtful eyes, often seen with a notebook",
+    "personality": "Introspective and curious, but sometimes overly self-critical",
+    "background": "A lifelong observer of human nature, shaped by small-town upbringing and urban experiences",
+    "goals": "To understand and articulate the complexities of modern life and relationships",
+    "arc": "Grows from uncertainty to greater self-awareness and acceptance",
+    "relationships": "Central figure who connects all other characters and experiences",
+    "strengths": "Empathy, observational skills, ability to find meaning in everyday moments",
+    "flaws": "Tendency toward overthinking, occasional self-doubt",
+    "voice": "Reflective and honest, with touches of humor and vulnerability",
+    "significance": "Represents the journey of understanding oneself and one's place in the world",
+    "ethical_considerations": "Author's own experiences, told with honesty and self-reflection"
+  }}
+]
+"""
 
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         essay_collection_additions = '''
 ## Essay Collection-Specific Chapter Writing
 - **Essay Focus**: Each essay (chapter) should have a clear and focused topic or argument. Avoid rambling or straying from the main point.

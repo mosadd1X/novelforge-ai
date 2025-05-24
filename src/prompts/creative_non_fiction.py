@@ -7,7 +7,7 @@ from .base_prompts import SpecialFormatBasePrompts
 class CreativeNonFictionPrompts(SpecialFormatBasePrompts):
     GENRE_NAME = "Creative Non-Fiction"
     GENRE_DESCRIPTION = "Creative Non-Fiction blends factual accuracy with literary flair. It employs narrative techniques typically associated with fiction, such as character development, plot structure, and vivid imagery, to tell true stories. The genre encompasses a wide range of forms, including memoir, personal essay, literary journalism, and travel writing, all grounded in verifiable reality but elevated by artistic expression."
-    
+
     GENRE_CHARACTERISTICS = [
         "Personal Voice: The author's unique perspective and experiences are central to the narrative.",
         "Factual Accuracy: While employing creative techniques, the work remains committed to truth and verifiable facts.",
@@ -20,7 +20,7 @@ class CreativeNonFictionPrompts(SpecialFormatBasePrompts):
         "Immersive Detail: Uses sensory details and specific anecdotes to create a sense of immediacy and authenticity.",
         "Ethical Considerations: Navigates the ethical complexities of representing real people and events responsibly."
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "Memoir: Focuses on a specific period or theme in the author's life.",
         "Personal Essay: Explores a topic through the lens of the author's personal experiences and reflections.",
@@ -39,7 +39,7 @@ class CreativeNonFictionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         creative_non_fiction_additions = '''
 ## Creative Non-Fiction-Specific Writing Considerations
 - **Ethical Responsibility**: Understand the ethical implications of writing about real people and events. Prioritize accuracy, fairness, and respect for privacy. Consider obtaining consent when necessary and avoiding sensationalism.
@@ -56,7 +56,7 @@ class CreativeNonFictionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         creative_non_fiction_additions = '''
 ## Creative Non-Fiction-Specific Outline Requirements
 - **Theme Identification**: Clearly define the central theme or message you want to convey. Ensure that each section of the outline contributes to the exploration of this theme.
@@ -73,25 +73,96 @@ class CreativeNonFictionPrompts(SpecialFormatBasePrompts):
 
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
-        base_prompt = super().get_character_prompt(**kwargs)
-        
-        creative_non_fiction_additions = '''
-## Creative Non-Fiction-Specific Character Development
-- **Authenticity and Complexity**: Strive to portray real people with authenticity and complexity. Avoid stereotypes and caricatures, and instead focus on capturing their unique personalities, motivations, and flaws.
-- **Multiple Perspectives**: Consider incorporating multiple perspectives to provide a more nuanced and complete picture of the characters and events.
-- **Inner Life**: Explore the inner lives of your characters, including their thoughts, feelings, and motivations. Use introspection and reflection to reveal their inner worlds to readers.
-- **Dialogue and Interaction**: Use dialogue and interaction to reveal character and advance the narrative. Pay attention to the way people speak and interact with each other.
-- **Physical Description**: Provide vivid physical descriptions of your characters, including their appearance, mannerisms, and body language.
-- **Backstory and Context**: Provide relevant backstory and context to help readers understand your characters' motivations and actions.
-- **Ethical Considerations**: Be mindful of the ethical implications of portraying real people in your writing. Respect their privacy and avoid sensationalizing their stories.
-- **Character Arc**: Consider the character arc of each person in your story. How do they change and evolve throughout the narrative?
-'''
-        return base_prompt + creative_non_fiction_additions
+        """Generate a character development prompt specifically for creative non-fiction."""
+        title = kwargs.get("title", "Untitled")
+        description = kwargs.get("description", "")
+        outline = kwargs.get("outline", "")
+        target_audience = kwargs.get("target_audience", "Adult")
+        subplot_info = kwargs.get("subplot_info", "")
+
+        return f"""
+# Creative Non-Fiction Character Development
+
+Create authentic, complex characters for the creative non-fiction work "{title}" for {target_audience}.
+
+## Work Information
+- Title: {title}
+- Description: {description}
+- Genre: Creative Non-Fiction
+- Target Audience: {target_audience}
+
+## Work Outline
+{outline}
+
+{subplot_info}
+
+## Creative Non-Fiction Character Requirements
+
+### Character Development Guidelines
+1. **Authenticity and Complexity**: Portray real people with depth, avoiding stereotypes and caricatures
+2. **Multiple Perspectives**: Consider different viewpoints to provide nuanced character portraits
+3. **Inner Life Exploration**: Reveal characters' thoughts, feelings, and motivations through introspection
+4. **Ethical Considerations**: Respect privacy and dignity of real people being portrayed
+5. **Character Evolution**: Show how people change and develop throughout the narrative
+6. **Dialogue and Interaction**: Use realistic conversation to reveal character and advance story
+7. **Contextual Understanding**: Provide backstory and context to explain motivations and actions
+
+### Character Types for Creative Non-Fiction
+- **Central Figures**: 1-2 main people whose stories drive the narrative
+- **Supporting Characters**: 3-4 people who provide context and depth to the story
+- **The Author/Narrator**: Often a character themselves, observing and participating
+- **Historical/Cultural Figures**: People who provide broader context or comparison
+
+## Character Object Format
+For each character, provide the following fields in a JSON object:
+- "name": (string) Character's name (real name or pseudonym for privacy)
+- "role": (string) Their role (central figure, supporting character, narrator, etc.)
+- "appearance": (string) Physical description with meaningful, memorable details
+- "personality": (string) Key personality traits and characteristics
+- "background": (string) Essential life context and experiences
+- "goals": (string) What they seek or represent in the narrative
+- "arc": (string) How they develop or are revealed throughout the work
+- "relationships": (string) How they relate to other characters and the narrator
+- "strengths": (string) Their positive qualities and contributions
+- "flaws": (string) Their human weaknesses and complexities
+- "voice": (string) How they speak and express themselves
+- "significance": (string) What they represent or contribute to the larger narrative
+- "ethical_considerations": (string) Privacy and portrayal considerations for this person
+- "inner_life": (string) Their thoughts, feelings, and internal motivations
+
+## Creative Non-Fiction Guidelines
+- Characters should feel like real, complex human beings
+- Balance honesty with compassion in character portrayal
+- Respect the privacy and dignity of real people
+- Focus on authentic experiences and genuine insights
+- Use literary techniques to bring characters to life while maintaining factual integrity
+
+Return ONLY a valid JSON array of character objects, nothing else.
+Example format:
+[
+  {{
+    "name": "Sarah Martinez",
+    "role": "central figure",
+    "appearance": "A woman in her forties with calloused hands and laugh lines, always wearing her grandmother's silver bracelet",
+    "personality": "Resilient and optimistic, but carries deep grief from family losses",
+    "background": "Third-generation immigrant who runs a family restaurant while caring for aging parents",
+    "goals": "To preserve her family's cultural traditions while adapting to modern challenges",
+    "arc": "Learns to balance honoring the past with embracing necessary change",
+    "relationships": "Devoted daughter and mother, mentor to younger family members",
+    "strengths": "Cultural wisdom, business acumen, emotional strength",
+    "flaws": "Sometimes too stubborn about tradition, difficulty asking for help",
+    "voice": "Speaks with quiet authority, mixes English with Spanish when emotional",
+    "significance": "Represents the immigrant experience and the challenge of preserving culture",
+    "ethical_considerations": "Real person whose story is told with permission and respect",
+    "inner_life": "Constantly weighing family obligations against personal dreams"
+  }}
+]
+"""
 
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         creative_non_fiction_additions = '''
 ## Creative Non-Fiction-Specific Chapter Writing
 - **Scene Setting**: Begin each chapter with a vivid description of the setting, including sensory details, atmosphere, and significance.
