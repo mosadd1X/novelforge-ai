@@ -659,7 +659,7 @@ def manage_series_cover_images(series_manager: SeriesManager) -> None:
             title = book.get("title", "Untitled")
             book_choices.append(f"Book {book_num}: {title}")
 
-        book_choices.append("🎨 Manage All Books Covers")
+        book_choices.append("Manage All Books Covers")
         book_choices.append("← Back")
 
         selected = questionary.select(
@@ -671,7 +671,7 @@ def manage_series_cover_images(series_manager: SeriesManager) -> None:
         if selected == "← Back":
             return
 
-        if selected == "🎨 Manage All Books Covers":
+        if selected == "Manage All Books Covers":
             manage_all_books_covers(series_manager)
             return
 
@@ -731,7 +731,7 @@ def manage_all_books_covers(series_manager: SeriesManager) -> None:
         from src.utils.cover_image_manager import CoverImageManager
         from src.utils.cover_folder_manager import CoverFolderManager
 
-        console.print("\n[bold cyan]🎨 Managing All Books Covers[/bold cyan]")
+        console.print("\n[bold cyan]Managing All Books Covers[/bold cyan]")
 
         # Get series info
         series_info = {
@@ -751,7 +751,7 @@ def manage_all_books_covers(series_manager: SeriesManager) -> None:
         console.print(f"[bold green]Series Cover Folder:[/bold green] [cyan]{series_folder_info['cover_folder']}[/cyan]")
 
         # Display all books status
-        console.print("\n[bold cyan]📚 Books Cover Status:[/bold cyan]")
+        console.print("\n[bold cyan]Books Cover Status:[/bold cyan]")
 
         books_table = Table(box=box.ROUNDED)
         books_table.add_column("Book", style="cyan", width=8)
@@ -800,11 +800,11 @@ def manage_all_books_covers(series_manager: SeriesManager) -> None:
         # Show management options
         while True:
             choices = [
-                "📋 View All Cover Prompts",
-                "🔍 Check All Cover Images",
-                "📁 Show Series Folder Structure",
-                "🎨 Apply Covers to All EPUBs",
-                "📊 Generate Cover Status Report",
+                "View All Cover Prompts",
+                "Check All Cover Images",
+                "Show Series Folder Structure",
+                "Apply Covers to All EPUBs",
+                "Generate Cover Status Report",
                 "← Back"
             ]
 
@@ -816,15 +816,15 @@ def manage_all_books_covers(series_manager: SeriesManager) -> None:
 
             if selected == "← Back":
                 break
-            elif selected == "📋 View All Cover Prompts":
+            elif selected == "View All Cover Prompts":
                 view_all_cover_prompts(valid_books)
-            elif selected == "🔍 Check All Cover Images":
+            elif selected == "Check All Cover Images":
                 check_all_cover_images(valid_books, folder_manager, series_info)
-            elif selected == "📁 Show Series Folder Structure":
+            elif selected == "Show Series Folder Structure":
                 show_series_folder_structure(series_folder_info, valid_books)
-            elif selected == "🎨 Apply Covers to All EPUBs":
+            elif selected == "Apply Covers to All EPUBs":
                 apply_covers_to_all_epubs(valid_books, folder_manager, series_info)
-            elif selected == "📊 Generate Cover Status Report":
+            elif selected == "Generate Cover Status Report":
                 generate_cover_status_report(valid_books, folder_manager, series_info)
 
     except Exception as e:
@@ -833,7 +833,7 @@ def manage_all_books_covers(series_manager: SeriesManager) -> None:
 
 def view_all_cover_prompts(valid_books: list) -> None:
     """View cover prompts for all books."""
-    console.print("\n[bold cyan]📋 Cover Prompts for All Books[/bold cyan]")
+    console.print("\n[bold cyan]Cover Prompts for All Books[/bold cyan]")
 
     for book_info in valid_books:
         book_num = book_info['book_num']
@@ -853,7 +853,7 @@ def view_all_cover_prompts(valid_books: list) -> None:
 
 def check_all_cover_images(valid_books: list, folder_manager, series_info: dict) -> None:
     """Check cover images for all books."""
-    console.print("\n[bold cyan]🔍 Cover Images Status for All Books[/bold cyan]")
+    console.print("\n[bold cyan]Cover Images Status for All Books[/bold cyan]")
 
     total_images = 0
     for book_info in valid_books:
@@ -880,7 +880,7 @@ def check_all_cover_images(valid_books: list, folder_manager, series_info: dict)
 
 def show_series_folder_structure(series_folder_info: dict, valid_books: list) -> None:
     """Show the series folder structure."""
-    console.print("\n[bold cyan]📁 Series Cover Folder Structure[/bold cyan]")
+    console.print("\n[bold cyan]Series Cover Folder Structure[/bold cyan]")
 
     console.print(f"\n[bold green]Series Cover Folder:[/bold green]")
     console.print(f"[cyan]{series_folder_info['cover_folder']}[/cyan]")
@@ -900,7 +900,7 @@ def show_series_folder_structure(series_folder_info: dict, valid_books: list) ->
 
 def apply_covers_to_all_epubs(valid_books: list, folder_manager, series_info: dict) -> None:
     """Apply covers to all EPUB files."""
-    console.print("\n[bold cyan]🎨 Applying Covers to All EPUBs[/bold cyan]")
+    console.print("\n[bold cyan]Applying Covers to All EPUBs[/bold cyan]")
 
     from src.formatters.epub_formatter import EpubFormatter
     from src.utils.file_handler import load_novel_json
@@ -958,7 +958,7 @@ def apply_covers_to_all_epubs(valid_books: list, folder_manager, series_info: di
 
 def generate_cover_status_report(valid_books: list, folder_manager, series_info: dict) -> None:
     """Generate a detailed cover status report."""
-    console.print("\n[bold cyan]📊 Cover Status Report[/bold cyan]")
+    console.print("\n[bold cyan]Cover Status Report[/bold cyan]")
 
     # Statistics
     total_books = len(valid_books)
@@ -967,7 +967,7 @@ def generate_cover_status_report(valid_books: list, folder_manager, series_info:
     books_ready_for_covers = sum(1 for book in valid_books if book['has_epub'] and book['has_covers'])
 
     # Summary table
-    summary_table = Table(box=box.ROUNDED, title="📊 Series Cover Summary")
+    summary_table = Table(box=box.ROUNDED, title="Series Cover Summary")
     summary_table.add_column("Metric", style="cyan")
     summary_table.add_column("Count", style="white")
     summary_table.add_column("Percentage", style="yellow")
@@ -980,7 +980,7 @@ def generate_cover_status_report(valid_books: list, folder_manager, series_info:
     console.print(summary_table)
 
     # Detailed status
-    console.print("\n[bold cyan]📋 Detailed Status:[/bold cyan]")
+    console.print("\n[bold cyan]Detailed Status:[/bold cyan]")
 
     for book_info in valid_books:
         book_num = book_info['book_num']
@@ -1005,7 +1005,7 @@ def generate_cover_status_report(valid_books: list, folder_manager, series_info:
         console.print(f"[bold]Book {book_num}:[/bold] {title[:40]}{'...' if len(title) > 40 else ''} - {status}")
 
     # Recommendations
-    console.print("\n[bold cyan]💡 Recommendations:[/bold cyan]")
+    console.print("\n[bold cyan]Recommendations:[/bold cyan]")
 
     if books_with_covers < total_books:
         missing_covers = total_books - books_with_covers
