@@ -2,21 +2,23 @@
 layout: default
 title: Configuration Options
 nav_order: 4
-description: "Detailed documentation of the configuration options available in the Ebook Generator"
+description: 'Detailed documentation of the configuration options available in the Ebook Generator'
 permalink: /configuration
 ---
 
 # Configuration Options
+
 {: .no_toc }
 
 The Ebook Generator provides various configuration options to customize the generation process according to your preferences.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
@@ -35,7 +37,7 @@ GEMINI_API_KEY_1=your_second_api_key_here
 GEMINI_API_KEY_2=your_third_api_key_here
 ```
 
-For more information on using multiple API keys, see the [Multiple API Keys](./multiple-api-keys.html) documentation.
+For more information on using multiple API keys, see the [API Key Management](./api-key-management.html) documentation.
 
 ### Output Directory
 
@@ -51,23 +53,23 @@ The Ebook Generator supports various options to customize the generation process
 
 ### Basic Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `chapter_count` | Number of chapters in the novel | Based on genre |
-| `target_word_count` | Target total word count for the novel | Based on genre |
-| `chapter_length` | Target words per chapter | Based on genre |
-| `writing_style` | Preferred writing style | "Descriptive and detailed" |
-| `pov` | Point of view for narration | "Third person limited" |
+| Option              | Description                           | Default                    |
+| ------------------- | ------------------------------------- | -------------------------- |
+| `chapter_count`     | Number of chapters in the novel       | Based on genre             |
+| `target_word_count` | Target total word count for the novel | Based on genre             |
+| `chapter_length`    | Target words per chapter              | Based on genre             |
+| `writing_style`     | Preferred writing style               | "Descriptive and detailed" |
+| `pov`               | Point of view for narration           | "Third person limited"     |
 
 ### Advanced Options
 
-| Option | Description | Default |
-|--------|-------------|---------|
-| `min_chapter_length` | Minimum words per chapter | 3500 |
-| `temperature` | Creativity level (0.0-1.0) | 0.7 |
-| `themes` | List of themes to emphasize | Based on genre |
-| `pov_structure` | Structure for POV (single, alternating, etc.) | "single" |
-| `pov_characters` | Characters to use as POV (for alternating) | [] |
+| Option               | Description                                   | Default        |
+| -------------------- | --------------------------------------------- | -------------- |
+| `min_chapter_length` | Minimum words per chapter                     | 3500           |
+| `temperature`        | Creativity level (0.0-1.0)                    | 0.7            |
+| `themes`             | List of themes to emphasize                   | Based on genre |
+| `pov_structure`      | Structure for POV (single, alternating, etc.) | "single"       |
+| `pov_characters`     | Characters to use as POV (for alternating)    | []             |
 
 ## Setting Options Through the UI
 
@@ -152,8 +154,8 @@ You can configure the Gemini API settings in your `.env` file:
 
 ```
 # API settings
-GEMINI_API_VERSION=v1
-GEMINI_MODEL=gemini-1.5-flash
+GEMINI_API_VERSION=v1beta
+GEMINI_MODEL=gemini-2.0-flash-exp
 GEMINI_MAX_TOKENS=8000
 GEMINI_TEMPERATURE=0.7
 ```

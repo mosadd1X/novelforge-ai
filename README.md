@@ -2,14 +2,19 @@
 
 An advanced AI-powered ebook generation system that creates complete, human-like novels in EPUB format based on minimal user input. The system uses Google's Gemini 2.0 Flash API to generate content and provides a rich, interactive terminal interface.
 
-## 🎉 **Latest Major Updates (v2.0)**
+## 🎉 **Latest Major Updates (v2.5)**
 
-**Production-Ready Reliability Improvements:**
+**Production-Ready Reliability & Advanced Features:**
 
 - ✅ **Memory Leak Fix**: Eliminated unlimited memory growth during long operations
 - ✅ **Network Resilience**: Bulletproof network handling with automatic retry and recovery
-- ✅ **Standardized Error Handling**: Beautiful, user-friendly error messages with recovery guidance
-- ✅ **Codebase Optimization**: Removed 171 unused imports for improved performance
+- ✅ **38+ Genre Support**: Comprehensive fiction, non-fiction, and special format genres
+- ✅ **Genre-Aware EPUB Formatting**: Specialized layouts for poetry, cookbooks, technical manuals
+- ✅ **AI-Generated Covers**: Professional covers using Gemini AI with genre-specific prompts
+- ✅ **Writer Profile Images**: Fictional author portraits with AI-generated images
+- ✅ **Fast Testing System**: 5-10 minute test cycles for rapid development
+- ✅ **Front/Back Matter**: Professional title pages, copyright, author bios, TOC
+- ✅ **API Key Management**: Advanced rotation and monitoring system
 - ✅ **Enterprise-Grade Stability**: 90% reduction in generation failures
 
 ## 🌟 Features
@@ -17,10 +22,12 @@ An advanced AI-powered ebook generation system that creates complete, human-like
 ### **Core Functionality**
 
 - **Complete Novel Generation**: Create full novels from basic inputs (title, author, description, genre)
-- **Series Generation**: Generate multi-book series with consistent characters and plot arcs
+- **Series Generation**: Generate multi-book series with consistent characters and plot arcs across multiple books
+- **38+ Genre Support**: Fiction, non-fiction, and special formats (poetry, cookbooks, technical manuals, etc.)
 - **Smart Memory Management**: Maintains context across chapters with bounded memory usage
-- **Professional EPUB Formatting**: Properly formatted ebooks with customizable covers
-- **Cover Generation**: Create professional-looking covers without external images
+- **Genre-Aware EPUB Formatting**: Specialized layouts and styling for different content types
+- **AI-Generated Covers**: Professional covers using Gemini AI with genre-specific visual prompts
+- **Writer Profile System**: Fictional author personas with AI-generated portrait images
 
 ### **Reliability & Performance**
 
@@ -31,10 +38,12 @@ An advanced AI-powered ebook generation system that creates complete, human-like
 
 ### **User Experience**
 
-- **Rich Terminal UI**: Beautiful, colorful interface with progress tracking
-- **Network Status Monitoring**: Real-time network health diagnostics
-- **Genre-Specific Recommendations**: Tailored chapter counts and structures based on genre
-- **Comprehensive Testing**: Full test suite ensures reliability
+- **Rich Terminal UI**: Clean, colorful interface with real-time progress tracking
+- **API Key Management**: Interactive management with automatic rotation and status monitoring
+- **Network Status Monitoring**: Real-time network health diagnostics and recovery
+- **Genre-Specific Recommendations**: Tailored chapter counts and structures for 38+ genres
+- **Fast Testing System**: Rapid 5-10 minute test cycles for development and validation
+- **Professional Output**: Complete books with front matter, back matter, and author sections
 
 ## 📋 Requirements
 
@@ -155,28 +164,40 @@ ebook-generator/
 
 ## 🔄 How It Works
 
-1. **User Input**: Collect basic information about the novel
-2. **Writer Profile**: Generate a detailed fictional author profile
-3. **Outline Creation**: Create a chapter-by-chapter outline based on genre
-4. **Character Development**: Generate detailed character profiles
-5. **Chapter Generation**: Create each chapter with context awareness
-6. **Memory Management**: Maintain narrative consistency across chapters
-7. **Cover Generation**: Create a professional cover image
-8. **EPUB Formatting**: Format the novel as a properly structured EPUB
+1. **User Input**: Collect basic information about the novel (title, genre, description)
+2. **Writer Profile**: Generate a detailed fictional author profile with AI-generated portrait
+3. **Outline Creation**: Create a genre-appropriate chapter-by-chapter outline
+4. **Character Development**: Generate detailed character profiles with relationships and arcs
+5. **Chapter Generation**: Create each chapter with context awareness and memory consistency
+6. **Memory Management**: Maintain narrative consistency across chapters with bounded memory
+7. **Cover Generation**: Create professional cover using Gemini AI with genre-specific prompts
+8. **Genre-Aware Formatting**: Apply specialized EPUB formatting based on content type
+9. **Front/Back Matter**: Add professional title pages, copyright, author bio, and TOC
+10. **Final Assembly**: Package everything into a complete, professional EPUB file
 
 ## 📖 Documentation
 
 ### **User Guides**
 
 - [Getting Started](docs/getting-started.md): Complete setup and usage guide
-- [API Key Management](docs/api-key-management.md): Managing multiple API keys
-- [Network Resilience](docs/NETWORK_RESILIENCE_SYSTEM.md): Network monitoring and diagnostics
+- [Quick Start Guide](docs/quick-start.md): Generate your first book in minutes
+- [Configuration Options](docs/configuration.md): Customize the generation process
 
-### **Technical Documentation**
+### **Core Components**
 
-- [API Documentation](docs/api.md): Details on the core functions and classes
-- [Memory Management](docs/components/memory-management.md): Memory optimization features
-- [Error Handling](docs/CRITICAL_FIXES_IMPLEMENTATION_GUIDE.md): Standardized error handling system
+- [Novel Generator](docs/components/novel-generator.md): Core generation system
+- [Memory Management](docs/components/memory-management.md): Context and consistency management
+- [Series Generation](docs/components/series-generation.md): Multi-book series creation
+- [Cover Generator](docs/components/cover-generator.md): AI-powered cover creation
+- [EPUB Formatting](docs/components/epub-formatting.md): Professional book formatting
+- [Writer Profile System](docs/components/writer-profiles.md): Fictional author generation
+- [Network Resilience](docs/components/network-resilience.md): Robust API handling
+
+### **Advanced Features**
+
+- [Genre-Aware EPUB Formatting](docs/advanced/genre-epub-formatting.md): Specialized layouts
+- [Fast Testing System](docs/advanced/fast-testing.md): Rapid development testing
+- [API Key Management](docs/api-key-management.md): Multiple key management
 
 ### **Development**
 

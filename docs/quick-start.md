@@ -2,20 +2,22 @@
 layout: default
 title: Quick Start Guide
 nav_order: 3
-description: "A quick guide to generating your first book with the Ebook Generator"
+description: 'A quick guide to generating your first book with the Ebook Generator'
 ---
 
 # Quick Start Guide
+
 {: .no_toc }
 
 This guide will walk you through generating your first book with the Ebook Generator.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
@@ -38,21 +40,31 @@ From the main menu, select option 1: "Generate a Book"
 You'll be prompted to enter basic information about your book:
 
 1. **Title**: Enter a title for your book
+
    ```
    Enter a title for your book: The Quantum Garden
    ```
 
 2. **Author**: Enter an author name
+
    ```
    Enter the author name: Dr. Elise Moreau
    ```
 
-3. **Genre**: Select a genre from the list or enter a custom genre
+3. **Genre**: Select from 38+ supported genres including fiction, non-fiction, and special formats
+
    ```
    Select a genre: Science Fiction
    ```
 
+   **Available Genre Categories:**
+
+   - **Fiction**: Romance, Mystery, Fantasy, Science Fiction, Historical Fiction, etc.
+   - **Non-Fiction**: Biography, Self-Help, History, Business, Popular Science, etc.
+   - **Special Formats**: Poetry Collection, Cookbook, Technical Manual, etc.
+
 4. **Target Audience**: Select the intended audience
+
    ```
    Select target audience: Adult (18+)
    ```
@@ -73,6 +85,7 @@ Would you like to customize generation options? (y/n): y
 ```
 
 If you select "yes," you can customize:
+
 - Chapter count
 - Target word count
 - Writing style
@@ -93,11 +106,15 @@ Ready to generate "The Quantum Garden"? (y/n): y
 ### Step 6: Monitor Generation Progress
 
 The system will now:
-1. Generate a writer profile
-2. Create a novel outline
-3. Develop characters
-4. Generate chapters one by one
-5. Format the final EPUB
+
+1. Generate a fictional writer profile with AI-generated portrait
+2. Create a genre-appropriate novel outline
+3. Develop detailed characters with relationships and arcs
+4. Generate chapters one by one with memory consistency
+5. Apply genre-aware EPUB formatting
+6. Create professional front and back matter
+7. Generate an AI-powered book cover
+8. Package everything into a complete EPUB file
 
 Progress will be displayed in the terminal with colorful indicators.
 
@@ -131,26 +148,31 @@ From the main menu, select option 2: "Generate a Series"
 You'll be prompted to enter information about your series:
 
 1. **Series Title**: Enter a title for your series
+
    ```
    Enter a title for your series: The Elemental Chronicles
    ```
 
 2. **Author**: Enter an author name
+
    ```
    Enter the author name: Aria Flameheart
    ```
 
 3. **Genre**: Select a genre
+
    ```
    Select a genre: Fantasy
    ```
 
 4. **Target Audience**: Select the intended audience
+
    ```
    Select target audience: Young Adult
    ```
 
 5. **Description**: Enter a brief description of your series
+
    ```
    Enter a description: A sweeping fantasy saga where four young mages,
    each wielding one of the primal elements, must unite to prevent an
@@ -165,6 +187,7 @@ You'll be prompted to enter information about your series:
 ### Step 4: Generate Series Plan
 
 The system will generate a plan for the entire series, including:
+
 - Overarching plot arc
 - Character development across books
 - Individual book outlines
@@ -200,6 +223,7 @@ Once you have generated multiple books in your series, you can create a zip arch
 5. The system will create a compressed archive with all your books organized in folders
 
 The zip file will contain:
+
 - Series information file
 - Each book in its own numbered folder (Book_01, Book_02, etc.)
 - All selected file formats for each book
@@ -228,9 +252,21 @@ The Ebook Generator comes with pre-defined book and series ideas that you can us
 
 Now that you've generated your first book or series, you might want to:
 
+### Core Features
+
 - Learn about [Configuration Options](./configuration.html) to customize the generation process
 - Explore [Memory Management](./components/memory-management.html) to understand how consistency is maintained
 - Check out [Cover Generation](./components/cover-generator.html) to create custom covers
 - Read about [EPUB Formatting](./components/epub-formatting.html) to customize the output format
 
-For more advanced usage, see the [API Documentation](./api.html) to integrate the Ebook Generator into your own applications.
+### Advanced Features
+
+- Discover [Genre-Aware EPUB Formatting](./advanced/genre-epub-formatting.html) for specialized layouts
+- Learn about [Writer Profile System](./components/writer-profiles.html) for fictional author generation
+- Explore [Fast Testing System](./advanced/fast-testing.html) for rapid development and validation
+- Understand [Network Resilience](./components/network-resilience.html) for robust API handling
+
+### API and Integration
+
+- See the [API Documentation](./api.html) to integrate the Ebook Generator into your own applications
+- Check out [API Key Management](./api-key-management.html) for managing multiple API keys

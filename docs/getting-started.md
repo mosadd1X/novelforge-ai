@@ -2,20 +2,22 @@
 layout: default
 title: Getting Started
 nav_order: 2
-description: "Installation and setup instructions for the Ebook Generator"
+description: 'Installation and setup instructions for the Ebook Generator'
 ---
 
 # Getting Started
+
 {: .no_toc }
 
 This guide will help you install and set up the Ebook Generator system on your machine.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
@@ -58,11 +60,13 @@ pip install git+https://github.com/mosadd1X/ebook-generator.git
 ### API Keys Setup
 
 1. Copy the example environment file:
+
    ```bash
    cp .env.example .env
    ```
 
 2. Open the `.env` file in your preferred text editor and add your Gemini API key(s):
+
    ```
    # Main API key (required)
    GEMINI_API_KEY=your_main_api_key_here
@@ -74,13 +78,25 @@ pip install git+https://github.com/mosadd1X/ebook-generator.git
 
 3. Save the file
 
-For more information on using multiple API keys, see the [Multiple API Keys](./multiple-api-keys.html) documentation.
+For more information on using multiple API keys, see the [API Key Management](./api-key-management.html) documentation.
+
+### API Key Management Features
+
+The system includes advanced API key management capabilities:
+
+- **Automatic Key Rotation**: When adding new keys, existing keys are automatically rotated
+- **Rate Limit Handling**: Automatic switching between keys when rate limits are reached
+- **Key Status Monitoring**: Real-time monitoring of which keys are available or rate-limited
+- **Interactive Management**: Add, remove, and manage keys through the terminal interface
+
+Access these features by selecting "API Key Management" from the main menu.
 
 ### Output Directory
 
 By default, generated books are saved to the `output/` directory in the project root. You can customize this location by:
 
 1. Creating a custom output directory:
+
    ```bash
    mkdir -p /path/to/your/custom/output
    ```
@@ -98,6 +114,7 @@ python run.py
 ```
 
 This will launch the main menu interface with options to:
+
 - Generate a single book
 - Generate a series
 - Check API key status
@@ -123,6 +140,7 @@ python -m src.main --auto-series
 To verify that your installation is working correctly:
 
 1. Run the application:
+
    ```bash
    python run.py
    ```
