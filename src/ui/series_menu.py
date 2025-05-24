@@ -650,7 +650,7 @@ def manage_series_cover_images(series_manager: SeriesManager) -> None:
             input("\nPress Enter to continue...")
             return
 
-        # Display books and let user select one
+        # Display books and let user select one or manage all
         console.print("\n[bold cyan]Select a book to manage cover images:[/bold cyan]")
 
         book_choices = []
@@ -659,6 +659,7 @@ def manage_series_cover_images(series_manager: SeriesManager) -> None:
             title = book.get("title", "Untitled")
             book_choices.append(f"Book {book_num}: {title}")
 
+        book_choices.append("🎨 Manage All Books Covers")
         book_choices.append("← Back")
 
         selected = questionary.select(
@@ -668,6 +669,10 @@ def manage_series_cover_images(series_manager: SeriesManager) -> None:
         ).ask()
 
         if selected == "← Back":
+            return
+
+        if selected == "🎨 Manage All Books Covers":
+            manage_all_books_covers(series_manager)
             return
 
         # Extract book number and find the book
@@ -714,6 +719,309 @@ def manage_series_cover_images(series_manager: SeriesManager) -> None:
     except Exception as e:
         console.print(f"[bold red]Error managing series cover images: {str(e)}[/bold red]")
         input("\nPress Enter to continue...")
+
+def manage_all_books_covers(series_manager: SeriesManager) -> None:
+    """
+    Manage cover images for all books in a series at once.
+
+    Args:
+        series_manager: SeriesManager instance
+    """
+    try:
+        from src.utils.cover_image_manager import CoverImageManager
+        from src.utils.cover_folder_manager import CoverFolderManager
+
+        console.print("\n[bold cyan]🎨 Managing All Books Covers[/bold cyan]")
+
+        # Get series info
+        series_info = {
+            'series_title': series_manager.series_title,
+            'is_part_of_series': True
+        }
+
+        # Initialize managers
+        cover_manager = CoverImageManager()
+        folder_manager = CoverFolderManager()
+
+        # Get series cover folder info
+        series_folder_info = folder_manager.get_cover_folder_structure_info(
+            series_manager.series_title, series_info
+        )
+
+        console.print(f"[bold green]Series Cover Folder:[/bold green] [cyan]{series_folder_info['cover_folder']}[/cyan]")
+
+        # Display all books status
+        console.print("\n[bold cyan]📚 Books Cover Status:[/bold cyan]")
+
+        books_table = Table(box=box.ROUNDED)
+        books_table.add_column("Book", style="cyan", width=8)
+        books_table.add_column("Title", style="white", width=30)
+        books_table.add_column("Cover Status", style="yellow", width=15)
+        books_table.add_column("EPUB Status", style="green", width=15)
+
+        valid_books = []
+        for book in series_manager.books:
+            book_num = book.get("book_number", "?")
+            title = book.get("title", "Untitled")
+
+            # Check for cover images
+            book_series_info = {**series_info, 'book_number': book_num}
+            found_images = folder_manager.scan_for_cover_images(title, book_series_info)
+            cover_status = f"✓ {len(found_images)}" if found_images else "✗ None"
+
+            # Check for EPUB file
+            series_dir = create_series_directory(series_manager.series_title)
+            book_dir = os.path.join(series_dir, f"book_{book_num:02d}_{sanitize_filename(title)}")
+            epub_files = []
+            if os.path.exists(book_dir):
+                epub_files = [f for f in os.listdir(book_dir) if f.endswith(".epub")]
+            epub_status = "✓ Ready" if epub_files else "✗ Missing"
+
+            books_table.add_row(f"Book {book_num}", title[:28] + "..." if len(title) > 28 else title, cover_status, epub_status)
+
+            # Add to valid books if directory exists
+            if os.path.exists(book_dir):
+                valid_books.append({
+                    'book': book,
+                    'book_dir': book_dir,
+                    'book_num': book_num,
+                    'title': title,
+                    'has_covers': len(found_images) > 0,
+                    'has_epub': len(epub_files) > 0
+                })
+
+        console.print(books_table)
+
+        if not valid_books:
+            console.print("[yellow]No valid books found with generated content.[/yellow]")
+            input("\nPress Enter to continue...")
+            return
+
+        # Show management options
+        while True:
+            choices = [
+                "📋 View All Cover Prompts",
+                "🔍 Check All Cover Images",
+                "📁 Show Series Folder Structure",
+                "🎨 Apply Covers to All EPUBs",
+                "📊 Generate Cover Status Report",
+                "← Back"
+            ]
+
+            selected = questionary.select(
+                "What would you like to do with all books?",
+                choices=choices,
+                style=custom_style
+            ).ask()
+
+            if selected == "← Back":
+                break
+            elif selected == "📋 View All Cover Prompts":
+                view_all_cover_prompts(valid_books)
+            elif selected == "🔍 Check All Cover Images":
+                check_all_cover_images(valid_books, folder_manager, series_info)
+            elif selected == "📁 Show Series Folder Structure":
+                show_series_folder_structure(series_folder_info, valid_books)
+            elif selected == "🎨 Apply Covers to All EPUBs":
+                apply_covers_to_all_epubs(valid_books, folder_manager, series_info)
+            elif selected == "📊 Generate Cover Status Report":
+                generate_cover_status_report(valid_books, folder_manager, series_info)
+
+    except Exception as e:
+        console.print(f"[bold red]Error managing all books covers: {str(e)}[/bold red]")
+        input("\nPress Enter to continue...")
+
+def view_all_cover_prompts(valid_books: list) -> None:
+    """View cover prompts for all books."""
+    console.print("\n[bold cyan]📋 Cover Prompts for All Books[/bold cyan]")
+
+    for book_info in valid_books:
+        book_num = book_info['book_num']
+        title = book_info['title']
+        book_dir = book_info['book_dir']
+
+        console.print(f"\n[bold green]Book {book_num}: {title}[/bold green]")
+
+        # Check for cover prompt file
+        prompt_file = os.path.join(book_dir, "cover_prompt.md")
+        if os.path.exists(prompt_file):
+            console.print(f"[green]✓[/green] Cover prompt available: [cyan]{prompt_file}[/cyan]")
+        else:
+            console.print(f"[red]✗[/red] No cover prompt found")
+
+    input("\nPress Enter to continue...")
+
+def check_all_cover_images(valid_books: list, folder_manager, series_info: dict) -> None:
+    """Check cover images for all books."""
+    console.print("\n[bold cyan]🔍 Cover Images Status for All Books[/bold cyan]")
+
+    total_images = 0
+    for book_info in valid_books:
+        book_num = book_info['book_num']
+        title = book_info['title']
+
+        # Check for cover images
+        book_series_info = {**series_info, 'book_number': book_num}
+        found_images = folder_manager.scan_for_cover_images(title, book_series_info)
+
+        console.print(f"\n[bold green]Book {book_num}: {title}[/bold green]")
+        if found_images:
+            console.print(f"[green]✓[/green] Found {len(found_images)} cover image(s):")
+            for img in found_images:
+                console.print(f"  • [cyan]{os.path.basename(img)}[/cyan]")
+            total_images += len(found_images)
+        else:
+            console.print(f"[red]✗[/red] No cover images found")
+            expected_path = folder_manager.get_expected_cover_path(title, book_series_info)
+            console.print(f"  Expected: [yellow]{expected_path}[/yellow]")
+
+    console.print(f"\n[bold cyan]Total cover images found: {total_images}[/bold cyan]")
+    input("\nPress Enter to continue...")
+
+def show_series_folder_structure(series_folder_info: dict, valid_books: list) -> None:
+    """Show the series folder structure."""
+    console.print("\n[bold cyan]📁 Series Cover Folder Structure[/bold cyan]")
+
+    console.print(f"\n[bold green]Series Cover Folder:[/bold green]")
+    console.print(f"[cyan]{series_folder_info['cover_folder']}[/cyan]")
+
+    console.print(f"\n[bold green]Expected Cover Files:[/bold green]")
+    for book_info in valid_books:
+        book_num = book_info['book_num']
+        title = book_info['title']
+        expected_filename = f"Book{book_num}.jpg"
+        console.print(f"  • [yellow]{expected_filename}[/yellow] - {title}")
+
+    console.print(f"\n[bold green]Supported Formats:[/bold green]")
+    for fmt in series_folder_info['supported_formats']:
+        console.print(f"  • [cyan]{fmt}[/cyan]")
+
+    input("\nPress Enter to continue...")
+
+def apply_covers_to_all_epubs(valid_books: list, folder_manager, series_info: dict) -> None:
+    """Apply covers to all EPUB files."""
+    console.print("\n[bold cyan]🎨 Applying Covers to All EPUBs[/bold cyan]")
+
+    from src.formatters.epub_formatter import EpubFormatter
+    from src.utils.file_handler import load_novel_json
+
+    applied_count = 0
+    skipped_count = 0
+
+    for book_info in valid_books:
+        book_num = book_info['book_num']
+        title = book_info['title']
+        book_dir = book_info['book_dir']
+
+        console.print(f"\n[bold green]Processing Book {book_num}: {title}[/bold green]")
+
+        # Check for EPUB file
+        if not book_info['has_epub']:
+            console.print(f"[yellow]⚠[/yellow] No EPUB file found - skipping")
+            skipped_count += 1
+            continue
+
+        # Check for cover images
+        book_series_info = {**series_info, 'book_number': book_num}
+        found_images = folder_manager.scan_for_cover_images(title, book_series_info)
+
+        if not found_images:
+            console.print(f"[yellow]⚠[/yellow] No cover images found - skipping")
+            skipped_count += 1
+            continue
+
+        # Use the first found image
+        selected_image = found_images[0]
+        console.print(f"[cyan]Using cover:[/cyan] {os.path.basename(selected_image)}")
+
+        try:
+            # Load novel data
+            json_path = os.path.join(book_dir, "novel_data.json")
+            novel_data = load_novel_json(json_path)
+
+            # Apply cover to EPUB
+            formatter = EpubFormatter(novel_data)
+            epub_path = formatter.save_epub(book_dir, selected_image)
+
+            console.print(f"[green]✓[/green] Cover applied successfully")
+            applied_count += 1
+
+        except Exception as e:
+            console.print(f"[red]✗[/red] Error applying cover: {str(e)}")
+            skipped_count += 1
+
+    console.print(f"\n[bold cyan]Summary:[/bold cyan]")
+    console.print(f"[green]✓[/green] Covers applied: {applied_count}")
+    console.print(f"[yellow]⚠[/yellow] Skipped: {skipped_count}")
+
+    input("\nPress Enter to continue...")
+
+def generate_cover_status_report(valid_books: list, folder_manager, series_info: dict) -> None:
+    """Generate a detailed cover status report."""
+    console.print("\n[bold cyan]📊 Cover Status Report[/bold cyan]")
+
+    # Statistics
+    total_books = len(valid_books)
+    books_with_covers = sum(1 for book in valid_books if book['has_covers'])
+    books_with_epubs = sum(1 for book in valid_books if book['has_epub'])
+    books_ready_for_covers = sum(1 for book in valid_books if book['has_epub'] and book['has_covers'])
+
+    # Summary table
+    summary_table = Table(box=box.ROUNDED, title="📊 Series Cover Summary")
+    summary_table.add_column("Metric", style="cyan")
+    summary_table.add_column("Count", style="white")
+    summary_table.add_column("Percentage", style="yellow")
+
+    summary_table.add_row("Total Books", str(total_books), "100%")
+    summary_table.add_row("Books with Covers", str(books_with_covers), f"{(books_with_covers/total_books)*100:.1f}%")
+    summary_table.add_row("Books with EPUBs", str(books_with_epubs), f"{(books_with_epubs/total_books)*100:.1f}%")
+    summary_table.add_row("Ready for Cover Application", str(books_ready_for_covers), f"{(books_ready_for_covers/total_books)*100:.1f}%")
+
+    console.print(summary_table)
+
+    # Detailed status
+    console.print("\n[bold cyan]📋 Detailed Status:[/bold cyan]")
+
+    for book_info in valid_books:
+        book_num = book_info['book_num']
+        title = book_info['title']
+
+        # Check cover images
+        book_series_info = {**series_info, 'book_number': book_num}
+        found_images = folder_manager.scan_for_cover_images(title, book_series_info)
+
+        status_parts = []
+        if book_info['has_epub']:
+            status_parts.append("[green]EPUB✓[/green]")
+        else:
+            status_parts.append("[red]EPUB✗[/red]")
+
+        if found_images:
+            status_parts.append(f"[green]Cover✓({len(found_images)})[/green]")
+        else:
+            status_parts.append("[red]Cover✗[/red]")
+
+        status = " ".join(status_parts)
+        console.print(f"[bold]Book {book_num}:[/bold] {title[:40]}{'...' if len(title) > 40 else ''} - {status}")
+
+    # Recommendations
+    console.print("\n[bold cyan]💡 Recommendations:[/bold cyan]")
+
+    if books_with_covers < total_books:
+        missing_covers = total_books - books_with_covers
+        console.print(f"• Generate covers for {missing_covers} book(s) without cover images")
+
+    if books_with_epubs < total_books:
+        missing_epubs = total_books - books_with_epubs
+        console.print(f"• Generate EPUB files for {missing_epubs} book(s)")
+
+    if books_ready_for_covers > 0:
+        console.print(f"• Apply covers to {books_ready_for_covers} book(s) that have both covers and EPUBs")
+
+    if books_with_covers == total_books and books_with_epubs == total_books:
+        console.print("• [green]All books are ready! All covers and EPUBs are available.[/green]")
+
+    input("\nPress Enter to continue...")
 
 def validate_epub_file(epub_path: str) -> bool:
     """
