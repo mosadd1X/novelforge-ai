@@ -591,6 +591,14 @@ Strengths: {profile_data.get('strengths', 'Not specified')}
         """
         import re
 
+        # First, fix the most common issue: missing commas after string values
+        # This must be done BEFORE quote processing to avoid breaking the pattern matching
+        # Pattern: "value"\n    "key": -> "value",\n    "key":
+        json_str = re.sub(r'"\s*\n\s*"([^"]+)"\s*:', r'",\n"\1":', json_str)
+
+        # Also handle cases without newlines
+        json_str = re.sub(r'"\s+"([^"]+)"\s*:', r'", "\1":', json_str)
+
         # Remove any trailing commas before closing braces/brackets
         json_str = re.sub(r',(\s*[}\]])', r'\1', json_str)
 
@@ -603,6 +611,14 @@ Strengths: {profile_data.get('strengths', 'Not specified')}
         json_str = json_str.replace('"', '"').replace('"', '"')
         json_str = json_str.replace(''', "'").replace(''', "'")
 
+        # Fix escaped quotes that shouldn't be escaped (common in AI responses)
+        # Replace \" with " in the content, but be careful not to break actual escaping
+        json_str = json_str.replace('\\"', '"')
+
+        # Fix missing commas between objects/arrays
+        json_str = re.sub(r'}\s*{', '},{', json_str)
+        json_str = re.sub(r']\s*\[', '],[', json_str)
+
         # Remove any non-JSON content at the end
         json_str = json_str.strip()
         if not json_str.endswith('}') and not json_str.endswith(']'):
@@ -614,6 +630,191 @@ Strengths: {profile_data.get('strengths', 'Not specified')}
                 json_str = json_str[:last_valid + 1]
 
         return json_str
+
+    def _fix_unescaped_quotes(self, json_str: str) -> str:
+        """
+        Fix unescaped quotes within JSON string values.
+
+        Args:
+            json_str: JSON string with potential unescaped quotes
+
+        Returns:
+            JSON string with properly escaped quotes
+        """
+        import re
+
+        # Pattern to find string values in JSON (between quotes, accounting for escaped quotes)
+        # This regex finds: "key": "value with potential unescaped quotes"
+        pattern = r'("(?:[^"\\]|\\.)*")\s*:\s*("(?:[^"\\]|\\.|[^"]*"[^"]*)*")'
+
+        def fix_value_quotes(match):
+            key = match.group(1)
+            value = match.group(2)
+
+            # If the value contains unescaped quotes, fix them
+            if value.count('"') > 2:  # More than opening and closing quotes
+                # Extract the content between the outer quotes
+                inner_content = value[1:-1]
+                # Escape any unescaped quotes in the content
+                inner_content = inner_content.replace('\\"', '___ESCAPED_QUOTE___')  # Temporarily mark escaped quotes
+                inner_content = inner_content.replace('"', '\\"')  # Escape unescaped quotes
+                inner_content = inner_content.replace('___ESCAPED_QUOTE___', '\\"')  # Restore escaped quotes
+                value = f'"{inner_content}"'
+
+            return f'{key}: {value}'
+
+        # Apply the fix
+        json_str = re.sub(pattern, fix_value_quotes, json_str)
+
+        return json_str
+
+    def _advanced_json_repair(self, json_str: str) -> str:
+        """
+        Advanced JSON repair for severely malformed JSON responses.
+
+        Args:
+            json_str: Malformed JSON string
+
+        Returns:
+            Repaired JSON string or None if repair fails
+        """
+        import re
+
+        try:
+            # First, try to find the JSON array boundaries
+            start_idx = json_str.find('[')
+            end_idx = json_str.rfind(']')
+
+            if start_idx == -1 or end_idx == -1 or end_idx <= start_idx:
+                return None
+
+            # Extract the array content
+            array_content = json_str[start_idx:end_idx + 1]
+
+            # Split into individual objects (look for complete {} blocks)
+            objects = []
+            brace_count = 0
+            current_obj = ""
+            in_string = False
+            escape_next = False
+
+            for i, char in enumerate(array_content):
+                if escape_next:
+                    current_obj += char
+                    escape_next = False
+                    continue
+
+                if char == '\\':
+                    escape_next = True
+                    current_obj += char
+                    continue
+
+                if char == '"' and not escape_next:
+                    in_string = not in_string
+
+                current_obj += char
+
+                if not in_string:
+                    if char == '{':
+                        brace_count += 1
+                    elif char == '}':
+                        brace_count -= 1
+
+                        # Complete object found
+                        if brace_count == 0 and current_obj.strip().startswith('{'):
+                            # Clean and validate this object
+                            clean_obj = self._repair_single_json_object(current_obj.strip())
+                            if clean_obj:
+                                objects.append(clean_obj)
+                            current_obj = ""
+
+            # Reconstruct the array
+            if objects:
+                repaired_json = '[' + ','.join(objects) + ']'
+                # Validate by attempting to parse
+                json.loads(repaired_json)
+                return repaired_json
+
+        except Exception:
+            pass
+
+        return None
+
+    def _repair_single_json_object(self, obj_str: str) -> str:
+        """
+        Repair a single JSON object.
+
+        Args:
+            obj_str: Single JSON object string
+
+        Returns:
+            Repaired JSON object string or None if repair fails
+        """
+        import re
+
+        try:
+            # Remove any leading/trailing whitespace and commas
+            obj_str = obj_str.strip().strip(',')
+
+            # Ensure it starts and ends with braces
+            if not obj_str.startswith('{'):
+                obj_str = '{' + obj_str
+            if not obj_str.endswith('}'):
+                obj_str = obj_str + '}'
+
+            # Fix missing commas between key-value pairs
+            # Look for pattern: "value" "key": and add comma
+            obj_str = re.sub(r'"\s*\n\s*"([^"]+)"\s*:', r'",\n"\1":', obj_str)
+            obj_str = re.sub(r'"\s+"([^"]+)"\s*:', r'", "\1":', obj_str)
+
+            # Fix common issues
+            obj_str = self._clean_json_string(obj_str)
+
+            # Try to parse to validate
+            json.loads(obj_str)
+            return obj_str
+
+        except Exception:
+            # If still failing, try more aggressive repairs
+            try:
+                # Extract key-value pairs using regex - improved pattern
+                # This pattern handles both quoted and unquoted values
+                pairs = []
+
+                # Pattern for quoted values
+                quoted_pairs = re.findall(r'"([^"]+)"\s*:\s*"([^"]*(?:\\.[^"]*)*)"', obj_str)
+                pairs.extend(quoted_pairs)
+
+                # Pattern for unquoted values (numbers, booleans, etc.)
+                unquoted_pairs = re.findall(r'"([^"]+)"\s*:\s*([^,}\s]+)', obj_str)
+                for key, value in unquoted_pairs:
+                    # Skip if this key was already found in quoted pairs
+                    if not any(key == qkey for qkey, _ in quoted_pairs):
+                        pairs.append((key, value.strip()))
+
+                if pairs:
+                    # Reconstruct object from extracted pairs
+                    reconstructed = '{'
+                    for i, (key, value) in enumerate(pairs):
+                        if i > 0:
+                            reconstructed += ','
+
+                        # Determine if value should be quoted
+                        if value.isdigit() or value.lower() in ['true', 'false', 'null']:
+                            reconstructed += f'"{key}": {value}'
+                        else:
+                            # Ensure value is properly escaped
+                            value = value.replace('\\', '\\\\').replace('"', '\\"')
+                            reconstructed += f'"{key}": "{value}"'
+                    reconstructed += '}'
+
+                    # Validate
+                    json.loads(reconstructed)
+                    return reconstructed
+            except Exception:
+                pass
+
+        return None
 
     def _generate_test_genre_outline(self) -> Tuple[List[str], int]:
         """
@@ -991,7 +1192,23 @@ Strengths: {profile_data.get('strengths', 'Not specified')}
 
             # Try to extract JSON from malformed response using multiple strategies
             try:
-                # Strategy 1: Look for JSON-like content between square brackets
+                # Strategy 1: Advanced JSON cleaning and repair
+                fixed_json = self._advanced_json_repair(response_text)
+                if fixed_json:
+                    characters = json.loads(fixed_json)
+                    log_info("Successfully recovered character JSON using advanced repair", character_count=len(characters))
+
+                    # Validate and add characters
+                    required_fields = ["name", "role", "appearance", "personality", "background", "goals", "arc"]
+                    for char in characters:
+                        for field in required_fields:
+                            if field not in char:
+                                char[field] = "Not specified"
+                        self.memory_manager.add_character(char)
+
+                    return characters
+
+                # Strategy 2: Look for JSON-like content between square brackets
                 import re
                 json_match = re.search(r'\[.*\]', response_text, re.DOTALL)
                 if json_match:
@@ -1011,7 +1228,7 @@ Strengths: {profile_data.get('strengths', 'Not specified')}
 
                     return characters
                 else:
-                    # Strategy 2: Try to find individual character objects
+                    # Strategy 3: Try to find individual character objects
                     char_objects = re.findall(r'\{[^{}]*\}', response_text, re.DOTALL)
                     if char_objects:
                         characters = []
