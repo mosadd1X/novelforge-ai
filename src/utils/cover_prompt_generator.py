@@ -340,6 +340,13 @@ class CoverPromptGenerator:
         - Text integration with background elements and visual harmony
         - Hierarchy and visual flow between text elements
 
+        ### CRITICAL AUTHOR NAME SPECIFICATION
+        - The author name that MUST appear on the cover is: "{author}"
+        - This is the ONLY name that should be used as the book author on the cover
+        - Do NOT use any character names, place names, or other names from the story as the author
+        - The author name "{author}" should be clearly visible and properly positioned on the cover
+        - Ignore any other names mentioned in the book content - only "{author}" is the actual author
+
         ### SYMBOLIC & THEMATIC ELEMENTS
         - Specific symbolic objects with detailed descriptions of appearance and placement
         - Thematic visual metaphors with exact visual treatment
@@ -683,12 +690,17 @@ class CoverPromptGenerator:
             tone = analysis_data["emotional_tone"][:200]
             prompt_parts.append(f"emotional atmosphere conveying: {tone.lower()}")
 
-        # Typography integration (visual aspects only)
+        # Typography integration with explicit author specification
         prompt_parts.append(f"elegant typography style: {typography_style}")
         prompt_parts.append(f'book title "{title}" artistically integrated with perfect visual hierarchy')
-        prompt_parts.append(f'author name "{author}" harmoniously positioned with optimal readability')
         prompt_parts.append("text elements seamlessly blended with background imagery")
         prompt_parts.append("high contrast text treatment ensuring maximum visual impact")
+
+        # CRITICAL: Explicit author name specification
+        prompt_parts.append(f'IMPORTANT: The author name that MUST appear on this book cover is "{author}"')
+        prompt_parts.append(f'Display "{author}" as the author name - do NOT use any character names or other names from the story')
+        prompt_parts.append(f'Author name "{author}" should be clearly visible and properly positioned below or above the title')
+        prompt_parts.append("Ensure the author name is distinct from any character names mentioned in the book content")
 
         # Artistic quality and style specifications
         prompt_parts.append("photorealistic rendering with ultra-high detail and texture definition")
@@ -804,7 +816,11 @@ class CoverPromptGenerator:
         # Get author name from metadata
         metadata = novel_data.get("metadata", {}) if hasattr(novel_data, 'get') else {}
         author = metadata.get("author", "Unknown Author")
-        prompt_parts.append(f'author name "{author}" elegantly placed at bottom in smaller text,')
+
+        # CRITICAL: Explicit author name specification
+        prompt_parts.append(f'IMPORTANT: author name "{author}" elegantly placed at bottom in smaller text,')
+        prompt_parts.append(f'use ONLY "{author}" as the author name - do NOT use character names from the story,')
+        prompt_parts.append(f'the author credit must show "{author}" and no other names,')
 
         # Technical specifications
         prompt_parts.append("text must be clearly readable and integrated into design,")
@@ -863,7 +879,11 @@ class CoverPromptGenerator:
         # Get author name from metadata
         metadata = novel_data.get("metadata", {}) if novel_data and hasattr(novel_data, 'get') else {}
         author = metadata.get("author", "Unknown Author")
-        prompt_parts.append(f'author name "{author}" subtly placed in smaller text, readable against background,')
+
+        # CRITICAL: Explicit author name specification
+        prompt_parts.append(f'IMPORTANT: author name "{author}" subtly placed in smaller text, readable against background,')
+        prompt_parts.append(f'use ONLY "{author}" as the author name - ignore any character names from the story,')
+        prompt_parts.append(f'the author credit must display "{author}" and no other names,')
 
         # Technical specifications
         prompt_parts.append("text must be clearly readable and part of the design,")
@@ -921,7 +941,11 @@ class CoverPromptGenerator:
         # Get author name from metadata
         metadata = novel_data.get("metadata", {}) if novel_data and hasattr(novel_data, 'get') else {}
         author = metadata.get("author", "Unknown Author")
-        prompt_parts.append(f'author name "{author}" harmoniously placed in smaller text as part of design,')
+
+        # CRITICAL: Explicit author name specification
+        prompt_parts.append(f'IMPORTANT: author name "{author}" harmoniously placed in smaller text as part of design,')
+        prompt_parts.append(f'use ONLY "{author}" as the author name - do NOT use character names from the book,')
+        prompt_parts.append(f'the author credit must show "{author}" and no other names,')
 
         # Technical specifications
         prompt_parts.append("text must be clearly readable and artistically integrated,")
