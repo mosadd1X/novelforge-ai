@@ -129,3 +129,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Rohan Mehta is a leading voice in contemporary Indian fiction, captivating readers with his relatable characters and insightful explorations of modern life. Growing up in the bustling metropolis of Mumbai, Rohan witnessed firsthand the pressures and aspirations of young Indians navigating a rapidly changing society. He channeled his own experiences – the struggle to reconcile familial expectations with personal passions, the push and pull of tradition and modernity – into compelling narratives that resonate deeply with a new generation. Like his literary influences Chetan Bhagat and R.K. Narayan, Rohan has a knack for capturing the nuances of everyday Indian life with warmth and humor, while subtly weaving in social commentary inspired by writers like Aravind Adiga.
+
+His accessible writing style, reminiscent of John Green’s ability to connect with young adults, allows him to tackle complex themes such as social inequality, the evolving nature of relationships in a globalized world, and the impact of technology on human connection. Rohan’s novels, often infused with a Jane Austen-esque wit, have garnered critical acclaim and commercial success, earning him a devoted following and solidifying his place as a significant contemporary author. Now residing in Bangalore, Rohan continues to write full-time, advocating for social causes and crafting stories that are both entertaining and thought-provoking reflections of India today."""

@@ -1375,6 +1375,9 @@ Strengths: {profile_data.get('strengths', 'Not specified')}
             if genre.lower() in ['romance', 'contemporary romance', 'paranormal romance']:
                 # Even lower temperature for Romance to encourage following word count instructions more precisely
                 chapter_text = self.gemini.generate_content(prompt, temperature=0.6, max_tokens=max_tokens)
+            elif 'poetry' in genre.lower():
+                # Higher temperature for poetry collections to encourage creativity and poetic expression
+                chapter_text = self.gemini.generate_content(prompt, temperature=0.8, max_tokens=max_tokens)
             else:
                 # Slightly lower temperature for all other genres to improve instruction following
                 chapter_text = self.gemini.generate_content(prompt, temperature=0.7, max_tokens=max_tokens)

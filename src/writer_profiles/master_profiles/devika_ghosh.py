@@ -129,3 +129,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Devika Ghosh crafts intricate narratives that delve into the intersection of history, migration, and cultural identity, earning her recognition as a powerful voice in contemporary fiction. Born and raised in the vibrant city of Kolkata, India, Devika developed a deep appreciation for the complexities of Indian history and culture, themes that now resonate throughout her acclaimed novels. Her writing journey took her from the bustling streets of Kolkata to the hallowed halls of Oxford, where her academic pursuits broadened her perspective and honed her scholarly approach to storytelling. Her work, often compared to that of Amitav Ghosh, blends meticulous historical research with lyrical prose, immersing readers in the sights, sounds, and moral quandaries of the past.
+
+Inspired by literary giants such as Salman Rushdie, Chinua Achebe, and Isabel Allende, Devika Ghosh fearlessly explores the enduring legacies of colonialism, the experiences of migrants and refugees, and the beauty of cultural hybridity. Her stories are populated by unforgettable characters navigating complex historical landscapes, each struggling to reconcile personal desires with the weight of the past. With a writing style characterized by rich detail, evocative imagery, and moments of profound reflection, Devika brings forgotten voices to life, revealing the human cost of historical events and the resilience of the human spirit. Her debut novel, \"The Saffron Sun,\" was longlisted for the Man Booker Prize, and her subsequent works have cemented her place as a vital chronicler of the Indian diaspora and its enduring connection to the motherland."""

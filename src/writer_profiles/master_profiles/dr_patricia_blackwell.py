@@ -148,3 +148,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Dr. Patricia Blackwell isn\'t just a business and self-help author; she\'s a seasoned observer of human behavior in the workplace and beyond. Years spent as a management consultant, witnessing the inner workings of companies both thriving and struggling, ignited her passion for understanding the subtle shifts in mindset and strategy that determine success. Frustrated by seeing organizations stumble over preventable pitfalls, she traded boardrooms for the written word, determined to share her insights with a wider audience. Blackwell\'s work, now recognized with industry accolades and featured in leading business publications, blends rigorous analysis with accessible storytelling, offering readers actionable strategies for personal and professional growth.
+
+Drawing inspiration from writers like Malcolm Gladwell, for his narrative flair, and Daniel Kahneman, for his insights into decision-making, Dr. Blackwell crafts prose that is both insightful and engaging. Her writing style mirrors Gladwell\'s ability to transform complex research into compelling narratives, but with a stronger emphasis on practical application. She explores the power of mindset, the hidden forces of influence, and the importance of strategic thinking, all while maintaining a conversational tone that resonates with readers from diverse backgrounds. Blackwell\'s meticulous research, drawing upon academic studies, real-world case studies, and personal observations, underscores her unwavering belief in human potential and the possibility of positive change."""

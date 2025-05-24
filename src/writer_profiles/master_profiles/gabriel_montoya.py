@@ -153,3 +153,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Gabriel Montoya crafts narratives where the veil between the ordinary and the extraordinary thins, revealing the vibrant and often turbulent heart of Colombian life. Orphaned at a young age amidst political unrest, he found refuge in the captivating stories spun by his grandmother, a respected local healer and guardian of ancestral knowledge. This early exposure to both hardship and the transformative power of narrative ignited a lifelong passion for giving voice to the silenced, a dedication that permeates his literary fiction and speculative works. Drawing inspiration from literary giants like Gabriel García Márquez, Isabel Allende, and Toni Morrison, Montoya explores themes of memory, identity, and political struggle with unflinching honesty and lyrical grace.
+
+His writing style is characterized by its lush, evocative prose and seamless integration of magical elements into everyday existence. Inspired by the rhythmic cadence of oral storytelling, his sentences flow with a captivating rhythm, drawing readers into the heart of his narratives. Montoya masterfully employs vivid imagery and sensory details to create a world that is both familiar and fantastical, blurring the lines between reality and imagination. His work delves into the enduring power of hope, the blurring of reality and illusion, and the impact of political oppression. Montoya\'s short stories have garnered critical acclaim, appearing in prestigious literary journals, and his debut novel, *The Whispers of the Ceiba Tree*, was longlisted for the prestigious \"Libro de Oro\" award, solidifying his place as a compelling voice in contemporary Latin American literature."""

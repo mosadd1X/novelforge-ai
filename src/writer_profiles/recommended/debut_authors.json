@@ -1,0 +1,112 @@
+{
+  "collection_name": "Debut Author Success",
+  "description": "Profiles optimized for first-time authors with accessible approaches and proven debut strategies",
+  "category": "Experience-Based",
+  "target_audience": "First-time authors and debut novelists",
+  "use_cases": [
+    "Authors working in experience-based contexts",
+    "Writers seeking debut author success approach",
+    "Publishers looking for specialized expertise",
+    "Readers interested in authentic genre representation"
+  ],
+  "created_date": "2024-05-24",
+  "last_updated": "2024-05-24",
+  "selection_criteria": [
+    "Proven expertise in target areas",
+    "Authentic voice and perspective",
+    "Strong track record in genre/category",
+    "Distinctive approach and style",
+    "Reader engagement and satisfaction"
+  ],
+  "profiles": [
+    {
+      "profile_id": "luna_brightwater",
+      "name": "Luna Brightwater",
+      "priority": 1,
+      "genres": [
+        "Young Adult",
+        "Middle Grade",
+        "Coming-of-Age"
+      ],
+      "target_demographics": [
+        "Young Adult readers",
+        "Middle Grade readers",
+        "Coming-of-Age readers"
+      ],
+      "recommended_for": [
+        "Young Adult writing",
+        "Middle Grade writing",
+        "Coming-of-Age writing"
+      ],
+      "debut_strengths": [
+        "Clear voice",
+        "Accessible storytelling",
+        "Strong character development"
+      ]
+    },
+    {
+      "profile_id": "catherine_fairfax",
+      "name": "Catherine Fairfax",
+      "priority": 2,
+      "genres": [
+        "Commercial Fiction",
+        "Contemporary Fiction",
+        "Women's Fiction"
+      ],
+      "target_demographics": [
+        "Commercial Fiction readers",
+        "Contemporary Fiction readers",
+        "Women's Fiction readers"
+      ],
+      "recommended_for": [
+        "Commercial Fiction writing",
+        "Contemporary Fiction writing",
+        "Women's Fiction writing"
+      ],
+      "debut_strengths": [
+        "Market awareness",
+        "Broad appeal",
+        "Professional approach"
+      ]
+    },
+    {
+      "profile_id": "gabriel_montoya",
+      "name": "Gabriel Montoya",
+      "priority": 3,
+      "genres": [
+        "Travel",
+        "Adventure",
+        "Cultural Fiction"
+      ],
+      "target_demographics": [
+        "Travel readers",
+        "Adventure readers",
+        "Cultural Fiction readers"
+      ],
+      "recommended_for": [
+        "Travel writing",
+        "Adventure writing",
+        "Cultural Fiction writing"
+      ],
+      "debut_strengths": [
+        "Authentic voice",
+        "Cultural insight",
+        "Engaging narrative"
+      ]
+    }
+  ],
+  "usage_guidelines": {
+    "best_for": [
+      "Authors seeking debut author success",
+      "Projects requiring experience-based expertise",
+      "Specialized genre development",
+      "Authentic voice development"
+    ],
+    "considerations": [
+      "Match profile expertise to project needs",
+      "Consider target audience alignment",
+      "Evaluate genre compatibility",
+      "Balance specialization with accessibility"
+    ]
+  }
+}

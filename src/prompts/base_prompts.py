@@ -990,6 +990,23 @@ Return detailed element descriptions that will create a compelling and well-craf
         characters = kwargs.get("characters", "")  # In special formats, this would be elements/components
         title = kwargs.get("title", "Untitled")
 
+        # Add special handling for poetry collections
+        poetry_warning = ""
+        if "poetry" in cls.GENRE_NAME.lower():
+            poetry_warning = """
+
+## CRITICAL POETRY COLLECTION REQUIREMENTS
+**ABSOLUTELY ESSENTIAL**: This is a POETRY COLLECTION, not a novel or story. You must generate:
+- ACTUAL POEMS with proper poetic structure (line breaks, stanzas, rhythm)
+- Multiple individual poems (3-8 poems per section)
+- Various poetic forms (free verse, sonnets, haikus, villanelles, etc.)
+- Poetic language with metaphors, imagery, symbolism, and literary devices
+- NO narrative prose, character development, or story progression
+- Focus on emotional expression, themes, and poetic craft
+- Each poem should have a clear title and proper formatting
+- Use stanza breaks and line breaks for poetic effect
+"""
+
         return f"""
 # Section {chapter_num} - {cls.GENRE_NAME} Special Format Work
 
@@ -1006,6 +1023,7 @@ Create Section {chapter_num} for the {cls.GENRE_NAME.lower()} work "{title}".
 
 ## {cls.GENRE_NAME} Writing Guidelines
 {chr(10).join(f"- {element}" for element in cls.TYPICAL_ELEMENTS)}
+{poetry_warning}
 
 ## Special Format Creation Instructions
 Create a compelling section that:

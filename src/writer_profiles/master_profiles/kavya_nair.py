@@ -133,3 +133,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Kavya Nair is a vibrant voice in contemporary Indian literature, celebrated for her unflinching explorations of female identity, sexuality, and societal expectations within the modern landscape of India. Growing up in a conservative household in Bangalore, Kavya felt the stifling weight of tradition, a feeling that ignited her passion to challenge conventions and delve into the complexities of the female experience through her writing. Her subsequent move to Mumbai, a city teeming with both opportunity and chaos, broadened her perspectives and further fueled her narrative voice, imbuing her work with a unique blend of intimacy and raw honesty.
+
+Kavya’s writing style is a captivating fusion of poetry and prose, often blurring the lines between the two. Inspired by the confessional boldness of Kamala Das, the raw emotionality of Sylvia Plath, and the magical realism of Gabriel Garcia Marquez, Kavya crafts intensely personal narratives that delve into taboo subjects with vulnerability and grace. Her work explores themes of urban alienation, the tension between tradition and modernity, and the journey towards self-discovery, resonating deeply with readers who grapple with similar struggles. Her collection of poems, \"Crimson Threads,\" was lauded for its evocative imagery and its unflinching portrayal of female desire, earning her the prestigious \"Sahitya Samman\" for emerging voices in Indian poetry. Kavya continues to write, driven by a desire to give voice to the unspoken experiences of women in a rapidly changing world."""

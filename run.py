@@ -240,6 +240,89 @@ def network_status_and_diagnostics():
         console.print("[yellow]Make sure your system is properly configured.[/yellow]")
         input("\nPress Enter to continue...")
 
+def fast_testing_system() -> None:
+    """
+    Run the fast testing system for development and debugging.
+
+    Returns:
+        None
+    """
+    try:
+        clear_screen()
+        display_title()
+
+        console.print("[bold cyan]Fast Testing System[/bold cyan]")
+        console.print("This system provides rapid testing of the ebook generation workflow")
+        console.print("with optimized settings for development and debugging.\n")
+
+        # Test mode options
+        test_options = [
+            "1. Run All Tests (Standard Mode)",
+            "2. Run All Tests (Mock API Mode - Fastest)",
+            "3. Single Book Test Only",
+            "4. Series Test Only",
+            "5. Performance Benchmarks Only",
+            "6. Back to Main Menu"
+        ]
+
+        selected = questionary.select(
+            "Select testing mode:",
+            choices=test_options,
+            style=custom_style
+        ).ask()
+
+        if selected == "6. Back to Main Menu":
+            return
+
+        # Import and run the fast testing system
+        from src.testing.fast_test_system import FastTestSystem
+
+        use_mock_api = "Mock API" in selected
+
+        console.print(f"\n[bold yellow]Starting fast testing system...[/bold yellow]")
+        console.print(f"Mock API: {'Enabled' if use_mock_api else 'Disabled'}")
+        console.print("This may take 5-10 minutes depending on the selected tests.\n")
+
+        # Confirm before starting
+        proceed = questionary.confirm(
+            "Do you want to proceed with the testing?",
+            default=True,
+            style=custom_style
+        ).ask()
+
+        if not proceed:
+            console.print("[bold yellow]Testing cancelled.[/bold yellow]")
+            input("\nPress Enter to continue...")
+            return
+
+        # Initialize and run tests
+        test_system = FastTestSystem(use_mock_api=use_mock_api)
+
+        if "All Tests" in selected:
+            results = test_system.run_comprehensive_tests()
+        elif "Single Book" in selected:
+            results = {"Single Book Test": test_system._test_single_book_standard()}
+        elif "Series Test" in selected:
+            results = {"Series Test": test_system._test_series_generation()}
+        elif "Performance" in selected:
+            results = {"Performance Test": test_system._test_performance_benchmarks()}
+        else:
+            results = test_system.run_comprehensive_tests()
+
+        console.print(f"\n[bold green]Testing completed![/bold green]")
+        console.print("Check the test_reports directory for detailed results.")
+
+        input("\nPress Enter to continue...")
+
+    except ImportError as e:
+        console.print(f"[bold red]Error: Fast testing system not available: {e}[/bold red]")
+        input("\nPress Enter to continue...")
+    except Exception as e:
+        console.print(f"[bold red]Error in fast testing system: {str(e)}[/bold red]")
+        import traceback
+        console.print(f"[dim]{traceback.format_exc()}[/dim]")
+        input("\nPress Enter to continue...")
+
 def main_menu():
     """
     Display the main menu and handle user input.
@@ -268,7 +351,8 @@ def main_menu():
             "5. Content Quality & Feedback",
             "6. API Key Management",
             "7. Network Status & Diagnostics",
-            "8. Exit"
+            "8. Fast Testing System",
+            "9. Exit"
         ]
 
         selected = questionary.select(
@@ -291,7 +375,9 @@ def main_menu():
             api_key_management()
         elif selected == "7. Network Status & Diagnostics":
             network_status_and_diagnostics()
-        elif selected == "8. Exit":
+        elif selected == "8. Fast Testing System":
+            fast_testing_system()
+        elif selected == "9. Exit":
             console.print("[bold green]Thank you for using the Ebook Generator. Goodbye![/bold green]")
             sys.exit(0)
 

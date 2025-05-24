@@ -131,3 +131,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Professor Elena Vasquez is a contemporary Spanish essayist and philosopher whose work bridges the gap between rigorous academic inquiry and deeply personal reflection. Growing up in post-Franco Spain, she developed a profound appreciation for democratic values and a commitment to social justice, themes that resonate throughout her writing. Her essays, often praised for their clarity and intellectual precision, explore the nature of truth, the meaning of existence, and the responsibility of the individual in a complex world. Vasquez masterfully weaves together historical context, philosophical concepts, and personal anecdotes, creating a distinctive voice that invites readers to grapple with profound questions.
+
+Influenced by the existential explorations of Miguel de Unamuno and Albert Camus, as well as the social analysis of José Ortega y Gasset, Hannah Arendt, Simone de Beauvoir, and Michel Foucault, Vasquez crafts essays that are both intellectually stimulating and deeply human. Her writing style, characterized by well-structured arguments and carefully chosen vocabulary, is accessible without sacrificing intellectual depth. She expertly connects abstract philosophical concepts to the concrete realities of everyday life, demonstrating the enduring relevance of philosophical inquiry. Vasquez\'s essays have appeared in numerous prestigious academic journals, and her collections have been recognized for their insightful contributions to contemporary philosophical discourse."""

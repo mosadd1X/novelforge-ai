@@ -129,3 +129,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Marcus Steele is an American author known for his stark and emotionally resonant narratives that explore the resilience of the human spirit amidst adversity. His writing, particularly influenced by his time as a war correspondent covering the Bosnian War, delves into the complexities of courage, loss, and redemption with a quiet intensity. Steele\'s minimalist prose, honed by the brutal realities he witnessed firsthand, reflects a belief that less is often more when conveying the profound impact of conflict on individuals and societies. Inspired by literary giants like Ernest Hemingway, Raymond Carver, and Tim O\'Brien, Steele adds his own layer of introspective depth, exploring the psychological impact of trauma on his characters with unflinching honesty.
+
+Steele\'s work is characterized by its deliberate simplicity and precision, mirroring the \'iceberg theory\' in its reliance on subtext and implication. His stories often grapple with existential questions, focusing on themes of moral ambiguity, the search for meaning, and the enduring power of memory. While drawing inspiration from Cormac McCarthy\'s stark landscapes and John Steinbeck\'s empathetic portraits of ordinary people, Steele\'s distinctive voice shines through in his nuanced portrayal of historical events and their lasting consequences. His debut novel, \"Echoes of the Valley,\" was longlisted for the National Book Award, and his short stories have appeared in numerous literary journals, solidifying his place as a compelling voice in contemporary fiction."""

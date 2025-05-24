@@ -130,3 +130,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Ananya Desai is a contemporary Indian author whose lyrical and politically resonant fiction has garnered critical acclaim for its unflinching portrayal of environmental degradation and its impact on marginalized communities. Born in a small Himalayan village where she witnessed firsthand the devastating effects of deforestation, Ananya\'s early life ignited a passion for environmental justice that permeates her writing. Later, her work with NGOs in Mumbai exposed her to the stark realities of urban poverty and pollution, further shaping her commitment to amplifying the voices of those often unheard. Her stories, often compared to the works of Arundhati Roy for their sharp social commentary and evocative prose, weave together personal narratives and broader critiques of power, offering a deeply affecting reading experience.
+
+Drawing inspiration from literary giants such as Gabriel Garcia Marquez, Chinua Achebe, and Toni Morrison, Ananya crafts narratives that explore themes of displacement, resilience, and the interconnectedness of all things. Her work delves into the complexities of caste, class, and gender inequality, exposing the systemic injustices that perpetuate poverty and marginalization. Ananya\'s writing is characterized by its lush imagery and intricate metaphors, mirroring the natural world she so passionately defends. Her debut novel, *The Whispering Pines of Kumaon*, was longlisted for the Man Booker Prize, and her essays on environmentalism have appeared in *The Hindu* and *The Guardian*, solidifying her reputation as a powerful voice for change in contemporary literature."""

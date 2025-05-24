@@ -1,0 +1,112 @@
+{
+  "collection_name": "Innovative Voices",
+  "description": "Authors pushing boundaries with experimental techniques and fresh perspectives",
+  "category": "Literary-Focused",
+  "target_audience": "Authors seeking innovation and experimental approaches",
+  "use_cases": [
+    "Authors working in literary-focused contexts",
+    "Writers seeking innovative voices approach",
+    "Publishers looking for specialized expertise",
+    "Readers interested in authentic genre representation"
+  ],
+  "created_date": "2024-05-24",
+  "last_updated": "2024-05-24",
+  "selection_criteria": [
+    "Proven expertise in target areas",
+    "Authentic voice and perspective",
+    "Strong track record in genre/category",
+    "Distinctive approach and style",
+    "Reader engagement and satisfaction"
+  ],
+  "profiles": [
+    {
+      "profile_id": "elena_thornfield",
+      "name": "Elena Thornfield",
+      "priority": 1,
+      "genres": [
+        "Literary Fiction",
+        "Experimental Fiction",
+        "Stream of Consciousness"
+      ],
+      "target_demographics": [
+        "Literary Fiction readers",
+        "Experimental Fiction readers",
+        "Stream of Consciousness readers"
+      ],
+      "recommended_for": [
+        "Literary Fiction writing",
+        "Experimental Fiction writing",
+        "Stream of Consciousness writing"
+      ],
+      "innovation_focus": [
+        "Narrative experimentation",
+        "Psychological realism",
+        "Modernist techniques"
+      ]
+    },
+    {
+      "profile_id": "hiroshi_nakamura",
+      "name": "Hiroshi Nakamura",
+      "priority": 2,
+      "genres": [
+        "Graphic Novel",
+        "Visual Storytelling",
+        "Multimedia Narrative"
+      ],
+      "target_demographics": [
+        "Graphic Novel readers",
+        "Visual Storytelling readers",
+        "Multimedia Narrative readers"
+      ],
+      "recommended_for": [
+        "Graphic Novel writing",
+        "Visual Storytelling writing",
+        "Multimedia Narrative writing"
+      ],
+      "innovation_focus": [
+        "Visual narrative",
+        "Format innovation",
+        "Cultural fusion"
+      ]
+    },
+    {
+      "profile_id": "kavya_nair",
+      "name": "Kavya Nair",
+      "priority": 3,
+      "genres": [
+        "Poetry Collection",
+        "Prose Poetry",
+        "Lyrical Fiction"
+      ],
+      "target_demographics": [
+        "Poetry Collection readers",
+        "Prose Poetry readers",
+        "Lyrical Fiction readers"
+      ],
+      "recommended_for": [
+        "Poetry Collection writing",
+        "Prose Poetry writing",
+        "Lyrical Fiction writing"
+      ],
+      "innovation_focus": [
+        "Poetic narrative",
+        "Cultural voice",
+        "Lyrical innovation"
+      ]
+    }
+  ],
+  "usage_guidelines": {
+    "best_for": [
+      "Authors seeking innovative voices",
+      "Projects requiring literary-focused expertise",
+      "Specialized genre development",
+      "Authentic voice development"
+    ],
+    "considerations": [
+      "Match profile expertise to project needs",
+      "Consider target audience alignment",
+      "Evaluate genre compatibility",
+      "Balance specialization with accessibility"
+    ]
+  }
+}

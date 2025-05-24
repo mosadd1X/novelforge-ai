@@ -151,3 +151,11 @@ def get_tags() -> List[str]:
 
 if __name__ == '__main__':
     print(get_profile())
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Raven Nightshade is the pen name of a contemporary American author whose evocative paranormal romances and urban fantasies have captivated readers with their atmospheric settings and complex characters. Drawing inspiration from literary giants like Anne Rice, Neil Gaiman, and Laurell K. Hamilton, Nightshade weaves tales where the supernatural intertwines with the everyday, exploring the blurred lines between reality and illusion, and the enduring power of love in the face of adversity. Her novels are known for their lyrical prose, rich sensory details, and exploration of the duality of human nature, often delving into the ethical implications of wielding supernatural abilities and the search for identity in a world where ancient traditions clash with modern progress.
+
+Haunted by a near-drowning experience in childhood, Nightshade infuses her writing with a pervasive sense of water imagery and the constant threat of being submerged by the unknown. This early trauma, coupled with rumors of a closely guarded family secret, fuels the sense of mystery that permeates her work. While Nightshade maintains a somewhat reclusive lifestyle, her dedication to crafting immersive worlds where magic and romance collide has garnered critical acclaim. She was a finalist for the prestigious \"Whispers of the Unseen\" award for her debut novel, \"Crimson Tides,\" and her subsequent books have consistently topped bestseller lists in the paranormal romance genre, solidifying her place as a leading voice in contemporary fantasy literature.
+
+Nightshade\'s writing resonates with readers who seek more than just escapism; they crave stories that explore the depths of human emotion and the enduring quest for connection in a world where the veil between realities is thin. From morally ambiguous vampires to resourceful heroines battling supernatural threats, Nightshade\'s characters grapple with questions of identity, belonging, and the consequences of wielding power, inviting readers to contemplate the darkness and light that exists within us all."""

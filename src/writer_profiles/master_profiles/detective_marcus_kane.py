@@ -130,3 +130,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Detective Marcus Kane doesn\'t just write about the dark underbelly of Chicago; he lived it. For two decades, he patrolled the city\'s toughest streets as a Chicago police officer, witnessing firsthand the brutal realities of crime and its devastating impact on lives. A career-ending injury forced him into an early retirement, but it couldn\'t extinguish his burning desire to tell the stories he carried with him. Inspired by the gritty realism of Joseph Wambaugh and the psychological depth of Truman Capote, Kane turned to writing as a way to honor the victims he couldn\'t save and to continue his fight for justice.
+
+Kane\'s writing is as unflinching and authentic as his years on the force. Eschewing flowery prose, he favors a lean, economical style, mirroring the directness of police reports and witness testimonies. He meticulously recreates crime scenes, immersing readers in the investigation and forcing them to confront the moral ambiguities inherent in law enforcement. Drawing influence from masters of the genre like Ed McBain, Dennis Lehane, James Ellroy, and Ann Rule, Kane delves into the psychological impact of trauma, the failures of the justice system, and the very nature of evil. His novels, praised for their gritty realism and nuanced character studies, have earned him critical acclaim and established him as a powerful voice in contemporary crime fiction. More than just entertainment, Kane\'s work is a testament to the fragility of human life and a relentless pursuit of truth in a world often shrouded in darkness."""

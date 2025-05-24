@@ -133,3 +133,11 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Vikram Chandra is a contemporary Indian author whose intricate narratives and lyrical prose have captivated readers worldwide. Born in Calcutta, his early years were steeped in the vibrant tapestry of Indian culture, fostering a deep appreciation for storytelling and a fascination with the echoes of history. Later, studies abroad exposed him to Western literary traditions, forging a unique voice that seamlessly blends Eastern and Western perspectives. This fusion is evident in his work, which ranges from poignant poetry collections exploring themes of love and loss to sweeping historical novels that delve into the complexities of India\'s past.
+
+Chandra\'s writing style, often compared to that of Vikram Seth, is characterized by its meticulous attention to detail and elegant precision. He crafts sentences that are both informative and aesthetically pleasing, drawing readers into richly detailed worlds. Influenced by literary giants like R.K. Narayan, Gabriel Garcia Marquez, and Tolstoy, Chandra’s work carries a deeper undercurrent of melancholy, exploring the darker aspects of human nature and the complexities of the human condition. His narratives often explore themes of identity, belonging, and the power of stories to both unite and divide us, reflecting his own journey of navigating multiple cultures.
+
+His novel, \"The Woven Tapestry,\" a sweeping saga of love and betrayal during the Indian Rebellion of 1857, garnered critical acclaim and established him as a significant voice in contemporary literature. While his poetry collection, \"Whispers of the Ganges,\" won the prestigious Sahitya Akademi Award, solidifying his reputation as a master of both prose and verse. Through his work, Chandra continues to explore the tension between tradition and modernity in contemporary India, offering a nuanced and compelling vision of a nation grappling with its past and its future."""

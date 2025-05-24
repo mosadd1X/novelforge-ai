@@ -131,3 +131,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Grace Washington is a contemporary author whose powerful memoirs and biographies have resonated with readers across the nation. Born in rural Alabama during the Jim Crow era, Grace witnessed firsthand the injustices that fueled the Civil Rights Movement, experiences that ignited within her a lifelong commitment to truth-telling. Her writing style, often described as lyrical and evocative, echoes the spoken word traditions of her heritage, weaving together personal anecdotes with the broader tapestry of American history. Inspired by literary giants like Maya Angelou, James Baldwin, and Toni Morrison, Grace crafts narratives that unflinchingly explore themes of resilience, identity, and social justice within the African American experience.
+
+Grace’s work delves into the complexities of identity formation in a racialized society, the intergenerational impact of trauma, and the pursuit of justice and equality. She celebrates Black culture and heritage through vivid portrayals of music, art, and community traditions, reminding us of the power of memory and storytelling to heal and empower. Her dedication to preserving personal and collective histories has earned her numerous accolades, including the prestigious Langston Hughes Award for Literary Excellence and critical acclaim for her memoir, *Beneath the Southern Sky,* a poignant exploration of her childhood in the segregated South. Through her writing, Grace Washington continues to be a beacon of hope, advocating for understanding and empathy, one story at a time."""

@@ -695,7 +695,7 @@ class WriterProfileManager:
         """
         try:
             # Normalize genre name for file lookup
-            genre_key = genre.lower().replace(" ", "_").replace("-", "_")
+            genre_key = genre.lower().replace(" ", "_").replace("-", "_").replace("/", "_")
 
             # Try to import the genre recommendation module
             module_name = f"src.writer_profiles.genre_recommendations.{genre_key}"
@@ -703,14 +703,275 @@ class WriterProfileManager:
 
             # Get profile by style
             profile = module.get_profile_by_style(style)
+
+            # Track analytics if profile found
+            if profile:
+                self._track_style_selection(genre, style, profile.get("base_profile", "unknown"))
+
             return profile if profile else None
 
         except ImportError:
-            log_warning(f"No profiles found for genre: {genre}")
+            log_warning(f"No style variants found for genre: {genre}")
             return None
         except Exception as e:
             log_error(f"Failed to get profile by style for genre: {genre}, style: {style}", exception=e)
             return None
+
+    def get_available_styles_for_genre(self, genre: str) -> List[str]:
+        """
+        Get available style variants for a specific genre.
+
+        Args:
+            genre: Genre name
+
+        Returns:
+            List of available style names
+        """
+        try:
+            # Normalize genre name for file lookup
+            genre_key = genre.lower().replace(" ", "_").replace("-", "_").replace("/", "_")
+
+            # Try to import the genre recommendation module
+            module_name = f"src.writer_profiles.genre_recommendations.{genre_key}"
+            module = importlib.import_module(module_name)
+
+            # Get available styles
+            if hasattr(module, 'get_available_styles'):
+                return module.get_available_styles()
+
+            # Default styles if not specified
+            return ["Master", "Innovator", "Storyteller", "Craftsperson", "Commercial"]
+
+        except ImportError:
+            return []
+        except Exception:
+            return []
+
+    def get_style_descriptions_for_genre(self, genre: str) -> Dict[str, str]:
+        """
+        Get style descriptions for a specific genre.
+
+        Args:
+            genre: Genre name
+
+        Returns:
+            Dictionary mapping style names to descriptions
+        """
+        try:
+            # Normalize genre name for file lookup
+            genre_key = genre.lower().replace(" ", "_").replace("-", "_").replace("/", "_")
+
+            # Try to import the genre recommendation module
+            module_name = f"src.writer_profiles.genre_recommendations.{genre_key}"
+            module = importlib.import_module(module_name)
+
+            # Get style descriptions
+            if hasattr(module, 'get_style_descriptions'):
+                return module.get_style_descriptions()
+
+            return {}
+
+        except ImportError:
+            return {}
+        except Exception:
+            return {}
+
+    def get_recommended_collections(self) -> List[Dict[str, Any]]:
+        """
+        Get all available recommended profile collections.
+
+        Returns:
+            List of collection metadata
+        """
+        try:
+            from src.writer_profiles.recommended import get_available_collections, get_collection_metadata
+
+            collections = []
+            for collection_name in get_available_collections():
+                metadata = get_collection_metadata(collection_name)
+                if metadata:
+                    collections.append({
+                        "collection_name": collection_name,
+                        **metadata
+                    })
+
+            return sorted(collections, key=lambda x: x.get("priority", 999))
+
+        except Exception as e:
+            log_error("Failed to get recommended collections", exception=e)
+            return []
+
+    def get_profiles_from_collection(self, collection_name: str) -> List[Dict[str, Any]]:
+        """
+        Get profiles from a specific recommended collection.
+
+        Args:
+            collection_name: Name of the collection
+
+        Returns:
+            List of profile data from the collection
+        """
+        try:
+            from src.writer_profiles.recommended import get_profiles_from_collection
+
+            profiles = get_profiles_from_collection(collection_name)
+
+            # Track analytics
+            if profiles:
+                self._track_collection_access(collection_name, len(profiles))
+
+            return profiles
+
+        except Exception as e:
+            log_error(f"Failed to get profiles from collection: {collection_name}", exception=e)
+            return []
+
+    def get_recommended_profile_for_goal(self, goal: str, genre: str = None) -> Optional[Dict[str, Any]]:
+        """
+        Get a recommended profile based on user goal and optional genre.
+
+        Args:
+            goal: User's goal (e.g., "commercial_success", "literary_excellence")
+            genre: Optional genre filter
+
+        Returns:
+            Recommended profile or None if not found
+        """
+        try:
+            from src.writer_profiles.recommended import get_recommended_profile_for_goal
+
+            profile = get_recommended_profile_for_goal(goal, genre)
+
+            # Track analytics
+            if profile:
+                self._track_goal_based_selection(goal, genre, profile.get("profile_id", "unknown"))
+
+            return profile
+
+        except Exception as e:
+            log_error(f"Failed to get recommended profile for goal: {goal}", exception=e)
+            return None
+
+    def search_collections_by_genre(self, genre: str) -> List[Dict[str, Any]]:
+        """
+        Find collections that contain profiles suitable for a specific genre.
+
+        Args:
+            genre: Genre to search for
+
+        Returns:
+            List of matching collections with their metadata
+        """
+        try:
+            from src.writer_profiles.recommended import search_collections_by_genre
+
+            collections = search_collections_by_genre(genre)
+
+            # Track analytics
+            if collections:
+                self._track_genre_collection_search(genre, len(collections))
+
+            return collections
+
+        except Exception as e:
+            log_error(f"Failed to search collections for genre: {genre}", exception=e)
+            return []
+
+    def _track_style_selection(self, genre: str, style: str, profile_id: str) -> None:
+        """Track style-based profile selection for analytics."""
+        try:
+            if "style_selections" not in self.analytics_data:
+                self.analytics_data["style_selections"] = {}
+
+            key = f"{genre}_{style}"
+            if key not in self.analytics_data["style_selections"]:
+                self.analytics_data["style_selections"][key] = {
+                    "count": 0,
+                    "profiles_used": {},
+                    "last_used": None
+                }
+
+            self.analytics_data["style_selections"][key]["count"] += 1
+            self.analytics_data["style_selections"][key]["last_used"] = datetime.now().isoformat()
+
+            if profile_id not in self.analytics_data["style_selections"][key]["profiles_used"]:
+                self.analytics_data["style_selections"][key]["profiles_used"][profile_id] = 0
+            self.analytics_data["style_selections"][key]["profiles_used"][profile_id] += 1
+
+            self._save_analytics()
+
+        except Exception as e:
+            log_error("Failed to track style selection", exception=e)
+
+    def _track_collection_access(self, collection_name: str, profile_count: int) -> None:
+        """Track collection access for analytics."""
+        try:
+            if "collection_access" not in self.analytics_data:
+                self.analytics_data["collection_access"] = {}
+
+            if collection_name not in self.analytics_data["collection_access"]:
+                self.analytics_data["collection_access"][collection_name] = {
+                    "access_count": 0,
+                    "profiles_accessed": 0,
+                    "last_accessed": None
+                }
+
+            self.analytics_data["collection_access"][collection_name]["access_count"] += 1
+            self.analytics_data["collection_access"][collection_name]["profiles_accessed"] += profile_count
+            self.analytics_data["collection_access"][collection_name]["last_accessed"] = datetime.now().isoformat()
+
+            self._save_analytics()
+
+        except Exception as e:
+            log_error("Failed to track collection access", exception=e)
+
+    def _track_goal_based_selection(self, goal: str, genre: str, profile_id: str) -> None:
+        """Track goal-based profile selection for analytics."""
+        try:
+            if "goal_selections" not in self.analytics_data:
+                self.analytics_data["goal_selections"] = {}
+
+            key = f"{goal}_{genre}" if genre else goal
+            if key not in self.analytics_data["goal_selections"]:
+                self.analytics_data["goal_selections"][key] = {
+                    "count": 0,
+                    "profiles_used": {},
+                    "last_used": None
+                }
+
+            self.analytics_data["goal_selections"][key]["count"] += 1
+            self.analytics_data["goal_selections"][key]["last_used"] = datetime.now().isoformat()
+
+            if profile_id not in self.analytics_data["goal_selections"][key]["profiles_used"]:
+                self.analytics_data["goal_selections"][key]["profiles_used"][profile_id] = 0
+            self.analytics_data["goal_selections"][key]["profiles_used"][profile_id] += 1
+
+            self._save_analytics()
+
+        except Exception as e:
+            log_error("Failed to track goal-based selection", exception=e)
+
+    def _track_genre_collection_search(self, genre: str, result_count: int) -> None:
+        """Track genre-based collection searches for analytics."""
+        try:
+            if "genre_collection_searches" not in self.analytics_data:
+                self.analytics_data["genre_collection_searches"] = {}
+
+            if genre not in self.analytics_data["genre_collection_searches"]:
+                self.analytics_data["genre_collection_searches"][genre] = {
+                    "search_count": 0,
+                    "total_results": 0,
+                    "last_searched": None
+                }
+
+            self.analytics_data["genre_collection_searches"][genre]["search_count"] += 1
+            self.analytics_data["genre_collection_searches"][genre]["total_results"] += result_count
+            self.analytics_data["genre_collection_searches"][genre]["last_searched"] = datetime.now().isoformat()
+
+            self._save_analytics()
+
+        except Exception as e:
+            log_error("Failed to track genre collection search", exception=e)
 
     def get_analytics_summary(self) -> Dict[str, Any]:
         """

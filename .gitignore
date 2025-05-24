@@ -58,3 +58,16 @@ logs/
 # Local development files
 local_settings.py
 ignore.pdf
+
+# Test reports and data
+test_reports/
+data/*.db
+*.cache
+
+# Development scripts output
+scripts/development/*.md
+scripts/development/output/
+
+# API keys and sensitive data
+config/api_keys.json
+api_keys.txt

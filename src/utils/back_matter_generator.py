@@ -10,6 +10,7 @@ from datetime import datetime
 
 from src.utils.genre_defaults import get_genre_defaults, get_all_genres
 from src.utils.writer_profile_manager import WriterProfileManager
+from src.utils.profile_image_manager import ProfileImageManager
 
 
 class BackMatterGenerator:
@@ -34,13 +35,14 @@ class BackMatterGenerator:
         self.novel_data = novel_data
         self.writer_profile = writer_profile or {}
         self.profile_manager = profile_manager
+        self.image_manager = ProfileImageManager()
         self.metadata = novel_data.get("metadata", {})
         self.genre = self.metadata.get("genre", "Fiction")
         self.genre_defaults = get_genre_defaults(self.genre)
 
     def generate_writer_profile_section(self) -> str:
         """
-        Generate "About This Writer Profile" section.
+        Generate "About the Author" section with enhanced biographical content.
 
         Returns:
             HTML content for the writer profile section
@@ -48,8 +50,113 @@ class BackMatterGenerator:
         if not self.writer_profile:
             return self._generate_generic_profile_section()
 
-        profile_data = self.writer_profile.get("profile_data", {})
         profile_name = self.writer_profile.get("name", "Custom AI Writer Profile")
+
+        # Get profile image information
+        image_info = self.image_manager.get_writer_image_info(profile_name)
+        profile_image_html = ""
+
+        if image_info['has_image'] and image_info['base64_data']:
+            profile_image_html = f"""
+            <div class="profile-image">
+                <img src="{image_info['base64_data']}" alt="Portrait of {profile_name}"
+                     class="author-portrait" />
+                <p class="image-caption">Portrait of {profile_name}</p>
+            </div>
+            """
+
+        # Try to get the enhanced author biography
+        author_biography = self._get_enhanced_author_biography()
+
+        if author_biography:
+            # Use the enhanced biographical narrative
+            return f"""
+            <div class="writer-profile">
+                <h1>About the Author</h1>
+
+                {profile_image_html}
+
+                <h2>{profile_name}</h2>
+
+                <div class="author-biography">
+                    {self._format_biography_paragraphs(author_biography)}
+                </div>
+
+                <div class="fictional-author-notice">
+                    <p><em><strong>Important Note:</strong> {profile_name} is a fictional author persona.
+                    This profile draws inspiration from real literary techniques and styles but represents
+                    a completely original fictional identity. All books attributed to this name are
+                    AI-generated works.</em></p>
+                </div>
+            </div>
+            """
+        else:
+            # Fallback to technical profile information
+            return self._generate_technical_profile_section(profile_image_html, profile_name)
+
+    def _get_enhanced_author_biography(self) -> Optional[str]:
+        """
+        Get the enhanced author biography from the writer profile module.
+
+        Returns:
+            Enhanced biography string or None if not available
+        """
+        try:
+            # Try to get the biography from the profile module
+            if hasattr(self.writer_profile, '_module_name'):
+                module_name = f"src.writer_profiles.master_profiles.{self.writer_profile['_module_name']}"
+            else:
+                # Try to derive module name from writer name
+                profile_name = self.writer_profile.get("name", "")
+                if profile_name:
+                    # Convert name to module format (e.g., "Catherine Fairfax" -> "catherine_fairfax")
+                    module_name = profile_name.lower().replace(" ", "_").replace(".", "_")
+                    module_name = f"src.writer_profiles.master_profiles.{module_name}"
+                else:
+                    return None
+
+            # Import the module and get the biography
+            import importlib
+            module = importlib.import_module(module_name)
+
+            if hasattr(module, 'get_author_biography'):
+                biography = module.get_author_biography()
+                if biography and len(biography.strip()) > 50:
+                    return biography.strip()
+
+            return None
+
+        except Exception as e:
+            # If we can't get the enhanced biography, return None to use fallback
+            return None
+
+    def _format_biography_paragraphs(self, biography: str) -> str:
+        """
+        Format the biography text into proper HTML paragraphs.
+
+        Args:
+            biography: Raw biography text
+
+        Returns:
+            HTML formatted biography
+        """
+        # Split into paragraphs and wrap in <p> tags
+        paragraphs = [p.strip() for p in biography.split('\n\n') if p.strip()]
+        formatted_paragraphs = [f"<p>{paragraph}</p>" for paragraph in paragraphs]
+        return '\n'.join(formatted_paragraphs)
+
+    def _generate_technical_profile_section(self, profile_image_html: str, profile_name: str) -> str:
+        """
+        Generate fallback technical profile section when enhanced biography is not available.
+
+        Args:
+            profile_image_html: HTML for profile image
+            profile_name: Name of the profile
+
+        Returns:
+            HTML content for technical profile section
+        """
+        profile_data = self.writer_profile.get("profile_data", {})
 
         # Extract profile information
         writing_style = profile_data.get("writing_style", "Engaging and descriptive")
@@ -57,23 +164,6 @@ class BackMatterGenerator:
         themes = profile_data.get("thematic_focuses", "Human experience and storytelling")
         techniques = profile_data.get("narrative_techniques", "Character-driven narratives")
         strengths = profile_data.get("strengths", "Creating compelling stories")
-
-        # Get books generated with this profile
-        books_info = ""
-        if self.profile_manager and "id" in self.writer_profile:
-            profile_books = self.profile_manager.get_profile_books(self.writer_profile["id"])
-            if len(profile_books) > 1:  # More than just this book
-                other_books = [book for book in profile_books
-                             if book.get("title") != self.metadata.get("title")]
-                if other_books:
-                    book_list = ", ".join([f'"{book["title"]}"' for book in other_books[:5]])
-                    if len(other_books) > 5:
-                        book_list += f" and {len(other_books) - 5} others"
-
-                    books_info = f"""
-                    <h2>Other Works by This Profile</h2>
-                    <p>This AI writer profile has also generated: {book_list}.</p>
-                    """
 
         # Get additional profile metadata
         cultural_background = self.writer_profile.get("cultural_background", "")
@@ -98,7 +188,11 @@ class BackMatterGenerator:
 
         return f"""
         <div class="writer-profile">
-            <h1>About This Fictional Writer Profile</h1>
+            <h1>About the Author</h1>
+
+            {profile_image_html}
+
+            <h2>{profile_name}</h2>
 
             <p>This book was generated using the <strong>"{profile_name}"</strong> fictional author profile,
             a specialized AI persona inspired by literary masters but representing an entirely original
@@ -112,26 +206,11 @@ class BackMatterGenerator:
             </div>
 
             <h2>Profile Characteristics</h2>
-            <p><strong>Writing Style:</strong> {writing_style}</p>
-            <p><strong>Literary Influences:</strong> {influences}</p>
-            <p><strong>Thematic Focus:</strong> {themes}</p>
-            <p><strong>Narrative Techniques:</strong> {techniques}</p>
-            <p><strong>Key Strengths:</strong> {strengths}</p>
+            <p><strong>Writing Style:</strong> {writing_style[:200]}...</p>
+            <p><strong>Literary Influences:</strong> {', '.join(influences[:3]) if isinstance(influences, list) else str(influences)[:200]}...</p>
+            <p><strong>Thematic Focus:</strong> {', '.join(themes[:3]) if isinstance(themes, list) else str(themes)[:200]}...</p>
             {cultural_context}
             {style_tags}
-
-            {books_info}
-
-            <h2>About Fictional AI Writer Profiles</h2>
-            <p>Fictional AI writer profiles are persistent creative personas that maintain consistent
-            voice, style, and thematic approaches across multiple AI-generated works. Each profile
-            represents a unique fictional author identity inspired by real literary masters, allowing
-            for the development of recognizable authorial characteristics while ensuring that
-            AI-generated content is properly attributed to fictional rather than real authors.</p>
-
-            <p>These profiles enable the creation of sophisticated literature while maintaining
-            transparency about the AI-generated nature of the content and respecting the legacy
-            of real literary figures.</p>
         </div>
         """
 
@@ -372,6 +451,8 @@ class BackMatterGenerator:
         </div>
         """
 
+
+
     def get_all_back_matter(self) -> Dict[str, str]:
         """
         Generate all back matter sections.
@@ -379,14 +460,22 @@ class BackMatterGenerator:
         Returns:
             Dictionary with section names as keys and HTML content as values
         """
-        sections = {
-            # Only include technical details - remove writer profile and genre recommendations
-            "technical_details": self.generate_technical_details()
-        }
+        sections = {}
+
+        # Add writer profile section with image
+        writer_profile = self.generate_writer_profile_section()
+        if writer_profile:
+            sections["writer_profile"] = writer_profile
 
         # Add series information if applicable
         series_info = self.generate_series_information()
         if series_info:
             sections["series_information"] = series_info
+
+        # Add genre recommendations
+        sections["genre_recommendations"] = self.generate_genre_recommendations()
+
+        # Add technical details
+        sections["technical_details"] = self.generate_technical_details()
 
         return sections

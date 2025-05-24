@@ -1,0 +1,121 @@
+{
+  "collection_name": "Non-Fiction Experts",
+  "description": "Specialists in various non-fiction genres with expertise and authority",
+  "category": "Genre-Specific",
+  "target_audience": "Non-fiction authors seeking expertise and credibility",
+  "use_cases": [
+    "Authors working in genre-specific contexts",
+    "Writers seeking non-fiction experts approach",
+    "Publishers looking for specialized expertise",
+    "Readers interested in authentic genre representation"
+  ],
+  "created_date": "2024-05-24",
+  "last_updated": "2024-05-24",
+  "selection_criteria": [
+    "Proven expertise in target areas",
+    "Authentic voice and perspective",
+    "Strong track record in genre/category",
+    "Distinctive approach and style",
+    "Reader engagement and satisfaction"
+  ],
+  "profiles": [
+    {
+      "profile_id": "dr_malcolm_sterling",
+      "name": "Dr. Malcolm Sterling",
+      "priority": 1,
+      "genres": [
+        "Self-Help",
+        "Psychology",
+        "Personal Development"
+      ],
+      "target_demographics": [
+        "Self-Help readers",
+        "Psychology readers",
+        "Personal Development readers"
+      ],
+      "recommended_for": [
+        "Self-Help writing",
+        "Psychology writing",
+        "Personal Development writing"
+      ],
+      "expertise": "Psychological insight and practical guidance"
+    },
+    {
+      "profile_id": "dr_samuel_voss",
+      "name": "Dr. Samuel Voss",
+      "priority": 2,
+      "genres": [
+        "Popular Science",
+        "Scientific Writing",
+        "Research Communication"
+      ],
+      "target_demographics": [
+        "Popular Science readers",
+        "Scientific Writing readers",
+        "Research Communication readers"
+      ],
+      "recommended_for": [
+        "Popular Science writing",
+        "Scientific Writing writing",
+        "Research Communication writing"
+      ],
+      "expertise": "Scientific communication and research translation"
+    },
+    {
+      "profile_id": "rajesh_malhotra",
+      "name": "Rajesh Malhotra",
+      "priority": 3,
+      "genres": [
+        "Business",
+        "Entrepreneurship",
+        "Professional Development"
+      ],
+      "target_demographics": [
+        "Business readers",
+        "Entrepreneurship readers",
+        "Professional Development readers"
+      ],
+      "recommended_for": [
+        "Business writing",
+        "Entrepreneurship writing",
+        "Professional Development writing"
+      ],
+      "expertise": "Business strategy and entrepreneurial insight"
+    },
+    {
+      "profile_id": "dr_patricia_blackwell",
+      "name": "Dr. Patricia Blackwell",
+      "priority": 4,
+      "genres": [
+        "History",
+        "Biography",
+        "Historical Research"
+      ],
+      "target_demographics": [
+        "History readers",
+        "Biography readers",
+        "Historical Research readers"
+      ],
+      "recommended_for": [
+        "History writing",
+        "Biography writing",
+        "Historical Research writing"
+      ],
+      "expertise": "Historical research and biographical narrative"
+    }
+  ],
+  "usage_guidelines": {
+    "best_for": [
+      "Authors seeking non-fiction experts",
+      "Projects requiring genre-specific expertise",
+      "Specialized genre development",
+      "Authentic voice development"
+    ],
+    "considerations": [
+      "Match profile expertise to project needs",
+      "Consider target audience alignment",
+      "Evaluate genre compatibility",
+      "Balance specialization with accessibility"
+    ]
+  }
+}

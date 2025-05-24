@@ -34,7 +34,7 @@
       "profiles_selected": {}
     },
     "Romance": {
-      "recommendation_requests": 16,
+      "recommendation_requests": 21,
       "profiles_selected": {}
     },
     "Fantasy": {
@@ -176,6 +176,10 @@
     "Contemporary Romance": {
       "recommendation_requests": 9,
       "profiles_selected": {}
+    },
+    "test": {
+      "recommendation_requests": 8,
+      "profiles_selected": {}
     }
   },
   "creation_stats": {
@@ -188,5 +192,44 @@
     "genre_popularity": {},
     "user_satisfaction": {}
   },
-  "last_updated": "2025-05-24T15:51:33.737023"
+  "last_updated": "2025-05-25T00:09:21.935614",
+  "style_selections": {
+    "Romance_Master": {
+      "count": 2,
+      "profiles_used": {
+        "priya_sharma": 2
+      },
+      "last_used": "2025-05-25T00:09:21.930243"
+    },
+    "Science Fiction_Innovator": {
+      "count": 1,
+      "profiles_used": {
+        "dr_sophia_chronos": 1
+      },
+      "last_used": "2025-05-25T00:05:43.995888"
+    }
+  },
+  "collection_access": {
+    "commercial_success": {
+      "access_count": 1,
+      "profiles_accessed": 6,
+      "last_accessed": "2025-05-25T00:06:03.970061"
+    }
+  },
+  "goal_selections": {
+    "commercial_success_Romance": {
+      "count": 1,
+      "profiles_used": {
+        "priya_sharma": 1
+      },
+      "last_used": "2025-05-25T00:06:03.971989"
+    }
+  },
+  "genre_collection_searches": {
+    "Romance": {
+      "search_count": 1,
+      "total_results": 1,
+      "last_searched": "2025-05-25T00:06:03.974112"
+    }
+  }
 }

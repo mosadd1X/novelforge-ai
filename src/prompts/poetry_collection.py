@@ -7,7 +7,7 @@ from .base_prompts import SpecialFormatBasePrompts
 class PoetryCollectionPrompts(SpecialFormatBasePrompts):
     GENRE_NAME = "Poetry Collection"
     GENRE_DESCRIPTION = "A poetry collection is a curated compilation of poems, often unified by a central theme, style, or emotional arc. It's a deliberate arrangement of individual pieces to create a larger, resonant artistic statement. The poems within can explore diverse subjects, forms, and perspectives, but they are ultimately bound together by the poet's unique voice and vision."
-    
+
     GENRE_CHARACTERISTICS = [
         "Strong thematic coherence: The poems are often linked by a central theme, concept, or emotional thread, creating a unified reading experience.",
         "Distinct poetic voice: The collection showcases the poet's unique style, perspective, and use of language.",
@@ -20,7 +20,7 @@ class PoetryCollectionPrompts(SpecialFormatBasePrompts):
         "Narrative elements: Some poems may tell stories or present characters, adding a narrative dimension to the collection.",
         "Careful arrangement: The order of the poems is carefully considered to create a specific flow and build towards a cohesive whole."
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "A title that reflects the collection's theme or central idea.",
         "A table of contents listing the poems in the collection.",
@@ -39,7 +39,7 @@ class PoetryCollectionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         poetry_collection_additions = '''
 ## Poetry Collection-Specific Writing Considerations
 - **Voice and Style**: Develop a distinct poetic voice that is consistent throughout the collection. Experiment with different styles, such as confessional, lyrical, or narrative, to find the one that best suits your subject matter and perspective.
@@ -56,7 +56,7 @@ class PoetryCollectionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         poetry_collection_additions = '''
 ## Poetry Collection-Specific Outline Requirements
 - **Thematic Sections**: Organize the collection into thematic sections, each exploring a different aspect of the central theme. For example, a collection about grief might have sections on denial, anger, bargaining, depression, and acceptance.
@@ -73,7 +73,7 @@ class PoetryCollectionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_character_prompt(**kwargs)
-        
+
         poetry_collection_additions = '''
 ## Poetry Collection-Specific Character Development
 - **Character as Persona**: In poetry, characters often function as personae, representing aspects of the poet's own experiences or emotions. Consider how your characters can embody different facets of the human condition.
@@ -90,7 +90,7 @@ class PoetryCollectionPrompts(SpecialFormatBasePrompts):
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         poetry_collection_additions = '''
 ## Poetry Collection-Specific Chapter Writing
 - **Focus on a Single Theme**: Each poem should focus on a single theme or idea. Avoid trying to cram too much into one poem.
@@ -101,6 +101,22 @@ class PoetryCollectionPrompts(SpecialFormatBasePrompts):
 - **Create a Sense of Closure**: Each poem should have a sense of closure, even if it's just a subtle shift in tone or perspective.
 - **Vary Length and Style**: Within a section, vary the length and style of the poems to maintain reader interest.
 - **Consider White Space**: Use white space effectively to create pauses and emphasize certain words or phrases.
+
+## CRITICAL POETRY REQUIREMENTS
+**IMPORTANT**: This section must contain ACTUAL POEMS, not narrative prose or story content. Generate:
+- Multiple individual poems (3-8 poems per section)
+- Proper poetic structure with line breaks and stanzas
+- Various poetic forms (free verse, sonnets, haikus, etc.)
+- Poetic language with metaphors, imagery, and literary devices
+- NO character development, plot progression, or narrative storytelling
+- Focus on emotional expression, imagery, and poetic craft
+
+**FORMAT REQUIREMENTS**:
+- Each poem should have a title
+- Use proper line breaks for poetic effect
+- Include stanza breaks (empty lines between stanzas)
+- Vary poem lengths and styles within the section
+- End each poem with clear separation (*** or similar)
 '''
         return base_prompt + poetry_collection_additions
 
@@ -159,6 +175,34 @@ Ensure this volume demonstrates poetrycollection mastery while serving as an int
 """
 
         return base_prompt + poetrycollection_book_additions
+
+    @classmethod
+    def get_enhancement_prompt(cls, **kwargs) -> str:
+        """Generate a poetry collection-specific enhancement prompt."""
+        base_prompt = super().get_enhancement_prompt(**kwargs)
+
+        poetry_enhancement_additions = '''
+
+## CRITICAL POETRY COLLECTION ENHANCEMENT REQUIREMENTS
+**ABSOLUTELY ESSENTIAL**: This is a POETRY COLLECTION enhancement. You must:
+- PRESERVE the poetic structure and format of the original content
+- ENHANCE the poetic quality, imagery, and literary devices
+- MAINTAIN proper line breaks, stanza breaks, and poetic formatting
+- IMPROVE word choice, rhythm, and sound devices
+- STRENGTHEN metaphors, imagery, and emotional impact
+- DO NOT convert poems into narrative prose or story content
+- DO NOT add character development or plot elements
+- KEEP the focus on poetic expression and artistic merit
+
+**ENHANCEMENT FOCUS**:
+- Refine poetic language and word choice
+- Strengthen imagery and sensory details
+- Improve rhythm and sound patterns
+- Enhance metaphors and literary devices
+- Perfect line breaks and stanza structure
+- Maintain the authentic poetic voice
+'''
+        return base_prompt + poetry_enhancement_additions
 
 def get_writer_profile_prompt(**kwargs) -> str:
     return PoetryCollectionPrompts.get_writer_profile_prompt(**kwargs)

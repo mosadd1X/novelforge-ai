@@ -57,6 +57,15 @@ def get_genre_defaults(genre: str) -> Dict[str, Any]:
     Returns:
         Dictionary containing default options
     """
+    # Check if test mode is active and apply optimizations
+    try:
+        from src.utils.test_mode_manager import is_test_mode, get_test_mode_level, apply_test_mode_optimizations
+        if is_test_mode():
+            return _get_test_optimized_defaults(genre)
+    except ImportError:
+        # Test mode manager not available, continue with normal defaults
+        pass
+
     # Default options if genre not found
     default_options = {
         "target_length": "medium",
@@ -504,6 +513,98 @@ def get_genre_defaults(genre: str) -> Dict[str, Any]:
         pass
 
     return default_options
+
+
+def _get_test_optimized_defaults(genre: str) -> Dict[str, Any]:
+    """
+    Get test-optimized defaults for fast testing.
+
+    Args:
+        genre: The genre of the novel
+
+    Returns:
+        Dictionary containing test-optimized options
+    """
+    from src.utils.test_mode_manager import get_test_mode_level, TestModeManager
+
+    level = get_test_mode_level()
+
+    # Base test optimizations by level
+    test_base = {
+        "minimal": {
+            "chapter_count": 2,
+            "target_word_count": 2000,
+            "chapter_length": 1000,
+            "min_chapter_length": 800,
+            "writing_style": "Simple and direct",
+            "themes": ["Testing", "Speed"],
+            "temperature": 0.5
+        },
+        "standard": {
+            "chapter_count": 4,
+            "target_word_count": 6000,
+            "chapter_length": 1500,
+            "min_chapter_length": 1200,
+            "writing_style": "Descriptive and detailed",
+            "themes": ["Identity", "Relationships"],
+            "temperature": 0.7
+        },
+        "comprehensive": {
+            "chapter_count": 6,
+            "target_word_count": 9000,
+            "chapter_length": 1500,
+            "min_chapter_length": 1200,
+            "writing_style": "Descriptive and detailed",
+            "themes": ["Identity", "Relationships", "Growth"],
+            "temperature": 0.7
+        }
+    }
+
+    base_config = test_base.get(level, test_base["standard"])
+
+    # Genre-specific test optimizations
+    genre_optimizations = {
+        "test": {
+            "target_length": "short",
+            "pov": "Third person limited",
+            **base_config
+        },
+        "literary fiction": {
+            "target_length": "short",
+            "pov": "Third person limited",
+            **base_config
+        },
+        "contemporary romance": {
+            "target_length": "short",
+            "pov": "Alternating POVs",
+            "themes": ["Love", "Growth", "Communication"],
+            **base_config
+        },
+        "fantasy": {
+            "target_length": "short",
+            "pov": "Third person limited",
+            "themes": ["Adventure", "Magic", "Growth"],
+            **base_config
+        },
+        "science fiction": {
+            "target_length": "short",
+            "pov": "Third person limited",
+            "themes": ["Technology", "Future", "Ethics"],
+            **base_config
+        }
+    }
+
+    # Get genre-specific optimization or use base
+    genre_key = genre.lower()
+    if genre_key in genre_optimizations:
+        return genre_optimizations[genre_key]
+
+    # Default test optimization for unknown genres
+    return {
+        "target_length": "short",
+        "pov": "Third person limited",
+        **base_config
+    }
 
 
 def extract_from_guidelines(genre: str) -> Optional[Dict[str, Any]]:

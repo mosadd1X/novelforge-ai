@@ -153,3 +153,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Luna Brightwater grew up in a world steeped in stories, a sleepy Cotswolds village where ancient folklore whispered on the wind. Surrounded by rolling hills and the comforting scent of old books, she spent her childhood lost in fantastical worlds, dreaming of daring adventures far beyond her village borders. It was this early enchantment, coupled with her later experiences as a primary school teacher, witnessing the boundless imaginations of her students, that ignited her passion to create her own whimsical tales. Drawing inspiration from literary giants like Roald Dahl, Neil Gaiman, and Eva Ibbotson, Luna crafts stories that blend the everyday with the extraordinary, inviting young readers to find magic hidden in the mundane.
+
+With a distinctly British wit and a keen eye for detail, Luna\'s writing is known for its quirky characters, clever plots, and subtle moral lessons. Her prose, reminiscent of Dahl but with a softer, more contemporary edge, employs a playful tone and vivid imagery to create an intimate connection with her audience. She deftly balances humor and heart, exploring themes of resilience, friendship, and the power of imagination with a light touch, always offering a beacon of hope. Luna\'s debut chapter book, \"The Clockwork Sparrow and the Lost Library,\" earned her a nomination for the prestigious Children\'s Literary Award, solidifying her place as a rising voice in middle grade fiction. She continues to inspire young readers to embrace their individuality, question authority, and, above all, to believe in the power of their own imaginations."""

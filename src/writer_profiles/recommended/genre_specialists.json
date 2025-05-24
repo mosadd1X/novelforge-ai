@@ -1,0 +1,142 @@
+{
+  "collection_name": "Genre Specialists",
+  "description": "Master authors who excel in specific genres with deep expertise and authentic voice",
+  "category": "Genre-Specific",
+  "target_audience": "Authors seeking genre mastery and authentic voice",
+  "use_cases": [
+    "Authors working in genre-specific contexts",
+    "Writers seeking genre specialists approach",
+    "Publishers looking for specialized expertise",
+    "Readers interested in authentic genre representation"
+  ],
+  "created_date": "2024-05-24",
+  "last_updated": "2024-05-24",
+  "selection_criteria": [
+    "Proven expertise in target areas",
+    "Authentic voice and perspective",
+    "Strong track record in genre/category",
+    "Distinctive approach and style",
+    "Reader engagement and satisfaction"
+  ],
+  "profiles": [
+    {
+      "profile_id": "professor_aldrich_quantum",
+      "name": "Professor Aldrich Quantum",
+      "priority": 1,
+      "genres": [
+        "Fantasy",
+        "Epic Fantasy",
+        "Middle Grade"
+      ],
+      "target_demographics": [
+        "Fantasy readers",
+        "Epic Fantasy readers",
+        "Middle Grade readers"
+      ],
+      "recommended_for": [
+        "Fantasy writing",
+        "Epic Fantasy writing",
+        "Middle Grade writing"
+      ],
+      "specialization": "Fantasy world-building and mythological storytelling"
+    },
+    {
+      "profile_id": "dr_sophia_chronos",
+      "name": "Dr. Sophia Chronos",
+      "priority": 2,
+      "genres": [
+        "Science Fiction",
+        "Speculative Fiction",
+        "Dystopian"
+      ],
+      "target_demographics": [
+        "Science Fiction readers",
+        "Speculative Fiction readers",
+        "Dystopian readers"
+      ],
+      "recommended_for": [
+        "Science Fiction writing",
+        "Speculative Fiction writing",
+        "Dystopian writing"
+      ],
+      "specialization": "Hard science fiction and temporal narratives"
+    },
+    {
+      "profile_id": "sebastian_darkmore",
+      "name": "Sebastian Darkmore",
+      "priority": 3,
+      "genres": [
+        "Horror",
+        "Gothic Fiction",
+        "Dark Fantasy"
+      ],
+      "target_demographics": [
+        "Horror readers",
+        "Gothic Fiction readers",
+        "Dark Fantasy readers"
+      ],
+      "recommended_for": [
+        "Horror writing",
+        "Gothic Fiction writing",
+        "Dark Fantasy writing"
+      ],
+      "specialization": "Psychological horror and atmospheric storytelling"
+    },
+    {
+      "profile_id": "raven_nightshade",
+      "name": "Raven Nightshade",
+      "priority": 4,
+      "genres": [
+        "Paranormal Romance",
+        "Urban Fantasy",
+        "Dark Romance"
+      ],
+      "target_demographics": [
+        "Paranormal Romance readers",
+        "Urban Fantasy readers",
+        "Dark Romance readers"
+      ],
+      "recommended_for": [
+        "Paranormal Romance writing",
+        "Urban Fantasy writing",
+        "Dark Romance writing"
+      ],
+      "specialization": "Supernatural romance and dark fantasy elements"
+    },
+    {
+      "profile_id": "zara_blackthorn",
+      "name": "Zara Blackthorn",
+      "priority": 5,
+      "genres": [
+        "Urban Fantasy",
+        "Contemporary Fantasy",
+        "Supernatural Fiction"
+      ],
+      "target_demographics": [
+        "Urban Fantasy readers",
+        "Contemporary Fantasy readers",
+        "Supernatural Fiction readers"
+      ],
+      "recommended_for": [
+        "Urban Fantasy writing",
+        "Contemporary Fantasy writing",
+        "Supernatural Fiction writing"
+      ],
+      "specialization": "Modern fantasy and supernatural urban settings"
+    }
+  ],
+  "usage_guidelines": {
+    "best_for": [
+      "Authors seeking genre specialists",
+      "Projects requiring genre-specific expertise",
+      "Specialized genre development",
+      "Authentic voice development"
+    ],
+    "considerations": [
+      "Match profile expertise to project needs",
+      "Consider target audience alignment",
+      "Evaluate genre compatibility",
+      "Balance specialization with accessibility"
+    ]
+  }
+}

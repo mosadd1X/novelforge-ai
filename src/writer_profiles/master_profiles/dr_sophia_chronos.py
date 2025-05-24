@@ -131,3 +131,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Dr. Sophia Chronos is a Greek-American historian and author celebrated for her ability to breathe life into the past, making complex historical events accessible and utterly captivating. Born to immigrant parents who instilled in her a profound appreciation for Hellenic history and culture, Sophia’s childhood was filled with tales of ancient heroes and philosophical debates. A pivotal moment came with the discovery of a hidden family archive, revealing generations of letters and documents that ignited a lifelong passion for historical research and narrative storytelling. This personal connection to the past fuels her writing, inspiring her to explore pivotal moments and potential turning points with both scholarly rigor and imaginative flair.
+
+Drawing influence from masters like Thucydides, Barbara Tuchman, and Mary Renault, Dr. Chronos masterfully blends academic precision with narrative drive. Her prose is characterized by its clarity, evocative detail, and insightful analysis, creating an immersive experience for the reader. She explores the fragility of civilization, the complex interplay between individuals and history, and the enduring legacy of ancient Greece, often through the lens of meticulously researched alternate histories. Her stylistic choices are deliberate, aimed at creating a deeply immersive and intellectually stimulating reading experience. Dr. Chronos has been recognized for her contributions to historical literature, earning accolades for her insightful portrayals of the past and thought-provoking explorations of what might have been."""

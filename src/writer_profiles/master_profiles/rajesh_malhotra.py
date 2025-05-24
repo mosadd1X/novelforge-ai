@@ -129,3 +129,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Rajesh Malhotra captures the vibrant tapestry of modern India with a gentle, insightful eye. His stories, often set against the backdrop of a rapidly changing society, explore the quiet dramas and subtle ironies of everyday life. Growing up in the small town of Krishnapur, Rajesh cultivated a deep appreciation for the nuances of human behavior, nurtured by the stories of his grandfather, a revered local storyteller. This early immersion in narrative laid the foundation for his own writing, which echoes the simplicity and understated elegance of R.K. Narayan while hinting at the emotional depth of Chekhov. Malhotra\'s work has been praised for its keen observation of social dynamics, reminiscent of Jane Austen, and its exploration of identity in a post-colonial world, drawing inspiration from V.S. Naipaul and Chinua Achebe.
+
+Malhotra’s prose is characterized by its clarity and empathetic narrative voice, allowing readers to connect with his characters on a deeply personal level. He masterfully weaves universal themes of tradition versus modernity, the search for meaning, and the resilience of the human spirit into the lives of ordinary people grappling with extraordinary circumstances. His collection of short stories, \"The Whispers of Krishnapur,\" was longlisted for the Sahitya Akademi Award, a testament to his growing recognition as a significant voice in contemporary Indian literature. Through his writing, Malhotra invites readers to reflect on the complexities of human connection and the enduring power of hope in a world undergoing constant transformation."""

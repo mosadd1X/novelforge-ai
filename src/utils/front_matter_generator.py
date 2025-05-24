@@ -6,7 +6,7 @@ including AI-appropriate title pages, copyright notices, and introductory conten
 that acknowledges the AI generation process while maintaining professional standards.
 """
 
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from datetime import datetime
 
 from src.utils.genre_defaults import get_genre_defaults
@@ -337,6 +337,100 @@ class FrontMatterGenerator:
         </div>
         """
 
+    def generate_table_of_contents(self, chapters: List[Dict[str, Any]] = None) -> str:
+        """
+        Generate a Table of Contents page for the front matter.
+
+        Args:
+            chapters: List of chapter data for TOC generation
+
+        Returns:
+            HTML content for the table of contents
+        """
+        # Get chapter data from novel_data if not provided
+        if chapters is None:
+            chapters = self.novel_data.get("chapters", [])
+
+        # Determine chapter terminology based on genre
+        chapter_term = "Chapter"
+        if self.genre.lower() in ["poetry collection", "poetry"]:
+            chapter_term = "Section"
+        elif self.genre.lower() in ["essay collection", "short story collection"]:
+            chapter_term = "Chapter"
+
+        # Build TOC entries
+        toc_entries = []
+
+        # Add front matter entries (excluding title page and TOC itself)
+        front_matter_items = [
+            ("Copyright", "copyright.xhtml"),
+            ("Introduction", "introduction.xhtml") if self.generate_introduction() else None,
+            ("About This Generation", "about_generation.xhtml")
+        ]
+
+        # Filter out None entries
+        front_matter_items = [item for item in front_matter_items if item is not None]
+
+        if front_matter_items:
+            toc_entries.append('<div class="toc-section">')
+            toc_entries.append('<h2>Front Matter</h2>')
+            toc_entries.append('<ul>')
+            for title, filename in front_matter_items:
+                toc_entries.append(f'<li><a href="{filename}">{title}</a></li>')
+            toc_entries.append('</ul>')
+            toc_entries.append('</div>')
+
+        # Add chapters
+        if chapters:
+            toc_entries.append('<div class="toc-section">')
+            toc_entries.append(f'<h2>{chapter_term}s</h2>')
+            toc_entries.append('<ul>')
+
+            for chapter in chapters:
+                chapter_num = chapter.get("number", 1)
+                chapter_title = chapter.get("title", f"{chapter_term} {chapter_num}")
+                filename = f"chapter_{chapter_num:02d}.xhtml"
+
+                # Clean up chapter title for display
+                display_title = chapter_title
+                if display_title.startswith(f"{chapter_term} {chapter_num}:"):
+                    display_title = display_title[len(f"{chapter_term} {chapter_num}:"):]
+                elif display_title.startswith(f"{chapter_term} {chapter_num}"):
+                    display_title = display_title[len(f"{chapter_term} {chapter_num}"):]
+                display_title = display_title.strip()
+
+                if display_title:
+                    full_title = f"{chapter_term} {chapter_num}: {display_title}"
+                else:
+                    full_title = f"{chapter_term} {chapter_num}"
+
+                toc_entries.append(f'<li><a href="{filename}">{full_title}</a></li>')
+
+            toc_entries.append('</ul>')
+            toc_entries.append('</div>')
+
+        # Add back matter entries
+        back_matter_items = [
+            ("About the Author", "writer_profile.xhtml"),
+            ("Series Information", "series_information.xhtml"),
+            ("Technical Details", "technical_details.xhtml")
+        ]
+
+        toc_entries.append('<div class="toc-section">')
+        toc_entries.append('<h2>Additional Information</h2>')
+        toc_entries.append('<ul>')
+        for title, filename in back_matter_items:
+            toc_entries.append(f'<li><a href="{filename}">{title}</a></li>')
+        toc_entries.append('</ul>')
+        toc_entries.append('</div>')
+
+        return f"""
+        <div class="table-of-contents">
+            <h1>Table of Contents</h1>
+            {''.join(toc_entries)}
+        </div>
+        """
+
     def get_all_front_matter(self) -> Dict[str, str]:
         """
         Generate all front matter sections.
@@ -347,6 +441,7 @@ class FrontMatterGenerator:
         sections = {
             "title_page": self.generate_title_page(),
             "copyright": self.generate_copyright_page(),
+            "table_of_contents": self.generate_table_of_contents(),
             "about_generation": self.generate_about_generation()
         }
 

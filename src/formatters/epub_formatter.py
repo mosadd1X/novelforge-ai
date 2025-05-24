@@ -13,6 +13,9 @@ from src.utils.file_handler import sanitize_filename
 from src.utils.front_matter_generator import FrontMatterGenerator
 from src.utils.back_matter_generator import BackMatterGenerator
 from src.utils.writer_profile_manager import WriterProfileManager
+from src.utils.genre_utils import get_genre_format_type
+from src.formatters.genre_css_styles import get_complete_css
+from src.formatters.genre_content_processor import GenreContentProcessor
 
 
 class EpubFormatter:
@@ -44,6 +47,11 @@ class EpubFormatter:
         self.chapters = []
         self.front_matter_sections = []
         self.back_matter_sections = []
+
+        # Determine genre format type for specialized formatting
+        genre = novel_data.get("metadata", {}).get("genre", "")
+        self.format_type = get_genre_format_type(genre)
+        self.content_processor = GenreContentProcessor(self.format_type)
 
         # Initialize generators
         if self.include_front_matter:
@@ -82,162 +90,13 @@ class EpubFormatter:
 
     def _create_css(self) -> epub.EpubItem:
         """
-        Create CSS for the EPUB.
+        Create genre-aware CSS for the EPUB.
 
         Returns:
             EpubItem containing CSS
         """
-        css_content = """
-        @namespace epub "http://www.idpf.org/2007/ops";
-
-        body {
-            font-family: Cambria, Liberation Serif, Bitstream Vera Serif, Georgia, Times, Times New Roman, serif;
-            margin: 0 5%;
-            text-align: justify;
-            line-height: 1.5;
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            text-align: center;
-            line-height: 1.3;
-            font-weight: bold;
-            margin: 1em 0;
-        }
-
-        h1 {
-            font-size: 2em;
-            margin: 2em 0 1em;
-        }
-
-        h2 {
-            font-size: 1.5em;
-            margin: 1.5em 0 0.8em;
-        }
-
-        p {
-            margin: 0.5em 0;
-            text-indent: 1.5em;
-        }
-
-        .chapter-title {
-            margin: 3em 0 2em;
-            text-align: center;
-            font-size: 2em;
-            font-weight: bold;
-        }
-
-        .no-indent {
-            text-indent: 0;
-        }
-
-        .centered {
-            text-align: center;
-            text-indent: 0;
-        }
-
-        .scene-break {
-            text-align: center;
-            text-indent: 0;
-            margin: 1.5em auto;
-        }
-
-        .scene-break::before {
-            content: "* * *";
-        }
-
-        .cover {
-            text-align: center;
-            padding: 0;
-            margin: 0;
-        }
-
-        .cover img {
-            max-width: 100%;
-            max-height: 100%;
-            padding: 0;
-            margin: 0;
-        }
-
-        .series-info {
-            font-style: italic;
-            color: #666;
-            margin-top: 2em;
-            font-size: 1.1em;
-        }
-
-        /* Front Matter and Back Matter Styles */
-        .title-page {
-            text-align: center;
-            padding-top: 20%;
-        }
-
-        .title-content {
-            margin: 0 auto;
-            max-width: 80%;
-        }
-
-        .book-title {
-            font-size: 3em;
-            margin-bottom: 0.5em;
-            font-weight: bold;
-        }
-
-        .author-name {
-            font-size: 2em;
-            margin-top: 1em;
-            font-weight: normal;
-        }
-
-        .ai-attribution {
-            font-style: italic;
-            margin-top: 2em;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        .copyright-page h1,
-        .introduction h1,
-        .about-generation h1,
-        .writer-profile h1,
-        .series-information h1,
-        .genre-recommendations h1,
-        .technical-details h1 {
-            margin-bottom: 2em;
-        }
-
-        .writer-profile h2,
-        .series-information h2,
-        .genre-recommendations h2,
-        .technical-details h2,
-        .about-generation h2 {
-            text-align: left;
-            margin-top: 1.5em;
-            margin-bottom: 0.8em;
-            font-size: 1.3em;
-        }
-
-        .writer-profile ul,
-        .series-information ul,
-        .genre-recommendations ul,
-        .technical-details ul,
-        .about-generation ul,
-        .writer-profile ol,
-        .series-information ol,
-        .genre-recommendations ol,
-        .technical-details ol,
-        .about-generation ol {
-            margin-left: 2em;
-            margin-bottom: 1em;
-        }
-
-        .writer-profile li,
-        .series-information li,
-        .genre-recommendations li,
-        .technical-details li,
-        .about-generation li {
-            margin-bottom: 0.5em;
-        }
-        """
+        # Get complete CSS including genre-specific styles
+        css_content = get_complete_css(self.format_type)
 
         # Create CSS file
         css = epub.EpubItem(
@@ -440,7 +299,7 @@ class EpubFormatter:
 
     def _create_chapter(self, chapter: Dict[str, Any]) -> epub.EpubHtml:
         """
-        Create an EPUB chapter.
+        Create an EPUB chapter with genre-aware formatting.
 
         Args:
             chapter: Dictionary containing chapter data
@@ -452,27 +311,36 @@ class EpubFormatter:
         chapter_title = chapter.get("title", f"Chapter {chapter_num}")
         chapter_content = chapter["content"]
 
-        # Convert markdown to HTML if needed
-        if "```" in chapter_content or "#" in chapter_content or "*" in chapter_content:
-            html_content = markdown2.markdown(chapter_content)
+        # Use genre-aware content processing
+        processed_content = self.content_processor.process_content(chapter_content, chapter)
+
+        # Create chapter HTML with appropriate wrapper
+        if self.format_type == "poetry":
+            # Poetry collections use section terminology
+            chapter_html = f"""
+            <div class="poetry-section">
+                <h1 class="section-title">{chapter_title}</h1>
+                {processed_content}
+            </div>
+            """
+            title_prefix = "Section"
+        elif self.format_type in ["essay", "short_story"]:
+            # Essays and short stories are self-contained
+            chapter_html = processed_content
+            title_prefix = "Chapter"
         else:
-            # If not markdown, wrap paragraphs in <p> tags
-            paragraphs = chapter_content.split("\n\n")
-            html_content = "".join([f"<p>{p}</p>" for p in paragraphs if p.strip()])
-
-        # Clean up HTML
-        soup = BeautifulSoup(html_content, "html.parser")
-
-        # Create chapter HTML
-        chapter_html = f"""
-        <div class="chapter">
-            {str(soup)}
-        </div>
-        """
+            # Standard chapter formatting
+            chapter_html = f"""
+            <div class="chapter">
+                <h1 class="chapter-title">{chapter_title}</h1>
+                {processed_content}
+            </div>
+            """
+            title_prefix = "Chapter"
 
         # Create chapter
         epub_chapter = epub.EpubHtml(
-            title=f"Chapter {chapter_num}",
+            title=f"{title_prefix} {chapter_num}",
             file_name=f"chapter_{chapter_num:02d}.xhtml",
             lang="en"
         )
@@ -540,6 +408,12 @@ class EpubFormatter:
             self.book.set_cover("images/cover.jpg", cover_content)
 
         # Create front matter sections (replaces old title/copyright pages)
+        # Pass chapter data to front matter generator for TOC generation
+        if self.include_front_matter:
+            self.front_matter_generator.novel_data["chapters"] = [
+                {"number": i+1, "title": chapter.title}
+                for i, chapter in enumerate(self.chapters)
+            ]
         front_matter_sections = self._create_front_matter_sections()
 
         # Create legacy title and copyright pages if front matter is disabled

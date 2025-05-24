@@ -1,0 +1,121 @@
+{
+  "collection_name": "International Voices",
+  "description": "Diverse cultural perspectives and authentic international storytelling",
+  "category": "Cultural-Diverse",
+  "target_audience": "Authors seeking cultural authenticity and diverse perspectives",
+  "use_cases": [
+    "Authors working in cultural-diverse contexts",
+    "Writers seeking international voices approach",
+    "Publishers looking for specialized expertise",
+    "Readers interested in authentic genre representation"
+  ],
+  "created_date": "2024-05-24",
+  "last_updated": "2024-05-24",
+  "selection_criteria": [
+    "Proven expertise in target areas",
+    "Authentic voice and perspective",
+    "Strong track record in genre/category",
+    "Distinctive approach and style",
+    "Reader engagement and satisfaction"
+  ],
+  "profiles": [
+    {
+      "profile_id": "priya_sharma",
+      "name": "Priya Sharma",
+      "priority": 1,
+      "genres": [
+        "Contemporary Romance",
+        "Cultural Fiction",
+        "Family Drama"
+      ],
+      "target_demographics": [
+        "Contemporary Romance readers",
+        "Cultural Fiction readers",
+        "Family Drama readers"
+      ],
+      "recommended_for": [
+        "Contemporary Romance writing",
+        "Cultural Fiction writing",
+        "Family Drama writing"
+      ],
+      "cultural_focus": "Indian culture and contemporary relationships"
+    },
+    {
+      "profile_id": "hiroshi_nakamura",
+      "name": "Hiroshi Nakamura",
+      "priority": 2,
+      "genres": [
+        "Graphic Novel",
+        "Cultural Narrative",
+        "Visual Storytelling"
+      ],
+      "target_demographics": [
+        "Graphic Novel readers",
+        "Cultural Narrative readers",
+        "Visual Storytelling readers"
+      ],
+      "recommended_for": [
+        "Graphic Novel writing",
+        "Cultural Narrative writing",
+        "Visual Storytelling writing"
+      ],
+      "cultural_focus": "Japanese culture and visual storytelling traditions"
+    },
+    {
+      "profile_id": "gabriel_montoya",
+      "name": "Gabriel Montoya",
+      "priority": 3,
+      "genres": [
+        "Travel",
+        "Cultural Exploration",
+        "Adventure"
+      ],
+      "target_demographics": [
+        "Travel readers",
+        "Cultural Exploration readers",
+        "Adventure readers"
+      ],
+      "recommended_for": [
+        "Travel writing",
+        "Cultural Exploration writing",
+        "Adventure writing"
+      ],
+      "cultural_focus": "Latin American culture and travel narratives"
+    },
+    {
+      "profile_id": "ananya_desai",
+      "name": "Ananya Desai",
+      "priority": 4,
+      "genres": [
+        "Cookbook",
+        "Cultural Food",
+        "Culinary Memoir"
+      ],
+      "target_demographics": [
+        "Cookbook readers",
+        "Cultural Food readers",
+        "Culinary Memoir readers"
+      ],
+      "recommended_for": [
+        "Cookbook writing",
+        "Cultural Food writing",
+        "Culinary Memoir writing"
+      ],
+      "cultural_focus": "Indian culinary traditions and food culture"
+    }
+  ],
+  "usage_guidelines": {
+    "best_for": [
+      "Authors seeking international voices",
+      "Projects requiring cultural-diverse expertise",
+      "Specialized genre development",
+      "Authentic voice development"
+    ],
+    "considerations": [
+      "Match profile expertise to project needs",
+      "Consider target audience alignment",
+      "Evaluate genre compatibility",
+      "Balance specialization with accessibility"
+    ]
+  }
+}

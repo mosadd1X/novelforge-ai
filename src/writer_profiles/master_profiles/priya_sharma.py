@@ -129,3 +129,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Priya Sharma is a contemporary Indian romance author whose emotionally rich stories explore the complexities of love and identity in the modern world. Growing up in a bicultural household, Priya experienced firsthand the push and pull of tradition and modernity, a theme that resonates deeply within her writing. Inspired by her grandmother\'s vivid tales of pre-partition India, she developed a profound appreciation for the power of memory and the enduring strength of family bonds. This rich cultural tapestry informs her nuanced portrayals of contemporary Indian relationships, where strong heroines and emotionally intelligent heroes navigate the challenges of societal expectations and personal desires.
+
+Priya\'s writing is characterized by its emotionally evocative prose and authentic dialogue, seamlessly blending English with Hindi expressions to capture the true essence of Indian family dynamics. Influenced by literary giants like Toni Morrison, Arundhati Roy, and Jhumpa Lahiri, she delves into themes of cultural displacement, intergenerational trauma, and the search for belonging with both sensitivity and grace. Her novels, often praised for their richly developed characters and emotionally satisfying narratives, have garnered her a devoted following and critical acclaim within the contemporary romance genre, establishing her as a fresh and vital voice in modern Indian literature."""

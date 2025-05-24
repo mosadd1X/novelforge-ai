@@ -155,3 +155,9 @@ def get_biographical_context() -> str:
 def get_tags() -> List[str]:
     """Returns a list of tags associated with the writer."""
     return WRITER_PROFILE["tags"]
+
+def get_author_biography() -> str:
+    """Returns a compelling author biography for the 'About the Author' section."""
+    return """Hiroshi Nakamura’s stories emerge from the neon-drenched labyrinth of contemporary Tokyo, a city where ancient traditions grapple with the relentless pulse of modernity. Growing up amidst this vibrant clash, and witnessing firsthand the societal shifts that both connect and isolate its inhabitants, deeply informs Nakamura’s surreal and evocative fiction. A brief stint as a jazz musician, trading smoky clubs for quiet contemplation, further shaped his sense of rhythm and improvisation, elements now woven into the very fabric of his prose. He explores the hidden currents beneath the surface of everyday life, revealing the quiet beauty and profound unease that simmer beneath the mundane.
+
+Nakamura’s writing, often compared to the works of Murakami and drawing inspiration from literary giants like Kafka, Chandler, and Borges, is characterized by its understated elegance and its ability to evoke a sense of melancholic longing. His narratives unfold through interconnected vignettes, blurring the lines between reality and dream, inviting readers to question the very nature of their perception. He delves into the complexities of human connection in a disconnected world, exploring themes of alienation, the search for meaning, and the enduring power of memory. His debut collection, \"Shinjuku Shadows,\" was longlisted for the prestigious Tanizaki Prize, solidifying his place as a distinctive voice in contemporary Japanese literature, one that resonates with a generation grappling with identity and belonging in an increasingly surreal world."""
