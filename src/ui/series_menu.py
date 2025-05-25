@@ -1500,19 +1500,21 @@ def zip_series_books_menu(series_manager: SeriesManager) -> None:
         console.print(f"\n[bold red]{message}[/bold red]")
 
 def series_management_menu() -> None:
-    """Main series management menu."""
+    """Main series management menu with improved organization."""
     while True:
         clear_screen()
         display_title()
 
-        console.print("[bold cyan]Series Management[/bold cyan]")
+        console.print("[bold cyan]📚 Series Management[/bold cyan]")
+        console.print("    Create and manage book series")
+        console.print()
 
         # Main menu options
         choices = [
-            "Create New Series",
-            "Import Series from Ideas",
-            "Work with Existing Series",
-            "Exit"
+            "✨ Create New Series",
+            "💡 Import Series from Ideas",
+            "📚 Work with Existing Series",
+            "← Back to Main Menu"
         ]
 
         selected = questionary.select(
@@ -1521,27 +1523,27 @@ def series_management_menu() -> None:
             style=custom_style
         ).ask()
 
-        if selected == "Create New Series":
+        if selected == "✨ Create New Series":
             series_manager = create_new_series()
             if series_manager:
                 series_options_menu(series_manager)
 
-        elif selected == "Import Series from Ideas":
+        elif selected == "💡 Import Series from Ideas":
             series_manager = create_series_from_idea()
             if series_manager:
                 series_options_menu(series_manager)
 
-        elif selected == "Work with Existing Series":
+        elif selected == "📚 Work with Existing Series":
             series_manager = select_existing_series()
             if series_manager:
                 series_options_menu(series_manager)
 
-        elif selected == "Exit":
+        elif selected == "← Back to Main Menu":
             break
 
 def series_options_menu(series_manager: SeriesManager) -> None:
     """
-    Menu for working with a specific series.
+    Menu for working with a specific series with reorganized categories.
 
     Args:
         series_manager: SeriesManager instance
@@ -1553,16 +1555,13 @@ def series_options_menu(series_manager: SeriesManager) -> None:
         # Display series information
         display_series_info(series_manager)
 
-        # Series options
+        # Reorganized series options by category
         choices = [
-            "Auto-Generate Entire Series",
-            "Generate Books One by One",
-            "Create Covers for Books",
-            "Manage Cover Images",
-            "Export Books to Different Formats",
-            "Zip Series Books",
-            "API Key Status",
-            "← Back to Main Menu"
+            "📖 Content Generation",
+            "🎨 Visual Elements",
+            "📤 Export & Share",
+            "🔧 Advanced Options",
+            "← Back to Series Menu"
         ]
 
         selected = questionary.select(
@@ -1571,31 +1570,159 @@ def series_options_menu(series_manager: SeriesManager) -> None:
             style=custom_style
         ).ask()
 
+        if selected == "📖 Content Generation":
+            series_content_menu(series_manager)
+        elif selected == "🎨 Visual Elements":
+            series_visual_menu(series_manager)
+        elif selected == "📤 Export & Share":
+            series_export_menu(series_manager)
+        elif selected == "🔧 Advanced Options":
+            series_advanced_menu(series_manager)
+        elif selected == "← Back to Series Menu":
+            break
+
+def series_content_menu(series_manager: SeriesManager) -> None:
+    """Content generation submenu for a series."""
+    while True:
+        clear_screen()
+        display_title()
+        display_series_info(series_manager)
+
+        console.print("[bold cyan]📖 Content Generation[/bold cyan]")
+        console.print("    Generate books and series content")
+        console.print()
+
+        choices = [
+            "Auto-Generate Entire Series",
+            "Generate Books One by One",
+            "Edit Series Metadata",
+            "← Back to Series Options"
+        ]
+
+        selected = questionary.select(
+            "What would you like to do?",
+            choices=choices,
+            style=custom_style
+        ).ask()
+
         if selected == "Auto-Generate Entire Series":
             auto_generate_series(series_manager)
             input("\nPress Enter to continue...")
-
         elif selected == "Generate Books One by One":
             generate_book_by_book(series_manager)
             input("\nPress Enter to continue...")
+        elif selected == "Edit Series Metadata":
+            console.print("[yellow]Series metadata editing will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
+        elif selected == "← Back to Series Options":
+            break
 
-        elif selected == "Create Covers for Books":
+def series_visual_menu(series_manager: SeriesManager) -> None:
+    """Visual elements submenu for a series."""
+    while True:
+        clear_screen()
+        display_title()
+        display_series_info(series_manager)
+
+        console.print("[bold cyan]🎨 Visual Elements[/bold cyan]")
+        console.print("    Manage covers and visual design for the series")
+        console.print()
+
+        choices = [
+            "🎨 Create Covers for Books",
+            "🖼️ Manage Cover Images",
+            "✨ Series Visual Consistency",
+            "← Back to Series Options"
+        ]
+
+        selected = questionary.select(
+            "What would you like to do?",
+            choices=choices,
+            style=custom_style
+        ).ask()
+
+        if selected == "🎨 Create Covers for Books":
             generate_series_covers(series_manager)
             input("\nPress Enter to continue...")
-
-        elif selected == "Manage Cover Images":
+        elif selected == "🖼️ Manage Cover Images":
             manage_series_cover_images(series_manager)
+        elif selected == "✨ Series Visual Consistency":
+            console.print("[yellow]Visual consistency tools will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
+        elif selected == "← Back to Series Options":
+            break
 
-        elif selected == "Export Books to Different Formats":
+def series_export_menu(series_manager: SeriesManager) -> None:
+    """Export and share submenu for a series."""
+    while True:
+        clear_screen()
+        display_title()
+        display_series_info(series_manager)
+
+        console.print("[bold cyan]📤 Export & Share[/bold cyan]")
+        console.print("    Export series to different formats and create archives")
+        console.print()
+
+        choices = [
+            "Export Books to Different Formats",
+            "Zip Series Books",
+            "Create Series Archive",
+            "← Back to Series Options"
+        ]
+
+        selected = questionary.select(
+            "What would you like to do?",
+            choices=choices,
+            style=custom_style
+        ).ask()
+
+        if selected == "Export Books to Different Formats":
             export_books(series_manager)
             input("\nPress Enter to continue...")
-
         elif selected == "Zip Series Books":
             zip_series_books_menu(series_manager)
             input("\nPress Enter to continue...")
+        elif selected == "Create Series Archive":
+            console.print("[yellow]Series archive creation will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
+        elif selected == "← Back to Series Options":
+            break
 
+def series_advanced_menu(series_manager: SeriesManager) -> None:
+    """Advanced options submenu for a series."""
+    while True:
+        clear_screen()
+        display_title()
+        display_series_info(series_manager)
+
+        console.print("[bold cyan]🔧 Advanced Options[/bold cyan]")
+        console.print("    Technical details and advanced features")
+        console.print()
+
+        choices = [
+            "View Series Files",
+            "Quality Control",
+            "Technical Details",
+            "API Key Status",
+            "← Back to Series Options"
+        ]
+
+        selected = questionary.select(
+            "What would you like to do?",
+            choices=choices,
+            style=custom_style
+        ).ask()
+
+        if selected == "View Series Files":
+            console.print("[yellow]Series file viewer will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
+        elif selected == "Quality Control":
+            console.print("[yellow]Quality control tools will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
+        elif selected == "Technical Details":
+            console.print("[yellow]Technical details will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
         elif selected == "API Key Status":
             check_api_key_status()
-
-        elif selected == "← Back to Main Menu":
+        elif selected == "← Back to Series Options":
             break

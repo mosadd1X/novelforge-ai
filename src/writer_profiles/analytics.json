@@ -34,7 +34,7 @@
       "profiles_selected": {}
     },
     "Romance": {
-      "recommendation_requests": 25,
+      "recommendation_requests": 26,
       "profiles_selected": {}
     },
     "Fantasy": {
@@ -178,7 +178,7 @@
       "profiles_selected": {}
     },
     "test": {
-      "recommendation_requests": 8,
+      "recommendation_requests": 28,
       "profiles_selected": {}
     }
   },
@@ -192,7 +192,7 @@
     "genre_popularity": {},
     "user_satisfaction": {}
   },
-  "last_updated": "2025-05-25T08:30:54.574434",
+  "last_updated": "2025-05-25T19:30:16.459562",
   "style_selections": {
     "Romance_Master": {
       "count": 2,

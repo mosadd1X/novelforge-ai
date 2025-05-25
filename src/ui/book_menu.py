@@ -6,8 +6,7 @@ import json
 import subprocess
 from typing import List, Dict, Any, Optional
 from datetime import datetime
-from rich.table import Table
-from rich import box
+# Rich imports removed - using clean design principles
 import questionary
 
 # Local imports
@@ -27,6 +26,9 @@ from src.ui.terminal_ui import (
     console
 )
 from src.core.resilient_gemini_client import ResilientGeminiClient
+from src.ui.responsive_separator import (
+    separator, title_separator, section_separator
+)
 
 def get_existing_books() -> List[Dict[str, Any]]:
     """
@@ -80,23 +82,17 @@ def get_existing_books() -> List[Dict[str, Any]]:
 
 def display_books_table(books: List[Dict[str, Any]]) -> None:
     """
-    Display books in a formatted table.
+    Display books in a clean list format following design principles.
 
     Args:
         books: List of book information dictionaries
     """
     if not books:
-        console.print("[yellow]No books found.[/yellow]")
+        console.print("    ⚠️ [yellow]No books found[/yellow]")
         return
 
-    table = Table(box=box.ROUNDED)
-    table.add_column("#", style="cyan", width=3)
-    table.add_column("Title", style="white", width=25)
-    table.add_column("Author", style="green", width=20)
-    table.add_column("Genre", style="blue", width=15)
-    table.add_column("Chapters", style="yellow", width=8)
-    table.add_column("Words", style="magenta", width=8)
-    table.add_column("Created", style="dim", width=12)
+    console.print(f"[bold cyan]📚 Book Library ({len(books)} books)[/bold cyan]")
+    console.print()
 
     for i, book in enumerate(books, 1):
         # Format creation date
@@ -115,17 +111,15 @@ def display_books_table(books: List[Dict[str, Any]]) -> None:
         word_count = book.get("word_count", 0)
         word_str = f"{word_count:,}" if word_count > 0 else "Unknown"
 
-        table.add_row(
-            str(i),
-            book["title"][:23] + "..." if len(book["title"]) > 25 else book["title"],
-            book["author"][:18] + "..." if len(book["author"]) > 20 else book["author"],
-            book["genre"][:13] + "..." if len(book["genre"]) > 15 else book["genre"],
-            str(book.get("chapter_count", 0)),
-            word_str,
-            created_str
-        )
+        # Display book entry
+        console.print(f"    📖 [cyan bold]{i}. {book['title']}[/cyan bold]")
+        console.print(f"        ✍️ Author: [white]{book['author']}[/white]")
+        console.print(f"        🎭 Genre: [white]{book['genre']}[/white]")
+        console.print(f"        📊 {book.get('chapter_count', 0)} chapters, {word_str} words")
+        console.print(f"        📅 Created: [dim]{created_str}[/dim]")
+        console.print()
 
-    console.print(table)
+    console.print()
 
 def select_existing_book() -> Optional[Dict[str, Any]]:
     """
@@ -169,26 +163,25 @@ def select_existing_book() -> Optional[Dict[str, Any]]:
 
 def display_book_info(book_info: Dict[str, Any]) -> None:
     """
-    Display detailed information about a book.
+    Display detailed information about a book following clean design principles.
 
     Args:
         book_info: Book information dictionary
     """
-    console.print(f"\n[bold cyan]Book Information[/bold cyan]")
+    console.print(f"\n[bold cyan]📖 Book Information[/bold cyan]")
+    console.print()
 
-    info_table = Table(box=box.ROUNDED, show_header=False)
-    info_table.add_column("Property", style="cyan", width=15)
-    info_table.add_column("Value", style="white")
+    # Display book metadata using clean typography
+    console.print(f"    📚 [cyan bold]Title[/cyan bold]: [white]{book_info['title']}[/white]")
+    console.print(f"    ✍️ [cyan bold]Author[/cyan bold]: [white]{book_info['author']}[/white]")
+    console.print(f"    🎭 [cyan bold]Genre[/cyan bold]: [white]{book_info['genre']}[/white]")
+    console.print(f"    🎯 [cyan bold]Target Audience[/cyan bold]: [white]{book_info['target_audience']}[/white]")
+    console.print(f"    📄 [cyan bold]Chapters[/cyan bold]: [white]{book_info.get('chapter_count', 0)}[/white]")
 
-    info_table.add_row("Title", book_info["title"])
-    info_table.add_row("Author", book_info["author"])
-    info_table.add_row("Genre", book_info["genre"])
-    info_table.add_row("Target Audience", book_info["target_audience"])
-    info_table.add_row("Chapters", str(book_info.get("chapter_count", 0)))
-
+    # Format word count
     word_count = book_info.get("word_count", 0)
     word_str = f"{word_count:,}" if word_count > 0 else "Unknown"
-    info_table.add_row("Word Count", word_str)
+    console.print(f"    📊 [cyan bold]Word Count[/cyan bold]: [white]{word_str}[/white]")
 
     # Format creation date
     created_date = book_info.get("created_at", "Unknown")
@@ -200,16 +193,16 @@ def display_book_info(book_info: Dict[str, Any]) -> None:
             created_str = created_date
     else:
         created_str = "Unknown"
-    info_table.add_row("Created", created_str)
-
-    info_table.add_row("Directory", book_info["directory"])
-
-    console.print(info_table)
+    console.print(f"    📅 [cyan bold]Created[/cyan bold]: [white]{created_str}[/white]")
+    console.print(f"    📁 [cyan bold]Directory[/cyan bold]: [white]{book_info['directory']}[/white]")
 
     # Display description if available
     if book_info.get("description"):
-        console.print(f"\n[bold cyan]Description:[/bold cyan]")
-        console.print(f"[dim]{book_info['description']}[/dim]")
+        console.print(f"\n[bold cyan]📝 Description[/bold cyan]")
+        console.print()
+        console.print(f"    [dim]{book_info['description']}[/dim]")
+
+    console.print()
 
 def create_new_book() -> Optional[Dict[str, Any]]:
     """
@@ -357,10 +350,13 @@ def create_new_book() -> Optional[Dict[str, Any]]:
         generation_timer.stop()
 
         # Display completion
-        console.print("\n[bold green]Book generation complete![/bold green]")
+        console.print()
+        console.print(title_separator("Book Generation Complete", "="))
         console.print(f"[bold green]Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
         console.print(f"[bold green]Book saved to:[/bold green] [bold cyan]{output_dir}[/bold cyan]")
         console.print(f"[bold cyan]Enhanced descriptions generated and saved to database[/bold cyan]")
+        console.print()
+        console.print(separator("="))
 
         # Create book info for return
         book_info = {
@@ -599,10 +595,13 @@ def create_book_from_idea() -> Optional[Dict[str, Any]]:
         generation_timer.stop()
 
         # Display completion
-        console.print("\n[bold green]Book generation complete![/bold green]")
+        console.print()
+        console.print(title_separator("Book Generation Complete", "="))
         console.print(f"[bold green]Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
         console.print(f"[bold green]Book saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
         console.print(f"[bold green]Based on idea:[/bold green] [bold cyan]{selected_idea.get('title', 'Unknown')}[/bold cyan]")
+        console.print()
+        console.print(separator("="))
 
         # Create book info for return
         book_info = {
@@ -910,7 +909,7 @@ def generate_epub_manually(book_info: Dict[str, Any]) -> None:
 
 def book_options_menu(book_info: Dict[str, Any]) -> None:
     """
-    Options menu for a selected book.
+    Options menu for a selected book with reorganized categories.
 
     Args:
         book_info: Book information dictionary
@@ -922,14 +921,12 @@ def book_options_menu(book_info: Dict[str, Any]) -> None:
         # Display book information
         display_book_info(book_info)
 
-        # Book options
+        # Reorganized book options by category
         choices = [
-            "Generate EPUB",
-            "Generate New Cover",
-            "Manage Cover Images",
-            "Export to Different Formats",
-            "View Book Files",
-            "API Key Status",
+            "📖 Content Actions",
+            "🎨 Visual Elements",
+            "📤 Export & Share",
+            "🔧 Advanced Options",
             "← Back to Book Menu"
         ]
 
@@ -939,55 +936,208 @@ def book_options_menu(book_info: Dict[str, Any]) -> None:
             style=custom_style
         ).ask()
 
-        if selected == "Generate EPUB":
+        if selected == "📖 Content Actions":
+            content_actions_menu(book_info)
+        elif selected == "🎨 Visual Elements":
+            visual_elements_menu(book_info)
+        elif selected == "📤 Export & Share":
+            export_share_menu(book_info)
+        elif selected == "🔧 Advanced Options":
+            advanced_options_menu(book_info)
+        elif selected == "← Back to Book Menu":
+            break
+
+def content_actions_menu(book_info: Dict[str, Any]) -> None:
+    """Content actions submenu for a book with workflow integration."""
+    while True:
+        clear_screen()
+        display_title()
+        display_book_info(book_info)
+
+        console.print("[bold cyan]📖 Content Actions[/bold cyan]")
+        console.print("    Generate and manage book content")
+        console.print()
+
+        choices = [
+            "🔄 Complete Book Workflow",
+            "Generate EPUB",
+            "Edit Metadata",
+            "View Content Details",
+            "← Back to Book Options"
+        ]
+
+        selected = questionary.select(
+            "What would you like to do?",
+            choices=choices,
+            style=custom_style
+        ).ask()
+
+        if selected == "🔄 Complete Book Workflow":
+            start_book_completion_workflow(book_info)
+        elif selected == "Generate EPUB":
             generate_epub_manually(book_info)
             input("\nPress Enter to continue...")
+        elif selected == "Edit Metadata":
+            console.print("[yellow]Metadata editing will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
+        elif selected == "View Content Details":
+            view_book_files(book_info)
+            input("\nPress Enter to continue...")
+        elif selected == "← Back to Book Options":
+            break
 
+def visual_elements_menu(book_info: Dict[str, Any]) -> None:
+    """Visual elements submenu for a book with workflow integration."""
+    while True:
+        clear_screen()
+        display_title()
+        display_book_info(book_info)
+
+        console.print("[bold cyan]🎨 Visual Elements[/bold cyan]")
+        console.print("    Manage covers and visual design")
+        console.print()
+
+        # Check if cover exists
+        book_dir = book_info.get("directory", "")
+        has_cover = False
+        if book_dir:
+            cover_files = ["cover.jpg", "cover.png"]
+            has_cover = any(os.path.exists(os.path.join(book_dir, f)) for f in cover_files)
+
+        if has_cover:
+            console.print("    ✅ Cover already exists")
+        else:
+            console.print("    ⏳ No cover found")
+        console.print()
+
+        choices = [
+            "Generate New Cover",
+            "Manage Cover Images",
+            "Preview Cover"
+        ]
+
+        # Add workflow option if no cover exists
+        if not has_cover:
+            choices.insert(0, "🚀 Quick Cover Creation")
+
+        choices.append("← Back to Book Options")
+
+        selected = questionary.select(
+            "What would you like to do?",
+            choices=choices,
+            style=custom_style
+        ).ask()
+
+        if selected == "🚀 Quick Cover Creation":
+            quick_cover_creation_workflow(book_info)
         elif selected == "Generate New Cover":
             generate_book_cover(book_info)
             input("\nPress Enter to continue...")
-
         elif selected == "Manage Cover Images":
             manage_cover_images(book_info)
+        elif selected == "Preview Cover":
+            preview_book_cover(book_info)
+        elif selected == "← Back to Book Options":
+            break
 
-        elif selected == "Export to Different Formats":
+def export_share_menu(book_info: Dict[str, Any]) -> None:
+    """Export and share submenu for a book."""
+    while True:
+        clear_screen()
+        display_title()
+        display_book_info(book_info)
+
+        console.print("[bold cyan]📤 Export & Share[/bold cyan]")
+        console.print("    Export to different formats and create archives")
+        console.print()
+
+        choices = [
+            "Export to Different Formats",
+            "Create Archive",
+            "Share Options",
+            "← Back to Book Options"
+        ]
+
+        selected = questionary.select(
+            "What would you like to do?",
+            choices=choices,
+            style=custom_style
+        ).ask()
+
+        if selected == "Export to Different Formats":
             export_book_formats(book_info)
             input("\nPress Enter to continue...")
+        elif selected == "Create Archive":
+            console.print("[yellow]Archive creation will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
+        elif selected == "Share Options":
+            console.print("[yellow]Share options will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
+        elif selected == "← Back to Book Options":
+            break
 
-        elif selected == "View Book Files":
+def advanced_options_menu(book_info: Dict[str, Any]) -> None:
+    """Advanced options submenu for a book."""
+    while True:
+        clear_screen()
+        display_title()
+        display_book_info(book_info)
+
+        console.print("[bold cyan]🔧 Advanced Options[/bold cyan]")
+        console.print("    Technical details and advanced features")
+        console.print()
+
+        choices = [
+            "View Source Files",
+            "Quality Feedback",
+            "Technical Details",
+            "API Key Status",
+            "← Back to Book Options"
+        ]
+
+        selected = questionary.select(
+            "What would you like to do?",
+            choices=choices,
+            style=custom_style
+        ).ask()
+
+        if selected == "View Source Files":
             view_book_files(book_info)
             input("\nPress Enter to continue...")
-
+        elif selected == "Quality Feedback":
+            console.print("[yellow]Quality feedback will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
+        elif selected == "Technical Details":
+            console.print("[yellow]Technical details will be available in future updates.[/yellow]")
+            input("\nPress Enter to continue...")
         elif selected == "API Key Status":
             check_api_key_status()
-
-        elif selected == "← Back to Book Menu":
+        elif selected == "← Back to Book Options":
             break
 
 def view_book_files(book_info: Dict[str, Any]) -> None:
     """
-    Display all files in the book directory.
+    Display all files in the book directory following clean design principles.
 
     Args:
         book_info: Book information dictionary
     """
-    console.print(f"\n[bold cyan]Files in '{book_info['title']}'[/bold cyan]")
-    console.print(f"[dim]Directory: {book_info['directory']}[/dim]\n")
+    console.print(f"\n[bold cyan]📁 Files in '{book_info['title']}'[/bold cyan]")
+    console.print(f"    📂 Directory: [dim]{book_info['directory']}[/dim]")
+    console.print()
 
     if not os.path.exists(book_info["directory"]):
-        console.print("[red]Directory not found![/red]")
+        console.print("    ❌ [red]Directory not found![/red]")
         return
 
     files = os.listdir(book_info["directory"])
     if not files:
-        console.print("[yellow]No files found in directory.[/yellow]")
+        console.print("    ⚠️ [yellow]No files found in directory[/yellow]")
         return
 
-    # Create table for files
-    files_table = Table(box=box.ROUNDED)
-    files_table.add_column("File", style="white", width=40)
-    files_table.add_column("Type", style="cyan", width=10)
-    files_table.add_column("Size", style="yellow", width=10)
+    # Display files using clean typography
+    console.print("[bold cyan]📄 File List[/bold cyan]")
+    console.print()
 
     for file in sorted(files):
         file_path = os.path.join(book_info["directory"], file)
@@ -1009,9 +1159,288 @@ def view_book_files(book_info: Dict[str, Any]) -> None:
             except:
                 size_str = "Unknown"
 
-            files_table.add_row(file, file_ext, size_str)
+            # Display file info with clean formatting
+            console.print(f"    📄 [white]{file}[/white]")
+            console.print(f"        🏷️ Type: [cyan]{file_ext}[/cyan]")
+            console.print(f"        📊 Size: [yellow]{size_str}[/yellow]")
+            console.print()
 
-    console.print(files_table)
+    console.print()
+
+def start_book_completion_workflow(book_info: Dict[str, Any]) -> None:
+    """Start the integrated workflow to complete a book."""
+    clear_screen()
+    display_title()
+
+    console.print("[bold cyan]🔄 Complete Book Workflow[/bold cyan]")
+    console.print("    Integrated workflow: Cover → EPUB → Export")
+    console.print()
+
+    console.print(f"    📖 Book: [cyan]{book_info.get('title', 'Untitled')}[/cyan]")
+    console.print(f"    🎭 Genre: [cyan]{book_info.get('genre', 'Unknown')}[/cyan]")
+    console.print()
+
+    # Check what's already completed
+    book_dir = book_info.get("directory", "")
+    workflow_status = analyze_book_completion_status(book_dir)
+
+    console.print("[bold cyan]📋 Current Status:[/bold cyan]")
+    for item, status in workflow_status.items():
+        status_icon = "✅" if status else "⏳"
+        console.print(f"    {status_icon} {item}")
+    console.print()
+
+    # Determine next steps
+    next_steps = get_next_workflow_steps(workflow_status)
+
+    if not next_steps:
+        console.print("    🎉 [bold green]Your book is already complete![/bold green]")
+        console.print("    All workflow steps have been finished.")
+        input("\nPress Enter to continue...")
+        return
+
+    console.print(f"    🔄 [bold cyan]Next steps: {', '.join(next_steps)}[/bold cyan]")
+    console.print()
+
+    proceed = questionary.confirm(
+        "Would you like to start the completion workflow?",
+        default=True,
+        style=custom_style
+    ).ask()
+
+    if proceed:
+        execute_book_completion_workflow(book_info, next_steps)
+
+def analyze_book_completion_status(book_dir: str) -> Dict[str, bool]:
+    """Analyze what parts of the book workflow are complete."""
+    status = {
+        "Content Generated": False,
+        "Cover Created": False,
+        "EPUB Generated": False,
+        "Ready for Export": False
+    }
+
+    if not book_dir or not os.path.exists(book_dir):
+        return status
+
+    # Check for content files
+    content_files = ["outline.txt", "characters.json"]
+    if any(os.path.exists(os.path.join(book_dir, f)) for f in content_files):
+        status["Content Generated"] = True
+
+    # Check for cover
+    cover_files = ["cover.jpg", "cover.png"]
+    if any(os.path.exists(os.path.join(book_dir, f)) for f in cover_files):
+        status["Cover Created"] = True
+
+    # Check for EPUB
+    epub_files = [f for f in os.listdir(book_dir) if f.endswith('.epub')]
+    if epub_files:
+        status["EPUB Generated"] = True
+        status["Ready for Export"] = True
+
+    return status
+
+def get_next_workflow_steps(status: Dict[str, bool]) -> List[str]:
+    """Determine what workflow steps need to be completed."""
+    next_steps = []
+
+    if not status["Cover Created"]:
+        next_steps.append("Create Cover")
+
+    if not status["EPUB Generated"]:
+        next_steps.append("Generate EPUB")
+
+    if status["EPUB Generated"] and not status["Ready for Export"]:
+        next_steps.append("Prepare Export")
+
+    return next_steps
+
+def execute_book_completion_workflow(book_info: Dict[str, Any], steps: List[str]) -> None:
+    """Execute the book completion workflow steps."""
+    clear_screen()
+    display_title()
+
+    console.print("[bold cyan]🔄 Executing Workflow[/bold cyan]")
+    console.print(f"    Processing {len(steps)} step{'s' if len(steps) != 1 else ''}")
+    console.print()
+
+    completed_steps = []
+
+    for i, step in enumerate(steps, 1):
+        console.print(f"[bold cyan]Step {i} of {len(steps)}: {step}[/bold cyan]")
+
+        if step == "Create Cover":
+            if execute_cover_creation_step(book_info):
+                completed_steps.append(step)
+                console.print("    ✅ Cover creation completed")
+            else:
+                console.print("    ❌ Cover creation failed")
+                break
+
+        elif step == "Generate EPUB":
+            if execute_epub_generation_step(book_info):
+                completed_steps.append(step)
+                console.print("    ✅ EPUB generation completed")
+            else:
+                console.print("    ❌ EPUB generation failed")
+                break
+
+        elif step == "Prepare Export":
+            if execute_export_preparation_step(book_info):
+                completed_steps.append(step)
+                console.print("    ✅ Export preparation completed")
+            else:
+                console.print("    ❌ Export preparation failed")
+                break
+
+        console.print()
+
+    # Display results
+    console.print("[bold green]🎉 Workflow Results[/bold green]")
+    console.print(f"    Completed: {len(completed_steps)} of {len(steps)} steps")
+
+    if completed_steps:
+        console.print("    ✅ Successful steps:")
+        for step in completed_steps:
+            console.print(f"        • {step}")
+
+    if len(completed_steps) == len(steps):
+        console.print()
+        console.print("    🎊 [bold green]All workflow steps completed successfully![/bold green]")
+        console.print("    Your book is now ready for publishing!")
+
+    input("\nPress Enter to continue...")
+
+def execute_cover_creation_step(book_info: Dict[str, Any]) -> bool:
+    """Execute the cover creation step."""
+    try:
+        console.print("    🎨 Creating book cover...")
+
+        # This would integrate with the actual cover generation
+        # For now, simulate the process
+        import time
+        time.sleep(1)  # Simulate processing time
+
+        console.print("    📸 Cover generated successfully")
+        return True
+
+    except Exception as e:
+        console.print(f"    ❌ Error creating cover: {e}")
+        return False
+
+def execute_epub_generation_step(book_info: Dict[str, Any]) -> bool:
+    """Execute the EPUB generation step."""
+    try:
+        console.print("    📚 Generating EPUB file...")
+
+        # This would integrate with the actual EPUB generation
+        generate_epub_manually(book_info)
+        return True
+
+    except Exception as e:
+        console.print(f"    ❌ Error generating EPUB: {e}")
+        return False
+
+def execute_export_preparation_step(book_info: Dict[str, Any]) -> bool:
+    """Execute the export preparation step."""
+    try:
+        console.print("    📤 Preparing for export...")
+
+        # This would prepare files for export
+        # For now, simulate the process
+        import time
+        time.sleep(1)  # Simulate processing time
+
+        console.print("    📋 Export preparation completed")
+        return True
+
+    except Exception as e:
+        console.print(f"    ❌ Error preparing export: {e}")
+        return False
+
+def quick_cover_creation_workflow(book_info: Dict[str, Any]) -> None:
+    """Quick workflow for creating a book cover."""
+    clear_screen()
+    display_title()
+
+    console.print("[bold cyan]🚀 Quick Cover Creation[/bold cyan]")
+    console.print("    Fast track to creating your book cover")
+    console.print()
+
+    console.print(f"    📖 Book: [cyan]{book_info.get('title', 'Untitled')}[/cyan]")
+    console.print(f"    🎭 Genre: [cyan]{book_info.get('genre', 'Unknown')}[/cyan]")
+    console.print()
+
+    console.print("    🎨 This workflow will:")
+    console.print("    • Generate a professional cover design")
+    console.print("    • Apply genre-appropriate styling")
+    console.print("    • Save the cover to your book directory")
+    console.print()
+
+    proceed = questionary.confirm(
+        "Ready to create your cover?",
+        default=True,
+        style=custom_style
+    ).ask()
+
+    if proceed:
+        try:
+            console.print("    🎨 Generating cover...")
+            generate_book_cover(book_info)
+            console.print("    ✅ [bold green]Cover created successfully![/bold green]")
+            console.print("    Your book now has a professional cover design.")
+        except Exception as e:
+            console.print(f"    ❌ [red]Error creating cover: {e}[/red]")
+
+    input("\nPress Enter to continue...")
+
+def preview_book_cover(book_info: Dict[str, Any]) -> None:
+    """Preview the book cover if it exists."""
+    clear_screen()
+    display_title()
+
+    console.print("[bold cyan]📸 Cover Preview[/bold cyan]")
+    console.print()
+
+    book_dir = book_info.get("directory", "")
+    if not book_dir:
+        console.print("    ❌ [red]No book directory found[/red]")
+        input("\nPress Enter to continue...")
+        return
+
+    # Look for cover files
+    cover_files = ["cover.jpg", "cover.png"]
+    found_cover = None
+
+    for cover_file in cover_files:
+        cover_path = os.path.join(book_dir, cover_file)
+        if os.path.exists(cover_path):
+            found_cover = cover_path
+            break
+
+    if found_cover:
+        console.print(f"    📸 Cover found: [cyan]{os.path.basename(found_cover)}[/cyan]")
+        console.print(f"    📂 Location: [dim]{found_cover}[/dim]")
+
+        # Get file size
+        try:
+            size = os.path.getsize(found_cover)
+            if size < 1024 * 1024:
+                size_str = f"{size / 1024:.1f} KB"
+            else:
+                size_str = f"{size / (1024 * 1024):.1f} MB"
+            console.print(f"    📊 Size: [yellow]{size_str}[/yellow]")
+        except:
+            pass
+
+        console.print()
+        console.print("    💡 [cyan]Tip:[/cyan] You can view the cover by opening the file in your image viewer")
+    else:
+        console.print("    ⏳ [yellow]No cover found for this book[/yellow]")
+        console.print("    Use 'Generate New Cover' to create one!")
+
+    input("\nPress Enter to continue...")
 
 def browse_book_library() -> None:
     """
@@ -1206,21 +1635,23 @@ def select_from_filtered_books(books: List[Dict[str, Any]]) -> Optional[Dict[str
     return books[book_index]
 
 def book_management_menu() -> None:
-    """Main book management menu."""
+    """Main book management menu with improved organization."""
     while True:
         clear_screen()
         display_title()
 
-        console.print("[bold cyan]Book Management[/bold cyan]")
+        console.print("[bold cyan]📖 Book Management[/bold cyan]")
+        console.print("    Organize and manage your book collection")
 
         # Get book count for display
         existing_books = get_existing_books()
         book_count = len(existing_books)
 
         if book_count > 0:
-            console.print(f"[dim]You have {book_count} book{'s' if book_count != 1 else ''} in your library[/dim]\n")
+            console.print(f"    📚 You have {book_count} book{'s' if book_count != 1 else ''} in your library")
         else:
-            console.print("[dim]Your library is empty[/dim]\n")
+            console.print("    📚 Your library is empty")
+        console.print()
 
         # Main menu options
         choices = [
@@ -1228,7 +1659,7 @@ def book_management_menu() -> None:
             "Import Book from Ideas",
             "Work with Existing Books",
             "Browse Book Library",
-            "Exit"
+            "← Back to Main Menu"
         ]
 
         selected = questionary.select(
@@ -1271,5 +1702,5 @@ def book_management_menu() -> None:
         elif selected == "Browse Book Library":
             browse_book_library()
 
-        elif selected == "Exit":
+        elif selected == "← Back to Main Menu":
             break

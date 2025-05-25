@@ -1,0 +1,90 @@
+{
+  "metadata": {
+    "title": "Fast Test Novel",
+    "author": "Test Author",
+    "description": "A test novel for fast testing",
+    "genre": "test",
+    "target_audience": "Adult (18+)",
+    "created_at": "2025-05-25T19:01:26.558117",
+    "last_updated": "2025-05-25T19:29:55.295198",
+    "series": {
+      "is_part_of_series": false,
+      "series_title": "",
+      "book_number": 0
+    }
+  },
+  "structure": {
+    "total_chapters": 2,
+    "target_word_count": 2000,
+    "current_word_count": 2656,
+    "outline": [
+      "Chapter 1: Test Chapter Title 1 - This is a test chapter summary for chapter 1. It contains the basic plot points and character development needed for testing purposes.",
+      "Chapter 2: Test Chapter Title 2 - This is a test chapter summary for chapter 2. It contains the basic plot points and character development needed for testing purposes."
+    ]
+  },
+  "characters": [],
+  "settings": [],
+  "plot_points": [],
+  "chapter_summaries": [
+    {
+      "chapter_num": 1,
+      "summary": "Mock response for prompt: \n        Summarize the following chapter content in 2-3 sentences, capturing the key events and deve...",
+      "word_count": 664
+    },
+    {
+      "chapter_num": 2,
+      "summary": "Mock response for prompt: \n        Summarize the following chapter content in 2-3 sentences, capturing the key events and deve...",
+      "word_count": 664
+    },
+    {
+      "chapter_num": 1,
+      "summary": "Mock response for prompt: \n        Summarize the following chapter content in 2-3 sentences, capturing the key events and deve...",
+      "word_count": 664
+    },
+    {
+      "chapter_num": 2,
+      "summary": "Mock response for prompt: \n        Summarize the following chapter content in 2-3 sentences, capturing the key events and deve...",
+      "word_count": 664
+    }
+  ],
+  "narrative_tracking": {
+    "character_arcs": {},
+    "character_emotions": {},
+    "character_knowledge": {},
+    "character_locations": {},
+    "relationships": {},
+    "relationship_development": {},
+    "plot_threads": {},
+    "unresolved_questions": [],
+    "foreshadowing": [],
+    "callbacks": [],
+    "plot_progression": {},
+    "world_building": {},
+    "locations_visited": {},
+    "objects_of_significance": {},
+    "timeline": [],
+    "pov_shifts": {
+      "1": null,
+      "2": null
+    },
+    "chapter_connections": {},
+    "scene_transitions": {},
+    "themes_and_motifs": {},
+    "symbols": {},
+    "tone_shifts": {},
+    "continuity_elements": {},
+    "time_of_day": {
+      "1": "Unknown",
+      "2": "Unknown"
+    },
+    "weather_conditions": {
+      "1": "Unknown",
+      "2": "Unknown"
+    },
+    "clothing_and_appearance": {}
+  },
+  "memory_config": {
+    "max_memory_items": 1000,
+    "version": "2.0_with_memory_limits"
+  }
+}

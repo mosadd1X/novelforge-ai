@@ -2507,7 +2507,25 @@ Strengths: {profile_data.get('strengths', 'Not specified')}
         # Save to database first
         from src.database.database_manager import get_database_manager
         db_manager = get_database_manager()
-        book_id = db_manager.save_book(novel)
+
+        # Prepare book data for database
+        metadata = novel.get("metadata", {})
+        book_data = {
+            "book_id": db_manager.generate_book_id(metadata.get("title", "Unknown")),
+            "title": metadata.get("title", "Unknown"),
+            "author": metadata.get("author", ""),
+            "genre": metadata.get("genre", ""),
+            "target_audience": metadata.get("target_audience", ""),
+            "description": metadata.get("description", ""),
+            "series_info": novel.get("series", {}),
+            "generation_status": "completed",
+            "word_count": metadata.get("word_count", 0),
+            "chapter_count": len(novel.get("chapters", [])),
+            "created_date": metadata.get("created_date", ""),
+            "metadata": novel
+        }
+
+        book_id = db_manager.add_book(book_data)
 
         # Process with enhanced workflow
         workflow.process_completed_book(book_id, novel)

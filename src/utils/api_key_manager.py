@@ -10,6 +10,9 @@ from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 import questionary
+from src.ui.responsive_separator import (
+    separator, title_separator, section_separator
+)
 
 console = Console()
 
@@ -292,26 +295,26 @@ class APIKeyManager:
         return True
 
     def display_api_keys(self):
-        """Display all API keys in a formatted table."""
+        """Display all API keys following clean design principles."""
         api_keys = self.get_all_api_keys()
 
         if not api_keys:
-            console.print("[yellow]No API keys found in .env file[/yellow]")
+            console.print("    ⚠️ [yellow]No API keys found in .env file[/yellow]")
             return
 
-        table = Table(title="Gemini API Keys", show_header=True, header_style="bold magenta")
-        table.add_column("Key Name", style="cyan", no_wrap=True)
-        table.add_column("Key Value", style="green")
-        table.add_column("Status", style="yellow")
+        console.print("[bold cyan]🔑 Gemini API Keys[/bold cyan]")
+        console.print()
 
         for key_name, key_value in api_keys.items():
             # Mask the key value for security
             masked_value = key_value[:8] + "*" * (len(key_value) - 12) + key_value[-4:] if len(key_value) > 12 else "*" * len(key_value)
 
-            status = "Main" if key_name == "GEMINI_API_KEY" else "Backup"
-            table.add_row(key_name, masked_value, status)
+            status_icon = "🎯" if key_name == "GEMINI_API_KEY" else "🔄"
+            status_text = "[bold green]Main[/bold green]" if key_name == "GEMINI_API_KEY" else "[cyan]Backup[/cyan]"
 
-        console.print(table)
+            console.print(f"    {status_icon} [cyan bold]{key_name}[/cyan bold]: [white]{masked_value}[/white] ({status_text})")
+
+        console.print()
 
     def get_api_key_count(self) -> Tuple[int, int]:
         """
@@ -362,113 +365,75 @@ class APIKeyManager:
 
 
 def show_api_key_management_menu():
-    """Display the API key management menu and handle user interactions."""
+    """Display the API key management menu following clean design principles."""
     api_manager = APIKeyManager()
 
     while True:
         console.clear()
 
-        # Display header
-        console.print(Panel.fit(
-            "[bold cyan]Gemini API Key Management System[/bold cyan]\n"
-            "[dim]Comprehensive management of your Gemini AI API keys with automatic rotation and backup functionality[/dim]",
-            border_style="cyan"
-        ))
+        # Clean header
+        console.print()
+        console.print("[bold cyan]🔑 API Key Management[/bold cyan]")
+        console.print("    Manage your Gemini AI API keys")
+        console.print()
 
-        # Display current API key status
+        # Minimal status display
         total_keys, backup_keys = api_manager.get_api_key_count()
-        console.print(f"\n[bold]Current Status:[/bold] {total_keys} total keys ({backup_keys} backup keys)")
+        console.print(f"    📊 Keys: {total_keys} total, {backup_keys} backup")
 
-        # Check for compatibility issues
+        # Quick status check
         compatibility = api_manager.check_key_usage_compatibility()
         if compatibility["compatibility_status"] == "incompatible":
-            console.print(f"\n[bold red]WARNING: Key Usage Issue Detected[/bold red]")
-            console.print(f"• You have {compatibility['managed_count']} keys configured")
-            console.print(f"• But only {compatibility['used_count']} keys are actually used by the system")
-            console.print(f"• {compatibility['unused_count']} keys are being ignored and wasted")
-            console.print(f"• This has been fixed in the latest update - restart to use all keys")
+            console.print(f"    ⚠️ [yellow]Status: {compatibility['unused_count']} keys unused[/yellow]")
         elif compatibility["compatibility_status"] == "compatible":
-            console.print(f"[green]• All {compatibility['managed_count']} keys are being used correctly[/green]")
+            console.print(f"    ✅ [green]Status: All keys active[/green]")
 
-        # Display API keys table
         console.print()
-        api_manager.display_api_keys()
 
-        # Create clean menu choices
+        # Clean menu choices
         choices = [
-            questionary.Choice(
-                title="Add New API Key - Automatic rotation system",
-                value="add_key",
-                shortcut_key="a"
-            ),
-            questionary.Choice(
-                title="View All API Keys - Complete configuration overview",
-                value="view_keys",
-                shortcut_key="v"
-            ),
-            questionary.Choice(
-                title="Remove Backup API Key - Safe deletion system",
-                value="remove_key",
-                shortcut_key="r"
-            ),
-            questionary.Choice(
-                title="Promote Backup Key to Main - Key elevation system",
-                value="promote_key",
-                shortcut_key="p"
-            ),
-            questionary.Choice(
-                title="Test Current Main API Key - Connectivity diagnostics",
-                value="test_key",
-                shortcut_key="t"
-            ),
-            questionary.Choice(
-                title="Check API Key Status & Rate Limits - Comprehensive monitoring",
-                value="check_status",
-                shortcut_key="c"
-            ),
-            questionary.Choice(
-                title="Back to Main Menu",
-                value="exit",
-                shortcut_key="e"
-            )
+            "➕ Add New API Key",
+            "👁️ View All Keys",
+            "🗑️ Remove Backup Key",
+            "⬆️ Promote Backup to Main",
+            "🧪 Test Main Key",
+            "📊 Check Key Status",
+            "← Back to System Settings"
         ]
 
         # Show clean menu
-        console.print("\n[bold cyan]Select an action:[/bold cyan]")
         try:
             action = questionary.select(
-                "",
+                "What would you like to do?",
                 choices=choices,
                 style=questionary.Style([
-                    ('question', 'bold'),
-                    ('answer', 'fg:#ff9d00 bold'),
-                    ('pointer', 'fg:#ff9d00 bold'),
-                    ('highlighted', 'fg:#ff9d00 bold'),
-                    ('selected', 'fg:#cc5454'),
-                    ('separator', 'fg:#cc5454'),
-                    ('instruction', ''),
-                    ('text', ''),
-                    ('disabled', 'fg:#858585 italic')
-                ]),
-                use_shortcuts=True,
-                show_selected=False
+                    ('question', 'fg:cyan bold'),
+                    ('answer', 'fg:green bold'),
+                    ('pointer', 'fg:cyan bold'),
+                    ('highlighted', 'fg:cyan bold'),
+                    ('selected', 'fg:green bold'),
+                    ('separator', 'fg:cyan'),
+                    ('instruction', 'fg:white'),
+                    ('text', 'fg:white'),
+                    ('disabled', 'fg:gray')
+                ])
             ).ask()
 
             if action is None:  # User pressed Ctrl+C
                 break
-            elif action == "add_key":
+            elif action == "➕ Add New API Key":
                 add_new_api_key_interactive(api_manager)
-            elif action == "view_keys":
+            elif action == "👁️ View All Keys":
                 view_all_keys_interactive(api_manager)
-            elif action == "remove_key":
+            elif action == "🗑️ Remove Backup Key":
                 remove_api_key_interactive(api_manager)
-            elif action == "promote_key":
+            elif action == "⬆️ Promote Backup to Main":
                 promote_api_key_interactive(api_manager)
-            elif action == "test_key":
+            elif action == "🧪 Test Main Key":
                 test_api_key_interactive(api_manager)
-            elif action == "check_status":
+            elif action == "📊 Check Key Status":
                 check_api_status_interactive(api_manager)
-            elif action == "exit":
+            elif action == "← Back to System Settings":
                 break
 
         except KeyboardInterrupt:
@@ -481,173 +446,100 @@ def show_api_key_management_menu():
 
 
 def add_new_api_key_interactive(api_manager: APIKeyManager):
-    """Interactive function to add a new API key with detailed explanations."""
-    console.print("\n[bold cyan]Add New API Key - Automatic Rotation System[/bold cyan]")
-    console.print("[dim]This process safely adds a new API key while preserving your existing configuration[/dim]")
-
-    console.print("\n[bold]How this works:[/bold]")
-    console.print("1. Your current main API key will be automatically moved to backup")
-    console.print("2. The new API key will become your primary GEMINI_API_KEY")
-    console.print("3. No existing keys will be lost or overwritten")
-    console.print("4. The system maintains chronological backup numbering")
+    """Interactive function to add a new API key with minimal interface."""
+    console.print("\n[bold cyan]➕ Add New API Key[/bold cyan]")
+    console.print("    Current main key will be moved to backup")
+    console.print()
 
     # Show current main key (masked)
     current_keys = api_manager.get_all_api_keys()
     if 'GEMINI_API_KEY' in current_keys:
         current_main = current_keys['GEMINI_API_KEY']
         masked_current = current_main[:8] + "*" * (len(current_main) - 12) + current_main[-4:] if len(current_main) > 12 else "*" * len(current_main)
-        console.print(f"\n[bold]Current main key:[/bold] {masked_current}")
-        next_num = api_manager.get_next_available_number()
-        console.print(f"[dim]This key will be moved to: GEMINI_API_KEY_{next_num}[/dim]")
+        console.print(f"    Current: {masked_current}")
     else:
-        console.print("\n[yellow]No main API key currently configured[/yellow]")
+        console.print("    No main key configured")
 
-    console.print("\n[bold]API Key Requirements:[/bold]")
-    console.print("• Must be a valid Gemini AI API key from Google AI Studio")
-    console.print("• Should be at least 20 characters long")
-    console.print("• Must contain only alphanumeric characters, underscores, and hyphens")
-
-    new_key = console.input("\n[bold]Enter your new API key: [/bold]").strip()
+    console.print()
+    new_key = console.input("Enter new API key: ").strip()
 
     if not new_key:
-        console.print("[red]Error: No API key entered. Operation cancelled.[/red]")
+        console.print("[red]No key entered. Cancelled.[/red]")
         console.input("\nPress Enter to continue...")
         return
 
-    # Show what will happen
-    console.print(f"\n[bold yellow]Confirmation - The following changes will be made:[/bold yellow]")
-    console.print("1. New key will be set as main GEMINI_API_KEY")
-    console.print("2. New key will be validated for proper format")
-    if 'GEMINI_API_KEY' in current_keys:
-        next_num = api_manager.get_next_available_number()
-        console.print(f"3. Current main key will be moved to GEMINI_API_KEY_{next_num}")
-    console.print("4. Changes will be saved to .env file immediately")
-    console.print("5. System will continue using the new key for all operations")
-
     confirm = questionary.confirm(
-        "Do you want to proceed with these changes?",
+        "Add this key as main and move current to backup?",
         default=False
     ).ask()
 
     if confirm:
-        console.print("\n[yellow]Processing API key rotation...[/yellow]")
         if api_manager.add_new_api_key(new_key):
-            console.print("\n[bold green]SUCCESS: API key successfully added and rotated![/bold green]")
-            console.print("• New key is now active as main GEMINI_API_KEY")
-            console.print("• Previous key safely moved to backup")
-            console.print("• Configuration updated in .env file")
+            console.print("\n[bold green]✅ API key added successfully![/bold green]")
         else:
-            console.print("\n[bold red]FAILED: Could not add API key.[/bold red]")
-            console.print("• Check that the API key format is valid")
-            console.print("• Ensure the key is from Google AI Studio")
-            console.print("• Verify file permissions for .env file")
+            console.print("\n[bold red]❌ Failed to add API key[/bold red]")
     else:
-        console.print("\n[yellow]Operation cancelled. No changes made to your configuration.[/yellow]")
+        console.print("\n[yellow]Cancelled[/yellow]")
 
     console.input("\nPress Enter to continue...")
 
 
 def view_all_keys_interactive(api_manager: APIKeyManager):
-    """Interactive function to view all API keys with comprehensive information."""
-    console.print("\n[bold cyan]Complete API Key Configuration Overview[/bold cyan]")
-    console.print("[dim]Detailed view of all configured API keys with security masking[/dim]")
+    """Interactive function to view all API keys with clean interface."""
+    console.print("\n[bold cyan]👁️ View All Keys[/bold cyan]")
+    console.print()
 
     api_keys = api_manager.get_all_api_keys()
 
     if not api_keys:
-        console.print("\n[yellow]No API keys found in configuration.[/yellow]")
-        console.print("Use option 1 to add your first API key.")
+        console.print("    No API keys found")
         console.input("\nPress Enter to continue...")
         return
 
-    console.print(f"\n[bold]Configuration Summary:[/bold]")
-    console.print(f"• Total API keys configured: {len(api_keys)}")
-    console.print(f"• Main key: {'Present' if 'GEMINI_API_KEY' in api_keys else 'Missing'}")
-    console.print(f"• Backup keys: {len(api_keys) - 1 if 'GEMINI_API_KEY' in api_keys else len(api_keys)}")
-
-    # Create detailed table
-    table = Table(title="Detailed API Key Information", show_header=True, header_style="bold magenta")
-    table.add_column("Key Name", style="cyan", no_wrap=True, width=20)
-    table.add_column("Key Preview (First 20 chars)", style="green", width=25)
-    table.add_column("Total Length", style="yellow", justify="center", width=12)
-    table.add_column("Key Status", style="blue", width=15)
-    table.add_column("Usage Priority", style="white", width=15)
+    console.print(f"    📊 Total: {len(api_keys)} keys")
+    console.print()
 
     for key_name, key_value in api_keys.items():
-        preview = key_value[:20] + "..." if len(key_value) > 20 else key_value
-        status = "Primary Main" if key_name == "GEMINI_API_KEY" else "Backup"
+        preview = key_value[:12] + "..." + key_value[-4:] if len(key_value) > 16 else key_value
+        status = "🔑 Main" if key_name == "GEMINI_API_KEY" else "🔄 Backup"
 
-        if key_name == "GEMINI_API_KEY":
-            priority = "Active (1st)"
-        else:
-            # Extract number from backup key name
-            try:
-                num = int(key_name.split('_')[-1])
-                priority = f"Backup ({num + 1})"
-            except:
-                priority = "Backup"
+        console.print(f"    {status} {key_name}")
+        console.print(f"        Preview: {preview}")
+        console.print(f"        Length: {len(key_value)} chars")
+        console.print()
 
-        table.add_row(key_name, preview, str(len(key_value)), status, priority)
-
-    console.print(table)
-
-    console.print("\n[bold]Key Information Legend:[/bold]")
-    console.print("• Key Preview: First 20 characters for identification (rest hidden for security)")
-    console.print("• Total Length: Complete character count of the API key")
-    console.print("• Key Status: Primary Main (currently active) or Backup (standby)")
-    console.print("• Usage Priority: Order in which keys are used during automatic rotation")
-
-    console.print("\n[bold]Security Notes:[/bold]")
-    console.print("• Full API keys are never displayed for security reasons")
-    console.print("• Keys are stored securely in your .env file")
-    console.print("• Only the first 20 characters are shown for identification")
-
-    console.input("\nPress Enter to continue...")
+    console.input("Press Enter to continue...")
 
 
 def remove_api_key_interactive(api_manager: APIKeyManager):
-    """Interactive function to safely remove backup API keys with detailed explanations."""
-    console.print("\n[bold cyan]Remove Backup API Key - Safe Deletion System[/bold cyan]")
-    console.print("[dim]Permanently removes backup API keys while protecting your main key[/dim]")
+    """Interactive function to safely remove backup API keys."""
+    console.print("\n[bold cyan]🗑️ Remove Backup Key[/bold cyan]")
+    console.print("    Main key cannot be removed")
+    console.print()
 
     api_keys = api_manager.get_all_api_keys()
     backup_keys = {k: v for k, v in api_keys.items() if k != 'GEMINI_API_KEY'}
 
-    console.print("\n[bold]Safety Information:[/bold]")
-    console.print("• Main API key (GEMINI_API_KEY) cannot be removed for protection")
-    console.print("• Only backup keys can be safely deleted")
-    console.print("• Deletion is permanent and cannot be undone")
-    console.print("• Removed keys must be re-added manually if needed again")
-
     if not backup_keys:
-        console.print("\n[yellow]No backup API keys found in your configuration.[/yellow]")
-        console.print("• You currently only have a main API key")
-        console.print("• Consider adding backup keys for redundancy")
-        console.print("• Use option 1 to add additional API keys")
+        console.print("    No backup keys found")
         console.input("\nPress Enter to continue...")
         return
 
-    console.print(f"\n[bold]Available backup keys for removal:[/bold]")
-    console.print(f"Total backup keys: {len(backup_keys)}")
+    console.print(f"    📊 {len(backup_keys)} backup key{'s' if len(backup_keys) != 1 else ''} available:")
+    console.print()
 
     for i, key_name in enumerate(backup_keys.keys(), 1):
         masked_value = backup_keys[key_name][:8] + "*" * 8 + backup_keys[key_name][-4:]
-        console.print(f"{i}. {key_name}")
-        console.print(f"   Preview: {masked_value}")
-        console.print(f"   Length: {len(backup_keys[key_name])} characters")
-
-    console.print("\n[bold]Removal Process:[/bold]")
-    console.print("1. Select a backup key by number")
-    console.print("2. Confirm the deletion (requires 'y' confirmation)")
-    console.print("3. Key will be permanently removed from .env file")
-    console.print("4. System will continue with remaining keys")
+        console.print(f"    {i}. {key_name}")
+        console.print(f"       {masked_value}")
+        console.print()
 
     # Create choices for questionary
     key_choices = []
     for key_name in backup_keys.keys():
         masked_value = backup_keys[key_name][:8] + "*" * 8 + backup_keys[key_name][-4:]
         key_choices.append(questionary.Choice(
-            title=f"{key_name} - {masked_value} ({len(backup_keys[key_name])} chars)",
+            title=f"{key_name} - {masked_value}",
             value=key_name
         ))
 
@@ -655,66 +547,40 @@ def remove_api_key_interactive(api_manager: APIKeyManager):
 
     try:
         key_name = questionary.select(
-            "Select a backup key to remove:",
-            choices=key_choices,
-            style=questionary.Style([
-                ('question', 'bold'),
-                ('answer', 'fg:#ff9d00 bold'),
-                ('pointer', 'fg:#ff9d00 bold'),
-                ('highlighted', 'fg:#ff9d00 bold'),
-            ])
+            "Select key to remove:",
+            choices=key_choices
         ).ask()
 
         if key_name == "cancel" or key_name is None:
-            console.print("\n[yellow]Operation cancelled. No keys were removed.[/yellow]")
+            console.print("    Cancelled")
             console.input("\nPress Enter to continue...")
             return
 
         if key_name in backup_keys:
-            key_value = backup_keys[key_name]
-            masked_value = key_value[:8] + "*" * 8 + key_value[-4:]
-
-            console.print(f"\n[bold yellow]Confirmation Required - Key Deletion[/bold yellow]")
-            console.print(f"Key to remove: {key_name}")
-            console.print(f"Key preview: {masked_value}")
-            console.print(f"Key length: {len(key_value)} characters")
-            console.print("\n[bold red]WARNING: This action cannot be undone![/bold red]")
-            console.print("• The key will be permanently deleted from your configuration")
-            console.print("• You will need to re-add it manually if needed in the future")
-            console.print("• Your main key and other backup keys will remain unaffected")
-
             confirm = questionary.confirm(
-                f"Are you sure you want to permanently remove {key_name}?",
+                f"Permanently remove {key_name}?",
                 default=False
             ).ask()
 
             if confirm:
-                console.print(f"\n[yellow]Removing {key_name}...[/yellow]")
                 if api_manager.remove_api_key(key_name):
-                    console.print(f"\n[bold green]SUCCESS: {key_name} has been permanently removed[/bold green]")
-                    console.print("• Key deleted from .env file")
-                    console.print("• Configuration updated successfully")
-                    remaining_backups = len(backup_keys) - 1
-                    console.print(f"• You now have {remaining_backups} backup keys remaining")
+                    console.print(f"\n    ✅ [green]{key_name} removed successfully[/green]")
                 else:
-                    console.print(f"\n[bold red]FAILED: Could not remove {key_name}[/bold red]")
-                    console.print("• Check file permissions for .env file")
-                    console.print("• Ensure the key exists in the configuration")
+                    console.print(f"\n    ❌ [red]Failed to remove {key_name}[/red]")
             else:
-                console.print("\n[yellow]Deletion cancelled. Key was not removed.[/yellow]")
-        else:
-            console.print("\n[red]Error: Selected key not found.[/red]")
+                console.print("    Cancelled")
 
     except Exception as e:
-        console.print(f"\n[red]Error during key removal: {str(e)}[/red]")
+        console.print(f"\n    ❌ [red]Error: {str(e)}[/red]")
 
     console.input("\nPress Enter to continue...")
 
 
 def promote_api_key_interactive(api_manager: APIKeyManager):
     """Interactive function to promote a backup key to main with detailed explanations."""
-    console.print("\n[bold cyan]Promote Backup Key to Main - Key Elevation System[/bold cyan]")
-    console.print("[dim]Elevates a backup API key to become your primary active key[/dim]")
+    console.print()
+    console.print(title_separator("Promote Backup Key to Main"))
+    console.print()
 
     api_keys = api_manager.get_all_api_keys()
     backup_keys = {k: v for k, v in api_keys.items() if k != 'GEMINI_API_KEY'}
@@ -818,8 +684,9 @@ def promote_api_key_interactive(api_manager: APIKeyManager):
 
 def test_api_key_interactive(api_manager: APIKeyManager):
     """Interactive function to test the current main API key with detailed diagnostics."""
-    console.print("\n[bold cyan]Test Current Main API Key - Connectivity Diagnostics[/bold cyan]")
-    console.print("[dim]Comprehensive testing of your primary API key functionality[/dim]")
+    console.print()
+    console.print(title_separator("Test Current Main API Key"))
+    console.print()
 
     api_keys = api_manager.get_all_api_keys()
 
@@ -942,8 +809,9 @@ def test_api_key_interactive(api_manager: APIKeyManager):
 
 def check_api_status_interactive(api_manager: APIKeyManager):
     """Interactive function to check API key status and rate limits with comprehensive monitoring."""
-    console.print("\n[bold cyan]API Key Status & Rate Limit Monitor - Comprehensive Analysis[/bold cyan]")
-    console.print("[dim]Real-time monitoring of all API keys with detailed rate limit analysis[/dim]")
+    console.print()
+    console.print(title_separator("API Key Status & Rate Limit Monitor"))
+    console.print()
 
     console.print("\n[bold]Monitoring Process:[/bold]")
     console.print("1. Initializes connection to all configured API keys")

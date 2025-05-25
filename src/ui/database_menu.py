@@ -22,57 +22,59 @@ console = Console()
 
 
 def database_management_menu() -> None:
-    """Main database management menu."""
+    """Main database management menu with improved organization."""
     while True:
         clear_screen()
         display_title()
 
-        console.print("[bold cyan]Database Management[/bold cyan]\n")
+        console.print("[bold cyan]🗄️ Data & Storage[/bold cyan]")
+        console.print("    Manage database and storage systems")
 
         # Get database statistics
         db_manager = get_database_manager()
         stats = db_manager.get_database_stats()
 
         # Display quick stats
-        console.print(f"[dim]Database: {stats['total_books']} books, "
+        console.print(f"    📊 Database: {stats['total_books']} books, "
                      f"{stats['covers_stored']} covers, "
-                     f"{stats['database_size_bytes'] / (1024*1024):.1f} MB[/dim]\n")
+                     f"{stats['database_size_bytes'] / (1024*1024):.1f} MB")
+        console.print()
 
         choices = [
-            "View Database Statistics",
-            "Migrate Existing Data to Database",
-            "Book Library Management",
-            "Database Schema Management",
-            "Clear/Reset Database",
-            "Manage Book Display Settings",
-            "Database Maintenance",
-            "Export Database Data",
-            "← Back to Main Menu"
+            "📊 View Database Statistics",
+            "📥 Migrate Existing Data to Database",
+            "📚 Book Library Management",
+            "🔧 Database Schema Management",
+            "🗑️ Clear/Reset Database",
+            "⚙️ Manage Book Display Settings",
+            "🛠️ Database Maintenance",
+            "📤 Export Database Data",
+            "← Back to System Settings"
         ]
 
         selected = questionary.select(
-            "Database Management:",
+            "What would you like to do?",
             choices=choices,
             style=custom_style
         ).ask()
 
-        if selected == "View Database Statistics":
+        if selected == "📊 View Database Statistics":
             view_database_statistics()
-        elif selected == "Migrate Existing Data to Database":
+        elif selected == "📥 Migrate Existing Data to Database":
             migrate_data_menu()
-        elif selected == "Book Library Management":
+        elif selected == "📚 Book Library Management":
             book_library_menu()
-        elif selected == "Database Schema Management":
+        elif selected == "🔧 Database Schema Management":
             database_schema_menu()
-        elif selected == "Clear/Reset Database":
+        elif selected == "🗑️ Clear/Reset Database":
             database_clear_menu()
-        elif selected == "Manage Book Display Settings":
+        elif selected == "⚙️ Manage Book Display Settings":
             manage_display_settings()
-        elif selected == "Database Maintenance":
+        elif selected == "🛠️ Database Maintenance":
             database_maintenance_menu()
-        elif selected == "Export Database Data":
+        elif selected == "📤 Export Database Data":
             export_database_menu()
-        elif selected == "← Back to Main Menu":
+        elif selected == "← Back to System Settings":
             break
 
 

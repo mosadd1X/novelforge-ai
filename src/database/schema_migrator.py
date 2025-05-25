@@ -131,7 +131,7 @@ class SchemaMigrator:
 
     def _migrate_to_v1_0(self) -> bool:
         """
-        Migrate to schema version 1.0 (basic database with metadata table).
+        Migrate to schema version 1.0 (basic database with books and metadata tables).
 
         Returns:
             True if successful, False otherwise
@@ -146,6 +146,36 @@ class SchemaMigrator:
                         updated_date TEXT
                     )
                 """)
+
+                # Create basic books table with core columns
+                conn.execute("""
+                    CREATE TABLE IF NOT EXISTS books (
+                        book_id TEXT PRIMARY KEY,
+                        title TEXT NOT NULL,
+                        author TEXT,
+                        genre TEXT,
+                        target_audience TEXT,
+                        description TEXT,
+                        series_info TEXT,  -- JSON string for series information
+                        cover_base64 TEXT,  -- Base64 encoded cover image
+                        cover_filename TEXT,  -- Original filename for reference
+                        generation_status TEXT DEFAULT 'planned',  -- planned, generating, completed, failed
+                        word_count INTEGER DEFAULT 0,
+                        chapter_count INTEGER DEFAULT 0,
+                        file_path TEXT,  -- Legacy: Path to the book files (for migration)
+                        json_path TEXT,  -- Legacy: Path to novel_data.json (for migration)
+                        epub_path TEXT,  -- Legacy: Path to EPUB file (for migration)
+                        created_date TEXT,
+                        updated_date TEXT,
+                        metadata TEXT  -- Additional metadata as JSON
+                    )
+                """)
+
+                # Create basic indexes
+                conn.execute("CREATE INDEX IF NOT EXISTS idx_books_genre ON books(genre)")
+                conn.execute("CREATE INDEX IF NOT EXISTS idx_books_status ON books(generation_status)")
+                conn.execute("CREATE INDEX IF NOT EXISTS idx_books_created ON books(created_date)")
+                conn.execute("CREATE INDEX IF NOT EXISTS idx_books_series ON books(series_info)")
 
                 # Set initial metadata
                 conn.execute("""
@@ -176,6 +206,30 @@ class SchemaMigrator:
         """
         try:
             with self.get_connection() as conn:
+                # First ensure the books table exists
+                conn.execute("""
+                    CREATE TABLE IF NOT EXISTS books (
+                        book_id TEXT PRIMARY KEY,
+                        title TEXT NOT NULL,
+                        author TEXT,
+                        genre TEXT,
+                        target_audience TEXT,
+                        description TEXT,
+                        series_info TEXT,
+                        cover_base64 TEXT,
+                        cover_filename TEXT,
+                        generation_status TEXT DEFAULT 'planned',
+                        word_count INTEGER DEFAULT 0,
+                        chapter_count INTEGER DEFAULT 0,
+                        file_path TEXT,
+                        json_path TEXT,
+                        epub_path TEXT,
+                        created_date TEXT,
+                        updated_date TEXT,
+                        metadata TEXT
+                    )
+                """)
+
                 # Check which columns already exist
                 cursor = conn.execute("PRAGMA table_info(books)")
                 existing_columns = {row["name"] for row in cursor.fetchall()}
@@ -234,6 +288,40 @@ class SchemaMigrator:
         """
         try:
             with self.get_connection() as conn:
+                # First ensure the books table exists with all v2.0 columns
+                conn.execute("""
+                    CREATE TABLE IF NOT EXISTS books (
+                        book_id TEXT PRIMARY KEY,
+                        title TEXT NOT NULL,
+                        author TEXT,
+                        genre TEXT,
+                        target_audience TEXT,
+                        description TEXT,
+                        series_info TEXT,
+                        cover_base64 TEXT,
+                        cover_filename TEXT,
+                        epub_base64 TEXT,
+                        epub_filename TEXT,
+                        epub_size_bytes INTEGER DEFAULT 0,
+                        epub_compressed_size INTEGER DEFAULT 0,
+                        novel_data_json TEXT,
+                        generation_status TEXT DEFAULT 'planned',
+                        word_count INTEGER DEFAULT 0,
+                        chapter_count INTEGER DEFAULT 0,
+                        file_path TEXT,
+                        json_path TEXT,
+                        epub_path TEXT,
+                        storage_mode TEXT DEFAULT 'database',
+                        compression_ratio REAL DEFAULT 1.0,
+                        checksum TEXT,
+                        created_date TEXT,
+                        updated_date TEXT,
+                        last_accessed TEXT,
+                        access_count INTEGER DEFAULT 0,
+                        metadata TEXT
+                    )
+                """)
+
                 # Check which columns already exist
                 cursor = conn.execute("PRAGMA table_info(books)")
                 existing_columns = {row["name"] for row in cursor.fetchall()}
@@ -247,7 +335,19 @@ class SchemaMigrator:
                     ("back_cover_generated", "INTEGER DEFAULT 0"),  # Flag for back cover generation
                     ("description_enhanced", "INTEGER DEFAULT 0"),  # Flag for description enhancement
                     ("description_generation_date", "TEXT"),  # When descriptions were generated
-                    ("back_cover_style", "TEXT DEFAULT 'default'")  # Back cover style/theme
+                    ("back_cover_style", "TEXT DEFAULT 'default'"),  # Back cover style/theme
+
+                    # Telegram publishing fields
+                    ("telegram_published", "INTEGER DEFAULT 0"),  # Flag for Telegram publication
+                    ("telegram_message_id", "TEXT"),  # Telegram message ID for tracking
+                    ("telegram_publish_date", "TEXT"),  # When published to Telegram
+                    ("telegram_channel_id", "TEXT"),  # Which channel it was published to
+                    ("telegram_post_type", "TEXT"),  # 'book', 'series_announcement', 'series_update'
+                    ("telegram_engagement_stats", "TEXT"),  # JSON with views, reactions, etc.
+                    ("telegram_file_hosting", "TEXT"),  # JSON with file hosting details
+                    ("telegram_scheduled_date", "TEXT"),  # For scheduled publishing
+                    ("telegram_auto_publish", "INTEGER DEFAULT 1"),  # Auto-publish flag
+                    ("telegram_publication_status", "TEXT DEFAULT 'pending'")  # pending, published, failed, skipped
                 ]
 
                 for column_name, column_type in new_columns:

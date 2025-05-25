@@ -618,28 +618,78 @@ def extract_from_guidelines(genre: str) -> Optional[Dict[str, Any]]:
         Dictionary with default options or None if not found
     """
     try:
-        with open("genre_guideline.md", "r", encoding="utf-8") as f:
+        import os
+        guidelines_path = os.path.join("docs", "genere_guideline.md")
+        with open(guidelines_path, "r", encoding="utf-8") as f:
             content = f.read()
 
-        # Extract the table rows
-        table_pattern = r"\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|\s*([^|]+)\s*\|"
-        matches = re.findall(table_pattern, content)
+        # Extract the table rows - only match complete rows with exactly 5 columns
+        # Split into lines and process each line individually to avoid regex issues
+        lines = content.split('\n')
+        matches = []
 
-        # Search for the genre
+        for line in lines:
+            # Skip lines that don't look like table rows
+            if not line.strip().startswith('|') or line.count('|') != 6:
+                continue
+
+            # Extract the 5 columns from the line
+            parts = line.split('|')[1:6]  # Skip first empty part and take 5 columns
+            if len(parts) == 5:
+                matches.append(tuple(part.strip() for part in parts))
+
+        # Search for the genre - prioritize exact matches
+        exact_match = None
+        partial_match = None
+
         for match in matches:
+            # Skip header rows and section dividers
+            if len(match) != 5:
+                continue
+
             genre_name = match[0].strip()
-            if genre.lower() in genre_name.lower() or genre_name.lower() in genre.lower():
-                # Extract chapter range
-                chapter_range_str = match[2].strip()
-                chapter_min, chapter_max = map(int, re.findall(r'\d+', chapter_range_str))
+
+            # Skip rows that are headers or section dividers
+            if (genre_name.startswith('**') or
+                genre_name.lower() in ['genre', 'fiction', 'non-fiction', 'hybrid/specialized', 'testing'] or
+                'range' in genre_name.lower()):
+                continue
+
+            # Check for exact match first
+            if genre.lower() == genre_name.lower():
+                exact_match = match
+                break
+            # Check for partial match (genre is contained in genre_name)
+            elif genre.lower() in genre_name.lower() and len(genre) > 3:
+                if partial_match is None:  # Take the first partial match
+                    partial_match = match
+
+        # Use exact match if found, otherwise use partial match
+        selected_match = exact_match or partial_match
+        if selected_match:
+            # Extract chapter range
+            chapter_range_str = selected_match[2].strip()
+            chapter_numbers = re.findall(r'\d+', chapter_range_str)
+            if len(chapter_numbers) >= 2:
+                chapter_min, chapter_max = map(int, chapter_numbers[:2])
                 chapter_count = (chapter_min + chapter_max) // 2
 
-                # Extract word count range
-                word_count_str = match[3].strip()
-                word_count_min, word_count_max = map(
-                    lambda x: int(x.replace(',', '')),
-                    re.findall(r'\d+', word_count_str)
-                )
+                # Extract word count range - look for numbers with commas first
+                word_count_str = selected_match[3].strip()
+                # First try to find numbers with commas (e.g., "50,000-90,000")
+                word_count_with_commas = re.findall(r'\d{1,3}(?:,\d{3})+', word_count_str)
+                if len(word_count_with_commas) >= 2:
+                    word_count_min = int(word_count_with_commas[0].replace(',', ''))
+                    word_count_max = int(word_count_with_commas[1].replace(',', ''))
+                else:
+                    # Fallback to regular number extraction
+                    word_count_numbers = re.findall(r'\d+', word_count_str)
+                    if len(word_count_numbers) >= 2:
+                        word_count_min, word_count_max = map(int, word_count_numbers[:2])
+                    else:
+                        # Use defaults if parsing fails
+                        word_count_min, word_count_max = 70000, 90000
+
                 target_word_count = (word_count_min + word_count_max) // 2
 
                 # Calculate chapter length

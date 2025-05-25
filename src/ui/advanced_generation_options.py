@@ -68,14 +68,13 @@ class AdvancedGenerationOptions:
         }
 
     def show_advanced_options_menu(self) -> Optional[Dict[str, Any]]:
-        """Display the advanced generation options menu."""
+        """Display the creative generation modes menu following clean design principles."""
         try:
-            console.print(Panel.fit(
-                "[bold cyan]Advanced Generation Options[/bold cyan]\n"
-                "Smart presets that leverage our sophisticated fictional author system\n"
-                "for unique and engaging content experiences",
-                border_style="cyan"
-            ))
+            console.print()
+            console.print("[bold cyan]🎨 Creative Generation Modes[/bold cyan]")
+            console.print("    Smart presets that leverage our sophisticated fictional author system")
+            console.print("    for unique and engaging content experiences")
+            console.print()
 
             choice = questionary.select(
                 "Choose your generation experience:",
@@ -85,7 +84,7 @@ class AdvancedGenerationOptions:
                     "Cultural Journey - Discover diverse cultural perspectives",
                     "Genre Fusion - Blend multiple genres creatively",
                     "View Author Statistics",
-                    "Back to Main Menu"
+                    "← Back to Content Creation"
                 ],
                 style=custom_style
             ).ask()
@@ -110,7 +109,7 @@ class AdvancedGenerationOptions:
         except KeyboardInterrupt:
             return None
         except Exception as e:
-            console.print(f"[red]Error in advanced options menu: {e}[/red]")
+            console.print(f"[red]Error in creative generation modes menu: {e}[/red]")
             return None
 
     def surprise_me_mode(self) -> Dict[str, Any]:

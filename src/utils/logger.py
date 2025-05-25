@@ -1,5 +1,5 @@
 """
-Beautiful Rich-based logging system for the Ebook Generator.
+Beautiful Rich-based logging system for NovelForge AI.
 
 This module provides stunning terminal logging with colors, panels, progress bars,
 and beautiful formatting using the Rich library.
@@ -16,14 +16,10 @@ import json
 
 from rich.console import Console
 from rich.logging import RichHandler
-from rich.panel import Panel
 from rich.text import Text
-from rich.table import Table
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn
-from rich import box
 
-class EbookLogger:
-    """Beautiful Rich-enhanced logger for the Ebook Generator with stunning terminal output."""
+class NovelForgeLogger:
+    """Beautiful Rich-enhanced logger for NovelForge AI with stunning terminal output."""
 
     def __init__(self, log_level: str = "INFO"):
         """Initialize the beautiful logger with Rich console and file output."""
@@ -55,10 +51,10 @@ class EbookLogger:
         logs_dir.mkdir(exist_ok=True)
 
         # Create log file with timestamp
-        self.log_file_path = logs_dir / f"ebook_generator_{self.session_id}.log"
+        self.log_file_path = logs_dir / f"novelforge_ai_{self.session_id}.log"
 
         # Create logger with Rich handler
-        self.logger = logging.getLogger("EbookGenerator")
+        self.logger = logging.getLogger("NovelForge")
         self.logger.setLevel(self.log_level)
 
         # Clear any existing handlers
@@ -94,31 +90,21 @@ class EbookLogger:
         self._display_session_start()
 
     def _display_session_start(self):
-        """Display a beautiful session start banner."""
+        """Display clean session start information."""
         start_time = self.session_stats["start_time"].strftime("%Y-%m-%d %H:%M:%S")
 
-        # Create session info table
-        session_table = Table(box=box.ROUNDED, show_header=False, padding=(0, 1))
-        session_table.add_column("Property", style="cyan bold")
-        session_table.add_column("Value", style="white")
-
-        session_table.add_row("🆔 Session ID", self.session_id)
-        session_table.add_row("📅 Start Time", start_time)
-        session_table.add_row("📁 Log File", str(self.log_file_path))
-        session_table.add_row("🔧 Log Level", logging.getLevelName(self.log_level))
-        session_table.add_row("🐍 Python", f"{sys.version.split()[0]}")
-        session_table.add_row("📂 Directory", os.getcwd())
-
-        # Create beautiful panel
-        session_panel = Panel(
-            session_table,
-            title="[bold cyan]🚀 Ebook Generator Session Started[/bold cyan]",
-            border_style="cyan",
-            padding=(1, 2)
-        )
-
         self.rich_console.print()
-        self.rich_console.print(session_panel)
+        self.rich_console.print("[bold cyan]🚀 NovelForge AI Session Started[/bold cyan]")
+        self.rich_console.print()
+
+        # Session details with clean formatting
+        self.rich_console.print(f"    [cyan bold]🆔 Session ID:[/cyan bold] {self.session_id}")
+        self.rich_console.print(f"    [cyan bold]📅 Start Time:[/cyan bold] {start_time}")
+        self.rich_console.print(f"    [cyan bold]📁 Log File:[/cyan bold] {self.log_file_path}")
+        self.rich_console.print(f"    [cyan bold]🔧 Log Level:[/cyan bold] {logging.getLevelName(self.log_level)}")
+        self.rich_console.print(f"    [cyan bold]🐍 Python:[/cyan bold] {sys.version.split()[0]}")
+        self.rich_console.print(f"    [cyan bold]📂 Directory:[/cyan bold] {os.getcwd()}")
+
         self.rich_console.print()
 
     def info(self, message: str, **kwargs):
@@ -136,23 +122,17 @@ class EbookLogger:
         self._log_with_rich_context("WARNING", message, "yellow", "⚠️", **kwargs)
 
     def error(self, message: str, exception: Optional[Exception] = None, **kwargs):
-        """Log error message with beautiful formatting and exception details."""
+        """Log error message with clean formatting and exception details."""
         self.session_stats["errors"] += 1
 
         if exception:
-            # Create beautiful error panel
-            error_text = Text()
-            error_text.append(f"❌ {message}\n", style="bold red")
-            error_text.append(f"Exception: {str(exception)}", style="red")
-
-            error_panel = Panel(
-                error_text,
-                title="[bold red]🚨 Error Occurred[/bold red]",
-                border_style="red",
-                padding=(1, 2)
-            )
-
-            self.rich_console.print(error_panel)
+            # Clean error display
+            self.rich_console.print()
+            self.rich_console.print("[bold red]🚨 Error Occurred[/bold red]")
+            self.rich_console.print()
+            self.rich_console.print(f"    [bold red]❌ {message}[/bold red]")
+            self.rich_console.print(f"    [red]Exception: {str(exception)}[/red]")
+            self.rich_console.print()
 
             # Log to file with full traceback
             self.logger.error(f"{message} | Exception: {str(exception)}")
@@ -161,23 +141,17 @@ class EbookLogger:
             self._log_with_rich_context("ERROR", message, "red", "❌", **kwargs)
 
     def critical(self, message: str, exception: Optional[Exception] = None, **kwargs):
-        """Log critical message with beautiful formatting."""
+        """Log critical message with clean formatting."""
         self.session_stats["errors"] += 1
 
         if exception:
-            # Create beautiful critical error panel
-            critical_text = Text()
-            critical_text.append(f"💥 CRITICAL: {message}\n", style="bold red blink")
-            critical_text.append(f"Exception: {str(exception)}", style="red")
-
-            critical_panel = Panel(
-                critical_text,
-                title="[bold red blink]💥 CRITICAL ERROR[/bold red blink]",
-                border_style="red",
-                padding=(1, 2)
-            )
-
-            self.rich_console.print(critical_panel)
+            # Clean critical error display
+            self.rich_console.print()
+            self.rich_console.print("[bold red blink]💥 CRITICAL ERROR[/bold red blink]")
+            self.rich_console.print()
+            self.rich_console.print(f"    [bold red blink]💥 CRITICAL: {message}[/bold red blink]")
+            self.rich_console.print(f"    [red]Exception: {str(exception)}[/red]")
+            self.rich_console.print()
 
             # Log to file with full traceback
             self.logger.critical(f"{message} | Exception: {str(exception)}")
@@ -266,33 +240,25 @@ class EbookLogger:
         self.logger.debug(msg)
 
     def log_api_call(self, api_name: str, endpoint: str, params: Dict = None, response_status: str = None):
-        """Log API calls with beautiful formatting."""
+        """Log API calls with clean formatting."""
         self.session_stats["api_calls"] += 1
 
-        # Create beautiful API call display
-        api_table = Table(box=box.SIMPLE, show_header=False, padding=(0, 1))
-        api_table.add_column("Property", style="cyan")
-        api_table.add_column("Value", style="white")
-
-        api_table.add_row("🌐 API", api_name)
-        api_table.add_row("📡 Endpoint", endpoint)
+        # Clean API call display
+        self.rich_console.print()
+        self.rich_console.print("[bold blue]🌐 API Call[/bold blue]")
+        self.rich_console.print()
+        self.rich_console.print(f"    [cyan]🌐 API:[/cyan] {api_name}")
+        self.rich_console.print(f"    [cyan]📡 Endpoint:[/cyan] {endpoint}")
 
         if params:
             params_str = json.dumps(params, default=str)[:100] + "..." if len(json.dumps(params, default=str)) > 100 else json.dumps(params, default=str)
-            api_table.add_row("📝 Params", params_str)
+            self.rich_console.print(f"    [cyan]📝 Params:[/cyan] {params_str}")
 
         if response_status:
             status_color = "green" if response_status.lower() in ["success", "200", "ok"] else "red"
-            api_table.add_row("📊 Status", f"[{status_color}]{response_status}[/{status_color}]")
+            self.rich_console.print(f"    [cyan]📊 Status:[/cyan] [{status_color}]{response_status}[/{status_color}]")
 
-        api_panel = Panel(
-            api_table,
-            title="[bold blue]🌐 API Call[/bold blue]",
-            border_style="blue",
-            padding=(0, 1)
-        )
-
-        self.rich_console.print(api_panel)
+        self.rich_console.print()
 
         # File logging
         msg = f"API CALL: {api_name} | Endpoint: {endpoint}"
@@ -417,66 +383,43 @@ class EbookLogger:
             self.debug("MEMORY USAGE: psutil not available")
 
     def display_session_stats(self):
-        """Display beautiful session statistics."""
+        """Display clean session statistics."""
         duration = datetime.now() - self.session_stats["start_time"]
         duration_str = str(duration).split('.')[0]  # Remove microseconds
 
-        # Create stats table
-        stats_table = Table(box=box.ROUNDED, show_header=False, padding=(0, 1))
-        stats_table.add_column("Metric", style="cyan bold")
-        stats_table.add_column("Value", style="white")
-
-        stats_table.add_row("⏱️ Duration", duration_str)
-        stats_table.add_row("🔧 Operations", str(self.session_stats["operations"]))
-        stats_table.add_row("🌐 API Calls", str(self.session_stats["api_calls"]))
-        stats_table.add_row("⚠️ Warnings", str(self.session_stats["warnings"]))
-        stats_table.add_row("❌ Errors", str(self.session_stats["errors"]))
-
-        # Create beautiful panel
-        stats_panel = Panel(
-            stats_table,
-            title="[bold cyan]📊 Session Statistics[/bold cyan]",
-            border_style="cyan",
-            padding=(1, 2)
-        )
-
-        self.rich_console.print(stats_panel)
+        self.rich_console.print()
+        self.rich_console.print("[bold cyan]📊 Session Statistics[/bold cyan]")
+        self.rich_console.print()
+        self.rich_console.print(f"    [cyan bold]⏱️ Duration:[/cyan bold] {duration_str}")
+        self.rich_console.print(f"    [cyan bold]🔧 Operations:[/cyan bold] {self.session_stats['operations']}")
+        self.rich_console.print(f"    [cyan bold]🌐 API Calls:[/cyan bold] {self.session_stats['api_calls']}")
+        self.rich_console.print(f"    [cyan bold]⚠️ Warnings:[/cyan bold] {self.session_stats['warnings']}")
+        self.rich_console.print(f"    [cyan bold]❌ Errors:[/cyan bold] {self.session_stats['errors']}")
+        self.rich_console.print()
 
     def get_log_file_path(self) -> str:
         """Get the current log file path."""
         return str(self.log_file_path)
 
     def close(self):
-        """Close the logger with beautiful session end display."""
+        """Close the logger with clean session end display."""
         # Display session statistics
         self.display_session_stats()
 
         # Create session end banner
         end_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-        end_table = Table(box=box.ROUNDED, show_header=False, padding=(0, 1))
-        end_table.add_column("Property", style="cyan bold")
-        end_table.add_column("Value", style="white")
-
-        end_table.add_row("🆔 Session ID", self.session_id)
-        end_table.add_row("🏁 End Time", end_time)
-        end_table.add_row("📁 Log File", str(self.log_file_path))
-
-        # Create beautiful panel
-        end_panel = Panel(
-            end_table,
-            title="[bold cyan]🏁 Ebook Generator Session Ended[/bold cyan]",
-            border_style="cyan",
-            padding=(1, 2)
-        )
-
         self.rich_console.print()
-        self.rich_console.print(end_panel)
+        self.rich_console.print("[bold cyan]🏁 NovelForge AI Session Ended[/bold cyan]")
+        self.rich_console.print()
+        self.rich_console.print(f"    [cyan bold]🆔 Session ID:[/cyan bold] {self.session_id}")
+        self.rich_console.print(f"    [cyan bold]🏁 End Time:[/cyan bold] {end_time}")
+        self.rich_console.print(f"    [cyan bold]📁 Log File:[/cyan bold] {self.log_file_path}")
         self.rich_console.print()
 
         # File logging
         self.logger.info("=" * 80)
-        self.logger.info(f"EBOOK GENERATOR SESSION ENDED - ID: {self.session_id}")
+        self.logger.info(f"NOVELFORGE AI SESSION ENDED - ID: {self.session_id}")
         self.logger.info("=" * 80)
 
         # Close all handlers
@@ -485,19 +428,19 @@ class EbookLogger:
             self.logger.removeHandler(handler)
 
 # Global logger instance
-_global_logger: Optional[EbookLogger] = None
+_global_logger: Optional[NovelForgeLogger] = None
 
-def get_logger() -> EbookLogger:
+def get_logger() -> NovelForgeLogger:
     """Get the global logger instance."""
     global _global_logger
     if _global_logger is None:
-        _global_logger = EbookLogger()
+        _global_logger = NovelForgeLogger()
     return _global_logger
 
-def init_logger(log_level: str = "DEBUG") -> EbookLogger:
+def init_logger(log_level: str = "DEBUG") -> NovelForgeLogger:
     """Initialize the global logger with specified level."""
     global _global_logger
-    _global_logger = EbookLogger(log_level)
+    _global_logger = NovelForgeLogger(log_level)
     return _global_logger
 
 def close_logger():

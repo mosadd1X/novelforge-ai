@@ -123,13 +123,14 @@ class GenerationTimer:
 generation_timer = GenerationTimer()
 
 from src.utils.genre_defaults import get_genre_defaults, get_all_genres
+from src.ui.responsive_separator import separator, title_separator, section_separator
 
 # Create console with markup enabled for Rich formatting
 console = Console(markup=True)
 
 def display_api_key_status(gemini_client) -> None:
     """
-    Display API key status information.
+    Display API key status information following clean design principles.
 
     Args:
         gemini_client: GeminiClient instance
@@ -137,67 +138,59 @@ def display_api_key_status(gemini_client) -> None:
     clear_screen()
     display_title()
 
-    console.print("[bold cyan]API Key Status[/bold cyan]")
+    console.print("[bold cyan]🔑 API Key Status[/bold cyan]")
+    console.print(separator("="))
 
     # Check all API keys
     console.print("\n[bold cyan]Checking API keys...[/bold cyan]")
     api_status = gemini_client.check_api_connection(check_all_keys=True)
 
-    # Create a table for API key status
-    table = Table(box=box.ROUNDED)
-    table.add_column("Status", style="cyan")
-    table.add_column("Value", style="white")
-
-    # Add general information
-    table.add_row("Total API Keys", str(api_status["active_keys"]))
-    table.add_row("Working API Keys", str(api_status["working_keys"]))
-    table.add_row("Rate Limited Keys", str(len(gemini_client.rate_limited_keys)))
-    table.add_row("Current API Key", f"Key {gemini_client.current_key_index + 1}/{len(gemini_client.api_keys)}")
-
-    console.print(table)
+    # Display general information using clean typography
+    console.print(f"\n{section_separator('API Key Overview', '-', 'simple')}")
+    console.print()
+    console.print(f"    🔢 Total API Keys: [white]{api_status['active_keys']}[/white]")
+    console.print(f"    ✅ Working API Keys: [green]{api_status['working_keys']}[/green]")
+    console.print(f"    ⚠️ Rate Limited Keys: [red]{len(gemini_client.rate_limited_keys)}[/red]")
+    console.print(f"    🎯 Current API Key: [cyan]Key {gemini_client.current_key_index + 1}/{len(gemini_client.api_keys)}[/cyan]")
 
     # Get usage statistics
     usage_stats = gemini_client.get_api_key_usage_stats()
 
-    # Create a table for API key usage
-    usage_table = Table(title="API Key Usage", box=box.ROUNDED)
-    usage_table.add_column("API Key", style="cyan")
-    usage_table.add_column("Requests", style="white", justify="right")
-    usage_table.add_column("Percentage", style="white", justify="right")
-    usage_table.add_column("Status", style="green")
+    # Display API key usage using clean typography
+    console.print(f"\n{section_separator('API Key Usage Statistics', '-', 'simple')}")
+    console.print()
 
-    # Add rows for each API key
     for key, stats in usage_stats["usage_by_key"].items():
         # Determine if this key is rate limited
         is_rate_limited = key in [f"{k[:4]}...{k[-4:]}" for k in gemini_client.rate_limited_keys]
-        status = "[bold red]Rate Limited[/bold red]" if is_rate_limited else "[bold green]Available[/bold green]"
+        status_icon = "❌" if is_rate_limited else "✅"
+        status_text = "[bold red]Rate Limited[/bold red]" if is_rate_limited else "[bold green]Available[/bold green]"
 
-        # Add row
-        usage_table.add_row(
-            key,
-            str(stats["count"]),
-            f"{stats['percentage']}%",
-            status
-        )
-
-    console.print(usage_table)
+        console.print(f"    {status_icon} [cyan]{key}[/cyan]")
+        console.print(f"        📊 Requests: [white]{stats['count']}[/white]")
+        console.print(f"        📈 Percentage: [white]{stats['percentage']}%[/white]")
+        console.print(f"        🔄 Status: {status_text}")
+        console.print()
 
     # Display key rotation information
+    console.print("[bold cyan]🔄 Key Rotation Status[/bold cyan]")
+    console.print()
     if api_status["active_keys"] > 1:
-        console.print("\n[bold green]Multiple API keys detected[/bold green]")
-        console.print("The system will automatically rotate keys if rate limits are encountered.")
-        console.print("Keys are rotated in sequence, and rate-limited keys are skipped until all keys are exhausted.")
+        console.print("    ✅ [bold green]Multiple API keys detected[/bold green]")
+        console.print("    🔄 The system will automatically rotate keys if rate limits are encountered")
+        console.print("    ⚡ Keys are rotated in sequence, and rate-limited keys are skipped until all keys are exhausted")
     else:
-        console.print("\n[bold yellow]Only one API key detected[/bold yellow]")
-        console.print("Consider adding more API keys to handle rate limits for long generations.")
+        console.print("    ⚠️ [bold yellow]Only one API key detected[/bold yellow]")
+        console.print("    💡 Consider adding more API keys to handle rate limits for long generations")
 
-    console.print("\n[bold cyan]API Key Management Tips:[/bold cyan]")
-    console.print("1. Add more API keys in your .env file (GEMINI_API_KEY_1, GEMINI_API_KEY_2, etc.)")
-    console.print("2. If all keys are rate limited, wait for the quota to reset (usually hourly or daily)")
-    console.print("3. Monitor your API usage in the Google AI Studio dashboard")
+    console.print("\n[bold cyan]💡 API Key Management Tips[/bold cyan]")
+    console.print()
+    console.print("    1️⃣ Add more API keys in your .env file (GEMINI_API_KEY_1, GEMINI_API_KEY_2, etc.)")
+    console.print("    2️⃣ If all keys are rate limited, wait for the quota to reset (usually hourly or daily)")
+    console.print("    3️⃣ Monitor your API usage in the Google AI Studio dashboard")
 
     # Wait for user input
-    console.print("\nPress Enter to return to the main menu...")
+    console.print("\n[dim]Press Enter to return to the main menu...[/dim]")
     input()
 
 # Custom questionary style
@@ -221,8 +214,9 @@ def clear_screen() -> None:
 
 
 def display_title() -> None:
-    """Display the application title."""
-    console.print(Panel("NovelForge AI", style="cyan bold", expand=False))
+    """Display the application title following clean design principles."""
+    console.print()
+    console.print("[bold cyan]🚀 NovelForge AI[/bold cyan]")
     console.print()
 
 
@@ -421,16 +415,13 @@ def get_novel_info(series_info: Dict[str, Any] = None) -> Dict[str, str]:
 
 def display_writer_profile(writer_profile: Dict[str, Any]) -> None:
     """
-    Display the generated writer profile.
+    Display the generated writer profile following clean design principles.
 
     Args:
         writer_profile: Dictionary containing writer profile information
     """
-    console.print("\n[bold cyan]Writer Profile[/bold cyan]")
-
-    table = Table(box=box.ROUNDED)
-    table.add_column("Attribute", style="cyan")
-    table.add_column("Description", style="white")
+    console.print("\n[bold cyan]✍️ Writer Profile[/bold cyan]")
+    console.print()
 
     for key, value in writer_profile.items():
         if key != "raw_response":  # Skip raw response
@@ -439,91 +430,96 @@ def display_writer_profile(writer_profile: Dict[str, Any]) -> None:
                 value_str = str(value)
             else:
                 value_str = str(value)
-            table.add_row(key.replace("_", " ").title(), value_str)
 
-    console.print(table)
+            # Format the key for display
+            display_key = key.replace("_", " ").title()
+            console.print(f"    📝 [cyan bold]{display_key}[/cyan bold]: [white]{value_str}[/white]")
+
     console.print()
 
 
 def display_novel_outline(chapter_outlines: List[str], chapter_count: int) -> None:
     """
-    Display the generated novel outline.
+    Display the generated novel outline following clean design principles.
 
     Args:
         chapter_outlines: List of chapter outlines
         chapter_count: Total number of chapters
     """
-    console.print("\n[bold cyan]Novel Outline[/bold cyan]")
-    console.print(f"Total chapters: [bold]{chapter_count}[/bold]\n")
+    console.print("\n[bold cyan]📖 Novel Outline[/bold cyan]")
+    console.print(f"    📊 Total chapters: [bold]{chapter_count}[/bold]\n")
 
     # For many chapters, use a more compact display
     if chapter_count > 20:
         display_compact_outline(chapter_outlines, chapter_count)
     else:
-        display_table_outline(chapter_outlines)
+        display_clean_outline(chapter_outlines)
 
 def display_compact_outline(chapter_outlines: List[str], chapter_count: int) -> None:
-    """Display outline in a compact format for many chapters."""
-    from rich.panel import Panel
-    from rich.text import Text
-
+    """Display outline in a compact format for many chapters following clean design principles."""
     # Show first 5 chapters
-    console.print("[bold yellow]📖 First 5 Chapters:[/bold yellow]")
+    console.print("[bold yellow]📖 First 5 Chapters[/bold yellow]")
+    console.print()
     for i in range(min(5, len(chapter_outlines))):
         outline = chapter_outlines[i]
-        console.print(f"[cyan]Chapter {i+1}:[/cyan] {outline}")
+        console.print(f"    📄 [cyan bold]Chapter {i+1}[/cyan bold]: [white]{outline}[/white]")
+    console.print()
 
     # Show middle sample if there are many chapters
     if chapter_count > 15:
-        console.print(f"\n[dim]... {chapter_count - 10} more chapters ...[/dim]")
+        console.print(f"[dim]    ... {chapter_count - 10} more chapters ...[/dim]")
+        console.print()
 
         # Show last 5 chapters
-        console.print("\n[bold yellow]📚 Last 5 Chapters:[/bold yellow]")
+        console.print("[bold yellow]📚 Last 5 Chapters[/bold yellow]")
+        console.print()
         start_idx = max(5, len(chapter_outlines) - 5)
         for i in range(start_idx, len(chapter_outlines)):
             outline = chapter_outlines[i]
-            console.print(f"[cyan]Chapter {i+1}:[/cyan] {outline}")
+            console.print(f"    📄 [cyan bold]Chapter {i+1}[/cyan bold]: [white]{outline}[/white]")
+        console.print()
 
     # Show summary statistics
     total_words = sum(len(outline.split()) for outline in chapter_outlines)
     avg_words = total_words / len(chapter_outlines) if chapter_outlines else 0
 
-    summary_text = Text()
-    summary_text.append(f"\n📊 Outline Summary:\n", style="bold cyan")
-    summary_text.append(f"  • Total Chapters: {chapter_count}\n", style="white")
-    summary_text.append(f"  • Outline Words: {total_words:,}\n", style="white")
-    summary_text.append(f"  • Avg per Chapter: {avg_words:.0f} words\n", style="white")
-
-    console.print(Panel(summary_text, title="[bold cyan]Outline Overview[/bold cyan]", border_style="cyan"))
+    console.print("[bold cyan]📊 Outline Summary[/bold cyan]")
+    console.print()
+    console.print(f"    📚 Total Chapters: [white]{chapter_count}[/white]")
+    console.print(f"    📝 Outline Words: [white]{total_words:,}[/white]")
+    console.print(f"    📈 Avg per Chapter: [white]{avg_words:.0f} words[/white]")
     console.print()
 
-def display_table_outline(chapter_outlines: List[str]) -> None:
-    """Display outline in traditional table format for smaller chapter counts."""
-    table = Table(box=box.ROUNDED)
-    table.add_column("Chapter", style="cyan")
-    table.add_column("Description", style="white")
+def display_clean_outline(chapter_outlines: List[str]) -> None:
+    """Display outline in clean format for smaller chapter counts following design principles."""
+    console.print("[bold cyan]📋 Chapter Details[/bold cyan]")
+    console.print()
 
     for i, outline in enumerate(chapter_outlines, 1):
-        table.add_row(f"Chapter {i}", outline)
+        console.print(f"    📄 [cyan bold]Chapter {i}[/cyan bold]: [white]{outline}[/white]")
 
-    console.print(table)
     console.print()
 
 
 def display_characters(characters: List[Dict[str, Any]]) -> None:
     """
-    Display the generated characters.
+    Display the generated characters following clean design principles.
 
     Args:
         characters: List of character dictionaries
     """
-    console.print("\n[bold cyan]Characters[/bold cyan]")
+    console.print("\n[bold cyan]👥 Characters[/bold cyan]")
+    console.print()
 
     for character in characters:
         name = character.get("name", "Unknown")
         role = character.get("role", "")
 
-        panel_content = []
+        # Display character header
+        console.print(f"    🎭 [bold cyan]{name}[/bold cyan] [dim]({role})[/dim]")
+        console.print()
+
+        # Display character details
         for key, value in character.items():
             if key not in ["name", "raw_response"] and value:
                 # Convert value to string to ensure it's renderable
@@ -531,43 +527,40 @@ def display_characters(characters: List[Dict[str, Any]]) -> None:
                     value_str = str(value)
                 else:
                     value_str = str(value)
-                panel_content.append(f"[bold]{key.replace('_', ' ').title()}[/bold]: {value_str}")
 
-        console.print(Panel(
-            "\n".join(panel_content),
-            title=f"[bold]{name}[/bold] ({role})",
-            border_style="cyan",
-            expand=False
-        ))
+                display_key = key.replace('_', ' ').title()
+                console.print(f"        📝 [cyan bold]{display_key}[/cyan bold]: [white]{value_str}[/white]")
+
+        console.print()
 
     console.print()
 
 
 def display_chapter_progress(chapter_num: int, total_chapters: int) -> None:
     """
-    Display chapter generation progress.
+    Display chapter generation progress following clean design principles.
 
     Args:
         chapter_num: Current chapter number
         total_chapters: Total number of chapters
     """
-    console.print(f"\n[bold cyan]Generating Chapter {chapter_num}/{total_chapters}[/bold cyan]")
+    console.print(f"\n[bold cyan]📝 Generating Chapter {chapter_num}/{total_chapters}[/bold cyan]")
 
-    with Progress(
-        SpinnerColumn(),
-        TextColumn("[bold cyan]{task.description}"),
-        BarColumn(),
-        TextColumn("[bold cyan]{task.percentage:>3.0f}%"),
-        TimeElapsedColumn()
-    ) as progress:
-        task = progress.add_task(f"Generating Chapter {chapter_num}", total=100)
+    # Calculate progress percentage
+    progress_percent = (chapter_num / total_chapters) * 100
 
-        # Simulate progress
-        for i in range(1, 101):
-            time.sleep(0.05)
-            progress.update(task, completed=i)
+    # Create a simple text-based progress indicator
+    progress_bar_length = 30
+    filled_length = int(progress_bar_length * chapter_num // total_chapters)
+    bar = '█' * filled_length + '░' * (progress_bar_length - filled_length)
 
-    console.print(f"[bold green]Chapter {chapter_num} generated successfully![/bold green]\n")
+    console.print(f"    📊 Progress: [cyan]{bar}[/cyan] [white]{progress_percent:.1f}%[/white]")
+    console.print(f"    ⏱️ Working on chapter content...")
+
+    # Simple delay to show progress (in real usage, this would be actual generation time)
+    time.sleep(0.1)
+
+    console.print(f"    ✅ [bold green]Chapter {chapter_num} generated successfully![/bold green]\n")
 
 
 def display_timer_info():
@@ -581,7 +574,7 @@ def display_timer_info():
 
 def display_series_info(series_manager, show_visualizations: bool = False) -> None:
     """
-    Display information about a series.
+    Display information about a series following clean design principles.
 
     Args:
         series_manager: SeriesManager instance
@@ -590,38 +583,33 @@ def display_series_info(series_manager, show_visualizations: bool = False) -> No
     if not series_manager:
         return
 
-    console.print("\n[bold cyan]Series Information[/bold cyan]")
+    console.print("\n[bold cyan]📚 Series Information[/bold cyan]")
+    console.print()
 
-    # Create a table for series metadata
-    table = Table(box=box.ROUNDED)
-    table.add_column("Attribute", style="cyan")
-    table.add_column("Value", style="white")
-
-    table.add_row("Series Title", series_manager.metadata["title"])
-    table.add_row("Description", series_manager.metadata.get("description", ""))
-    table.add_row("Book Count", str(series_manager.metadata["book_count"]))
-    table.add_row("Planned Books", str(series_manager.metadata.get("planned_books", "Unknown")))
-    table.add_row("Created", series_manager.metadata["created_at"].split("T")[0])
-    table.add_row("Last Updated", series_manager.metadata["last_updated"].split("T")[0])
-
-    console.print(table)
+    # Display series metadata using clean typography
+    console.print(f"    📖 [cyan bold]Series Title[/cyan bold]: [white]{series_manager.metadata['title']}[/white]")
+    console.print(f"    📝 [cyan bold]Description[/cyan bold]: [white]{series_manager.metadata.get('description', '')}[/white]")
+    console.print(f"    📊 [cyan bold]Book Count[/cyan bold]: [white]{series_manager.metadata['book_count']}[/white]")
+    console.print(f"    🎯 [cyan bold]Planned Books[/cyan bold]: [white]{series_manager.metadata.get('planned_books', 'Unknown')}[/white]")
+    console.print(f"    📅 [cyan bold]Created[/cyan bold]: [white]{series_manager.metadata['created_at'].split('T')[0]}[/white]")
+    console.print(f"    🔄 [cyan bold]Last Updated[/cyan bold]: [white]{series_manager.metadata['last_updated'].split('T')[0]}[/white]")
 
     # Display books in the series
     if series_manager.books:
-        console.print("\n[bold cyan]Books in this Series[/bold cyan]")
-
-        books_table = Table(box=box.ROUNDED)
-        books_table.add_column("#", style="cyan")
-        books_table.add_column("Title", style="white")
-        books_table.add_column("Description", style="white")
+        console.print("\n[bold cyan]📖 Books in this Series[/bold cyan]")
+        console.print()
 
         for book in series_manager.books:
             book_num = book.get("book_number", "?")
             title = book.get("title", "Untitled")
             description = book.get("description", "")
-            books_table.add_row(str(book_num), title, description[:50] + "..." if len(description) > 50 else description)
 
-        console.print(books_table)
+            # Truncate description if too long
+            display_description = description[:50] + "..." if len(description) > 50 else description
+
+            console.print(f"    📚 [cyan bold]Book {book_num}[/cyan bold]: [white]{title}[/white]")
+            console.print(f"        📝 [dim]{display_description}[/dim]")
+            console.print()
 
     # Show visualizations if requested and we have more than one book
     if show_visualizations and series_manager.metadata["book_count"] > 0:
@@ -637,7 +625,7 @@ def display_series_info(series_manager, show_visualizations: bool = False) -> No
             if show_viz:
                 visualize_series_data(series_manager)
         else:
-            console.print("[yellow]Series visualizations not available.[/yellow]")
+            console.print("    ⚠️ [yellow]Series visualizations not available[/yellow]")
 
     console.print()
 

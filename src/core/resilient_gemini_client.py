@@ -55,6 +55,25 @@ class ResilientGeminiClient:
 
         console.print("[bold green]🛡️ Resilient Gemini Client initialized with network protection[/bold green]")
 
+    @property
+    def rate_limited_keys(self):
+        """Access rate limited keys from the underlying Gemini client."""
+        return self.gemini_client.rate_limited_keys
+
+    @property
+    def api_keys(self):
+        """Access API keys from the underlying Gemini client."""
+        return self.gemini_client.api_keys
+
+    @property
+    def current_key_index(self):
+        """Access current key index from the underlying Gemini client."""
+        return self.gemini_client.current_key_index
+
+    def get_api_key_usage_stats(self) -> Dict[str, Any]:
+        """Get API key usage statistics from the underlying Gemini client."""
+        return self.gemini_client.get_api_key_usage_stats()
+
     def _on_network_status_change(self, old_status: NetworkStatus, new_status: NetworkStatus):
         """Handle network status changes."""
         if new_status == NetworkStatus.DISCONNECTED:
