@@ -161,6 +161,161 @@ Ensure this book provides comprehensive business education while serving as an i
         
         return base_prompt + business_book_additions
 
+        ```python
+        class BusinessBackCover:
+        """
+        A class containing methods for generating back cover copy and design prompts for Business books.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs) -> str:
+        """
+        Generates a comprehensive prompt for creating a compelling back cover description for a Business book.
+
+        Args:
+        **kwargs: Keyword arguments containing book details such as title, author, target audience,
+        key takeaways, unique selling proposition (USP), and comparable titles.
+
+        Returns:
+        A detailed prompt string tailored for the Business genre.
+        """
+        prompt = f"""
+        Craft a compelling back cover description for a Business book titled "{kwargs.get('title', '[Title Placeholder]')}" by {kwargs.get('author', '[Author Placeholder]')}.
+
+        **Target Audience:** {kwargs.get('target_audience', '[Target Audience Placeholder, e.g., Aspiring Entrepreneurs, Seasoned CEOs, Marketing Professionals]')}.  Specifically address their pain points and aspirations.
+
+        **Core Message:**  The book's central argument or promise is: {kwargs.get('core_message', '[Core Message Placeholder, e.g., to provide a proven framework for scaling a startup, to offer actionable strategies for improving team performance]')}.
+
+        **Key Takeaways:**  Readers will learn:
+        - {kwargs.get('key_takeaway_1', '[Key Takeaway 1 Placeholder]')}
+        - {kwargs.get('key_takeaway_2', '[Key Takeaway 2 Placeholder]')}
+        - {kwargs.get('key_takeaway_3', '[Key Takeaway 3 Placeholder]')}
+        Focus on tangible results and measurable improvements.
+
+        **Unique Selling Proposition (USP):** What makes this book different and better than existing alternatives? {kwargs.get('usp', '[USP Placeholder, e.g., a data-driven approach, real-world case studies from Fortune 500 companies, a focus on ethical and sustainable business practices]')}.  Emphasize quantifiable benefits.
+
+        **Problem/Solution:** Clearly articulate the business problem this book solves and how it provides a practical solution.
+        Problem: {kwargs.get('problem', '[Problem Placeholder, e.g., Lack of effective leadership skills, Inability to adapt to market changes, Poor financial management]')}.
+        Solution: {kwargs.get('solution', '[Solution Placeholder, e.g., Proven leadership techniques, Agile strategies for innovation, Practical budgeting and forecasting methods]')}.
+
+        **Call to Action:**  What should the reader do after reading the back cover?  Encourage them to buy the book and outline the potential positive outcomes.  Example: "Unlock your business's full potential.  Start building a thriving and sustainable future today."
+
+        **Tone:** Authoritative, professional, yet engaging and accessible.  Avoid jargon unless it's essential and clearly defined.  Focus on providing value and building trust.
+
+        **Comparable Titles (for positioning):**  Books similar to this one include: {kwargs.get('comparable_titles', '[Comparable Titles Placeholder, e.g., Good to Great, The Lean Startup, Zero to One]')}.  Explain how this book is similar and different (better) than these titles.
+
+        **Length:** Aim for approximately 150-200 words.
+
+        **Important Considerations for Business Genre:**
+        *   Highlight ROI (Return on Investment) and tangible benefits.
+        *   Showcase expertise and credibility (author's background, credentials).
+        *   Use data and statistics to support claims.
+        *   Focus on practicality and actionable advice.
+        *   Emphasize innovation, efficiency, and growth.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs) -> str:
+        """
+        Generates a prompt for creating a short, impactful book description for the Business genre (2-3 lines).
+
+        Args:
+        **kwargs: Keyword arguments containing book details such as title, target audience, and core benefit.
+
+        Returns:
+        A prompt string for a concise Business book description.
+        """
+        prompt = f"""
+        Create a short, punchy book description (2-3 lines) for a Business book titled "{kwargs.get('title', '[Title Placeholder]')}".
+
+        **Target Audience:** {kwargs.get('target_audience', '[Target Audience Placeholder, e.g., Small Business Owners, Marketing Managers, Financial Analysts]')}.
+
+        **Core Benefit:** What is the single most important benefit readers will gain from this book? {kwargs.get('core_benefit', '[Core Benefit Placeholder, e.g., Increased profits, Improved efficiency, Better leadership skills]')}.
+
+        **Tone:**  Concise, confident, and benefit-driven.
+
+        **Example:** "Unlock exponential growth with [Book Title].  Proven strategies for [Target Audience] to [Core Benefit]."
+
+        **Important Considerations for Business Genre:**
+        *   Focus on immediate value and results.
+        *   Use strong action verbs.
+        *   Highlight the book's unique selling proposition in a concise way.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs) -> str:
+        """
+        Generates a prompt for creating a memorable and effective marketing tagline for a Business book.
+
+        Args:
+        **kwargs: Keyword arguments containing book details such as title, target audience, and USP.
+
+        Returns:
+        A prompt string for a Business book tagline.
+        """
+        prompt = f"""
+        Create a compelling marketing tagline for a Business book titled "{kwargs.get('title', '[Title Placeholder]')}".
+
+        **Target Audience:** {kwargs.get('target_audience', '[Target Audience Placeholder, e.g., Entrepreneurs, Executives, Investors]')}.
+
+        **Unique Selling Proposition (USP):** What is the key differentiator of this book? {kwargs.get('usp', '[USP Placeholder, e.g., A revolutionary new business model, A data-driven approach to decision-making, A focus on sustainable and ethical practices]')}.
+
+        **Desired Emotion:** What feeling should the tagline evoke in the reader? (e.g., excitement, confidence, trust, urgency). {kwargs.get('desired_emotion', '[Desired Emotion Placeholder]')}
+
+        **Tone:**  Bold, impactful, and memorable.
+
+        **Examples:**
+        *   "Innovate or Die."
+        *   "The Future of [Industry] Starts Now."
+        *   "Unlock Your Business Potential."
+        *   "Profit with Purpose."
+
+        **Important Considerations for Business Genre:**
+        *   Focus on results, innovation, and leadership.
+        *   Use strong, action-oriented language.
+        *   Keep it short, memorable, and easy to understand.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs) -> str:
+        """
+        Generates a prompt for defining the visual style preferences for a Business book's back cover.
+
+        Args:
+        **kwargs: Keyword arguments containing information about the book's theme, target audience, and overall tone.
+
+        Returns:
+        A prompt string detailing visual style preferences for the Business genre.
+        """
+        prompt = f"""
+        Define the visual style preferences for the back cover of a Business book titled "{kwargs.get('title', '[Title Placeholder]')}".
+
+        **Target Audience:** {kwargs.get('target_audience', '[Target Audience Placeholder, e.g., Tech Startups, Established Corporations, Finance Professionals]')}.
+
+        **Overall Tone:**  (e.g., Modern, Classic, Innovative, Trustworthy) {kwargs.get('overall_tone', '[Overall Tone Placeholder]')}.
+
+        **Color Palette:**  Suggest a color palette that reflects the book's tone and target audience.  Consider using colors that convey professionalism, innovation, and trustworthiness. (e.g., Blues and grays for trustworthiness, Greens for sustainability, Bright colors for innovation). {kwargs.get('color_palette', '[Color Palette Suggestions]')}.
+
+        **Imagery:**  Should the back cover include images? If so, what kind? (e.g., Abstract graphics, Business professionals, Data visualizations, Cityscapes). {kwargs.get('imagery', '[Imagery Suggestions]')}.  Consider images that convey success, growth, and innovation.
+
+        **Typography:**  What font styles would be appropriate? (e.g., Clean and modern sans-serif fonts, Classic serif fonts for a more traditional look). {kwargs.get('typography', '[Typography Suggestions]')}.  Ensure readability and professionalism.
+
+        **Layout:**  How should the text and images be arranged on the back cover? (e.g., Clean and minimalist layout, Bold and dynamic layout). {kwargs.get('layout', '[Layout Suggestions]')}.  Prioritize clarity and visual appeal.
+
+        **Overall Impression:**  The back cover should convey a sense of: {kwargs.get('overall_impression', '[Overall Impression Placeholder, e.g., Professionalism, Expertise, Innovation, Trustworthiness]')}.
+
+        **Important Considerations for Business Genre:**
+        *   Avoid overly flashy or distracting visuals.
+        *   Focus on conveying credibility and expertise.
+        *   Use high-quality images and graphics.
+        *   Ensure the design is clean, modern, and professional.
+        *   Consider incorporating data visualizations or charts if relevant to the book's content.
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return BusinessPrompts.get_writer_profile_prompt(**kwargs)
@@ -178,6 +333,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return BusinessPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return BusinessPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return BusinessPrompts.get_series_book_prompt(**kwargs)

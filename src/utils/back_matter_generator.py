@@ -11,6 +11,11 @@ from datetime import datetime
 from src.utils.genre_defaults import get_genre_defaults, get_all_genres
 from src.utils.writer_profile_manager import WriterProfileManager
 from src.utils.profile_image_manager import ProfileImageManager
+from src.utils.cover_folder_manager import CoverFolderManager
+from src.database.cover_database_manager import get_cover_database_manager
+from src.database.database_manager import get_database_manager
+import os
+import base64
 
 
 class BackMatterGenerator:
@@ -36,16 +41,20 @@ class BackMatterGenerator:
         self.writer_profile = writer_profile or {}
         self.profile_manager = profile_manager
         self.image_manager = ProfileImageManager()
+        self.cover_manager = CoverFolderManager()
+        self.cover_db_manager = get_cover_database_manager()
+        self.db_manager = get_database_manager()
         self.metadata = novel_data.get("metadata", {})
         self.genre = self.metadata.get("genre", "Fiction")
         self.genre_defaults = get_genre_defaults(self.genre)
 
     def generate_writer_profile_section(self) -> str:
         """
-        Generate "About the Author" section with enhanced biographical content.
+        Generate enhanced "About the Author" section with rich biographical content,
+        book description, and other books by the same author.
 
         Returns:
-            HTML content for the writer profile section
+            HTML content for the enhanced writer profile section
         """
         try:
             if not self.writer_profile:
@@ -53,47 +62,8 @@ class BackMatterGenerator:
 
             profile_name = self.writer_profile.get("name", "Custom AI Writer Profile")
 
-            # Get profile image information
-            image_info = self.image_manager.get_writer_image_info(profile_name)
-            profile_image_html = ""
-
-            if image_info['has_image'] and image_info['base64_data']:
-                profile_image_html = f"""
-                <div class="profile-image">
-                    <img src="{image_info['base64_data']}" alt="Portrait of {profile_name}"
-                         class="author-portrait" />
-                    <p class="image-caption">Portrait of {profile_name}</p>
-                </div>
-                """
-
-            # Try to get the enhanced author biography
-            author_biography = self._get_enhanced_author_biography()
-
-            if author_biography:
-                # Use the enhanced biographical narrative
-                return f"""
-                <div class="writer-profile">
-                    <h1>About the Author</h1>
-
-                    {profile_image_html}
-
-                    <h2>{profile_name}</h2>
-
-                    <div class="author-biography">
-                        {self._format_biography_paragraphs(author_biography)}
-                    </div>
-
-                    <div class="fictional-author-notice">
-                        <p><em><strong>Important Note:</strong> {profile_name} is a fictional author persona.
-                        This profile draws inspiration from real literary techniques and styles but represents
-                        a completely original fictional identity. All books attributed to this name are
-                        AI-generated works.</em></p>
-                    </div>
-                </div>
-                """
-            else:
-                # Fallback to technical profile information
-                return self._generate_technical_profile_section(profile_image_html, profile_name)
+            # Generate the enhanced author section with new layout
+            return self._generate_enhanced_author_section(profile_name)
 
         except Exception as e:
             # Return a basic fallback section
@@ -103,6 +73,344 @@ class BackMatterGenerator:
                 <p>This book was generated using AI technology.</p>
             </div>
             """
+
+    def _generate_enhanced_author_section(self, profile_name: str) -> str:
+        """
+        Generate the enhanced author section with improved layout matching the diagram.
+
+        Args:
+            profile_name: Name of the author profile
+
+        Returns:
+            HTML content for enhanced author section
+        """
+        # Get profile image (smaller, right-aligned)
+        profile_image_html = self._get_enhanced_profile_image(profile_name)
+
+        # Get enhanced author biography
+        author_biography = self._get_enhanced_author_biography()
+
+        # Get current book description (2-3 lines)
+        book_description = self._get_current_book_description()
+
+        # Get other books by the same author
+        other_books_html = self._get_other_books_by_author(profile_name)
+
+        # Build the enhanced layout
+        if author_biography:
+            biography_content = self._format_biography_paragraphs(author_biography)
+        else:
+            biography_content = self._get_fallback_biography_content(profile_name)
+
+        return f"""
+        <div class="writer-profile enhanced-layout">
+            <h1>About the Author</h1>
+
+            <div class="author-content-wrapper">
+                {profile_image_html}
+
+                <div class="author-text-content">
+                    <h2>{profile_name}</h2>
+
+                    <div class="author-biography">
+                        {biography_content}
+                    </div>
+
+                    {book_description}
+
+                    <div class="fictional-author-notice">
+                        <p><em><strong>Important Note:</strong> {profile_name} is a fictional author persona.
+                        This profile draws inspiration from real literary techniques and styles but represents
+                        a completely original fictional identity. All books attributed to this name are
+                        AI-generated works.</em></p>
+                    </div>
+                </div>
+            </div>
+
+            {other_books_html}
+        </div>
+        """
+
+    def _get_enhanced_profile_image(self, profile_name: str) -> str:
+        """
+        Get profile image HTML with enhanced styling (smaller, right-aligned).
+
+        Args:
+            profile_name: Name of the author profile
+
+        Returns:
+            HTML for enhanced profile image
+        """
+        image_info = self.image_manager.get_writer_image_info(profile_name)
+
+        if image_info['has_image'] and image_info['base64_data']:
+            return f"""
+            <div class="profile-image-enhanced">
+                <img src="{image_info['base64_data']}" alt="Portrait of {profile_name}"
+                     class="author-portrait-small" />
+            </div>
+            """
+        return ""
+
+    def _get_current_book_description(self) -> str:
+        """
+        Get the current book's description formatted for the author section.
+
+        Returns:
+            HTML content with book description
+        """
+        # Get description from metadata
+        description = self.metadata.get("description", "")
+
+        if not description:
+            # Try to get from database if we have book ID
+            try:
+                # Look for current book in database by title and author
+                title = self.metadata.get("title", "")
+                author = self.metadata.get("author", "")
+
+                if title and author:
+                    books = self.db_manager.get_books(status="completed")
+                    for book in books:
+                        if (book.get("title", "").lower() == title.lower() and
+                            book.get("author", "").lower() == author.lower()):
+                            description = book.get("description", "")
+                            break
+            except Exception:
+                pass
+
+        if description:
+            # Truncate to 2-3 lines (approximately 200-300 characters)
+            if len(description) > 300:
+                description = description[:297] + "..."
+
+            return f"""
+            <div class="current-book-description">
+                <p><strong>About this book:</strong> {description}</p>
+            </div>
+            """
+
+        return ""
+
+    def _get_other_books_by_author(self, profile_name: str) -> str:
+        """
+        Get other books by the same author with small cover thumbnails.
+
+        Args:
+            profile_name: Name of the author profile
+
+        Returns:
+            HTML content for other books section
+        """
+        try:
+            # Get all completed books by this author
+            books = self.db_manager.get_books(status="completed")
+            author_books = []
+
+            current_title = self.metadata.get("title", "").lower()
+
+            for book in books:
+                book_author = book.get("author", "").lower()
+                book_title = book.get("title", "").lower()
+
+                # Match by author name and exclude current book
+                if (profile_name.lower() in book_author or book_author in profile_name.lower()) and book_title != current_title:
+                    author_books.append(book)
+
+            if not author_books:
+                return ""
+
+            # Select the best book to display using smart selection
+            selected_book = self._select_best_author_book(author_books)
+            author_books = [selected_book]
+
+            # Use singular/plural text based on number of books
+            section_title = "Another Book by the Same Author" if len(author_books) == 1 else "Other Books by the Same Author"
+
+            books_html = f"""
+            <div class="other-books-section">
+                <h3>{section_title}</h3>
+                <div class="other-books-gallery">
+            """
+
+            for book in author_books:
+                book_id = book.get("book_id", "")
+                book_title = book.get("title", "Unknown Title")
+                book_description = book.get("description", "")
+
+                # Get cover image if available
+                cover_html = ""
+                if book_id and self.cover_db_manager.has_cover(book_id):
+                    cover_data_url = self.cover_db_manager.get_cover_data_url(book_id)
+                    if cover_data_url:
+                        cover_html = f"""
+                        <div class="other-book-cover">
+                            <img src="{cover_data_url}" alt="{book_title} Cover" class="other-book-thumbnail" />
+                        </div>
+                        """
+
+                # Truncate description for display
+                short_description = ""
+                if book_description:
+                    if len(book_description) > 100:
+                        short_description = book_description[:97] + "..."
+                    else:
+                        short_description = book_description
+
+                books_html += f"""
+                <div class="other-book-item">
+                    {cover_html}
+                    <div class="other-book-info">
+                        <h4>{book_title}</h4>
+                        {f'<p class="other-book-desc">{short_description}</p>' if short_description else ''}
+                    </div>
+                </div>
+                """
+
+            books_html += """
+                </div>
+            </div>
+            """
+
+            return books_html
+
+        except Exception as e:
+            # If anything goes wrong, return empty string
+            return ""
+
+    def _select_best_author_book(self, author_books: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """
+        Select the best book to display from the author's other works.
+        Uses intelligent criteria rather than just taking the first/newest.
+
+        Args:
+            author_books: List of books by the same author
+
+        Returns:
+            The best book to display
+        """
+        if len(author_books) == 1:
+            return author_books[0]
+
+        # Scoring criteria for book selection
+        scored_books = []
+
+        for book in author_books:
+            score = 0
+
+            # 1. Prefer books with descriptions (more informative for readers)
+            description = book.get("description", "")
+            if description and len(description.strip()) > 50:
+                score += 30
+            elif description and len(description.strip()) > 20:
+                score += 15
+
+            # 2. Prefer books with covers (more visually appealing)
+            if book.get("cover_base64"):
+                score += 25
+
+            # 3. Prefer books from same genre (reader interest alignment)
+            current_genre = self.metadata.get("genre", "").lower()
+            book_genre = book.get("genre", "").lower()
+            if current_genre and book_genre == current_genre:
+                score += 20
+            elif current_genre and current_genre in book_genre:
+                score += 10
+
+            # 4. Prefer books with reasonable word count (quality indicator)
+            word_count = book.get("word_count", 0)
+            if 30000 <= word_count <= 120000:  # Typical novel range
+                score += 15
+            elif 15000 <= word_count <= 150000:  # Acceptable range
+                score += 8
+
+            # 5. Prefer books that are part of series (reader engagement)
+            series_info = book.get("series_info", {})
+            if series_info and series_info.get("is_part_of_series"):
+                score += 10
+
+            # 6. Slight preference for newer books (relevance)
+            try:
+                from datetime import datetime
+                created_date = book.get("created_date", "")
+                if created_date:
+                    book_date = datetime.fromisoformat(created_date.replace('Z', '+00:00'))
+                    days_old = (datetime.now() - book_date).days
+                    if days_old < 30:  # Very recent
+                        score += 8
+                    elif days_old < 90:  # Recent
+                        score += 5
+                    elif days_old < 365:  # This year
+                        score += 2
+            except:
+                pass  # Skip date scoring if parsing fails
+
+            # 7. Prefer books with longer titles (often more descriptive)
+            title = book.get("title", "")
+            if len(title) > 20:
+                score += 5
+            elif len(title) > 10:
+                score += 2
+
+            scored_books.append((score, book))
+
+        # Sort by score (highest first) and return the best book
+        scored_books.sort(key=lambda x: x[0], reverse=True)
+
+        # If multiple books have the same top score, prefer the most recent
+        top_score = scored_books[0][0]
+        top_books = [book for score, book in scored_books if score == top_score]
+
+        if len(top_books) > 1:
+            # Among top-scored books, prefer the most recent
+            top_books.sort(key=lambda x: x.get("created_date", ""), reverse=True)
+
+        return top_books[0]
+
+    def _get_fallback_biography_content(self, profile_name: str) -> str:
+        """
+        Generate fallback biography content when enhanced biography is not available.
+
+        Args:
+            profile_name: Name of the author profile
+
+        Returns:
+            HTML formatted biography content
+        """
+        profile_data = self.writer_profile.get("profile_data", {})
+
+        # Extract profile information
+        writing_style = profile_data.get("writing_style", "Engaging and descriptive")
+        influences = profile_data.get("literary_influences", "Various classic and contemporary authors")
+        themes = profile_data.get("thematic_focuses", "Human experience and storytelling")
+
+        # Get additional profile metadata
+        cultural_background = self.writer_profile.get("cultural_background", "")
+        era = self.writer_profile.get("era", "")
+
+        # Create biographical narrative
+        bio_paragraphs = []
+
+        # First paragraph - introduction
+        intro = f"{profile_name} is a fictional author persona created specifically for AI-generated {self.genre.lower()} literature."
+        if cultural_background and era:
+            intro += f" Drawing inspiration from {cultural_background} literary traditions of the {era} era, this profile represents a unique blend of historical influence and contemporary storytelling."
+        bio_paragraphs.append(f"<p>{intro}</p>")
+
+        # Second paragraph - writing style and approach
+        style_para = f"Known for {writing_style.lower()}, {profile_name}'s work is characterized by {themes.lower()}."
+        if isinstance(influences, list):
+            influences_str = ", ".join(influences[:3])
+        else:
+            influences_str = str(influences)[:100]
+        style_para += f" The writing draws from influences including {influences_str}, creating narratives that resonate with modern readers while honoring literary traditions."
+        bio_paragraphs.append(f"<p>{style_para}</p>")
+
+        # Third paragraph - thematic focus
+        theme_para = f"Through carefully crafted {self.genre.lower()} narratives, {profile_name} explores the complexities of human experience, weaving together compelling characters and thought-provoking themes. Each work demonstrates a commitment to both entertaining storytelling and meaningful literary exploration."
+        bio_paragraphs.append(f"<p>{theme_para}</p>")
+
+        return '\n'.join(bio_paragraphs)
 
     def _get_enhanced_author_biography(self) -> Optional[str]:
         """
@@ -250,20 +558,141 @@ class BackMatterGenerator:
         </div>
         """
 
-    def generate_series_information(self) -> Optional[str]:
+    def _get_series_cover_images(self, series_title: str, total_books: int) -> str:
         """
-        Generate series information section if applicable.
+        Get HTML for series cover images if they exist.
+
+        Args:
+            series_title: Title of the series
+            total_books: Total number of books in the series
 
         Returns:
-            HTML content for series information or None
+            HTML content for cover images or empty string
         """
-        if "series" not in self.metadata or not self.metadata["series"].get("is_part_of_series"):
-            return None
+        try:
+            cover_images = []
 
+            # Check for covers for each book in the series
+            for book_num in range(1, min(total_books + 1, 6)):  # Limit to first 5 books for display
+                cover_found = False
+
+                # Step 1: Check database for covers first
+                try:
+                    # Find books in database with matching series info
+                    all_books = self.db_manager.get_books(status="completed")
+                    for book in all_books:
+                        book_series = book.get("series_info", {})
+                        if (book_series.get("series_title") == series_title and
+                            book_series.get("book_number") == book_num):
+
+                            if self.cover_db_manager.has_cover(book["book_id"]):
+                                # Get cover as base64 data URL
+                                cover_data_url = self.cover_db_manager.get_cover_data_url(book["book_id"])
+                                if cover_data_url:
+                                    cover_images.append({
+                                        'book_number': book_num,
+                                        'base64_data': cover_data_url,
+                                        'filename': f"Book{book_num}_database.jpg"
+                                    })
+                                    cover_found = True
+                                    break
+                except Exception as e:
+                    pass  # Continue to file system check
+
+                # Step 2: If not found in database, check file system
+                if not cover_found:
+                    book_series_info = {
+                        "series_title": series_title,
+                        "book_number": book_num
+                    }
+
+                    found_images = self.cover_manager.scan_for_cover_images(series_title, book_series_info)
+                    if found_images:
+                        # Use the first valid image found
+                        for image_path in found_images:
+                            is_valid, _ = self.cover_manager.validate_cover_image(image_path)
+                            if is_valid:
+                                # Convert to base64 for embedding
+                                try:
+                                    with open(image_path, 'rb') as img_file:
+                                        img_data = base64.b64encode(img_file.read()).decode('utf-8')
+                                        cover_images.append({
+                                            'book_number': book_num,
+                                            'base64_data': f"data:image/jpeg;base64,{img_data}",
+                                            'filename': os.path.basename(image_path)
+                                        })
+                                        break
+                                except Exception as e:
+                                    continue
+
+            if not cover_images:
+                return ""
+
+            # Generate HTML for cover gallery
+            covers_html = """
+            <div class="series-covers">
+                <h2>Books in This Series</h2>
+                <div class="cover-gallery">
+            """
+
+            for cover in cover_images:
+                covers_html += f"""
+                    <div class="series-cover-item">
+                        <img src="{cover['base64_data']}" alt="Book {cover['book_number']} Cover"
+                             class="series-cover-thumbnail" />
+                        <p class="cover-caption">Book {cover['book_number']}</p>
+                    </div>
+                """
+
+            covers_html += """
+                </div>
+            </div>
+            """
+
+            return covers_html
+
+        except Exception as e:
+            # If anything goes wrong, just return empty string
+            return ""
+
+    def generate_genre_recommendations(self) -> str:
+        """
+        Generate reading recommendations for the genre, or series information if part of a series.
+
+        Returns:
+            HTML content for genre recommendations or series information
+        """
+        # Check if this is part of a series
+        if "series" in self.metadata and self.metadata["series"].get("is_part_of_series"):
+            # Generate series-specific content instead of generic genre recommendations
+            return self._generate_series_recommendations()
+
+        # Fall back to genre recommendations for non-series books
+        return self._generate_genre_recommendations()
+
+    def _generate_series_recommendations(self) -> str:
+        """
+        Generate series-specific recommendations and information with cover images.
+
+        Returns:
+            HTML content for series recommendations
+        """
         series_data = self.metadata["series"]
         series_title = series_data.get("series_title", "Unknown Series")
         book_number = series_data.get("book_number", 1)
         total_books = series_data.get("planned_books", "multiple")
+
+        # Get cover images for the series
+        total_books_int = total_books if isinstance(total_books, int) else 5  # Default to 5 for "multiple"
+        cover_images_html = self._get_series_cover_images(series_title, total_books_int)
+
+        # Create series description
+        series_description = f"""
+        This book is part of the {series_title} series, an AI-generated collection
+        of interconnected {self.genre.lower()} novels. The series maintains consistent
+        characters, world-building, and thematic elements while telling unique stories
+        in each volume.
+        """
 
         # Generate reading order information
         reading_order = ""
@@ -275,24 +704,30 @@ class BackMatterGenerator:
             experience for understanding character development and overarching plot threads.</p>
             """
 
-        # Future books information
+        # Generate future books information
         future_info = ""
         if isinstance(total_books, int) and book_number < total_books:
             remaining = total_books - book_number
             future_info = f"""
-            <h2>Upcoming in This Series</h2>
-            <p>The {series_title} series will continue with {remaining} more book{'s' if remaining != 1 else ''},
-            further developing the characters and world you've encountered in this volume.</p>
+            <h2>Upcoming Books</h2>
+            <p>There are {remaining} more books planned in the {series_title} series,
+            continuing the story and expanding the world introduced in this collection.</p>
+            """
+        elif total_books == "multiple" or (isinstance(total_books, int) and total_books > book_number):
+            future_info = f"""
+            <h2>Continuing the Series</h2>
+            <p>The {series_title} series continues with additional books that expand
+            the world and develop the characters further. Each new volume brings fresh
+            perspectives while maintaining the series' core themes and continuity.</p>
             """
 
         return f"""
-        <div class="series-information">
+        <div class="series-recommendations">
             <h1>About the {series_title} Series</h1>
 
-            <p>This book is part of the {series_title} series, an AI-generated collection
-            of interconnected {self.genre.lower()} novels. The series maintains consistent
-            characters, world-building, and thematic elements while telling unique stories
-            in each volume.</p>
+            <p>{series_description}</p>
+
+            {cover_images_html}
 
             {reading_order}
 
@@ -307,15 +742,18 @@ class BackMatterGenerator:
 
             {future_info}
 
+            <h2>AI Generation Process</h2>
             <p>The AI generation process for this series involved creating detailed
             continuity tracking, character development arcs, and overarching narrative
-            threads to ensure a cohesive and engaging multi-book experience.</p>
+            threads to ensure a cohesive and engaging multi-book experience. Each book
+            builds upon the foundation established in previous volumes while introducing
+            new elements to keep the series fresh and engaging.</p>
         </div>
         """
 
-    def generate_genre_recommendations(self) -> str:
+    def _generate_genre_recommendations(self) -> str:
         """
-        Generate reading recommendations for the genre.
+        Generate traditional genre-based reading recommendations.
 
         Returns:
             HTML content for genre recommendations
@@ -477,12 +915,7 @@ class BackMatterGenerator:
         if writer_profile:
             sections["writer_profile"] = writer_profile
 
-        # Add series information if applicable
-        series_info = self.generate_series_information()
-        if series_info:
-            sections["series_information"] = series_info
-
-        # Add genre recommendations
+        # Add genre recommendations (includes series information for series books)
         sections["genre_recommendations"] = self.generate_genre_recommendations()
 
         # Add technical details

@@ -3,28 +3,31 @@ layout: default
 title: Genre Guidelines
 parent: Advanced Topics
 nav_order: 1
-description: "Detailed information about genre-specific settings and recommendations"
+description: 'Detailed information about genre-specific settings and recommendations'
 ---
 
 # Genre Guidelines
+
 {: .no_toc }
 
-The Ebook Generator uses genre-specific guidelines to tailor the generation process for different types of books.
+NovelForge AI uses genre-specific guidelines to tailor the generation process for different types of books.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
 ## Overview
 
-Different literary genres have distinct conventions, structures, and reader expectations. The Ebook Generator's genre guidelines system ensures that generated books adhere to these conventions, resulting in more authentic and satisfying content.
+Different literary genres have distinct conventions, structures, and reader expectations. NovelForge AI's genre guidelines system ensures that generated books adhere to these conventions, resulting in more authentic and satisfying content.
 
 The system includes guidelines for:
+
 - Chapter count and length
 - Word count ranges
 - Narrative structure
@@ -35,7 +38,7 @@ The system includes guidelines for:
 
 ## Supported Genres
 
-The Ebook Generator supports the following primary genres:
+NovelForge AI supports the following primary genres:
 
 - Fantasy
 - Science Fiction
@@ -65,6 +68,7 @@ Pacing: Balanced with emphasis on world-building
 ```
 
 Fantasy novels typically include:
+
 - Detailed world-building
 - Magic systems with consistent rules
 - Character journeys and growth
@@ -82,6 +86,7 @@ Pacing: Concept-driven with action elements
 ```
 
 Science Fiction novels typically include:
+
 - Technological concepts and their implications
 - Exploration of scientific ideas
 - Social commentary through speculative elements
@@ -99,6 +104,7 @@ Pacing: Tense with strategic reveals
 ```
 
 Mystery/Thriller novels typically include:
+
 - Central mystery or threat
 - Clues and red herrings
 - Rising tension and stakes
@@ -116,6 +122,7 @@ Pacing: Emotional development with obstacles
 ```
 
 Romance novels typically include:
+
 - Focus on relationship development
 - Emotional conflicts and growth
 - Character chemistry and attraction
@@ -133,6 +140,7 @@ Pacing: Character-driven with thematic focus
 ```
 
 Literary Fiction typically includes:
+
 - Complex character development
 - Thematic depth and exploration
 - Emphasis on prose quality
@@ -169,6 +177,7 @@ The Ebook Generator supports genre mixing by combining elements from multiple ge
 3. Adjust parameters to accommodate both genres
 
 Example mixed genres:
+
 - Science Fiction Romance
 - Historical Fantasy
 - Mystery Thriller
@@ -180,18 +189,21 @@ Example mixed genres:
 The system uses different prompt templates based on the selected genre. These templates emphasize different elements:
 
 ### Fantasy Prompt Elements
+
 - World-building details
 - Magic system rules
 - Character backgrounds and abilities
 - Cultural and historical context
 
 ### Mystery Prompt Elements
+
 - Clue placement and tracking
 - Suspect development
 - Tension building
 - Logical progression of investigation
 
 ### Romance Prompt Elements
+
 - Character chemistry and attraction
 - Emotional development
 - Relationship obstacles

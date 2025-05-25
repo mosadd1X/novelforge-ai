@@ -142,6 +142,204 @@ Create a truecrime series that provides comprehensive education with authoritati
         """Generate a truecrime-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class TrueCrimeMarketing:
+        """
+        A class containing methods for generating marketing materials for True Crime books,
+        specifically focused on back cover copy and visual design prompts.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions
+        for True Crime books.
+
+        Args:
+        **kwargs:  Keyword arguments for customizing the prompt.  Possible keys:
+        * target_reader (str): Description of the target reader (e.g., "armchair detective").
+        * crime_type (str): Type of crime (e.g., "serial murder," "financial fraud").
+        * location (str): Geographic location of the crime.
+        * time_period (str): Time period in which the crime occurred.
+        * victim_profile (str): Description of the victim(s).
+        * perpetrator_profile (str): Description of the perpetrator(s).
+        * central_question (str):  The core mystery or question the book explores.
+        * unique_angle (str):  What makes this book different from other true crime books?
+        * emotional_hook (str):  The primary emotion the book aims to evoke in the reader.
+        * narrative_style (str):  The writing style (e.g., "investigative," "narrative nonfiction").
+        * inclusion_statement (str): Information on inclusivity and representation of the victim(s).
+        * themes (str): Primary themes the book explores (e.g., justice, corruption, societal issues).
+
+        Returns:
+        str: A detailed prompt string for generating back cover copy.
+        """
+
+        target_reader = kwargs.get("target_reader", "True crime enthusiasts and armchair detectives")
+        crime_type = kwargs.get("crime_type", "a shocking and disturbing crime")
+        location = kwargs.get("location", "a seemingly ordinary town")
+        time_period = kwargs.get("time_period", "a time when secrets were easily buried")
+        victim_profile = kwargs.get("victim_profile", "an innocent victim")
+        perpetrator_profile = kwargs.get("perpetrator_profile", "a seemingly normal individual harboring dark secrets")
+        central_question = kwargs.get("central_question", "the question of why this happened")
+        unique_angle = kwargs.get("unique_angle", "unprecedented access to key evidence")
+        emotional_hook = kwargs.get("emotional_hook", "a sense of outrage and a desire for justice")
+        narrative_style = kwargs.get("narrative_style", "a gripping, investigative style")
+        inclusion_statement = kwargs.get("inclusion_statement", "This book is committed to telling the victim's story with respect and sensitivity.")
+        themes = kwargs.get("themes", "themes of justice, betrayal, and the dark side of human nature")
+
+
+        prompt = f"""
+        Write a compelling back cover description for a True Crime book that will captivate {target_reader}.
+        The book details {crime_type} that took place in {location} during {time_period}.
+        The victim was {victim_profile}, and the perpetrator was {perpetrator_profile}.
+
+        The description should:
+        *   Immediately grab the reader's attention with a chilling opening.
+        *   Highlight the central mystery: {central_question}.
+        *   Emphasize the unique angle: {unique_angle}.
+        *   Evoke {emotional_hook} in the reader.
+        *   Use language that is suspenseful and evocative.
+        *   Hint at twists and turns in the investigation.
+        *   Promise a deep dive into the psychology of both the victim and the perpetrator.
+        *   Reference the {narrative_style}.
+        *   Include the following: {inclusion_statement}.
+        *   Incorporate themes of {themes}.
+        *   End with a hook that leaves the reader wanting more, urging them to delve into the book.
+
+        Example opening lines (adapt these to the specific case):
+        *   "In the quiet town of [Location], a nightmare unfolded..."
+        *   "Behind the facade of normalcy, a killer lurked..."
+        *   "The truth is darker than you can imagine..."
+
+        The description should be approximately 150-200 words.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a short, impactful book recommendation blurb (2-3 lines) for a True Crime book.
+
+        Args:
+        **kwargs: Keyword arguments for customization. Possible keys:
+        * subject (str): Subject of the book (e.g., "the chilling case of the Zodiac Killer").
+        * hook (str): A captivating hook or detail.
+        * target_reader (str): Target audience.
+        * emotional_response (str): Desired emotional response.
+
+        Returns:
+        str: A prompt for a short book recommendation blurb.
+        """
+        subject = kwargs.get("subject", "a gripping true crime story")
+        hook = kwargs.get("hook", "unravels a web of lies and deceit")
+        target_reader = kwargs.get("target_reader", "fans of true crime")
+        emotional_response = kwargs.get("emotional_response", "shock and fascination")
+
+        prompt = f"""
+        Write a short, impactful book recommendation blurb (2-3 lines) for {target_reader} who enjoy {emotional_response}.
+
+        The blurb should:
+        *   Focus on {subject}.
+        *   Highlight the captivating hook: {hook}.
+        *   Use strong verbs and evocative language.
+        *   Create a sense of urgency and intrigue.
+        *   Be concise and memorable.
+
+        Example:
+        "A must-read for true crime aficionados. [Book Title] delves into the darkest corners of the human psyche, leaving you questioning everything you thought you knew."
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a punchy, attention-grabbing marketing tagline for a True Crime book.
+
+        Args:
+        **kwargs: Keyword arguments for customization. Possible keys:
+        * crime_type (str): Type of crime.
+        * emotional_impact (str): The emotional impact of the story.
+        * key_element (str): A key element of the story.
+        * tone (str): The overall tone (e.g., "dark," "disturbing," "revealing").
+
+        Returns:
+        str: A prompt for a marketing tagline.
+        """
+
+        crime_type = kwargs.get("crime_type", "The ultimate betrayal")
+        emotional_impact = kwargs.get("emotional_impact", "will leave you breathless")
+        key_element = kwargs.get("key_element", "the shocking truth")
+        tone = kwargs.get("tone", "dark and unsettling")
+
+        prompt = f"""
+        Create a punchy, attention-grabbing marketing tagline for a True Crime book. The tone is {tone}.
+
+        The tagline should:
+        *   Be short and memorable (ideally under 10 words).
+        *   Highlight the type of crime: {crime_type}.
+        *   Emphasize the emotional impact: {emotional_impact}.
+        *   Hint at a key element of the story: {key_element}.
+        *   Be intriguing and create a sense of mystery.
+        *   Avoid being overly sensationalistic or exploitative.  Focus on the story and the search for truth.
+
+        Examples:
+        *   "Evil walks among us."
+        *   "The truth is a killer."
+        *   "Some secrets are best left buried...but not this one."
+        *   "Justice is a long, dark road."
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for describing visual style preferences for the back cover design of a True Crime book.
+
+        Args:
+        **kwargs: Keyword arguments for customization. Possible keys:
+        * color_palette (str): Preferred color palette (e.g., "dark and muted," "high contrast black and white").
+        * imagery (str): Types of imagery to use or avoid (e.g., "avoid graphic images," "use evocative landscapes").
+        * typography (str): Preferred typography styles (e.g., "clean and modern," "vintage and gritty").
+        * overall_mood (str): The desired overall mood (e.g., "somber," "ominous," "intriguing").
+        * target_audience (str): Description of the target audience to tailor the design.
+        * symbolic_elements (str): Suggested symbolic elements (e.g., a broken mirror, a shadowed figure).
+        * avoidance (str): Things to avoid (e.g., bright colors, overtly sensational images).
+
+        Returns:
+        str: A prompt for describing visual style preferences.
+        """
+
+        color_palette = kwargs.get("color_palette", "a dark and muted color palette with shades of grey, black, and deep red or blue")
+        imagery = kwargs.get("imagery", "evocative landscapes or symbolic objects rather than graphic crime scene photos")
+        typography = kwargs.get("typography", "a clean and modern sans-serif font for readability, with a slightly distressed or vintage font for the title to add a sense of history and unease")
+        overall_mood = kwargs.get("overall_mood", "somber, ominous, and intriguing")
+        target_audience = kwargs.get("target_audience", "true crime enthusiasts who appreciate thoughtful and respectful storytelling")
+        symbolic_elements = kwargs.get("symbolic_elements", "a single, impactful symbolic element such as a broken mirror, a blurred figure in the shadows, or a decaying object")
+        avoidance = kwargs.get("avoidance", "bright colors, overly sensational images, and anything that could be perceived as exploitative or disrespectful to the victim")
+
+        prompt = f"""
+        Describe the desired visual style for the back cover design of a True Crime book.
+
+        Consider the following:
+        *   Color Palette: {color_palette}.
+        *   Imagery: Use {imagery}.
+        *   Typography: Choose {typography}.
+        *   Overall Mood: Create a design that feels {overall_mood}.
+        *   Target Audience: Design for {target_audience}.
+        *   Symbolic Elements: Consider incorporating {symbolic_elements}.
+        *   Avoid: {avoidance}.
+
+        The design should:
+        *   Be respectful of the victim(s) and their story.
+        *   Convey a sense of unease and mystery.
+        *   Reflect the tone and themes of the book.
+        *   Be visually appealing and professional.
+        *   Avoid being overly graphic or sensationalistic.
+
+        Describe the desired layout, placement of text, and overall visual impact.
+        """
+        return prompt
+        ```
         truecrime_book_additions = """
 
 ## TrueCrime Series Book Integration
@@ -181,6 +379,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return TrueCrimePrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return TrueCrimePrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return TrueCrimePrompts.get_series_book_prompt(**kwargs)

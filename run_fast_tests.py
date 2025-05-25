@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Fast Test Runner for Ebook Generator
+Fast Test Runner for NovelForge AI
 
 This script provides a simple command-line interface to run the fast testing
-system for the ebook generator. It can be used independently for development
+system for NovelForge AI. It can be used independently for development
 and debugging purposes.
 
 Usage:

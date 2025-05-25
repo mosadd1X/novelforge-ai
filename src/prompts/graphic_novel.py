@@ -212,6 +212,190 @@ Create a graphicnovel series that showcases artistic development and format mast
         """Generate a graphicnovel-specific individual volume prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class GraphicNovelMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover copy for a Graphic Novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, main character, plot summary, themes, target audience, etc.).
+
+        Returns:
+        A string containing the prompt for back cover copy generation.
+        """
+        prompt = f"""
+        Create compelling back cover copy for a Graphic Novel titled "{kwargs.get('title', '[Title]')}".
+        Written by {kwargs.get('author', '[Author]')}.
+
+        Genre: Graphic Novel (emphasize visual storytelling, sequential art, and panel-by-panel narrative)
+
+        Target Audience: {kwargs.get('target_audience', '[Target Audience - e.g., Young Adult, Adults, fans of specific genres]')}.
+        Consider age range and interests. Is it appropriate for all ages, or does it have mature themes?
+
+        Main Character(s): {kwargs.get('main_character', '[Main Character(s) - Name, brief description, and key traits]')}.
+        Highlight their personality, motivations, and internal conflicts. Focus on visual distinctiveness - what makes them recognizable in the art?
+
+        Plot Summary: {kwargs.get('plot_summary', '[Detailed plot summary - beginning, rising action, climax, resolution]')}.
+        Focus on the most visually arresting moments and the central conflict. Emphasize the unique storytelling possibilities offered by the graphic novel format.
+
+        Key Themes: {kwargs.get('themes', '[List of themes - e.g., identity, loss, redemption, power, social justice]')}.
+        How are these themes explored visually and through dialogue?
+
+        Emotional Hook: What emotions should the back cover evoke? (e.g., excitement, mystery, empathy, fear, hope).
+
+        Visual Style: {kwargs.get('visual_style', '[Description of the art style - e.g., Manga, realistic, stylized, watercolor, black and white]')}.
+        How does the art style contribute to the story's mood and atmosphere? Mention if it draws inspiration from specific artists or comics.
+
+        Instructions:
+
+        *   Craft a narrative hook that immediately grabs the reader's attention. Start with a question, a shocking statement, or an intriguing scene.
+        *   Show, don't tell. Use vivid language that hints at the visual spectacle within the pages.
+        *   Highlight the unique advantages of the graphic novel format: dynamic action sequences, expressive character designs, and immersive world-building.
+        *   Emphasize the emotional impact of the story. Connect with readers on a personal level.
+        *   Include a compelling "what if?" scenario that leaves the reader wanting more.
+        *   Keep it concise and engaging. The back cover should be a visual and textual invitation to enter the world of the graphic novel.
+        *   Mention any awards, accolades, or notable press coverage.
+        *   End with a strong call to action: "Pick up [Title] and experience the unforgettable story for yourself!" or similar.
+
+        Example Back Cover Copy Structure:
+
+        [Hook] - A captivating opening line or two.
+
+        [Brief Plot Summary] - Highlighting key characters, conflicts, and stakes.
+
+        [Theme Emphasis] - Connecting the story to universal human experiences.
+
+        [Visual Style Highlight] - Briefly mentioning the art style and its impact.
+
+        [Emotional Hook] - What feeling will readers experience?
+
+        [Call to Action] - Encouraging the reader to buy the book.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, 2-3 line description for a Graphic Novel, ideal for recommendation lists.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, main character, plot summary, genre elements).
+
+        Returns:
+        A string containing the prompt for the short description generation.
+        """
+        prompt = f"""
+        Create a short, 2-3 line description for the Graphic Novel "{kwargs.get('title', '[Title]')}" by {kwargs.get('author', '[Author]')}.
+
+        Genre: Graphic Novel (emphasize visual storytelling).
+
+        Main Character: {kwargs.get('main_character', '[Main Character - Name and defining trait]')}.
+
+        Plot Summary (Key Element): {kwargs.get('plot_summary', '[Highlight the most intriguing aspect of the plot]')}.
+
+        Genre Elements: {kwargs.get('genre_elements', '[List subgenres or related genres - e.g., superhero, fantasy, sci-fi, slice-of-life]')}.
+
+        Instructions:
+
+        *   Focus on brevity and impact. Every word counts.
+        *   Highlight the unique selling points of the graphic novel. What makes it stand out from other stories in the genre?
+        *   Use strong verbs and evocative language to create a sense of excitement and intrigue.
+        *   Emphasize the visual aspect of the story. Hint at the stunning artwork and dynamic panel layouts.
+        *   Capture the essence of the story's emotional core.
+        *   Consider using a comparison to other popular graphic novels or works of art to give readers a frame of reference (e.g., "Fans of [Graphic Novel] will love...").
+
+        Example Short Description:
+
+        "In a world where [brief plot setup], [Main Character] must [main objective]. Prepare for stunning visuals and a story that will leave you breathless!"
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Graphic Novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, core concept, target audience, genre elements).
+
+        Returns:
+        A string containing the prompt for the tagline generation.
+        """
+        prompt = f"""
+        Create a compelling marketing tagline for the Graphic Novel "{kwargs.get('title', '[Title]')}".
+
+        Core Concept: {kwargs.get('core_concept', '[The central idea or conflict of the story]')}.
+
+        Target Audience: {kwargs.get('target_audience', '[Target Audience - e.g., Teens, Adults, Comic Book Fans]')}.
+
+        Genre Elements: {kwargs.get('genre_elements', '[List subgenres or related genres - e.g., mystery, horror, romance]')}.
+
+        Instructions:
+
+        *   Keep it short, memorable, and impactful. Aim for a tagline that is easily shareable.
+        *   Focus on the emotional core of the story. What feeling should the tagline evoke?
+        *   Highlight the unique aspects of the graphic novel format (visual storytelling, dynamic action, expressive characters).
+        *   Use strong verbs and evocative language.
+        *   Consider using a play on words or a clever metaphor.
+        *   Think about what makes the graphic novel stand out from other stories in the genre.
+        *   Test different taglines to see which ones resonate the most with your target audience.
+
+        Example Taglines:
+
+        *   "[Title]: Where words meet art, and legends are born."
+        *   "Experience the story. See the legend. [Title]."
+        *   "Beyond the page. Beyond belief. [Title]."
+        *   "[Title]: Prepare to be drawn in."
+        *   "The story unfolds panel by panel. [Title]."
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for specifying visual style preferences for back cover design of a Graphic Novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, visual style, color palette, target audience).
+
+        Returns:
+        A string containing the prompt for visual style preferences.
+        """
+        prompt = f"""
+        Specify the visual style preferences for the back cover design of the Graphic Novel "{kwargs.get('title', '[Title]')}" by {kwargs.get('author', '[Author]')}.
+
+        Overall Visual Style: {kwargs.get('visual_style', '[Detailed description of the art style - e.g., Manga, realistic, stylized, watercolor, black and white, cyberpunk, art deco]')}.  Be specific about the influences and characteristics of the art.
+
+        Color Palette: {kwargs.get('color_palette', '[Description of the color palette - e.g., vibrant, muted, grayscale, limited palette]')}. How does the color palette contribute to the overall mood and atmosphere of the story?
+
+        Target Audience: {kwargs.get('target_audience', '[Target Audience - e.g., Young Adults, Adults, fans of specific genres]')}. Consider what kind of visual elements will appeal to this audience.
+
+        Key Visual Elements: {kwargs.get('key_visual_elements', '[List of key visual elements from the book - e.g., character designs, iconic locations, action sequences]')}.  Which of these elements should be featured on the back cover?
+
+        Typography: {kwargs.get('typography', '[Description of the desired typography - e.g., bold, handwritten, futuristic]')}. The typography should complement the overall visual style.
+
+        Layout: {kwargs.get('layout', '[Description of the desired layout - e.g., dynamic, minimalist, traditional comic book panel layout]')}. How should the text and images be arranged on the back cover?
+
+        Instructions:
+
+        *   The back cover design should be visually appealing and representative of the graphic novel's art style.
+        *   It should immediately grab the attention of potential readers.
+        *   Consider using a key image or panel from the graphic novel to create a strong visual impact.
+        *   The back cover should convey the tone and atmosphere of the story.
+        *   The typography should be legible and easy to read.
+        *   The overall design should be clean and uncluttered.
+        *   Provide examples of back covers or artwork that inspire the desired visual style.
+        *   Think about how the back cover can be used to create a sense of mystery and intrigue.
+
+        Example Visual Style Preferences:
+
+        "The back cover should feature a dynamic action scene in a style reminiscent of classic Manga, with bold lines, vibrant colors, and a fast-paced layout. The typography should be bold and futuristic, reflecting the cyberpunk themes of the story."
+        """
+        return prompt
+        ```
         graphicnovel_book_additions = """
 
 ## GraphicNovel Series Volume Integration
@@ -251,6 +435,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return GraphicNovelPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return GraphicNovelPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return GraphicNovelPrompts.get_series_book_prompt(**kwargs)

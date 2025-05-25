@@ -2,21 +2,23 @@
 layout: default
 title: Contributing Guidelines
 nav_order: 7
-description: "Guidelines and instructions for contributing to the Ebook Generator project"
+description: 'Guidelines and instructions for contributing to the Ebook Generator project'
 permalink: /contributing
 ---
 
 # Contributing to Ebook Generator
+
 {: .no_toc }
 
 Thank you for considering contributing to the Ebook Generator project! This document provides guidelines and instructions for contributing.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
@@ -44,21 +46,25 @@ By participating in this project, you agree to maintain a respectful and inclusi
 ### Setup
 
 1. Clone your fork of the repository:
+
    ```bash
-   git clone https://github.com/your-username/ebook-generator.git
-   cd ebook-generator
+   git clone https://github.com/your-username/novelforge-ai.git
+   cd novelforge-ai
    ```
 
 2. Create a virtual environment:
+
    ```bash
    python -m venv venv
    ```
 
 3. Activate the virtual environment:
+
    - Windows: `venv\Scripts\activate`
    - macOS/Linux: `source venv/bin/activate`
 
 4. Install dependencies:
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -90,20 +96,25 @@ By participating in this project, you agree to maintain a respectful and inclusi
 ## Pull Request Process
 
 1. Create a new branch for your feature or bugfix:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
+
    or
+
    ```bash
    git checkout -b fix/issue-you-are-fixing
    ```
 
 2. Make your changes and commit them with clear, descriptive commit messages:
+
    ```bash
    git commit -m "Add feature: description of the feature"
    ```
 
 3. Push your branch to your fork:
+
    ```bash
    git push origin feature/your-feature-name
    ```
@@ -156,7 +167,7 @@ When reporting bugs:
 Understanding the project structure will help you contribute effectively:
 
 ```
-ebook-generator/
+novelforge-ai/
 ├── docs/                       # Documentation
 ├── src/                        # Source code
 │   ├── core/                   # Core functionality
@@ -169,10 +180,19 @@ ebook-generator/
 └── README.md                   # Project documentation
 ```
 
+## Project Maintainer
+
+**Mosaddiq** - _Creator & Lead Developer_
+
+- GitHub: [@mosadd1X](https://github.com/mosadd1X)
+- Project: [NovelForge AI](https://github.com/mosadd1X/novelforge-ai)
+
+For questions about contributing or project direction, feel free to open an issue or start a discussion on GitHub.
+
 ## Related Documentation
 
 - [Development Setup](./development-setup.html): Detailed setup instructions
 - [Code Style Guide](./code-style.html): Specific code style requirements
 - [API Documentation](./api.html): Reference for the project's API
 
-Thank you for contributing to the Ebook Generator project!
+Thank you for contributing to the NovelForge AI project!

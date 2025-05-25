@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Unified command-line interface for the Ebook Generator application.
+Unified command-line interface for the NovelForge AI application.
 
 This script provides a user-friendly main menu system to access all the
-functionality of the Ebook Generator, including book generation, series
+functionality of NovelForge AI, including book generation, series
 management, and API key status checking. It serves as the recommended
 entry point for most users.
 
@@ -49,6 +49,12 @@ try:
     from src.ui.feedback_system import feedback_ui
 except ImportError:
     feedback_ui = None
+
+# Import database management
+try:
+    from src.ui.database_menu import database_management_menu
+except ImportError:
+    database_management_menu = None
 
 # Create console with markup enabled
 console = Console(markup=True)
@@ -240,6 +246,33 @@ def network_status_and_diagnostics():
         console.print("[yellow]Make sure your system is properly configured.[/yellow]")
         input("\nPress Enter to continue...")
 
+def database_management():
+    """
+    Run the Database Management functionality.
+
+    This function provides access to comprehensive database management including:
+    - Database statistics and monitoring
+    - Data migration from file system to database
+    - Book display settings and filtering
+    - Database maintenance and optimization
+    - Data export and backup operations
+
+    The function handles exceptions gracefully and provides helpful
+    error messages if the database management system is not available.
+
+    Returns:
+        None
+    """
+    if database_management_menu:
+        try:
+            database_management_menu()
+        except Exception as e:
+            console.print(f"[bold red]Error in Database Management: {str(e)}[/bold red]")
+            input("\nPress Enter to continue...")
+    else:
+        console.print("[bold red]Error: Database Management functionality not available.[/bold red]")
+        input("\nPress Enter to continue...")
+
 def fast_testing_system() -> None:
     """
     Run the fast testing system for development and debugging.
@@ -340,7 +373,7 @@ def main_menu():
         clear_screen()
         display_title()
 
-        console.print("[bold cyan]Welcome to the Ebook Generator![/bold cyan]")
+        console.print("[bold cyan]Welcome to NovelForge AI![/bold cyan]")
         console.print("Please select an option from the menu below:\n")
 
         choices = [
@@ -351,8 +384,9 @@ def main_menu():
             "5. Content Quality & Feedback",
             "6. API Key Management",
             "7. Network Status & Diagnostics",
-            "8. Fast Testing System",
-            "9. Exit"
+            "8. Database Management",
+            "9. Fast Testing System",
+            "10. Exit"
         ]
 
         selected = questionary.select(
@@ -375,9 +409,11 @@ def main_menu():
             api_key_management()
         elif selected == "7. Network Status & Diagnostics":
             network_status_and_diagnostics()
-        elif selected == "8. Fast Testing System":
+        elif selected == "8. Database Management":
+            database_management()
+        elif selected == "9. Fast Testing System":
             fast_testing_system()
-        elif selected == "9. Exit":
+        elif selected == "10. Exit":
             console.print("[bold green]Thank you for using the Ebook Generator. Goodbye![/bold green]")
             sys.exit(0)
 

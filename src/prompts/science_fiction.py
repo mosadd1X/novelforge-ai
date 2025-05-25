@@ -180,6 +180,170 @@ Ensure this book feels like an authentic continuation of the sciencefiction seri
         
         return base_prompt + sciencefiction_book_additions
 
+        ```python
+        class ScienceFictionBackCover:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating a full back cover description for a Science Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details such as title, author, main character,
+        setting, central conflict, themes, and target audience.  Crucially includes 'keywords'
+        for targeted marketing.
+
+        Returns:
+        str: A detailed prompt string for AI content generation.
+        """
+        prompt = f"""
+        Write a compelling and intriguing back cover description for a Science Fiction novel.
+
+        **Book Details:**
+        Title: {kwargs.get('title', '[Title]')}
+        Author: {kwargs.get('author', '[Author]')}
+        Main Character(s): {kwargs.get('main_character', '[Main Character(s)]')}
+        Setting: {kwargs.get('setting', '[Setting - e.g., a dystopian future on Mars, a cyberpunk city, a generation ship]')}
+        Central Conflict: {kwargs.get('central_conflict', '[Central Conflict - e.g., a rebellion against a tyrannical AI, a desperate search for a cure for a deadly virus, a first contact gone wrong]')}
+        Themes: {kwargs.get('themes', '[Themes - e.g., artificial intelligence, transhumanism, societal collapse, exploration, the nature of consciousness]')}
+        Target Audience: {kwargs.get('target_audience', '[Target Audience - e.g., fans of space operas, readers interested in hard science fiction, young adults looking for adventure]')}
+        Keywords: {kwargs.get('keywords', '[Keywords - e.g., cyberpunk, space opera, dystopian, AI, alien, first contact, time travel, transhumanism, genetic engineering]')}
+
+        **Description Guidelines:**
+
+        *   **Genre Focus:** Emphasize the Science Fiction elements. Highlight the technological advancements, the speculative concepts, and the exploration of future possibilities or alternate realities.
+        *   **Intrigue and Mystery:** Start with a hook that grabs the reader's attention. Pose a question, hint at a secret, or introduce a compelling problem.
+        *   **Character Connection:** Introduce the main character(s) and their motivations. Make the reader care about their journey and their fate.  Highlight their internal struggles alongside external challenges.
+        *   **World-Building:** Briefly paint a picture of the world.  Is it a utopia, a dystopia, or something in between? What are the unique aspects of this future society or alien world?  Use evocative language to bring the setting to life.
+        *   **Conflict and Stakes:** Clearly define the central conflict and the stakes involved. What will happen if the protagonist(s) fail? What are the consequences for the world and its inhabitants?
+        *   **Emotional Hook:** Tap into emotions like wonder, fear, hope, or despair. Science Fiction often explores complex ethical and philosophical questions, so consider incorporating these elements to add depth.
+        *   **Avoid Spoilers:** Tease the plot without giving away major twists or the ending.
+        *   **Call to Action:** End with a sentence or two that encourages the reader to pick up the book.  Use phrases like "Embark on a thrilling journey," "Discover the truth," or "The future hangs in the balance."
+        *   **Length:** Aim for approximately 150-200 words.
+        *   **Tone:** The tone should be exciting, thought-provoking, and suspenseful. Match the tone to the specific subgenre of Science Fiction (e.g., gritty for cyberpunk, optimistic for space opera).
+
+        **Example Sentence Starters (Feel free to adapt):**
+
+        *   "In a future where..."
+        *   "When [main character] discovers..."
+        *   "The fate of humanity rests on..."
+        *   "On a distant planet, a hidden danger lurks..."
+        *   "The line between human and machine blurs as..."
+        *   "They thought they were alone, but they were wrong."
+        *   "The secrets of the past hold the key to the future."
+
+        Write a back cover description that will make readers eager to dive into this Science Fiction world.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a short, punchy 2-3 line book recommendation for a Science Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details like title, author, and a brief summary.
+
+        Returns:
+        str: A prompt string for AI content generation.
+        """
+        prompt = f"""
+        Write a short, compelling 2-3 line book recommendation for a Science Fiction novel.
+
+        **Book Details:**
+        Title: {kwargs.get('title', '[Title]')}
+        Author: {kwargs.get('author', '[Author]')}
+        Brief Summary: {kwargs.get('brief_summary', '[Brief Summary of the book]')}
+        Keywords: {kwargs.get('keywords', '[Keywords - e.g., cyberpunk, space opera, dystopian, AI, alien, first contact, time travel, transhumanism, genetic engineering]')}
+
+        **Guidelines:**
+
+        *   **Conciseness:** Be extremely brief and to the point. Every word counts.
+        *   **Intrigue:** Focus on the most intriguing aspect of the story.
+        *   **Hook:** Grab the reader's attention immediately.
+        *   **Genre Appeal:** Clearly indicate that it is Science Fiction.
+        *   **Action-Oriented:** Use strong verbs and active voice.
+        *   **Example:** "In a world consumed by AI, one hacker fights for humanity's survival. A thrilling cyberpunk adventure you won't want to miss."
+        *   **Target Audience:** Consider who you want to attract with this recommendation.
+
+        Write a short and powerful recommendation that will make readers want to learn more about this Science Fiction novel.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a punchy marketing tagline for a Science Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing key themes, concepts, and target audience information.
+
+        Returns:
+        str: A prompt string for AI content generation.
+        """
+        prompt = f"""
+        Write a punchy and memorable marketing tagline for a Science Fiction novel.
+
+        **Book Details:**
+        Key Themes: {kwargs.get('key_themes', '[Key Themes - e.g., AI rebellion, space exploration, time travel paradoxes]')}
+        Key Concepts: {kwargs.get('key_concepts', '[Key Concepts - e.g., singularity, wormholes, genetic manipulation]')}
+        Target Audience: {kwargs.get('target_audience', '[Target Audience - e.g., fans of hard sci-fi, readers interested in philosophical sci-fi]')}
+        Keywords: {kwargs.get('keywords', '[Keywords - e.g., cyberpunk, space opera, dystopian, AI, alien, first contact, time travel, transhumanism, genetic engineering]')}
+
+        **Tagline Guidelines:**
+
+        *   **Brevity:** Keep it short and sweet – ideally under 10 words.
+        *   **Impact:** Make it memorable and attention-grabbing.
+        *   **Intrigue:** Hint at the story's core conflict or mystery.
+        *   **Genre Focus:** Clearly communicate that it's Science Fiction.
+        *   **Emotional Connection:** Evoke a feeling of wonder, excitement, or suspense.
+        *   **Examples:**
+        *   "The future is here. And it's terrifying."
+        *   "Beyond the stars, a new war begins."
+        *   "Time is a weapon. They're running out."
+        *   "Humanity's last hope lies in the machine."
+        *   "What if the aliens aren't who we think they are?"
+
+        Write a tagline that will instantly capture the essence of this Science Fiction novel and entice readers.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt describing visual style preferences for the back cover design of a Science Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing information about the book's setting, themes, and target audience.
+
+        Returns:
+        str: A prompt string for AI content generation or for briefing a graphic designer.
+        """
+        prompt = f"""
+        Describe the visual style preferences for the back cover design of a Science Fiction novel.
+
+        **Book Details:**
+        Setting: {kwargs.get('setting', '[Setting - e.g., a futuristic cityscape, a desolate alien planet, a sleek spaceship]')}
+        Themes: {kwargs.get('themes', '[Themes - e.g., artificial intelligence, societal collapse, space exploration]')}
+        Target Audience: {kwargs.get('target_audience', '[Target Audience - e.g., young adults, adults, fans of hard sci-fi]')}
+        Keywords: {kwargs.get('keywords', '[Keywords - e.g., cyberpunk, space opera, dystopian, AI, alien, first contact, time travel, transhumanism, genetic engineering]')}
+        Overall Tone: {kwargs.get('tone', '[Overall Tone - e.g., dark, optimistic, gritty, hopeful]')}
+
+        **Visual Style Guidelines:**
+
+        *   **Color Palette:** Suggest specific colors that evoke the book's atmosphere and themes.  Consider using blues and purples for a futuristic feel, or oranges and reds for a more dystopian vibe.
+        *   **Imagery:** Describe the type of imagery that would be appropriate.  Should it feature spaceships, robots, alien landscapes, futuristic technology, or abstract designs? Consider the level of realism vs. stylization.  Should the imagery be photorealistic, or more stylized and artistic?
+        *   **Typography:** Suggest fonts that complement the overall design.  Consider using modern, geometric fonts for a futuristic look, or more classic fonts for a retro sci-fi feel.
+        *   **Layout:** Describe the desired layout of the back cover.  Should it be clean and minimalist, or more complex and layered?  How should the text and imagery be arranged to create a visually appealing and informative design?
+        *   **Inspiration:** Provide examples of existing Science Fiction book covers or artwork that align with the desired visual style. Mention specific artists or designers whose work is relevant.
+        *   **Overall Impression:** The back cover should convey the essence of the book and appeal to the target audience.  It should be visually striking and memorable, and it should accurately reflect the book's genre and tone.  Should it be a minimalist design or a complex and visually rich one?
+
+        Example: "For a cyberpunk novel set in a neon-lit metropolis, the back cover should feature a dark color palette with pops of vibrant color. The imagery should depict a gritty cityscape with towering skyscrapers and flying vehicles. The typography should be modern and edgy, and the layout should be dynamic and visually engaging."
+
+        Generate a detailed description of the visual style preferences for the back cover design, ensuring it aligns with the book's Science Fiction genre and appeals to its target audience.
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return ScienceFictionPrompts.get_writer_profile_prompt(**kwargs)
@@ -197,6 +361,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return ScienceFictionPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return ScienceFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return ScienceFictionPrompts.get_series_book_prompt(**kwargs)

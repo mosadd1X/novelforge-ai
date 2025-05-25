@@ -141,6 +141,227 @@ Create a thriller series that builds compelling narratives with authentic genre 
         """Generate a thriller-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class ThrillerMarketing:
+        """
+        A class containing methods for generating marketing materials for Thriller books,
+        specifically focused on creating compelling back cover copy,
+        short descriptions, marketing taglines, and visual style preferences.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions for Thriller books.
+
+        Args:
+        **kwargs:  Arbitrary keyword arguments. These can include specific plot details,
+        character names, settings, and desired tone.  Use these to tailor the prompt.
+
+        Returns:
+        str: A prompt string designed to guide AI in generating effective back cover copy.
+        """
+        prompt = f"""
+        Write a gripping back cover description for a Thriller novel.
+
+        **Genre:** Thriller
+
+        **Core Elements to Emphasize:**
+
+        *   **High Stakes:** Clearly establish the life-or-death consequences facing the protagonist.  What will they lose if they fail?
+        *   **Suspense and Tension:** Use language that creates a sense of unease, anticipation, and impending danger.  Hint at twists and turns, but avoid spoilers.
+        *   **Mystery and Intrigue:**  Introduce a central mystery that the reader will be compelled to solve.  Plant seeds of doubt and suspicion. Who can the protagonist trust?
+        *   **Fast-Paced Action:** Convey a sense of urgency and relentless pursuit.  Use active verbs and short, punchy sentences.
+        *   **Moral Ambiguity:**  Explore the gray areas of morality.  Are the characters truly good or evil?  Are their actions justified?
+        *   **Psychological Depth:** Delve into the protagonist's inner turmoil, fears, and motivations.  What drives them to take such risks?  What are their deepest secrets?
+
+        **Specific Guidelines for Thrillers:**
+
+        *   **Hook the Reader Immediately:** Start with a captivating opening line or question that grabs the reader's attention.
+        *   **Introduce the Protagonist:** Briefly introduce the main character and their current situation.  Make them relatable, even if flawed.
+        *   **Hint at the Antagonist:** Subtly introduce the antagonist or the force opposing the protagonist.  Create a sense of menace and danger.
+        *   **Tease the Plot:** Provide just enough information to pique the reader's interest without revealing key plot points or the ending.
+        *   **Use Strong Verbs and Imagery:** Employ vivid language to create a visceral reading experience.
+        *   **End with a Cliffhanger:** Leave the reader with a burning question or a sense of unresolved tension that compels them to read the book.
+        *   **Focus on the 'What If' Scenario:**  Present a compelling 'what if' scenario that explores the darkest possibilities.
+        *   **Incorporate Genre Tropes:** Subtly use established thriller tropes (e.g., ticking clock, unreliable narrator, conspiracy, cat-and-mouse game) to appeal to genre fans.
+
+        **Optional Elements (Use if applicable to the specific book):**
+
+        *   **Specific Setting:** If the setting is crucial to the plot, highlight its unique atmosphere and how it contributes to the suspense.
+        *   **Twist Ending:** If the book has a major twist, subtly hint at its existence without giving it away.
+        *   **Themes:**  If the book explores deeper themes (e.g., betrayal, revenge, redemption), briefly allude to them.
+
+        **Tone:**  Suspenseful, intense, mysterious, gripping, unsettling, morally ambiguous.
+
+        **Consider these questions when crafting the description:**
+
+        *   What is the central conflict of the story?
+        *   What are the stakes for the protagonist?
+        *   What secrets are being kept?
+        *   What are the consequences of failure?
+        *   What makes this thriller unique and unforgettable?
+
+        **Specific details about the book (use these to personalize the description):**
+        {kwargs}
+
+        **Example Start:**
+        "One wrong move could cost her everything..."
+        "He thought he knew the truth. He was dead wrong."
+        "In a city of secrets, some are best left buried."
+
+        **Example End:**
+        "But the clock is ticking. And time is running out."
+        "The truth is closer than she thinks. And far more dangerous."
+        "Will he survive the night? Or will he become the next victim?"
+
+        Write a back cover description of approximately 150-200 words.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short (2-3 line) book recommendation for a Thriller novel.
+
+        Args:
+        **kwargs: Arbitrary keyword arguments.  Use these to provide specific details about the book.
+
+        Returns:
+        str: A prompt string designed to guide AI in generating a concise and compelling recommendation.
+        """
+        prompt = f"""
+        Write a short, punchy book recommendation (2-3 lines) for a Thriller novel.  This should be suitable for use on a website, social media, or in an email newsletter.
+
+        **Genre:** Thriller
+
+        **Key Considerations:**
+
+        *   **Intrigue:** Immediately grab the reader's attention with a hint of mystery or danger.
+        *   **Conciseness:** Get straight to the point and use impactful language.
+        *   **Emotional Hook:** Evoke a sense of suspense, fear, or excitement.
+        *   **Target Audience:** Appeal to fans of fast-paced thrillers with high stakes.
+
+        **Specific Guidelines for Thrillers:**
+
+        *   **Highlight the Central Conflict:** Briefly mention the main problem or challenge the protagonist faces.
+        *   **Emphasize the Stakes:**  Convey the potential consequences of failure.
+        *   **Use Strong Action Verbs:**  Create a sense of urgency and excitement.
+        *   **Focus on the Unique Selling Point:**  What makes this thriller stand out from the crowd?
+
+        **Example Recommendations:**
+
+        *   "A twisty, suspenseful thriller that will keep you guessing until the very end. Perfect for fans of [Author] and [Author]."
+        *   "Secrets, lies, and betrayal collide in this pulse-pounding thriller.  Prepare to be on the edge of your seat!"
+        *   "When a seemingly perfect life unravels, one woman must fight to uncover the truth before it's too late.  A must-read for thriller addicts."
+
+        **Specific details about the book (use these to personalize the recommendation):**
+        {kwargs}
+
+        Write a recommendation that is approximately 2-3 lines long.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Thriller novel.
+
+        Args:
+        **kwargs: Arbitrary keyword arguments. Use these to provide specific details about the book.
+
+        Returns:
+        str: A prompt string designed to guide AI in generating a memorable and effective tagline.
+        """
+        prompt = f"""
+        Write a punchy marketing tagline for a Thriller novel.  The tagline should be short, memorable, and attention-grabbing.
+
+        **Genre:** Thriller
+
+        **Key Considerations:**
+
+        *   **Intrigue:**  Create a sense of mystery and suspense.
+        *   **Conciseness:**  Use as few words as possible.
+        *   **Impact:**  Leave a lasting impression on the reader.
+        *   **Target Audience:**  Appeal to fans of thrilling and suspenseful stories.
+
+        **Specific Guidelines for Thrillers:**
+
+        *   **Focus on the Core Conflict:**  Hint at the central problem or challenge.
+        *   **Emphasize the Stakes:**  Convey the potential consequences of failure.
+        *   **Use Strong Verbs and Imagery:**  Create a sense of urgency and excitement.
+        *   **Highlight the Unique Selling Point:** What makes this thriller stand out?
+        *   **Consider using questions:** Taglines framed as questions can pique curiosity.
+
+        **Example Taglines:**
+
+        *   "The truth will cost her everything."
+        *   "Trust no one."
+        *   "Every secret has a price."
+        *   "What if everything you knew was a lie?"
+        *   "Some secrets are better left buried."
+        *   "The clock is ticking."
+        *   "Survival is the only option."
+
+        **Specific details about the book (use these to personalize the tagline):**
+        {kwargs}
+
+        Write a tagline that is approximately 5-10 words long.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt describing visual style preferences for the back cover of a Thriller novel.
+
+        Args:
+        **kwargs: Arbitrary keyword arguments. Use these to provide specific details about the book.
+
+        Returns:
+        str: A prompt string designed to guide a graphic designer in creating a visually appealing and genre-appropriate back cover.
+        """
+        prompt = f"""
+        Describe the desired visual style for the back cover of a Thriller novel.
+
+        **Genre:** Thriller
+
+        **Key Considerations:**
+
+        *   **Atmosphere:**  Create a sense of unease, suspense, and mystery.
+        *   **Color Palette:**  Use colors that evoke a sense of danger, darkness, or urgency.  Common choices include:
+        *   Dark blues and blacks
+        *   Reds (to suggest blood or danger)
+        *   Grays and silvers
+        *   Monochromatic schemes
+        *   **Imagery:**  Use images that are suggestive and symbolic rather than literal.  Consider:
+        *   Shadows and silhouettes
+        *   Blurred or distorted images
+        *   Abstract patterns
+        *   Objects associated with danger (e.g., weapons, keys, clocks)
+        *   Close-ups of faces or eyes (to convey emotion)
+        *   **Typography:**  Use fonts that are clean, modern, and easy to read.  Consider using different font weights and styles to create visual interest.  Avoid overly decorative or playful fonts.
+        *   **Layout:**  Keep the layout clean and uncluttered.  Use negative space to create a sense of tension and isolation.
+
+        **Specific Guidelines for Thrillers:**
+
+        *   **Convey a Sense of Danger:** The visual elements should immediately communicate that the book is a thriller and that the reader is in for a suspenseful ride.
+        *   **Create a Visual Hook:**  Use an image or design element that will grab the reader's attention and make them want to learn more about the book.
+        *   **Avoid Clichés:**  While it's important to adhere to genre conventions, avoid using overly generic or predictable imagery.
+        *   **Consider the Target Audience:**  Think about what visual styles will appeal to fans of thrillers.
+
+        **Specific details about the book (use these to personalize the visual style):**
+        {kwargs}
+
+        **Examples:**
+
+        *   "A stark, minimalist design with a single, blood-red object on a black background."
+        *   "A blurred image of a woman running through a dark forest, with a sense of impending danger."
+        *   "A close-up of a pair of eyes, filled with fear and desperation."
+        *   "Use a glitch effect on the text to create a sense of unease."
+        """
+        return prompt
+        ```
         thriller_book_additions = """
 
 ## Thriller Series Book Integration
@@ -180,6 +401,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return ThrillerPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return ThrillerPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return ThrillerPrompts.get_series_book_prompt(**kwargs)

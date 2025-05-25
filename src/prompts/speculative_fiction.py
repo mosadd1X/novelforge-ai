@@ -179,6 +179,178 @@ Ensure this book feels like an authentic continuation of the speculativefiction 
         
         return base_prompt + speculativefiction_book_additions
 
+        ```python
+        class SpeculativeFictionMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions for Speculative Fiction novels.
+
+        Args:
+        **kwargs: Keyword arguments containing book details such as title, author, main character, setting, plot summary, themes, target audience, and comparable titles.
+
+        Returns:
+        A string containing the prompt for the AI model.
+        """
+
+        prompt = f"""
+        Craft a captivating back cover description for a Speculative Fiction novel. Consider the following details:
+
+        **Book Title:** {kwargs.get('title', '[Book Title]')}
+        **Author:** {kwargs.get('author', '[Author Name]')}
+        **Main Character(s):** {kwargs.get('main_character', '[Main Character Name(s)]')} - Briefly describe their personality and motivations.
+        **Setting:** {kwargs.get('setting', '[Setting Description]')} - Emphasize the unique or altered aspects of the setting that make it Speculative Fiction. Is it a dystopian society, a futuristic world, an alternate history, a world with magic, or a reality altered by technology? Be specific.
+        **Plot Summary:** {kwargs.get('plot_summary', '[Plot Summary]')} - Concisely outline the central conflict and the stakes involved. Focus on the core speculative element driving the narrative.
+        **Themes:** {kwargs.get('themes', '[Themes Explored]')} - Highlight the thought-provoking themes explored in the novel, such as the nature of humanity, the impact of technology, social justice, morality, or the consequences of choices.
+        **Target Audience:** {kwargs.get('target_audience', '[Target Audience]')} - (e.g., fans of dystopian fiction, readers interested in AI ethics, etc.)
+        **Comparable Titles:** {kwargs.get('comparable_titles', '[Comparable Titles]')} - (e.g., "If you enjoyed 'The Handmaid's Tale' or 'Ready Player One', you'll love this.")
+
+        **Instructions:**
+
+        1.  **Begin with a Hook:** Start with a compelling question, a striking image, or a provocative statement that immediately grabs the reader's attention.  Examples:
+        *   "What if reality wasn't what you thought it was?"
+        *   "In a world where [SPECULATIVE ELEMENT], one person dares to..."
+        *   "The year is [YEAR], and humanity is on the brink..."
+
+        2.  **Emphasize the Speculative Element:** Clearly showcase the core speculative element that defines the novel. This could be advanced technology, magic systems, alternate timelines, alien encounters, or societal shifts. Make it intriguing and relevant to the plot.
+
+        3.  **Highlight the Stakes:** What are the consequences if the protagonist fails?  Focus on the potential for societal collapse, personal loss, or the alteration of reality itself.
+
+        4.  **Focus on Emotional Resonance:** Connect with the reader's emotions. Explore themes of hope, fear, love, loss, rebellion, or redemption. Make them care about the characters and their struggles.
+
+        5.  **Create Intrigue and Mystery:** Hint at secrets, conspiracies, or hidden truths that the protagonist must uncover. Leave the reader wanting to know more.
+
+        6.  **End with a Cliffhanger:** Conclude with a tantalizing question or a statement that leaves the reader eager to dive into the story.
+
+        7.  **Genre Conventions:** Adhere to the conventions of Speculative Fiction. Focus on world-building, plausible extrapolation, and thought-provoking explorations of "what if" scenarios.
+
+        8.  **Word Count:** Aim for approximately 150-200 words.
+
+        **Example Openings (Modify to fit the book):**
+
+        *   "In the neon-drenched metropolis of Neo-Tokyo, where artificial intelligence reigns supreme, a rogue programmer discovers a hidden code that could shatter the foundations of reality."
+        *   "Generations after the Great Collapse, humanity clings to survival in underground bunkers, haunted by the ghosts of a world lost to ecological disaster. But a whisper of hope emerges from the ruins..."
+        *   "Elara was born with a gift, a curse, that set her apart from the rigid Order of Mages. Now, she must choose between obedience and rebellion, as a dark prophecy threatens to consume the land."
+
+        **Write a back cover description that will entice readers to pick up this book and lose themselves in a world of imagination and possibility.**
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, impactful description for Speculative Fiction novels (2-3 lines). Ideal for book recommendations.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, genre, key themes).
+
+        Returns:
+        A string containing the prompt for the AI model.
+        """
+
+        prompt = f"""
+        Create a concise and compelling 2-3 line description for a Speculative Fiction novel, suitable for a book recommendation or a quick summary.
+
+        **Book Title:** {kwargs.get('title', '[Book Title]')}
+        **Author:** {kwargs.get('author', '[Author Name]')}
+        **Genre:** Speculative Fiction (Focus on the specific subgenre if applicable, e.g., Dystopian, Cyberpunk, Space Opera)
+        **Key Themes:** {kwargs.get('themes', '[Key Themes]')} - List 2-3 main themes explored in the book.
+
+        **Instructions:**
+
+        1.  **Focus on Intrigue:** Start with a hook that immediately grabs the reader's attention.
+        2.  **Highlight the Speculative Element:** Clearly state the core speculative element that defines the story (e.g., "AI gone rogue," "a parallel universe," "magic returning to Earth").
+        3.  **Emphasize the stakes:** Hint at the consequences or conflict that drives the narrative.
+        4.  **Use strong, evocative language:** Choose words that paint a vivid picture and create a sense of wonder or unease.
+        5.  **Keep it brief and impactful:** Every word counts!
+
+        **Examples:**
+
+        *   "In a city powered by dreams, one woman discovers a nightmare that could unravel reality."
+        *   "Humanity fled Earth, only to find that the stars hold secrets far more terrifying than they imagined."
+        *   "When magic returns to a world ruled by technology, chaos and hope collide in an epic struggle for survival."
+
+        **Write a short description that will make readers instantly want to learn more about this Speculative Fiction novel.**
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy and memorable marketing tagline for Speculative Fiction novels.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, core concept).
+
+        Returns:
+        A string containing the prompt for the AI model.
+        """
+
+        prompt = f"""
+        Craft a short, attention-grabbing marketing tagline for a Speculative Fiction novel.
+
+        **Book Title:** {kwargs.get('title', '[Book Title]')}
+        **Core Concept:** {kwargs.get('core_concept', '[Core Concept of the Book]')} - Briefly describe the central idea or premise of the book (e.g., "AI singularity," "time travel paradox," "magical rebellion").
+
+        **Instructions:**
+
+        1.  **Keep it concise:** Aim for a tagline of 5-10 words.
+        2.  **Highlight the speculative element:** Emphasize what makes the book unique and thought-provoking.
+        3.  **Create intrigue:** Make the reader curious to learn more.
+        4.  **Use strong verbs and imagery:** Choose words that are impactful and memorable.
+        5.  **Consider the tone:** Is the book dark and gritty, or optimistic and hopeful? The tagline should reflect the overall tone.
+
+        **Examples:**
+
+        *   "Reality is hacked. Humanity is the virus." (Cyberpunk)
+        *   "The future is closer than you think. And darker." (Dystopian)
+        *   "Magic reborn. The world will never be the same." (Fantasy/Sci-Fi Blend)
+        *   "What if the past could be rewritten? At what cost?" (Alternate History)
+        *   "Beyond the stars, a war for humanity's soul." (Space Opera)
+
+        **Write a tagline that will stick in readers' minds and make them want to explore this Speculative Fiction world.**
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for suggesting visual style preferences for the back cover design of a Speculative Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (setting, themes, tone).
+
+        Returns:
+        A string containing the prompt for the AI model.
+        """
+
+        prompt = f"""
+        Suggest visual style preferences for the back cover design of a Speculative Fiction novel.
+
+        **Book Setting:** {kwargs.get('setting', '[Setting Description]')} - Describe the visual aspects of the setting (e.g., futuristic cityscape, desolate wasteland, enchanted forest).
+        **Themes:** {kwargs.get('themes', '[Themes Explored]')} - List the key themes that should be visually represented.
+        **Tone:** {kwargs.get('tone', '[Overall Tone of the Book]')} - (e.g., Dark, gritty, hopeful, whimsical, mysterious)
+
+        **Instructions:**
+
+        1.  **Color Palette:** Suggest a color palette that reflects the setting and tone. Consider using cool colors for futuristic or dystopian settings, warm colors for magical or fantastical settings, and contrasting colors to create tension or drama.
+        2.  **Imagery:** Suggest specific imagery that could be used on the back cover. This could include landscapes, characters, objects, or abstract designs.  Consider how the imagery can visually represent the core speculative element of the story.
+        3.  **Typography:** Suggest font styles that are appropriate for the genre and tone. Consider using futuristic fonts for cyberpunk or science fiction, elegant fonts for fantasy, and bold fonts for action-packed stories.
+        4.  **Overall Style:** Describe the overall visual style of the back cover. Should it be minimalist, detailed, abstract, realistic, or stylized?
+        5.  **Inspirational Examples:** Mention specific artists, designers, or book covers that could serve as inspiration.
+
+        **Examples:**
+
+        *   **Cyberpunk:** "Dark, neon-lit cityscape with glitch effects, using a color palette of electric blue, hot pink, and deep black. A futuristic, sans-serif font would complement the technological theme."
+        *   **Dystopian:** "A desolate, barren landscape with a cracked earth texture, using a color palette of muted grays, browns, and reds. A distressed, handwritten font would convey a sense of decay and desperation."
+        *   **Fantasy:** "An enchanted forest with glowing flora and fauna, using a color palette of emerald green, sapphire blue, and gold. An elegant, calligraphic font would evoke a sense of magic and wonder."
+        *   **Space Opera:** "A vast, swirling nebula with distant planets and spaceships, using a color palette of deep purples, blues, and oranges. A bold, futuristic font would convey a sense of adventure and exploration."
+
+        **Provide detailed visual style preferences that will help create a back cover that is visually appealing and accurately reflects the essence of this Speculative Fiction novel.**
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return SpeculativeFictionPrompts.get_writer_profile_prompt(**kwargs)
@@ -196,6 +368,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return SpeculativeFictionPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return SpeculativeFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return SpeculativeFictionPrompts.get_series_book_prompt(**kwargs)

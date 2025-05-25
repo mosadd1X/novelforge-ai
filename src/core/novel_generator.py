@@ -2499,6 +2499,19 @@ Strengths: {profile_data.get('strengths', 'Not specified')}
             "word_count": self.memory_manager.structure["current_word_count"]
         }
 
+        # Generate enhanced descriptions and back cover
+        console.print("[bold cyan]Generating enhanced descriptions...[/bold cyan]")
+        from src.utils.enhanced_book_workflow import EnhancedBookWorkflow
+        workflow = EnhancedBookWorkflow()
+
+        # Save to database first
+        from src.database.database_manager import get_database_manager
+        db_manager = get_database_manager()
+        book_id = db_manager.save_book(novel)
+
+        # Process with enhanced workflow
+        workflow.process_completed_book(book_id, novel)
+
         # Generate cover prompt after novel completion
         self._generate_cover_prompt_after_completion(novel)
 

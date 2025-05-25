@@ -2,21 +2,23 @@
 layout: default
 title: API Documentation
 nav_order: 5
-description: "Detailed documentation of the core classes and functions in the Ebook Generator"
+description: 'Detailed documentation of the core classes and functions in NovelForge AI'
 permalink: /api
 ---
 
 # API Documentation
+
 {: .no_toc }
 
-This document provides detailed information about the core classes and functions in the Ebook Generator project.
+This document provides detailed information about the core classes and functions in the NovelForge AI project.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 

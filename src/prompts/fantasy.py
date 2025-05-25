@@ -238,6 +238,152 @@ Ensure this book feels like an authentic continuation of the fantasy world while
 
         return base_prompt + fantasy_book_additions
 
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs) -> str:
+        """Generate a fantasy-specific back cover description prompt."""
+        title = kwargs.get("title", "Unknown Title")
+        author = kwargs.get("author", "Unknown Author")
+        chapter_summary = kwargs.get("chapter_summary", "")
+
+        return f"""
+You are a professional fantasy book marketing copywriter specializing in epic back cover descriptions.
+
+Generate an immersive back cover description for "{title}" by {author}.
+
+FANTASY-SPECIFIC GUIDELINES:
+- EPIC SCOPE: Emphasize the grand scale and world-changing stakes
+- MAGICAL ELEMENTS: Highlight unique magic systems, creatures, and fantastical elements
+- HEROIC JOURNEY: Focus on the protagonist's transformation and destiny
+- WORLD-BUILDING: Showcase the rich, immersive fantasy world
+- ADVENTURE PROMISE: Create excitement for epic quests and discoveries
+- GOOD VS EVIL: Emphasize the moral stakes and battle between light and darkness
+
+FANTASY LANGUAGE STYLE:
+- Epic and grandiose without being overwrought
+- Rich, descriptive language that paints vivid imagery
+- Mythic and legendary tone
+- Emphasis on wonder, magic, and adventure
+- Heroic and inspiring language
+
+KEY FANTASY ELEMENTS TO EMPHASIZE:
+- Unique magical systems and supernatural powers
+- Mythical creatures and fantastical beings
+- Epic quests and world-threatening dangers
+- Ancient prophecies and mystical artifacts
+- Hero's journey and character transformation
+- Rich world-building and immersive settings
+
+STORY CONTEXT:
+{chapter_summary}
+
+FANTASY HOOKS:
+- "In a world where magic comes at a price..."
+- "Ancient powers stir, and only one can stop them..."
+- "Destiny calls, but will they answer?"
+- "When darkness threatens everything, heroes must rise..."
+- "Magic is returning, and the world will never be the same..."
+
+FORMAT: Write 400-600 words that transport fantasy readers into an epic adventure.
+Focus on wonder, heroism, and the promise of an unforgettable magical journey.
+"""
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs) -> str:
+        """Generate a fantasy-specific short description prompt for recommendations."""
+        title = kwargs.get("title", "Unknown Title")
+
+        return f"""
+Create an epic 2-3 line description for "{title}" perfect for fantasy book recommendations.
+
+FANTASY SHORT DESCRIPTION REQUIREMENTS:
+- 150-200 characters maximum
+- Immediately establish the magical premise
+- Create sense of wonder and adventure
+- Hint at epic scope and stakes
+- End with compelling hook about destiny or danger
+
+FANTASY FOCUS:
+- Magical elements and fantasy world
+- Epic adventure and heroic journey
+- World-threatening stakes
+- Character's destiny and transformation
+
+EXAMPLE FANTASY HOOKS:
+- "When ancient magic awakens, only one can save the realm..."
+- "Destiny chose her. Magic will test her. Evil will challenge her..."
+- "In a world of dragons and magic, heroes are forged in fire..."
+- "The prophecy is clear: save the world or watch it burn..."
+
+Write a short description that makes fantasy readers eager to embark on this epic adventure.
+"""
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs) -> str:
+        """Generate a fantasy-specific marketing tagline prompt."""
+
+        return f"""
+Create an epic, memorable marketing tagline for this fantasy novel.
+
+FANTASY TAGLINE REQUIREMENTS:
+- 5-10 words maximum
+- Epic and inspiring tone
+- Captures the magical adventure
+- Creates sense of wonder and excitement
+- Perfect for fantasy marketing
+
+FANTASY TAGLINE STYLES:
+- "Magic awakens. Destiny calls."
+- "Heroes rise. Legends are born."
+- "When darkness falls, light must rise."
+- "One quest. Infinite possibilities."
+- "Magic has a price. Heroes pay it."
+- "Destiny cannot be denied."
+- "Adventure beyond imagination."
+
+Focus on themes of heroism, magic, destiny, and epic adventure that resonate with fantasy readers.
+"""
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs) -> str:
+        """Get visual style preferences for fantasy back covers."""
+
+        return """
+FANTASY VISUAL STYLE PREFERENCES:
+
+COLOR SCHEMES:
+- Rich, mystical colors (deep purples, midnight blues, emerald greens)
+- Metallic accents (gold, silver, bronze) for magical elements
+- Dramatic contrasts (dark backgrounds with bright magical effects)
+- Earth tones for grounded fantasy (browns, forest greens, stone grays)
+
+TYPOGRAPHY:
+- Bold, epic fonts for titles (medieval or mystical styles)
+- Ornate decorative elements and borders
+- Readable but atmospheric font choices
+- Emphasis on magical or heroic words
+
+IMAGERY SUGGESTIONS:
+- Epic fantasy landscapes (castles, mountains, magical forests)
+- Mythical creatures (dragons, phoenixes, magical beasts)
+- Magical elements (glowing runes, spell effects, enchanted objects)
+- Heroic figures in dramatic poses
+- Ancient symbols and mystical artifacts
+
+LAYOUT PREFERENCES:
+- Grand, epic composition with sweeping elements
+- Layered imagery suggesting depth and mystery
+- Magical effects and atmospheric lighting
+- Focus on adventure and wonder
+- Professional but fantastical design
+
+MOOD:
+- Epic and adventurous
+- Mysterious and magical
+- Heroic and inspiring
+- Sense of wonder and discovery
+- Appeals to fantasy readers' imagination
+"""
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return FantasyPrompts.get_writer_profile_prompt(**kwargs)
@@ -259,3 +405,15 @@ def get_series_plan_prompt(**kwargs) -> str:
 
 def get_series_book_prompt(**kwargs) -> str:
     return FantasyPrompts.get_series_book_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return FantasyPrompts.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return FantasyPrompts.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return FantasyPrompts.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return FantasyPrompts.get_visual_style_preferences(**kwargs)

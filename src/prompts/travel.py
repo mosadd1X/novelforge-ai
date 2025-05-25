@@ -163,6 +163,197 @@ Ensure this book provides comprehensive travel education while serving as an int
         
         return base_prompt + travel_book_additions
 
+        ```python
+        class TravelMarketing:
+        """
+        A class containing methods for generating back cover copy and marketing materials
+        specifically for the Travel genre.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions
+        for Travel books.
+
+        Args:
+        **kwargs: Keyword arguments to pass specific details about the book,
+        such as target audience, travel destination, themes, etc.
+
+        Returns:
+        A string containing the prompt for the AI model.
+        """
+        prompt = f"""
+        Craft a captivating back cover description for a Travel book.
+
+        Genre: Travel
+
+        Book Title: {kwargs.get('title', '[Insert Book Title Here]')}
+        Author: {kwargs.get('author', '[Insert Author Name Here]')}
+        Target Audience: {kwargs.get('target_audience', 'Travel enthusiasts, adventure seekers, armchair travelers')}
+        Travel Destination: {kwargs.get('destination', '[Insert Destination Here: e.g., Tuscany, Nepal, Patagonia]')}
+        Main Themes: {kwargs.get('themes', '[Insert Themes Here: e.g., self-discovery, cultural immersion, overcoming challenges]')}
+        Emotional Hook: {kwargs.get('emotional_hook', 'Inspire wanderlust, evoke a sense of adventure, create a longing for exploration')}
+        Unique Selling Proposition (USP): {kwargs.get('usp', '[Insert USP Here: e.g., off-the-beaten-path experiences, insider tips, stunning photography]')}
+        Call to Action: {kwargs.get('call_to_action', 'Embark on your next adventure!')}
+
+        Guidelines:
+
+        *   **Evoke a sense of place:** Use vivid language and sensory details to transport the reader to the destination.  Describe the sights, sounds, smells, tastes, and textures of the location.
+        *   **Highlight the journey:** Focus on the transformative power of travel.  Show how the journey changes the protagonist or the reader's perspective.
+        *   **Emphasize discovery:**  Highlight the unique experiences and hidden gems that the book reveals.  Focus on cultural immersion, local encounters, and off-the-beaten-path adventures.
+        *   **Create an emotional connection:** Tap into the reader's desire for adventure, exploration, and self-discovery.  Use language that is inspiring, evocative, and emotionally resonant.
+        *   **Address the target audience:** Tailor the language and tone to the specific audience.  For example, a book for budget travelers will have a different tone than a book for luxury travelers.
+        *   **Show, don't tell:** Use specific examples and anecdotes to illustrate the book's key themes and arguments.
+        *   **Use strong verbs and descriptive adjectives:**  Make the language dynamic and engaging.
+        *   **End with a compelling hook:** Leave the reader wanting to know more.
+        *   **Consider including a quote from a review or endorsement.**
+        *   **Mention any awards or recognition the book has received.**
+
+        Example Structure:
+
+        [Opening hook that grabs the reader's attention and introduces the destination.]
+
+        [Briefly introduce the protagonist or the main focus of the book.]
+
+        [Highlight the key themes and experiences of the journey.]
+
+        [Emphasize the transformative power of travel and the unique insights the book offers.]
+
+        [End with a call to action that encourages the reader to embark on their own adventure.]
+
+        Write a back cover description that is approximately 150-200 words in length.  It should be concise, engaging, and persuasive.  It should accurately reflect the content and tone of the book.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, impactful description
+        for Travel books (2-3 lines).
+
+        Args:
+        **kwargs: Keyword arguments to pass specific details about the book.
+
+        Returns:
+        A string containing the prompt.
+        """
+        prompt = f"""
+        Craft a short, compelling description (2-3 lines) for a Travel book.
+
+        Genre: Travel
+
+        Book Title: {kwargs.get('title', '[Insert Book Title Here]')}
+        Destination: {kwargs.get('destination', '[Insert Destination Here]')}
+        Core Idea: {kwargs.get('core_idea', '[Insert the core idea or unique selling proposition]')}
+
+        Guidelines:
+
+        *   **Focus on the essence:** Capture the most captivating element of the travel experience.
+        *   **Highlight the destination's allure:** Use evocative language to paint a picture of the place.
+        *   **Emphasize the unique perspective:** What makes this book different from other travel guides?
+        *   **Inspire wanderlust:** Make the reader want to pack their bags and go.
+        *   **Use concise and impactful language.**
+        *   **Focus on the transformative power of travel.**
+        *   **Consider using a question to pique the reader's interest.**
+
+        Examples:
+
+        *   "Escape to the sun-drenched shores of the Amalfi Coast, where ancient ruins whisper stories of empires past and the scent of lemon blossoms fills the air."
+        *   "Discover the hidden trails of the Himalayas, where breathtaking landscapes and spiritual encounters await the intrepid traveler."
+        *   "More than just a guide, this book is your passport to unlocking the soul of Kyoto, from serene Zen gardens to bustling geisha districts."
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for
+        Travel books.
+
+        Args:
+        **kwargs: Keyword arguments to pass specific details about the book.
+
+        Returns:
+        A string containing the prompt.
+        """
+        prompt = f"""
+        Craft a punchy and memorable marketing tagline for a Travel book.
+
+        Genre: Travel
+
+        Book Title: {kwargs.get('title', '[Insert Book Title Here]')}
+        Destination: {kwargs.get('destination', '[Insert Destination Here]')}
+        Key Selling Point: {kwargs.get('key_selling_point', '[Insert the most appealing aspect of the book]')}
+
+        Guidelines:
+
+        *   **Be concise and memorable:** Aim for a tagline that is easy to remember and repeat.
+        *   **Highlight the destination's appeal:** Focus on what makes the location special.
+        *   **Emphasize the transformative power of travel.**
+        *   **Evoke a sense of adventure and excitement.**
+        *   **Target the specific audience:** Tailor the language to resonate with the intended readers.
+        *   **Use strong verbs and evocative language.**
+        *   **Consider using a play on words or a clever pun.**
+
+        Examples:
+
+        *   "Unleash Your Inner Explorer."
+        *   "Your Passport to Paradise."
+        *   "The World Awaits."
+        *   "Adventure Starts Here."
+        *   "Discover. Dream. Travel."
+        *   "Beyond the Guidebook."
+        *   "Travel Deeper."
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for defining visual style preferences for a Travel book's
+        back cover design.
+
+        Args:
+        **kwargs: Keyword arguments to pass specific details about the book.
+
+        Returns:
+        A string containing the prompt.
+        """
+        prompt = f"""
+        Define the visual style preferences for the back cover design of a Travel book.
+
+        Genre: Travel
+
+        Book Title: {kwargs.get('title', '[Insert Book Title Here]')}
+        Destination: {kwargs.get('destination', '[Insert Destination Here]')}
+        Target Audience: {kwargs.get('target_audience', '[Describe the target audience]')}
+        Overall Tone: {kwargs.get('tone', '[Describe the desired tone: e.g., adventurous, romantic, sophisticated]')}
+
+        Guidelines:
+
+        *   **Imagery:**
+        *   **Photography Style:** (e.g., vibrant, documentary, landscape, portrait, black and white, aerial)  Specify preferred photographic techniques (e.g., long exposure, shallow depth of field).
+        *   **Subject Matter:** (e.g., landscapes, cityscapes, people, cultural events, food, wildlife)
+        *   **Color Palette:** (e.g., bright and bold, muted and earthy, monochromatic, pastel) How does the color palette reflect the destination and tone?
+        *   **Typography:**
+        *   **Font Style:** (e.g., Serif, Sans-Serif, Script)  Consider legibility and readability.
+        *   **Font Size and Weight:**  Ensure the text is easily readable.
+        *   **Use of Hierarchy:**  How will different font sizes and styles be used to create visual hierarchy?
+        *   **Layout:**
+        *   **Overall Design:** (e.g., minimalist, cluttered, modern, vintage)
+        *   **Use of White Space:**  How much white space should be used to create a clean and balanced design?
+        *   **Placement of Elements:**  Where should the title, author name, tagline, and description be placed?
+        *   **Branding:**
+        *   **Logos and Trademarks:**  Include any relevant logos or trademarks.
+        *   **Consistency:**  Ensure the design is consistent with the overall branding of the book and author.
+        *   **Inspiration:**
+        *   **Provide examples of back cover designs that you like.**  Explain what you like about them.
+        *   **Consider the target audience:**  The visual style should appeal to the intended readers.  For example, a book for young adventurers might have a bold and colorful design, while a book for luxury travelers might have a more sophisticated and minimalist design.
+        *   **Reflect the destination:**  The design should evoke the feeling and atmosphere of the destination.  For example, a book about Italy might use warm and earthy colors, while a book about Iceland might use cool and icy colors.
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return TravelPrompts.get_writer_profile_prompt(**kwargs)
@@ -180,6 +371,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return TravelPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return TravelPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return TravelPrompts.get_series_book_prompt(**kwargs)

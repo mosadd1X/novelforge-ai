@@ -358,6 +358,152 @@ Ensure this book feels like an authentic continuation of the romance series whil
 
         return base_prompt + romance_book_additions
 
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs) -> str:
+        """Generate a romance-specific back cover description prompt."""
+        title = kwargs.get("title", "Unknown Title")
+        author = kwargs.get("author", "Unknown Author")
+        chapter_summary = kwargs.get("chapter_summary", "")
+
+        return f"""
+You are a professional romance book marketing copywriter specializing in compelling back cover descriptions.
+
+Generate a captivating back cover description for "{title}" by {author}.
+
+ROMANCE-SPECIFIC GUIDELINES:
+- EMOTIONAL HOOKS: Focus on the romantic tension, chemistry, and emotional stakes
+- RELATIONSHIP FOCUS: Highlight the central romantic relationship and obstacles
+- PASSIONATE LANGUAGE: Use emotionally charged, romantic language that creates desire
+- CHARACTER CHEMISTRY: Emphasize the attraction and connection between protagonists
+- ROMANTIC STAKES: Show what the characters risk losing if they don't find love
+- HAPPY ENDING PROMISE: Hint at the satisfying romantic resolution without spoiling
+
+ROMANCE LANGUAGE STYLE:
+- Emotionally evocative and passionate
+- Focus on feelings, attraction, and heart-racing moments
+- Use sensual but appropriate language
+- Emphasize emotional vulnerability and connection
+- Include romantic tension and chemistry
+
+KEY ROMANCE ELEMENTS TO EMPHASIZE:
+- The irresistible attraction between protagonists
+- Emotional obstacles that test their love
+- Personal growth through romantic connection
+- Moments of vulnerability and intimacy
+- The stakes of finding or losing true love
+- Character flaws that love helps overcome
+
+STORY CONTEXT:
+{chapter_summary}
+
+EMOTIONAL HOOKS FOR ROMANCE:
+- "Will they overcome their past to find love?"
+- "Can love conquer their deepest fears?"
+- "Two hearts, one impossible choice..."
+- "Love was the last thing they expected..."
+- "Sometimes the heart wants what it shouldn't have..."
+
+FORMAT: Write 400-600 words that make romance readers desperate to read this love story.
+Focus on emotional connection, romantic tension, and the promise of a satisfying romantic journey.
+"""
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs) -> str:
+        """Generate a romance-specific short description prompt for recommendations."""
+        title = kwargs.get("title", "Unknown Title")
+
+        return f"""
+Create a compelling 2-3 line description for "{title}" perfect for romance book recommendations.
+
+ROMANCE SHORT DESCRIPTION REQUIREMENTS:
+- 150-200 characters maximum
+- Immediately establish the romantic premise
+- Create emotional intrigue and desire to read
+- Hint at romantic tension and chemistry
+- End with emotional hook or question
+
+ROMANCE FOCUS:
+- Central romantic relationship
+- Emotional stakes and obstacles
+- Character chemistry and attraction
+- Promise of romantic satisfaction
+
+EXAMPLE ROMANCE HOOKS:
+- "When opposites attract, sparks fly..."
+- "Love wasn't part of the plan, but hearts don't follow rules..."
+- "Two broken hearts, one chance at forever..."
+- "She swore off love. He changed everything..."
+
+Write a short description that makes romance readers add this book to their must-read list immediately.
+"""
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs) -> str:
+        """Generate a romance-specific marketing tagline prompt."""
+
+        return f"""
+Create a punchy, memorable marketing tagline for this romance novel.
+
+ROMANCE TAGLINE REQUIREMENTS:
+- 5-10 words maximum
+- Emotionally powerful and evocative
+- Captures the essence of romantic tension
+- Creates immediate emotional response
+- Perfect for marketing and promotion
+
+ROMANCE TAGLINE STYLES:
+- "Love conquers all"
+- "Two hearts, one destiny"
+- "When love defies everything"
+- "The heart wants what it wants"
+- "Love was worth the risk"
+- "Forever starts with one kiss"
+- "Love beyond all reason"
+
+Focus on universal romantic themes that resonate with romance readers' deepest desires.
+"""
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs) -> str:
+        """Get visual style preferences for romance back covers."""
+
+        return """
+ROMANCE VISUAL STYLE PREFERENCES:
+
+COLOR SCHEMES:
+- Warm, passionate colors (deep reds, rose gold, burgundy)
+- Soft romantic pastels (blush pink, lavender, cream)
+- Elegant combinations (gold and deep purple, silver and rose)
+- Avoid cold colors (stark blues, grays) unless for contrast
+
+TYPOGRAPHY:
+- Elegant, flowing fonts for titles
+- Script or calligraphy elements for romantic feel
+- Readable but sophisticated font choices
+- Emphasis on emotional words in the description
+
+IMAGERY SUGGESTIONS:
+- Romantic couples in intimate poses
+- Symbolic elements (roses, hearts, rings)
+- Elegant backgrounds (silk, lace textures)
+- Soft lighting and warm atmosphere
+- Focus on emotional connection between characters
+
+LAYOUT PREFERENCES:
+- Central focus on romantic elements
+- Balanced composition with breathing room
+- Elegant borders or decorative elements
+- Emphasis on title and romantic tagline
+- Professional but emotionally appealing design
+
+MOOD:
+- Passionate and emotionally engaging
+- Sophisticated and elegant
+- Warm and inviting
+- Promise of romantic satisfaction
+- Appeals to romance readers' fantasies
+"""
+
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return RomancePrompts.get_writer_profile_prompt(**kwargs)
@@ -379,3 +525,15 @@ def get_series_plan_prompt(**kwargs) -> str:
 
 def get_series_book_prompt(**kwargs) -> str:
     return RomancePrompts.get_series_book_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return RomancePrompts.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return RomancePrompts.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return RomancePrompts.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return RomancePrompts.get_visual_style_preferences(**kwargs)

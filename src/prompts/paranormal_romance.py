@@ -177,6 +177,205 @@ Ensure this book feels like an authentic continuation of the paranormalromance s
         
         return base_prompt + paranormalromance_book_additions
 
+        ```python
+        class ParanormalRomanceMarketing:
+        """
+        A class containing methods for generating prompts for Paranormal Romance back cover copy,
+        taglines, short descriptions, and visual style preferences.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling Paranormal Romance back cover descriptions.
+
+        Args:
+        **kwargs: Keyword arguments providing book-specific details.
+
+        Returns:
+        str: A prompt string tailored for AI content generation.
+        """
+        prompt = f"""
+        Write a captivating back cover description for a Paranormal Romance novel.
+
+        Genre: Paranormal Romance
+
+        Key Elements to Emphasize:
+        *   Forbidden Love: Highlight the intense connection between the human and paranormal characters, emphasizing the obstacles and societal pressures they face.
+        *   Supernatural Powers/Abilities: Showcase the unique abilities of the paranormal character(s) and how they impact the relationship and the plot.
+        *   Worldbuilding: Briefly describe the unique paranormal world and its rules, creating a sense of mystery and intrigue.
+        *   Emotional Intensity: Focus on the deep emotions, passion, and vulnerability between the characters.  Readers want to *feel* the connection.
+        *   High Stakes: Emphasize the dangers and challenges the characters face, both from external threats and internal conflicts.  What will they risk for love?
+        *   Transformation/Growth: Show how the relationship changes the characters, leading to personal growth and self-discovery.
+        *   Intrigue and Suspense: Tease the central conflict or mystery that drives the plot, leaving the reader wanting more.
+        *   Strong Female Lead (if applicable): Highlight the heroine's strength, independence, and resilience.
+
+        Specific Details (Use these to tailor the description):
+        *   Title: {kwargs.get('title', '[Book Title]')}
+        *   Heroine Name: {kwargs.get('heroine_name', '[Heroine Name]')}
+        *   Hero Name: {kwargs.get('hero_name', '[Hero Name]')}
+        *   Paranormal Creature Type (e.g., Vampire, Werewolf, Fae, Witch): {kwargs.get('paranormal_creature', '[Paranormal Creature]')}
+        *   Brief Plot Summary: {kwargs.get('plot_summary', '[Brief Plot Summary]')}
+        *   Central Conflict/Mystery: {kwargs.get('conflict', '[Central Conflict]')}
+        *   Setting (Time Period and Location): {kwargs.get('setting', '[Setting]')}
+        *   Key Themes: {kwargs.get('themes', '[Themes, e.g., destiny, sacrifice, acceptance]')}
+        *   Tone (e.g., Dark, Romantic, Humorous): {kwargs.get('tone', '[Tone]')}
+
+        Instructions:
+        1.  Start with a hook that immediately grabs the reader's attention and introduces the heroine and/or hero.
+        2.  Briefly introduce the paranormal element and the central conflict.
+        3.  Highlight the forbidden romance and the emotional connection between the characters.
+        4.  Tease the high stakes and the potential consequences of their relationship.
+        5.  End with a cliffhanger or a question that leaves the reader wanting to know what happens next.
+        6.  Use evocative language and imagery to create a sense of atmosphere and emotion.
+        7.  Keep the description concise and engaging (approximately 150-200 words).
+        8.  Avoid spoilers.
+        9.  Mention any unique aspects of the paranormal world or the characters' abilities.
+        10. Focus on the emotional journey of the characters and the power of love to overcome obstacles.
+
+        Example Opening Lines (Feel free to adapt or use as inspiration):
+        *   "She never believed in vampires... until she met him."
+        *   "In a world where magic is forbidden, their love is the most dangerous spell of all."
+        *   "He was a creature of the night, bound by duty, until she awakened his heart."
+
+        Write the back cover description now.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a short (2-3 line) book recommendation description for Paranormal Romance.
+
+        Args:
+        **kwargs: Keyword arguments providing book-specific details.
+
+        Returns:
+        str: A prompt string tailored for AI content generation.
+        """
+        prompt = f"""
+        Write a short, enticing 2-3 line description of a Paranormal Romance novel for book recommendations.
+
+        Genre: Paranormal Romance
+
+        Key Elements to Emphasize:
+        *   Forbidden love between a human and a paranormal being.
+        *   Unique paranormal elements and worldbuilding.
+        *   Intense emotions and passionate connection.
+        *   High stakes and potential danger.
+
+        Specific Details (Use these to tailor the description):
+        *   Title: {kwargs.get('title', '[Book Title]')}
+        *   Heroine Name: {kwargs.get('heroine_name', '[Heroine Name]')}
+        *   Hero Name: {kwargs.get('hero_name', '[Hero Name]')}
+        *   Paranormal Creature Type: {kwargs.get('paranormal_creature', '[Paranormal Creature]')}
+        *   Brief Plot Summary: {kwargs.get('plot_summary', '[Brief Plot Summary]')}
+
+        Instructions:
+        1.  Focus on creating intrigue and capturing the essence of the story in a concise way.
+        2.  Highlight the unique aspects of the paranormal romance.
+        3.  Use strong, evocative language.
+        4.  End with a hook that makes the reader want to learn more.
+
+        Example:
+        "When a mortal woman stumbles into a world of ancient vampires, she finds herself drawn to a dark and dangerous lord. But their love could ignite a war that destroys them both."
+
+        Write the short description now.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Paranormal Romance novel.
+
+        Args:
+        **kwargs: Keyword arguments providing book-specific details.
+
+        Returns:
+        str: A prompt string tailored for AI content generation.
+        """
+        prompt = f"""
+        Write a captivating marketing tagline for a Paranormal Romance novel.
+
+        Genre: Paranormal Romance
+
+        Key Elements to Emphasize:
+        *   Forbidden love and desire.
+        *   The clash between two worlds (human and paranormal).
+        *   Intense emotions and passion.
+        *   Danger and high stakes.
+        *   The power of love to overcome obstacles.
+
+        Specific Details (Use these to tailor the tagline):
+        *   Title: {kwargs.get('title', '[Book Title]')}
+        *   Heroine Name: {kwargs.get('heroine_name', '[Heroine Name]')}
+        *   Hero Name: {kwargs.get('hero_name', '[Hero Name]')}
+        *   Paranormal Creature Type: {kwargs.get('paranormal_creature', '[Paranormal Creature]')}
+        *   Central Conflict: {kwargs.get('conflict', '[Central Conflict]')}
+        *   Key Themes: {kwargs.get('themes', '[Themes, e.g., destiny, sacrifice, acceptance]')}
+
+        Instructions:
+        1.  Keep the tagline short, memorable, and impactful (ideally under 10 words).
+        2.  Focus on the core conflict or theme of the story.
+        3.  Use strong verbs and evocative language.
+        4.  Create a sense of mystery and intrigue.
+        5.  Consider using a question or a play on words.
+
+        Example Taglines:
+        *   "Love is a dangerous game when your heart belongs to a vampire."
+        *   "Their love could break the curse... or destroy the world."
+        *   "He's a monster. She's his obsession."
+
+        Write the marketing tagline now.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for defining visual style preferences for a Paranormal Romance book cover.
+
+        Args:
+        **kwargs: Keyword arguments providing book-specific details.
+
+        Returns:
+        str: A prompt string tailored for AI content generation.
+        """
+        prompt = f"""
+        Describe the visual style preferences for a Paranormal Romance book cover.
+
+        Genre: Paranormal Romance
+
+        Key Visual Elements to Consider:
+        *   Imagery: What kind of imagery would best represent the story? (e.g., a couple embracing, a lone figure in a mystical setting, a close-up of a paranormal creature, symbolic elements like a moon, stars, or ancient artifacts)
+        *   Color Palette: What colors evoke the mood and atmosphere of the story? (e.g., dark and moody colors for a gothic romance, vibrant and ethereal colors for a fae romance, warm and passionate colors for a werewolf romance)
+        *   Typography: What font styles would be appropriate for the title and author name? (e.g., elegant and flowing fonts for a romantic feel, bold and dramatic fonts for a darker tone, handwritten fonts for a more personal touch)
+        *   Overall Mood: What is the overall mood you want to convey? (e.g., romantic, mysterious, sensual, dangerous, suspenseful)
+
+        Specific Details (Use these to tailor the visual style):
+        *   Title: {kwargs.get('title', '[Book Title]')}
+        *   Heroine Appearance: {kwargs.get('heroine_appearance', '[Heroine Appearance Description]')}
+        *   Hero Appearance: {kwargs.get('hero_appearance', '[Hero Appearance Description]')}
+        *   Paranormal Creature Type: {kwargs.get('paranormal_creature', '[Paranormal Creature]')}
+        *   Setting: {kwargs.get('setting', '[Setting Description]')}
+        *   Tone: {kwargs.get('tone', '[Tone, e.g., Dark, Romantic, Humorous]')}
+        *   Target Audience: {kwargs.get('target_audience', '[Target Audience Description]')}
+        *   Specific Cover Art Examples (Optional): {kwargs.get('cover_examples', '[Examples of similar covers you like]')}
+
+        Instructions:
+        1.  Provide a detailed description of the desired imagery, color palette, typography, and overall mood.
+        2.  Consider the target audience and what kind of cover art would appeal to them.
+        3.  Think about the key themes and elements of the story and how they can be visually represented.
+        4.  Be specific and provide as much detail as possible to help the AI generate a cover that accurately reflects your vision.
+        5.  If you have any specific cover art examples that you like, include them for reference.
+        6.  Consider the use of silhouettes, textures, and lighting to create a visually appealing and memorable cover.
+        7.  Think about the composition of the cover and how the different elements will be arranged.
+
+        Describe the desired visual style for the book cover now.
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return ParanormalRomancePrompts.get_writer_profile_prompt(**kwargs)
@@ -194,6 +393,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return ParanormalRomancePrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return ParanormalRomancePrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return ParanormalRomancePrompts.get_series_book_prompt(**kwargs)

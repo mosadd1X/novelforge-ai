@@ -2,21 +2,23 @@
 layout: default
 title: Development Setup
 nav_order: 10
-description: "Detailed instructions for setting up a development environment for the Ebook Generator"
+description: 'Detailed instructions for setting up a development environment for the Ebook Generator'
 permalink: /development-setup
 ---
 
 # Development Setup
+
 {: .no_toc }
 
 This guide provides detailed instructions for setting up a development environment for the Ebook Generator.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
@@ -36,10 +38,10 @@ Before setting up the development environment, ensure you have the following pre
 
 ```bash
 # Clone the repository
-git clone https://github.com/mosadd1X/ebook-generator.git
+git clone https://github.com/mosadd1X/novelforge-ai.git
 
 # Navigate to the project directory
-cd ebook-generator
+cd novelforge-ai
 ```
 
 ### 2. Create a Virtual Environment
@@ -143,7 +145,7 @@ pre-commit install
 Understanding the project structure will help you navigate and contribute effectively:
 
 ```
-ebook-generator/
+novelforge-ai/
 ├── docs/                       # Documentation
 ├── src/                        # Source code
 │   ├── core/                   # Core functionality
@@ -189,6 +191,7 @@ pytest --cov=src tests/
 ## Development Workflow
 
 1. **Create a Branch**: Create a new branch for your feature or bugfix
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -196,11 +199,13 @@ pytest --cov=src tests/
 2. **Make Changes**: Implement your changes following the project's coding standards
 
 3. **Run Tests**: Ensure your changes pass all tests
+
    ```bash
    pytest
    ```
 
 4. **Format Code**: Format your code before committing
+
    ```bash
    black src tests
    isort src tests
@@ -208,11 +213,13 @@ pytest --cov=src tests/
    ```
 
 5. **Commit Changes**: Commit your changes with a clear message
+
    ```bash
    git commit -m "Add feature: description of the feature"
    ```
 
 6. **Push Changes**: Push your branch to your fork
+
    ```bash
    git push origin feature/your-feature-name
    ```

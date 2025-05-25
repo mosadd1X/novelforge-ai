@@ -1,0 +1,55 @@
+
+# Writer Profile Picture Specifications
+
+## Image Requirements
+- **Format**: JPG (preferred) or PNG
+- **Size**: 800x800 pixels (square format)
+- **Resolution**: 300 DPI minimum
+- **Quality**: High quality, professional portrait style
+- **Orientation**: Square (1:1 aspect ratio)
+
+## Folder Structure
+```
+writer_profile_images/
+├── portraits/
+│   ├── writer_001_catherine.jpg
+│   ├── writer_002_hiroshi.jpg
+│   ├── writer_003_patricia.jpg
+│   └── ...
+└── specifications.txt (this file)
+```
+
+## Naming Convention
+**Format**: `writer_[ID]_[shortname].jpg`
+
+Where:
+- **ID**: 3-digit number (001, 002, 003, etc.)
+- **shortname**: First name in lowercase, max 10 characters
+- **Extension**: .jpg (preferred) or .png
+
+## Examples
+- Catherine Fairfax → `writer_001_catherine.jpg`
+- Hiroshi Nakamura → `writer_002_hiroshi.jpg`
+- Dr. Patricia Blackwell → `writer_003_patricia.jpg`
+- Professor Aldrich Quantum → `writer_004_aldrich.jpg`
+
+## Style Guidelines
+- Professional portrait style
+- Clear, well-lit face
+- Appropriate period clothing/styling
+- Neutral or contextual background
+- Serious or thoughtful expression
+- High contrast and clarity
+- Suitable for book back matter inclusion
+
+## Cultural Sensitivity
+- Ensure accurate representation of cultural backgrounds
+- Respect historical periods and contexts
+- Avoid stereotypes or caricatures
+- Maintain dignity and professionalism
+
+## Technical Notes
+- Images will be resized to fit EPUB back matter sections
+- Should look good at both full size and thumbnail
+- Consider how they'll appear in black and white
+- Ensure good contrast for accessibility

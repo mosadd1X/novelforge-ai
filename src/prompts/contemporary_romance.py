@@ -264,6 +264,185 @@ Contemporary Romance readers deserve substantial, emotionally rich content with 
 
         return base_prompt + contemporary_romance_additions
 
+        ```python
+        class ContemporaryRomanceMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover copy for a Contemporary Romance novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, hero character description,
+        heroine character description, setting, plot summary, key themes, emotional stakes,
+        trope, target audience, comparable titles).
+
+        Returns:
+        str: A detailed prompt string for AI-powered back cover copy generation.
+        """
+        return f"""
+        Write a captivating back cover description for a Contemporary Romance novel.
+
+        Genre: Contemporary Romance
+
+        Target Audience: Readers who enjoy heartwarming, relatable, and emotionally engaging love stories set in modern times. Think fans of authors like Emily Henry, Tessa Bailey, and Christina Lauren.
+
+        Key Elements to Include:
+
+        *   **Emotional Hook:** Emphasize the emotional connection between the hero and heroine. Focus on the vulnerability, desires, and internal conflicts that drive their relationship. What are they searching for? What are they afraid of?
+        *   **Relatable Characters:** Highlight the characters' flaws, insecurities, and everyday struggles. Make them feel authentic and relatable to the reader. Avoid overly perfect or idealized depictions.
+        *   **Realistic Setting:** Ground the story in a believable and contemporary setting. Use vivid descriptions to bring the location to life and make it feel like a place the reader could actually visit.
+        *   **High Stakes (Emotional):** Even though it's Contemporary Romance, there should still be something at stake. This could be a career, a family relationship, a secret from the past, or simply the risk of heartbreak.
+        *   **Tension and Chemistry:** Create a palpable sense of tension and chemistry between the hero and heroine. Hint at the obstacles they must overcome to be together. Use suggestive but tasteful language.
+        *   **Hopeful Ending:** While the road to love may be bumpy, the ending should ultimately be optimistic and satisfying. Leave the reader feeling happy and hopeful.
+        *   **Trope Awareness:** If the story utilizes a popular romance trope (e.g., enemies to lovers, second chance romance, fake dating), subtly incorporate it into the description.
+
+        Tone: Warm, engaging, witty, and emotionally resonant. Avoid overly dramatic or melodramatic language.
+
+        Do NOT include:
+        * Spoilers for major plot twists or the ending.
+        * Cliches or overused phrases.
+        * Generic descriptions that could apply to any romance novel.
+
+        Consider these questions to spark interest:
+
+        *   What is the central conflict that keeps the hero and heroine apart?
+        *   What are their deepest desires and fears?
+        *   What makes their connection unique and special?
+        *   What will they risk to be together?
+
+        Book Details:
+
+        *   Title: {kwargs.get('title', '[Insert Title Here]')}
+        *   Author: {kwargs.get('author', '[Insert Author Name Here]')}
+        *   Hero Description: {kwargs.get('hero_description', '[Insert Hero Description Here]')}
+        *   Heroine Description: {kwargs.get('heroine_description', '[Insert Heroine Description Here]')}
+        *   Setting: {kwargs.get('setting', '[Insert Setting Description Here]')}
+        *   Plot Summary: {kwargs.get('plot_summary', '[Insert Plot Summary Here]')}
+        *   Key Themes: {kwargs.get('key_themes', '[Insert Key Themes Here]')} (e.g., self-discovery, forgiveness, second chances)
+        *   Emotional Stakes: {kwargs.get('emotional_stakes', '[Insert Emotional Stakes Here]')}
+        *   Trope: {kwargs.get('trope', '[Insert Trope Here, if applicable]')} (e.g., enemies to lovers, friends to lovers, fake dating)
+        *   Comparable Titles: {kwargs.get('comparable_titles', '[Insert Comparable Titles Here]')} (e.g., books by Emily Henry, Tessa Bailey, Christina Lauren)
+        """
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, punchy description (2-3 lines) for a Contemporary Romance novel, suitable for book recommendations.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, hero character, heroine character, key conflict).
+
+        Returns:
+        str: A prompt string for AI-powered short description generation.
+        """
+        return f"""
+        Write a short, engaging description (2-3 lines) for a Contemporary Romance novel, suitable for a book recommendation.
+
+        Genre: Contemporary Romance
+
+        Focus: Capture the essence of the story in a concise and intriguing way. Highlight the central conflict and the emotional connection between the hero and heroine.
+
+        Tone: Playful, intriguing, and emotionally resonant.
+
+        Include:
+
+        *   The core relationship dynamic.
+        *   A hint of the central conflict.
+        *   A sense of emotional stakes.
+
+        Avoid:
+
+        *   Spoilers.
+        *   Generic phrases.
+
+        Book Details:
+
+        *   Title: {kwargs.get('title', '[Insert Title Here]')}
+        *   Author: {kwargs.get('author', '[Insert Author Name Here]')}
+        *   Hero Character: {kwargs.get('hero_character', '[Insert Hero Character Description Here]')}
+        *   Heroine Character: {kwargs.get('heroine_character', '[Insert Heroine Character Description Here]')}
+        *   Key Conflict: {kwargs.get('key_conflict', '[Insert Key Conflict Here]')}
+        """
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy and memorable marketing tagline for a Contemporary Romance novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, key theme, emotional hook, unique selling point).
+
+        Returns:
+        str: A prompt string for AI-powered tagline generation.
+        """
+        return f"""
+        Write a catchy and memorable marketing tagline for a Contemporary Romance novel.
+
+        Genre: Contemporary Romance
+
+        Goal: To grab the reader's attention and make them want to learn more about the book.
+
+        Characteristics:
+
+        *   Short and concise (ideally under 10 words).
+        *   Intriguing and thought-provoking.
+        *   Emotionally resonant.
+        *   Reflects the core theme or conflict of the story.
+        *   Highlights the unique selling point of the book.
+
+        Examples of Effective Taglines:
+
+        *   Love is the ultimate risk.
+        *   Sometimes, the greatest love stories start with the biggest mistakes.
+        *   One summer can change everything.
+        *   Finding love where you least expect it.
+
+        Book Details:
+
+        *   Title: {kwargs.get('title', '[Insert Title Here]')}
+        *   Key Theme: {kwargs.get('key_theme', '[Insert Key Theme Here]')} (e.g., second chances, self-discovery, overcoming fear)
+        *   Emotional Hook: {kwargs.get('emotional_hook', '[Insert Emotional Hook Here]')} (e.g., forbidden love, overcoming grief, finding your voice)
+        *   Unique Selling Point: {kwargs.get('unique_selling_point', '[Insert Unique Selling Point Here]')} (e.g., unusual setting, quirky characters, unexpected twist)
+        """
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for defining visual style preferences for the back cover of a Contemporary Romance novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (setting, tone, target audience, character archetypes).
+
+        Returns:
+        str: A prompt string for AI-powered visual style suggestions.
+        """
+        return f"""
+        Describe the ideal visual style for the back cover of a Contemporary Romance novel.
+
+        Genre: Contemporary Romance
+
+        Considerations:
+
+        *   **Color Palette:** Should evoke feelings of warmth, happiness, and romance. Consider using soft pastels, vibrant hues, or a combination of both. The color choices should align with the overall tone of the book.
+        *   **Imagery:** May include photographs or illustrations. Photographs should feature attractive but relatable models who embody the characters. Illustrations can be more abstract and symbolic. Focus on conveying the mood and setting of the story. Avoid overly posed or staged images.
+        *   **Typography:** Choose fonts that are easy to read and visually appealing. The font should reflect the tone of the book (e.g., playful, elegant, modern).
+        *   **Overall Design:** The design should be clean, uncluttered, and visually engaging. Avoid overcrowding the cover with too many elements. The focus should be on creating a sense of romance and intrigue.
+
+        Specific Guidelines:
+
+        *   Avoid overly sexualized or suggestive imagery. Focus on conveying emotional connection and intimacy.
+        *   Consider incorporating elements that reflect the setting of the story (e.g., a beach, a city skyline, a cozy cafe).
+        *   The overall design should appeal to a female audience aged 25-45.
+
+        Book Details:
+
+        *   Setting: {kwargs.get('setting', '[Insert Setting Description Here]')}
+        *   Tone: {kwargs.get('tone', '[Insert Tone Description Here]')} (e.g., lighthearted, emotional, witty)
+        *   Target Audience: {kwargs.get('target_audience', '[Insert Target Audience Description Here]')}
+        *   Character Archetypes: {kwargs.get('character_archetypes', '[Insert Character Archetypes Here]')} (e.g., the girl next door, the brooding hero, the charming best friend)
+        """
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return ContemporaryRomancePrompts.get_writer_profile_prompt(**kwargs)
@@ -279,6 +458,19 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return ContemporaryRomancePrompts.get_enhancement_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_plan_prompt(**kwargs) -> str:
     return ContemporaryRomancePrompts.get_series_plan_prompt(**kwargs)

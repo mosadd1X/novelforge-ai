@@ -162,6 +162,207 @@ Ensure this book provides comprehensive biography education while serving as an 
         
         return base_prompt + biography_book_additions
 
+        ```python
+        class BiographyMarketing:
+        """
+        A class containing methods for generating back cover copy and marketing materials for biographies.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling biography back cover descriptions.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt (e.g., subject_name, subject_occupation,
+        key_events, themes, target_audience).
+
+        Returns:
+        str: A detailed prompt string tailored for biography back cover copy generation.
+        """
+        prompt = f"""
+        You are a skilled biographer and marketing copywriter. Your task is to craft a captivating back cover description for a biography.
+        The goal is to entice readers to purchase the book by highlighting the subject's extraordinary life and its relevance to the reader.
+
+        Here are the key elements to include:
+
+        1.  **Intriguing Hook:** Begin with a captivating opening that grabs the reader's attention. Consider a thought-provoking question, a striking statement, or a glimpse into a pivotal moment in the subject's life.
+
+        2.  **Subject Introduction:** Clearly introduce the subject of the biography. Mention their full name and a brief description of their occupation or claim to fame.  Emphasize what made them a significant figure in history or culture.
+
+        3.  **Life's Journey:** Briefly outline the subject's life journey, highlighting key milestones, challenges, and triumphs. Focus on the most compelling and dramatic aspects of their story.  Consider including:
+        *   Early life and formative experiences.
+        *   Significant achievements and contributions.
+        *   Major obstacles overcome.
+        *   Key relationships and influences.
+        *   Moments of crisis and transformation.
+
+        4.  **Themes and Relevance:** Identify and emphasize the universal themes explored in the biography. Consider themes such as ambition, resilience, love, loss, legacy, social justice, or the pursuit of knowledge. Explain how the subject's life resonates with contemporary readers and offers valuable insights into the human condition.
+
+        5.  **Unique Angle:** Highlight what makes this particular biography unique. Does it offer new perspectives, previously unpublished information, or a fresh interpretation of the subject's life?
+
+        6.  **Emotional Resonance:** Evoke emotions in the reader.  Use vivid language and imagery to bring the subject's story to life.  Consider focusing on:
+        *   The subject's passions and motivations.
+        *   The emotional impact of their experiences.
+        *   The sacrifices they made.
+        *   The challenges they faced with courage and determination.
+
+        7.  **Target Audience:** Consider the target audience for the biography. Are you writing for history buffs, fans of a particular field, or readers interested in personal growth and inspiration? Tailor the language and tone to appeal to the specific audience.
+
+        8.  **Intriguing Question/Call to Action:** End with a compelling question or a call to action that leaves the reader wanting more.  For example:
+        *   "What drove [Subject Name] to achieve such extraordinary feats?"
+        *   "Discover the untold story behind one of history's most enigmatic figures."
+        *   "Journey into the life of [Subject Name] and uncover the secrets to their enduring legacy."
+
+        9.  **Keep it Concise:** Aim for a length of approximately 150-200 words. Every word should contribute to enticing the reader.
+
+        10. **Biography-Specific Considerations:**
+        * Emphasize the truth and authenticity of the narrative.
+        * Highlight the depth of research undertaken by the author.
+        * Convey the impact of the subject's life on the world.
+        * Consider using quotes from the subject or from people who knew them.
+
+        Subject Name: {kwargs.get('subject_name', '[Subject Name]')}
+        Subject Occupation: {kwargs.get('subject_occupation', '[Subject Occupation]')}
+        Key Events: {kwargs.get('key_events', '[Key Events in Subject\'s Life]')}
+        Themes: {kwargs.get('themes', '[Themes explored in the Biography]')}
+        Target Audience: {kwargs.get('target_audience', '[Target Audience]')}
+        Unique Angle: {kwargs.get('unique_angle', '[Unique aspects of this Biography]')}
+
+        Write a compelling back cover description that will captivate readers and convince them to buy this book.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, punchy biography description (2-3 lines) for recommendation lists.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt.
+
+        Returns:
+        str: A prompt string for generating concise biography descriptions.
+        """
+        prompt = f"""
+        You are writing a very short (2-3 line) description of a biography for use in recommendation lists or online stores. The goal is to quickly grab the reader's attention and pique their interest.
+
+        Key elements to include:
+
+        1. **Subject and Significance:** Immediately identify the subject of the biography and a key reason why they are noteworthy.
+
+        2. **Central Conflict/Achievement:** Briefly hint at a major challenge they faced or a significant achievement they accomplished.
+
+        3. **Intriguing Hook:** End with a question, a provocative statement, or a hint of the book's emotional core to leave the reader wanting more.
+
+        4. **Biography-Specific Considerations:**
+        * Emphasize the real-life nature of the story.
+        * Focus on the impact and legacy of the subject.
+
+        Subject Name: {kwargs.get('subject_name', '[Subject Name]')}
+        Subject Occupation: {kwargs.get('subject_occupation', '[Subject Occupation]')}
+        Key Achievement/Conflict: {kwargs.get('key_achievement_conflict', '[Key Achievement or Conflict]')}
+
+        Example:
+        "Discover the untold story of Marie Curie, a pioneer in radioactivity.  Fighting sexism and adversity, she changed the world with her discoveries. But at what cost?"
+
+        Write a very short and compelling biography description.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a biography.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt.
+
+        Returns:
+        str: A prompt string for generating biography taglines.
+        """
+        prompt = f"""
+        You are crafting a short, memorable marketing tagline for a biography. The goal is to capture the essence of the subject's life and the book's appeal in a few powerful words.
+
+        Key elements to include:
+
+        1. **Core Theme:** Identify the central theme or message of the biography. What is the most compelling aspect of the subject's life?
+
+        2. **Emotional Hook:** Evoke an emotional response in the reader. Consider using words that convey inspiration, drama, intrigue, or empathy.
+
+        3. **Conciseness:** Keep the tagline short and easy to remember. Aim for 5-10 words.
+
+        4. **Biography-Specific Considerations:**
+        *  Emphasize the authenticity and historical significance of the story.
+        *  Highlight the subject's impact on the world.
+
+        Subject Name: {kwargs.get('subject_name', '[Subject Name]')}
+        Subject Occupation: {kwargs.get('subject_occupation', '[Subject Occupation]')}
+        Core Theme: {kwargs.get('core_theme', '[Core Theme of the Biography]')}
+
+        Examples:
+        *   "The untold story. The unyielding spirit." (Biography of a resilient figure)
+        *   "A life of passion. A legacy of change." (Biography of a transformative leader)
+        *   "Truth is stranger than fiction." (If the subject's life was exceptionally unusual)
+
+        Write a compelling and memorable marketing tagline.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt outlining visual style preferences for a biography's back cover design.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt.
+
+        Returns:
+        str: A prompt string for guiding the visual design of a biography back cover.
+        """
+        prompt = f"""
+        You are an art director providing guidance for the visual design of a biography's back cover. Consider the following elements to create a visually appealing and genre-appropriate design:
+
+        1. **Overall Tone:**  The design should reflect the tone and subject matter of the biography. Is it a serious and scholarly work, or a more accessible and popular account?  Consider using words like:  "Serious", "Scholarly", "Intimate", "Inspirational", "Dramatic", "Historical".
+
+        2. **Imagery:**  Suggest appropriate imagery to use on the back cover. Consider:
+        *   A portrait of the subject (if available and high-quality).
+        *   Images related to their work or accomplishments.
+        *   Historical photographs or illustrations.
+        *   Symbolic imagery that reflects the themes of the biography.
+        *   Avoid overly stylized or modern images if the biography is historical.
+
+        3. **Typography:**  Recommend font styles that are appropriate for the biography's subject matter.
+        *   Consider classic and elegant fonts for historical biographies.
+        *   Use more modern and bold fonts for biographies of contemporary figures.
+        *   Ensure the font is legible and easy to read.
+
+        4. **Color Palette:**  Suggest a color palette that complements the imagery and reinforces the overall tone.
+        *   Consider using muted colors for historical biographies.
+        *   Use brighter and more vibrant colors for biographies of inspiring figures.
+        *   Ensure the colors are harmonious and visually appealing.
+
+        5. **Layout:**  Provide general layout guidelines for the back cover.
+        *   Ensure the text is well-organized and easy to read.
+        *   Use visual hierarchy to draw the reader's eye to the most important elements.
+        *   Avoid clutter and maintain a clean and professional design.
+
+        6. **Biography-Specific Considerations:**
+        *   Strive for authenticity and historical accuracy in the visual design.
+        *   Consider incorporating elements that reflect the subject's personality and achievements.
+        *   Research covers of similar biographies for inspiration.
+
+        Subject Name: {kwargs.get('subject_name', '[Subject Name]')}
+        Subject Occupation: {kwargs.get('subject_occupation', '[Subject Occupation]')}
+        Overall Tone: {kwargs.get('overall_tone', '[Overall Tone of the Biography]')}
+        Imagery Suggestions: {kwargs.get('imagery_suggestions', '[Suggestions for Imagery]')}
+        Font Style Preferences: {kwargs.get('font_style_preferences', '[Font Style Preferences]')}
+        Color Palette Preferences: {kwargs.get('color_palette_preferences', '[Color Palette Preferences]')}
+
+        Provide detailed visual style preferences for the back cover design.
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return BiographyPrompts.get_writer_profile_prompt(**kwargs)
@@ -179,6 +380,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return BiographyPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return BiographyPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return BiographyPrompts.get_series_book_prompt(**kwargs)

@@ -210,6 +210,214 @@ Create a novella series that showcases artistic development and format mastery a
         """Generate a novella-specific individual volume prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class NovellaMarketing:
+        """
+        A class containing methods for generating marketing materials specifically
+        tailored for the Novella genre.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions
+        for Novellas.
+
+        Args:
+        **kwargs: Keyword arguments to pass genre-specific details.
+
+        Returns:
+        str: A detailed prompt string for AI content generation.
+        """
+        prompt = f"""
+        Create a captivating back cover description for a novella.  Remember, novellas are all about impact.
+        They offer a concentrated dose of story, focusing on a specific theme, character arc, or pivotal event.
+
+        **Genre:** Novella
+
+        **Guidelines:**
+
+        *   **Brevity is Key:** The description must be concise and engaging, reflecting the novella's shorter length. Aim for approximately 150-200 words. Every word must count.
+
+        *   **Intrigue and Mystery:**  Hook the reader immediately. Pose a compelling question or hint at a central conflict that drives the narrative. Don't give away too much.
+
+        *   **Highlight the Core Theme:** Clearly identify the central theme or message of the novella. Is it about love, loss, redemption, revenge, self-discovery, or something else? Make this theme resonant.
+
+        *   **Character Focus:** Emphasize the protagonist's internal struggles and their journey. What are their motivations, flaws, and desires?  Show the reader why they should care about this character.
+
+        *   **Emotional Resonance:** Novellas often pack a powerful emotional punch. Evoke the feelings and atmosphere of the story. Use vivid language and sensory details to immerse the reader.
+
+        *   **Unique Selling Proposition:** What makes this novella stand out from others in its subgenre (e.g., science fiction, fantasy, romance, thriller)?  Is it a unique premise, a compelling voice, or a surprising twist?
+
+        *   **End with a Hook:** Leave the reader wanting more. End the description with a question or a cliffhanger that compels them to open the book and start reading.
+
+        **Input:**
+
+        *   **Title:** {kwargs.get('title', '[Title of Novella]')}
+        *   **Author:** {kwargs.get('author', '[Author Name]')}
+        *   **Genre/Subgenre:** {kwargs.get('genre', '[e.g., Historical Romance, Sci-Fi Thriller, Literary Fiction]')}
+        *   **Main Character(s):** {kwargs.get('main_characters', '[Brief description of main characters]')}
+        *   **Setting:** {kwargs.get('setting', '[Time and place of the story]')}
+        *   **Core Conflict:** {kwargs.get('core_conflict', '[Central problem or challenge the character faces]')}
+        *   **Theme(s):** {kwargs.get('themes', '[Main themes explored in the novella]')}
+        *   **Target Audience:** {kwargs.get('target_audience', '[Who is most likely to enjoy this novella?]')}
+        *   **Keywords:** {kwargs.get('keywords', '[Keywords related to plot, setting, theme, etc. for SEO]')}
+
+        **Example Structure:**
+
+        [Opening hook - a question or intriguing statement]
+
+        [Briefly introduce the main character(s) and their situation.]
+
+        [Describe the central conflict and the stakes involved.]
+
+        [Highlight the emotional impact and thematic resonance of the story.]
+
+        [End with a compelling question or cliffhanger.]
+
+        **Tone:**  [Specify the desired tone: e.g., suspenseful, romantic, humorous, thought-provoking, dark, hopeful]
+
+        Write a description that makes the reader feel like they absolutely NEED to read this novella right now.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, 2-3 line book recommendation
+        specifically for Novellas.
+
+        Args:
+        **kwargs: Keyword arguments to pass genre-specific details.
+
+        Returns:
+        str: A detailed prompt string for AI content generation.
+        """
+        prompt = f"""
+        Create a concise, 2-3 line book recommendation for a novella. This should be used for social media,
+        email marketing, or online retailers where space is limited.
+
+        **Genre:** Novella
+
+        **Guidelines:**
+
+        *   **Focus on Impact:** Emphasize the concentrated storytelling and emotional resonance that novellas offer.
+        *   **Highlight the Unique Selling Point:** What makes this novella stand out?
+        *   **Intrigue and Hook:** Grab the reader's attention immediately.
+        *   **Target Audience:** Keep the target audience in mind.
+
+        **Input:**
+
+        *   **Title:** {kwargs.get('title', '[Title of Novella]')}
+        *   **Author:** {kwargs.get('author', '[Author Name]')}
+        *   **Genre/Subgenre:** {kwargs.get('genre', '[e.g., Historical Romance, Sci-Fi Thriller, Literary Fiction]')}
+        *   **Core Theme:** {kwargs.get('core_theme', '[Central theme of the novella]')}
+        *   **Target Audience:** {kwargs.get('target_audience', '[Who is most likely to enjoy this novella?]')}
+
+        **Example:**
+
+        "A gripping [Genre] novella about [Main Character] facing [Core Conflict]. Perfect for readers who love fast-paced stories with a powerful emotional punch."
+
+        **Tone:** [Specify the desired tone: e.g., Exciting, Romantic, Thought-provoking, Suspenseful]
+
+        Craft a short description that convinces someone to read this novella immediately.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for Novellas.
+
+        Args:
+        **kwargs: Keyword arguments to pass genre-specific details.
+
+        Returns:
+        str: A detailed prompt string for AI content generation.
+        """
+        prompt = f"""
+        Create a short, memorable, and impactful marketing tagline for a novella.
+
+        **Genre:** Novella
+
+        **Guidelines:**
+
+        *   **Brevity is Essential:** Taglines should be extremely short and easy to remember.
+        *   **Highlight the Essence:** Capture the core theme or conflict of the novella.
+        *   **Intrigue and Emotion:** Evoke curiosity and emotional resonance.
+        *   **Target Audience:** Tailor the tagline to appeal to the target audience.
+        *   **Consider the emotional hook:** What feeling does this novella evoke?
+
+        **Input:**
+
+        *   **Title:** {kwargs.get('title', '[Title of Novella]')}
+        *   **Author:** {kwargs.get('author', '[Author Name]')}
+        *   **Genre/Subgenre:** {kwargs.get('genre', '[e.g., Historical Romance, Sci-Fi Thriller, Literary Fiction]')}
+        *   **Core Theme:** {kwargs.get('core_theme', '[Central theme of the novella]')}
+        *   **Target Audience:** {kwargs.get('target_audience', '[Who is most likely to enjoy this novella?]')}
+        *   **Emotional Hook:** {kwargs.get('emotional_hook', '[The primary emotion the novella evokes: e.g., hope, fear, love, sadness]')}
+
+        **Examples:**
+
+        *   "A short story. A lifetime impact."
+        *   "Intense. Immersive. Unforgettable."
+        *   "Get lost in a world in a single sitting."
+        *   "A novella of [Emotion]."
+
+        **Tone:** [Specify the desired tone: e.g., Dramatic, Romantic, Mysterious, Bold]
+
+        Craft a tagline that grabs attention and makes people want to know more about this novella.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for guiding the visual design of the back cover for
+        a Novella.
+
+        Args:
+        **kwargs: Keyword arguments to pass genre-specific details.
+
+        Returns:
+        str: A detailed prompt string for AI content generation.
+        """
+        prompt = f"""
+        Describe the desired visual style for the back cover of a novella. Consider the novella's genre,
+        themes, and target audience.
+
+        **Genre:** Novella
+
+        **Guidelines:**
+
+        *   **Reflect the Story's Essence:** The visual style should complement the tone and themes of the novella.
+        *   **Simplicity and Impact:** Given the novella's shorter length, the design should be clean and impactful. Avoid clutter.
+        *   **Target Audience Appeal:** The design should resonate with the target audience.
+        *   **Consider Cover Art Integration:** How will the back cover design complement the front cover art?
+        *   **Typography:** Specify font styles, sizes, and colors.
+
+        **Input:**
+
+        *   **Title:** {kwargs.get('title', '[Title of Novella]')}
+        *   **Author:** {kwargs.get('author', '[Author Name]')}
+        *   **Genre/Subgenre:** {kwargs.get('genre', '[e.g., Historical Romance, Sci-Fi Thriller, Literary Fiction]')}
+        *   **Core Theme:** {kwargs.get('core_theme', '[Central theme of the novella]')}
+        *   **Target Audience:** {kwargs.get('target_audience', '[Who is most likely to enjoy this novella?]')}
+        *   **Cover Art Style:** {kwargs.get('cover_art_style', '[Description of the front cover art style]')}
+        *   **Color Palette:** {kwargs.get('color_palette', '[Desired color scheme for the back cover]')}
+        *   **Imagery:** {kwargs.get('imagery', '[Any specific imagery or symbols to incorporate: e.g., a silhouette, a specific object, a landscape]')}
+        *   **Typography:** {kwargs.get('typography', '[Font styles and sizes to use]')}
+        *   **Overall Mood:** {kwargs.get('overall_mood', '[The desired mood or feeling conveyed by the back cover: e.g., mysterious, romantic, suspenseful, elegant]')}
+
+        **Examples:**
+
+        *   "For a dark fantasy novella, use a gothic-inspired font, a dark color palette (e.g., black, deep purple, silver), and incorporate imagery of ravens or shadows."
+        *   "For a contemporary romance novella, use a clean and modern font, a warm color palette (e.g., pastel pinks, soft blues), and incorporate imagery of flowers or a couple holding hands."
+
+        Describe the visual style in detail, including specific examples and references if possible.  Consider the overall aesthetic and how it will attract the right readers.
+        """
+        return prompt
+        ```
         novella_book_additions = """
 
 ## Novella Series Volume Integration
@@ -249,6 +457,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return NovellaPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return NovellaPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return NovellaPrompts.get_series_book_prompt(**kwargs)

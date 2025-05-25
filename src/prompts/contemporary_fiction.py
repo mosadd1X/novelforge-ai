@@ -161,6 +161,196 @@ Ensure this book feels like an authentic continuation of the contemporaryfiction
         
         return base_prompt + contemporaryfiction_book_additions
 
+        ```python
+        class ContemporaryFictionMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions for Contemporary Fiction novels.
+
+        Args:
+        **kwargs: Keyword arguments that can be used to pass specific book details (e.g., title, author, protagonist, setting, themes, target audience).
+
+        Returns:
+        str: A detailed prompt string tailored for generating Contemporary Fiction back cover copy.
+        """
+
+        prompt = f"""
+        Write a compelling back cover description for a Contemporary Fiction novel. Consider the following elements:
+
+        Genre: Contemporary Fiction
+
+        Core Elements to Emphasize:
+        *   **Relatability:** Highlight themes and situations that resonate with modern readers' experiences, struggles, and aspirations. Focus on authentic emotions and realistic characters.
+        *   **Character-Driven Narrative:** Emphasize the protagonist's internal journey, their flaws, and their growth throughout the story. Show their vulnerability and resilience.
+        *   **Exploration of Modern Issues:** Address relevant social, cultural, or political issues that impact contemporary society. Do so in a nuanced and thought-provoking way.
+        *   **Emotional Impact:** Evoke a strong emotional response in the reader. Aim for empathy, hope, heartbreak, or a sense of catharsis.
+        *   **Setting as a Character:** If the setting is significant, showcase how it influences the characters and the plot.
+
+        Key Questions to Answer (without revealing major spoilers):
+        *   Who is the protagonist, and what are their defining characteristics? What are their desires, fears, and motivations?
+        *   What is the central conflict or challenge they face?
+        *   What are the stakes involved? What will they lose or gain if they succeed or fail?
+        *   What are the major themes explored in the story (e.g., love, loss, identity, family, social justice, mental health)?
+        *   What makes this story unique and memorable?
+
+        Writing Style Guidelines:
+        *   Use evocative language and vivid imagery to paint a picture of the story's world and characters.
+        *   Create a sense of intrigue and suspense to hook the reader.
+        *   Avoid clichés and strive for originality in your phrasing.
+        *   Keep the tone consistent with the overall mood of the novel (e.g., heartwarming, suspenseful, humorous, poignant).
+        *   Write in the present tense to create a sense of immediacy.
+        *   End with a compelling hook or question that leaves the reader wanting more.
+
+        Specific Details (replace with actual book details):
+        *   Title: {kwargs.get('title', '[Title of the Book]')}
+        *   Author: {kwargs.get('author', '[Author Name]')}
+        *   Protagonist: {kwargs.get('protagonist', '[Protagonist Name and Brief Description]')}
+        *   Setting: {kwargs.get('setting', '[Brief Description of the Setting]')}
+        *   Themes: {kwargs.get('themes', '[List of Key Themes]')}
+        *   Target Audience: {kwargs.get('target_audience', '[Target Audience Description]')}
+
+        Example Structure:
+        [Start with a hook that introduces the protagonist and their dilemma.]
+        [Briefly describe the central conflict and the stakes involved.]
+        [Hint at the major themes explored in the story.]
+        [End with a compelling question or statement that leaves the reader wanting to know what happens next.]
+
+        Remember to keep the description concise and engaging. Aim for a word count of around 150-200 words.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, impactful description (2-3 lines) for book recommendations in the Contemporary Fiction genre.
+
+        Args:
+        **kwargs: Keyword arguments that can be used to pass specific book details (e.g., title, author, protagonist, central theme).
+
+        Returns:
+        str: A prompt string designed to create a concise and attention-grabbing description.
+        """
+
+        prompt = f"""
+        Write a very short (2-3 lines) description for a Contemporary Fiction novel, suitable for a book recommendation. Focus on grabbing the reader's attention quickly.
+
+        Genre: Contemporary Fiction
+
+        Key Elements to Include:
+        *   **Intriguing Hook:** Start with a compelling question or statement that immediately piques the reader's interest.
+        *   **Central Conflict:** Briefly mention the main challenge or conflict the protagonist faces.
+        *   **Emotional Core:** Hint at the emotional impact of the story.
+        *   **Unique Selling Point:** What makes this book stand out from other Contemporary Fiction novels?
+
+        Writing Style Guidelines:
+        *   Use strong verbs and vivid language.
+        *   Keep it concise and to the point.
+        *   Focus on the most compelling aspects of the story.
+        *   End with a sense of mystery or anticipation.
+
+        Specific Details (replace with actual book details):
+        *   Title: {kwargs.get('title', '[Title of the Book]')}
+        *   Author: {kwargs.get('author', '[Author Name]')}
+        *   Protagonist: {kwargs.get('protagonist', '[Protagonist Name and Brief Description]')}
+        *   Central Theme: {kwargs.get('central_theme', '[Main Theme of the Book]')}
+
+        Example:
+        "When [Protagonist's Name]'s carefully constructed life crumbles, she must confront a past she thought she'd buried. A poignant exploration of [Central Theme] and the enduring power of hope."
+
+        Focus on creating a description that is both informative and captivating.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy and memorable marketing tagline for a Contemporary Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments that can be used to pass specific book details (e.g., title, central theme, target audience).
+
+        Returns:
+        str: A prompt string tailored for generating effective marketing taglines.
+        """
+
+        prompt = f"""
+        Write a punchy and memorable marketing tagline for a Contemporary Fiction novel.
+
+        Genre: Contemporary Fiction
+
+        Key Elements to Consider:
+        *   **Target Audience:** Who is this book for? Tailor the tagline to resonate with their interests and values.
+        *   **Central Theme:** What is the main message or idea the book explores?
+        *   **Emotional Impact:** What feeling should the tagline evoke in the reader?
+        *   **Uniqueness:** What makes this book different from other Contemporary Fiction novels?
+
+        Tagline Characteristics:
+        *   Short and catchy
+        *   Memorable and impactful
+        *   Intriguing and thought-provoking
+        *   Relevant to the story's core themes
+        *   Reflects the tone and style of the book
+
+        Specific Details (replace with actual book details):
+        *   Title: {kwargs.get('title', '[Title of the Book]')}
+        *   Central Theme: {kwargs.get('central_theme', '[Main Theme of the Book]')}
+        *   Target Audience: {kwargs.get('target_audience', '[Target Audience Description]')}
+
+        Examples:
+        *   "Love. Loss. And the courage to start again."
+        *   "Every family has secrets. Some are meant to stay buried."
+        *   "Finding yourself is just the beginning of the journey."
+        *   "The truth hurts. But silence can kill."
+
+        Brainstorm several taglines and choose the one that best captures the essence of the book.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for defining visual style preferences for the back cover design of a Contemporary Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments that can be used to pass specific book details (e.g., title, setting, protagonist's personality, overall tone).
+
+        Returns:
+        str: A prompt string guiding the creation of visually appealing and genre-appropriate back cover designs.
+        """
+
+        prompt = f"""
+        Describe the desired visual style for the back cover design of a Contemporary Fiction novel.
+
+        Genre: Contemporary Fiction
+
+        Visual Elements to Consider:
+        *   **Imagery:** What kind of images would best represent the story's themes and setting? (e.g., landscapes, cityscapes, portraits, abstract designs) Should the imagery be realistic, stylized, or symbolic?
+        *   **Color Palette:** What colors evoke the appropriate mood and atmosphere? (e.g., warm and inviting, cool and melancholic, vibrant and energetic) Consider the emotional associations of different colors.
+        *   **Typography:** What font styles would complement the overall design and reflect the tone of the book? (e.g., modern and minimalist, classic and elegant, bold and edgy)
+        *   **Layout:** How should the text and images be arranged on the back cover? (e.g., clean and organized, dynamic and asymmetrical, minimalist)
+        *   **Overall Tone:** What feeling should the back cover design convey? (e.g., hopeful, mysterious, emotional, thought-provoking)
+
+        Specific Considerations for Contemporary Fiction:
+        *   **Authenticity:** Aim for a design that feels genuine and relatable. Avoid overly polished or artificial imagery.
+        *   **Modernity:** Reflect the contemporary setting and themes of the story.
+        *   **Emotional Connection:** Evoke a sense of empathy and connection with the characters and their experiences.
+        *   **Subtlety:** Avoid being too literal or heavy-handed. Let the design hint at the story's themes without giving away too much.
+
+        Specific Details (replace with actual book details):
+        *   Title: {kwargs.get('title', '[Title of the Book]')}
+        *   Setting: {kwargs.get('setting', '[Brief Description of the Setting]')}
+        *   Protagonist's Personality: {kwargs.get('protagonist_personality', '[Brief Description of the Protagonist's Personality]')}
+        *   Overall Tone: {kwargs.get('overall_tone', '[Overall Tone of the Book]')}
+
+        Example:
+        "For a novel set in a bustling modern city about a young woman struggling with identity, I envision a back cover with a slightly blurred cityscape in muted blues and grays. The typography should be clean and modern, with a sans-serif font. The overall tone should be reflective and a little melancholic, hinting at the protagonist's inner turmoil."
+
+        Provide a detailed description of your desired visual style, including specific examples if possible.
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return ContemporaryFictionPrompts.get_writer_profile_prompt(**kwargs)
@@ -178,6 +368,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return ContemporaryFictionPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return ContemporaryFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return ContemporaryFictionPrompts.get_series_book_prompt(**kwargs)

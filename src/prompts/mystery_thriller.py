@@ -7,7 +7,7 @@ from .base_prompts import FictionBasePrompts
 class MysteryThrillerPrompts(FictionBasePrompts):
     GENRE_NAME = "Mystery Thriller"
     GENRE_DESCRIPTION = "Mystery Thrillers combine the suspenseful elements of a thriller with the intricate puzzle-solving of a mystery. They typically involve a crime or a series of crimes, often violent, that the protagonist must unravel while facing escalating danger and moral dilemmas. The focus is on both the 'who' and the 'why,' with a strong emphasis on psychological tension, red herrings, and unexpected twists."
-    
+
     GENRE_CHARACTERISTICS = [
         "A compelling central mystery or crime that drives the plot forward.",
         "A protagonist, often flawed or with a troubled past, who is determined to solve the mystery.",
@@ -20,7 +20,7 @@ class MysteryThrillerPrompts(FictionBasePrompts):
         "A fast-paced narrative that keeps the reader engaged and on the edge of their seat.",
         "A satisfying resolution that ties up loose ends and reveals the truth behind the mystery."
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "A dead body or a missing person that initiates the investigation.",
         "A detective, amateur sleuth, or law enforcement officer as the protagonist.",
@@ -39,7 +39,7 @@ class MysteryThrillerPrompts(FictionBasePrompts):
     @classmethod
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         mystery_thriller_additions = '''
 ## Mystery Thriller-Specific Writing Considerations
 - **Pacing and Suspense**: Master the art of pacing to build suspense gradually. Use short, impactful sentences and cliffhangers at the end of chapters to keep readers hooked. Vary sentence length and structure to control the rhythm of the narrative.
@@ -56,7 +56,7 @@ class MysteryThrillerPrompts(FictionBasePrompts):
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         mystery_thriller_additions = '''
 ## Mystery Thriller-Specific Outline Requirements
 - **Inciting Incident**: Clearly define the inciting incident that sets the mystery in motion (e.g., a murder, a disappearance, a theft). This should occur early in the story.
@@ -75,7 +75,7 @@ class MysteryThrillerPrompts(FictionBasePrompts):
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_character_prompt(**kwargs)
-        
+
         mystery_thriller_additions = '''
 ## Mystery Thriller-Specific Character Development
 - **Protagonist's Flaws and Strengths**: Define the protagonist's flaws and weaknesses, as well as their strengths and skills. These should be relevant to the mystery and influence their actions and decisions.
@@ -94,7 +94,7 @@ class MysteryThrillerPrompts(FictionBasePrompts):
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         mystery_thriller_additions = '''
 ## Mystery Thriller-Specific Chapter Writing
 - **Opening Hook**: Start each chapter with a compelling hook that grabs the reader's attention and creates suspense. This could be a shocking revelation, a dangerous situation, or a mysterious clue.
@@ -166,6 +166,202 @@ Ensure this book feels like an authentic continuation of the mysterythriller ser
 
         return base_prompt + mysterythriller_book_additions
 
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions for
+        Mystery/Thriller novels.
+
+        Args:
+        **kwargs:  Optional keyword arguments to further customize the prompt.
+        Examples:
+        - title (str): The title of the book.
+        - author (str): The author of the book.
+        - target_audience (str): Description of target audience.
+        - central_mystery (str): A brief summary of the central mystery.
+        - stakes (str): What's at stake if the mystery isn't solved?
+        - tone (str): The overall tone of the book (e.g., gritty, suspenseful, atmospheric).
+        - key_characters (list of str): List of key characters and their brief descriptions.
+        - keywords (list of str): List of keywords related to the book to improve AI generation.
+
+        Returns:
+        str: A detailed prompt string to guide the AI in generating back cover copy.
+        """
+
+        title = kwargs.get('title', '[Book Title]')
+        author = kwargs.get('author', '[Author Name]')
+        target_audience = kwargs.get('target_audience', 'Fans of twisty thrillers and intricate mysteries.')
+        central_mystery = kwargs.get('central_mystery', '[Briefly describe the central mystery of the book.]')
+        stakes = kwargs.get('stakes', '[What are the consequences if the mystery remains unsolved?]')
+        tone = kwargs.get('tone', 'Suspenseful and gripping.')
+        key_characters = kwargs.get('key_characters', ['A flawed detective with a troubled past', 'A mysterious suspect with a hidden agenda'])
+        keywords = kwargs.get('keywords', ['mystery', 'thriller', 'suspense', 'crime', 'investigation', 'secrets', 'twists', 'red herrings', 'deception'])
+
+        prompt = f"""
+        Write a compelling back cover description for the Mystery/Thriller novel, "{title}" by {author}.
+
+        Target Audience: {target_audience}
+
+        Central Mystery: {central_mystery}
+
+        Stakes: {stakes}
+
+        Overall Tone: {tone}
+
+        Key Characters:
+        {chr(10).join([f"- {char}" for char in key_characters])}
+
+        Focus on creating a sense of suspense, intrigue, and urgency.  Hint at the dark secrets and hidden dangers lurking beneath the surface.  Don't give away the ending, but leave the reader desperate to know the truth.
+
+        Key elements to include:
+
+        *   **A Hook:** Start with a gripping opening line that immediately grabs the reader's attention.
+        *   **Intriguing Questions:** Pose questions that the reader will want answered.  What secrets are being kept? Who can be trusted? What will happen next?
+        *   **A Sense of Danger:** Highlight the potential risks and consequences faced by the characters.
+        *   **Twists and Turns:** Suggest unexpected developments and shocking revelations.
+        *   **Emotional Resonance:** Tap into the reader's emotions, such as fear, anxiety, or curiosity.
+        *   **High Stakes:** Emphasize what the characters stand to lose if they fail.
+
+        The description should be between 150 and 200 words.  Use vivid language and evocative imagery to create a memorable and impactful reading experience.  Use keywords: {', '.join(keywords)}.
+
+        Examples of effective phrasing to use:
+
+        *   "A dark secret threatens to unravel..."
+        *   "In a world where nothing is as it seems..."
+        *   "The clock is ticking..."
+        *   "Every clue leads them closer to danger..."
+        *   "But the truth comes at a price..."
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, punchy 2-3 line book recommendation for
+        Mystery/Thriller novels.
+
+        Args:
+        **kwargs: Optional keyword arguments (title, author, central_theme, similar_books)
+
+        Returns:
+        str: A prompt string.
+        """
+        title = kwargs.get('title', '[Book Title]')
+        author = kwargs.get('author', '[Author Name]')
+        central_theme = kwargs.get('central_theme', '[Briefly describe the central theme of the book.]')
+        similar_books = kwargs.get('similar_books', ['Gone Girl', 'The Girl on the Train'])
+
+        prompt = f"""
+        Write a short, attention-grabbing book recommendation (2-3 lines) for the Mystery/Thriller novel, "{title}" by {author}.
+
+        Central Theme: {central_theme}
+
+        Similar Books: {', '.join(similar_books)}
+
+        Focus on:
+
+        *   Creating a sense of urgency and suspense.
+        *   Highlighting the unique aspects of the story.
+        *   Appealing to fans of similar books.
+
+        The recommendation should be concise and impactful, leaving the reader wanting more.  Use language that is both engaging and informative.  Emphasize the twists, turns, and psychological elements that make Mystery/Thrillers so captivating.
+
+        Examples:
+
+        *   "A web of lies, a desperate search for the truth. If you loved Gone Girl, you won't be able to put this down!"
+        *   "When a detective's past comes back to haunt him, no one is safe. Prepare for a thrilling ride!"
+        *   "Secrets, obsession, and a killer on the loose. This is one mystery you won't soon forget."
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for Mystery/Thriller novels.
+
+        Args:
+        **kwargs: Optional keyword arguments (title, author, core_emotion, target_audience)
+
+        Returns:
+        str: A prompt string.
+        """
+        title = kwargs.get('title', '[Book Title]')
+        author = kwargs.get('author', '[Author Name]')
+        core_emotion = kwargs.get('core_emotion', 'Fear, suspense, and intrigue.')
+        target_audience = kwargs.get('target_audience', 'Fans of fast-paced thrillers and psychological suspense.')
+
+        prompt = f"""
+        Write a punchy, memorable marketing tagline for the Mystery/Thriller novel, "{title}" by {author}.
+
+        Core Emotion: {core_emotion}
+
+        Target Audience: {target_audience}
+
+        Focus on:
+
+        *   Creating a sense of mystery and suspense.
+        *   Highlighting the key themes and emotions of the story.
+        *   Being short, catchy, and easy to remember.
+        *   Emphasizing the unique selling points of the book.
+
+        The tagline should be no more than 5-7 words.  Use strong verbs and evocative language to create a lasting impression. Think about the core of the story and what will resonate most with readers of the Mystery/Thriller genre.
+
+        Examples:
+
+        *   "Every secret has a price."
+        *   "The truth will bury you."
+        *   "No one can be trusted."
+        *   "The past never stays buried."
+        *   "Fear is the only witness."
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for describing visual style preferences for the back cover design of
+        Mystery/Thriller novels.
+
+        Args:
+        **kwargs: Optional keyword arguments (title, themes, color_palette, imagery)
+
+        Returns:
+        str: A prompt string.
+        """
+        title = kwargs.get('title', '[Book Title]')
+        themes = kwargs.get('themes', 'Dark secrets, hidden identities, and dangerous obsessions.')
+        color_palette = kwargs.get('color_palette', 'Dark blues, blacks, grays, and reds.')
+        imagery = kwargs.get('imagery', 'Shadowy figures, crime scenes, and symbolic objects.')
+
+        prompt = f"""
+        Describe the visual style preferences for the back cover design of the Mystery/Thriller novel, "{title}".
+
+        Themes: {themes}
+
+        Color Palette: {color_palette}
+
+        Imagery: {imagery}
+
+        Focus on:
+
+        *   Creating a sense of mystery, suspense, and danger.
+        *   Using dark and moody colors to evoke a feeling of unease.
+        *   Incorporating imagery that hints at the story's themes and plot.
+        *   Using typography that is both legible and visually striking.
+        *   Consider elements like silhouettes, blurred images, and unsettling compositions.
+
+        The overall design should be visually arresting and create a sense of intrigue that compels readers to pick up the book.  Think about the tone and atmosphere of the story and how that can be translated into visual elements.  The design should be professional, polished, and reflective of the high-stakes nature of the genre.
+
+        Examples:
+
+        *   "A close-up of a single, bloodshot eye in shadow."
+        *   "A silhouette of a figure running through a dark alleyway."
+        *   "A shattered mirror reflecting a distorted image."
+        *   "A crime scene with evidence scattered around."
+        *   "A vintage key with a mysterious inscription."
+        """
+        return prompt
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return MysteryThrillerPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -182,6 +378,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return MysteryThrillerPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return MysteryThrillerPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return MysteryThrillerPrompts.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return MysteryThrillerPrompts.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return MysteryThrillerPrompts.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return MysteryThrillerPrompts.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return MysteryThrillerPrompts.get_series_book_prompt(**kwargs)

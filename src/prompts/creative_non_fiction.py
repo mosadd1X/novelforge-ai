@@ -233,6 +233,220 @@ Ensure this book provides comprehensive creativenonfiction education while servi
 
         return base_prompt + creativenonfiction_book_additions
 
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating compelling back cover copy for a
+        Creative Non-Fiction book.
+
+        Args:
+        **kwargs:  Keyword arguments containing book details such as:
+        - title (str): The title of the book.
+        - author (str): The author of the book.
+        - central_theme (str): The central theme or subject matter.
+        - emotional_core (str): The main emotion the book evokes.
+        - key_events (list): A list of key events or turning points.
+        - target_audience (str):  Description of the ideal reader.
+        - unique_selling_point (str):  What makes this book stand out.
+        - tone (str): The overall tone of the writing (e.g., reflective, humorous, poignant).
+        - writing_style (str):  Description of the author's writing style (e.g., lyrical, journalistic, conversational).
+
+        Returns:
+        str: A detailed prompt string for generating back cover copy.
+        """
+        title = kwargs.get('title', '[Title]')
+        author = kwargs.get('author', '[Author]')
+        central_theme = kwargs.get('central_theme', '[Central Theme]')
+        emotional_core = kwargs.get('emotional_core', '[Emotional Core]')
+        key_events = kwargs.get('key_events', '[Key Events, comma-separated]')
+        target_audience = kwargs.get('target_audience', '[Target Audience]')
+        unique_selling_point = kwargs.get('unique_selling_point', '[Unique Selling Point]')
+        tone = kwargs.get('tone', '[Tone]')
+        writing_style = kwargs.get('writing_style', '[Writing Style]')
+
+        prompt = f"""
+        Craft compelling back cover copy for the Creative Non-Fiction book, "{title}" by {author}.
+        The central theme explores {central_theme}, evoking an emotional core of {emotional_core}.
+        Key events include: {key_events}.
+
+        **Guidelines for Creative Non-Fiction:**
+
+        *   **Emphasize the 'Creative'**:  Highlight the artistry and literary techniques used in telling the story. Focus on vivid language, sensory details, and narrative structure.
+        *   **Authenticity and Truth**:  Acknowledge the factual basis of the story while emphasizing the author's unique perspective and personal journey.
+        *   **Emotional Resonance**:  Connect with readers on a deep emotional level.  Highlight the universal human experiences explored in the book.
+        *   **Personal Transformation**:  If applicable, showcase the author's or subjects' personal growth, insights, or transformations.
+        *   **Literary Merit**:  Position the book as a work of literary significance, appealing to readers who appreciate well-crafted prose and insightful storytelling.
+
+        **Include the following elements:**
+
+        1.  **A Hook**:  Start with a captivating opening that immediately grabs the reader's attention.  Pose a question, present a striking image, or introduce a compelling character.
+        2.  **A Brief Summary**:  Provide a concise overview of the book's subject matter, focusing on the most intriguing aspects.
+        3.  **Emotional Impact**:  Convey the emotional weight of the story and how it will resonate with readers. Use strong verbs and evocative language.
+        4.  **Author's Voice**:  Hint at the author's unique perspective and writing style ({writing_style} tone).
+        5.  **Target Audience Appeal**:  Clearly indicate who the book is for ({target_audience}).
+        6.  **Unique Selling Proposition**:  Emphasize what sets this book apart from other Creative Non-Fiction works ({unique_selling_point}).
+        7.  **A Call to Action**:  Encourage readers to pick up the book and embark on the journey within its pages.
+
+        **Example Framework:**
+
+        "In '{title}', {author} masterfully blends [writing style] with the raw truth of [central theme]. Experience [emotional core] as [brief summary of key events/plot].  For readers who [target audience], this book offers [unique selling point]. Prepare to be moved, challenged, and ultimately transformed."
+
+        Write approximately 150-200 words.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short (2-3 line) description
+        for a Creative Non-Fiction book, suitable for recommendations.
+
+        Args:
+        **kwargs:  Keyword arguments containing book details such as:
+        - title (str): The title of the book.
+        - author (str): The author of the book.
+        - central_theme (str): The central theme.
+        - emotional_impact (str): The primary emotional impact.
+        - target_audience (str):  Ideal reader description.
+
+        Returns:
+        str: A detailed prompt string for generating a short description.
+        """
+        title = kwargs.get('title', '[Title]')
+        author = kwargs.get('author', '[Author]')
+        central_theme = kwargs.get('central_theme', '[Central Theme]')
+        emotional_impact = kwargs.get('emotional_impact', '[Emotional Impact]')
+        target_audience = kwargs.get('target_audience', '[Target Audience]')
+
+        prompt = f"""
+        Create a short, impactful 2-3 line description for the Creative Non-Fiction book, "{title}" by {author}.
+
+        **Guidelines for Creative Non-Fiction:**
+
+        *   **Focus on Emotional Resonance**:  Highlight the core emotion the book evokes (e.g., hope, grief, resilience, wonder).
+        *   **Intrigue and Mystery**:  Hint at the book's central question or conflict without giving away too much.
+        *   **Target Audience Appeal**:  Immediately convey who the book is for and why they should read it.
+
+        **Include the following elements:**
+
+        1.  **A Hook**:  Start with a captivating phrase or question that grabs attention.
+        2.  **Core Theme**:  Briefly mention the central theme or subject matter.
+        3.  **Emotional Impact**:  Convey the emotional experience readers will have.
+
+        **Example Framework:**
+
+        "'{title}' by {author} delves into {central_theme}, leaving readers with {emotional_impact}.  A must-read for anyone interested in {target_audience}."
+
+        "Experience the raw power of {central_theme} in '{title}'.  {author}'s deeply personal account will resonate with those seeking {emotional_impact}."
+
+        "For readers who [target_audience], '{title}' offers a poignant and unforgettable exploration of {central_theme}."
+
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline
+        for a Creative Non-Fiction book.
+
+        Args:
+        **kwargs:  Keyword arguments containing book details such as:
+        - title (str): The title of the book.
+        - central_theme (str): The central theme.
+        - emotional_core (str):  The primary emotion.
+        - unique_selling_point (str):  What makes the book unique.
+
+        Returns:
+        str: A detailed prompt string for generating a tagline.
+        """
+        title = kwargs.get('title', '[Title]')
+        central_theme = kwargs.get('central_theme', '[Central Theme]')
+        emotional_core = kwargs.get('emotional_core', '[Emotional Core]')
+        unique_selling_point = kwargs.get('unique_selling_point', '[Unique Selling Point]')
+
+        prompt = f"""
+        Create a compelling and memorable marketing tagline for the Creative Non-Fiction book, "{title}".
+
+        **Guidelines for Creative Non-Fiction:**
+
+        *   **Focus on Authenticity**:  The tagline should feel genuine and reflect the true essence of the story.
+        *   **Emotional Connection**:  Evoke the primary emotion the book explores.
+        *   **Intrigue and Curiosity**:  Make readers want to know more.
+        *   **Conciseness and Impact**:  Keep it short, memorable, and impactful.
+
+        **Consider these angles:**
+
+        *   **Thematic Focus**:  Highlight the central theme in a provocative way.
+        *   **Emotional Core**:  Capture the emotional heart of the book.
+        *   **Unique Selling Point**:  Emphasize what makes the book stand out.
+
+        **Examples:**
+
+        *   "{central_theme}: A Story of [Emotional Core]."
+        *   "The Truth You Didn't Know You Needed."
+        *   "{title}: Where [Central Theme] Meets [Emotional Core]."
+        *   "More Than Just a Story. It's a [Unique Selling Point]."
+        *   "Unearthing the Truth Within."
+
+        Generate several options, each no more than 7-10 words.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt to guide the visual design of the back cover
+        for a Creative Non-Fiction book.
+
+        Args:
+        **kwargs:  Keyword arguments containing book details such as:
+        - title (str): The title of the book.
+        - central_theme (str): The central theme.
+        - emotional_tone (str): The overall feeling.
+        - target_audience (str): The intended reader.
+        - key_imagery (list): List of keywords for imagery.
+        - writing_style (str): The author's writing style.
+
+        Returns:
+        str: A detailed prompt string for visual design guidance.
+        """
+        title = kwargs.get('title', '[Title]')
+        central_theme = kwargs.get('central_theme', '[Central Theme]')
+        emotional_tone = kwargs.get('emotional_tone', '[Emotional Tone]')
+        target_audience = kwargs.get('target_audience', '[Target Audience]')
+        key_imagery = kwargs.get('key_imagery', '[Key Imagery Keywords, comma-separated]')
+        writing_style = kwargs.get('writing_style', '[Writing Style]')
+
+        prompt = f"""
+        Provide visual style preferences for the back cover design of the Creative Non-Fiction book, "{title}".
+
+        **Guidelines for Creative Non-Fiction:**
+
+        *   **Reflect Authenticity**: The design should feel genuine and avoid overly stylized or artificial elements.
+        *   **Evoke Emotion**:  The visual style should complement the book's emotional tone.
+        *   **Hint at the Story**:  The imagery should subtly suggest the book's central theme or subject matter.
+        *   **Appeal to the Target Audience**: The design should resonate with the intended reader.
+
+        **Consider these elements:**
+
+        1.  **Color Palette**:  Suggest a color palette that reflects the book's emotional tone ({emotional_tone}). Consider using muted tones, natural colors, or colors that evoke specific emotions.
+        2.  **Imagery**:  Describe the type of imagery that would be appropriate, drawing inspiration from the book's key imagery keywords ({key_imagery}). Consider using photographs, illustrations, or abstract designs.
+        3.  **Typography**:  Suggest font styles that complement the book's writing style ({writing_style}) and target audience ({target_audience}). Consider using classic fonts, handwritten fonts, or fonts that evoke a sense of history or authenticity.
+        4.  **Layout**:  Describe the overall layout of the back cover, including the placement of text, images, and other elements. Consider using a minimalist layout, a layered layout, or a layout that emphasizes the book's title.
+        5.  **Overall Aesthetic**:  Describe the overall aesthetic of the back cover. Consider using words like "intimate," "reflective," "powerful," "haunting," or "uplifting."
+
+        **Example:**
+
+        "For '{title}', a book exploring {central_theme} with an emotional tone of {emotional_tone}, the back cover design should evoke a sense of [aesthetic]. The color palette should be [color palette description], with imagery featuring [key imagery]. The font should be [font style suggestion] to appeal to [target audience]."
+
+        Provide specific and actionable suggestions to guide the visual designer.
+        """
+        return prompt
+
+
+# Convenience functions for direct access
+
 def get_writer_profile_prompt(**kwargs) -> str:
     return CreativeNonFictionPrompts.get_writer_profile_prompt(**kwargs)
 
@@ -249,6 +463,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return CreativeNonFictionPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return CreativeNonFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return CreativeNonFictionPrompts.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return CreativeNonFictionPrompts.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return CreativeNonFictionPrompts.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return CreativeNonFictionPrompts.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return CreativeNonFictionPrompts.get_series_book_prompt(**kwargs)

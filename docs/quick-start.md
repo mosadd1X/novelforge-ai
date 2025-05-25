@@ -2,14 +2,14 @@
 layout: default
 title: Quick Start Guide
 nav_order: 3
-description: 'A quick guide to generating your first book with the Ebook Generator'
+description: 'A quick guide to generating your first book with NovelForge AI'
 ---
 
 # Quick Start Guide
 
 {: .no_toc }
 
-This guide will walk you through generating your first book with the Ebook Generator.
+This guide will walk you through generating your first book with NovelForge AI.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
@@ -232,7 +232,7 @@ This makes it easy to share your complete series with others or backup your work
 
 ## Using Book and Series Ideas
 
-The Ebook Generator comes with pre-defined book and series ideas that you can use for testing or inspiration.
+NovelForge AI comes with pre-defined book and series ideas that you can use for testing or inspiration.
 
 ### Using a Pre-defined Book Idea
 
@@ -268,5 +268,5 @@ Now that you've generated your first book or series, you might want to:
 
 ### API and Integration
 
-- See the [API Documentation](./api.html) to integrate the Ebook Generator into your own applications
+- See the [API Documentation](./api.html) to integrate NovelForge AI into your own applications
 - Check out [API Key Management](./api-key-management.html) for managing multiple API keys

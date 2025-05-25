@@ -138,6 +138,172 @@ Create a youngadult series that builds compelling narratives with authentic genr
         """Generate a youngadult-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class YoungAdultBackCover:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating a compelling Young Adult back cover description.
+
+        Args:
+        **kwargs: Keyword arguments to provide context about the book (title, author, genre, target audience, etc.).
+
+        Returns:
+        str: A detailed prompt for AI content generation, tailored for the Young Adult genre.
+        """
+        prompt = f"""
+        Write a captivating back cover description for a Young Adult novel.
+
+        Title: {kwargs.get('title', '[Insert Title Here]')}
+        Author: {kwargs.get('author', '[Insert Author Name Here]')}
+        Genre: {kwargs.get('genre', 'Young Adult [Specify Subgenre, e.g., Fantasy, Contemporary, Sci-Fi]')}
+        Target Audience: Teenagers and Young Adults (ages 13-19)
+        Main Character: {kwargs.get('main_character', '[Describe the Main Character - Age, Personality, Key Traits]')}
+        Setting: {kwargs.get('setting', '[Describe the Setting - Time Period, Location, Atmosphere]')}
+        Core Conflict: {kwargs.get('core_conflict', '[Describe the Central Problem or Challenge the Main Character Faces]')}
+        Themes: {kwargs.get('themes', '[List Key Themes - e.g., Identity, Love, Loss, Friendship, Self-Discovery, Social Justice]')}
+        Tone: {kwargs.get('tone', '[Describe the Tone - e.g., Humorous, Suspenseful, Romantic, Heartbreaking, Hopeful]')}
+        Keywords: {kwargs.get('keywords', '[List Relevant Keywords - e.g., Magic, Dystopia, First Love, Found Family, Coming of Age]')}
+
+        **Guidelines:**
+
+        *   **Emotional Resonance:** Tap into the emotions and experiences of teenagers. Focus on feelings of uncertainty, rebellion, first love, friendship, and finding one's place in the world.  Emphasize the emotional stakes.
+        *   **Relatability:** Make the main character relatable to young adults, even if the setting is fantastical.  Highlight their flaws, insecurities, and struggles.
+        *   **Voice:** Use a voice that resonates with the target audience. It should be authentic and engaging, avoiding overly formal or condescending language.
+        *   **Intrigue and Mystery:**  Create a sense of mystery and intrigue, leaving the reader wanting to know more.  Hint at the central conflict and its potential consequences.
+        *   **High Stakes:** Emphasize the high stakes involved for the main character and those they care about.  Make the reader understand what's at risk.
+        *   **Hope and Empowerment:** While acknowledging the challenges faced by teenagers, offer a sense of hope and empowerment. Show the main character growing and overcoming obstacles.
+        *   **Avoid Spoilers:** Tease the plot without revealing major spoilers or plot twists.
+        *   **Hook:** Start with a strong hook that grabs the reader's attention immediately.
+        *   **Cliffhanger:** End with a compelling cliffhanger that leaves the reader eager to read the book.
+        *   **Word Count:** Aim for a description that is approximately 150-200 words.
+        *   **Call to Action:** Consider ending with a question or statement that encourages the reader to pick up the book.  Example: "Will [Main Character] overcome [Obstacle]? Find out in [Title]!"
+        *   **Subgenre Conventions:** Adhere to the conventions of the specific subgenre (e.g., if it's a dystopian novel, highlight the oppressive society and the protagonist's rebellion).
+
+        **Example Structure:**
+
+        1.  **Hook:** Start with a sentence or two that immediately grabs the reader's attention.
+        2.  **Character Introduction:** Briefly introduce the main character and their situation.
+        3.  **Conflict Introduction:** Introduce the central conflict or challenge the character faces.
+        4.  **Stakes:** Emphasize the high stakes involved for the character and those they care about.
+        5.  **Intrigue/Mystery:** Create a sense of mystery and intrigue, leaving the reader wanting to know more.
+        6.  **Cliffhanger:** End with a compelling cliffhanger that leaves the reader eager to read the book.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a short (2-3 line) book recommendation for a Young Adult audience.
+
+        Args:
+        **kwargs: Keyword arguments to provide context about the book (title, author, genre, target audience, etc.).
+
+        Returns:
+        str: A prompt for AI content generation, tailored for short, punchy YA recommendations.
+        """
+        prompt = f"""
+        Write a short (2-3 line) book recommendation for a Young Adult audience. Think of it as a "If you like X, you'll love Y" style description.
+
+        Title: {kwargs.get('title', '[Insert Title Here]')}
+        Author: {kwargs.get('author', '[Insert Author Name Here]')}
+        Genre: {kwargs.get('genre', 'Young Adult [Specify Subgenre, e.g., Fantasy, Contemporary, Sci-Fi]')}
+        Target Audience: Teenagers and Young Adults (ages 13-19)
+        Main Character: {kwargs.get('main_character', '[Describe the Main Character - Age, Personality, Key Traits]')}
+        Themes: {kwargs.get('themes', '[List Key Themes - e.g., Identity, Love, Loss, Friendship, Self-Discovery, Social Justice]')}
+        Keywords: {kwargs.get('keywords', '[List Relevant Keywords - e.g., Magic, Dystopia, First Love, Found Family, Coming of Age]')}
+        Similar Books/Authors: {kwargs.get('similar_books', '[List Similar Books or Authors]')}
+
+        **Guidelines:**
+
+        *   **Brevity:** Keep it concise and to the point. Maximum 3 lines.
+        *   **Focus on Appeal:** Highlight what makes the book appealing to Young Adult readers.
+        *   **Comparison:** If possible, compare it to other popular YA books or authors.
+        *   **Emotional Hook:** Try to evoke an emotional response in the reader.
+        *   **Intrigue:** Hint at the plot or themes without giving away too much.
+        *   **Example:** "If you loved *The Hunger Games*, prepare for a thrilling ride in [Title], where one girl must fight to save her family from a corrupt government."
+        *   **Example:** "For fans of Sarah J. Maas, [Title] delivers a magical world, forbidden romance, and a heroine who will stop at nothing to protect her kingdom."
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Young Adult novel.
+
+        Args:
+        **kwargs: Keyword arguments to provide context about the book (title, author, genre, target audience, etc.).
+
+        Returns:
+        str: A prompt for AI content generation, tailored for creating impactful YA taglines.
+        """
+        prompt = f"""
+        Write a punchy and memorable marketing tagline for a Young Adult novel.
+
+        Title: {kwargs.get('title', '[Insert Title Here]')}
+        Genre: {kwargs.get('genre', 'Young Adult [Specify Subgenre, e.g., Fantasy, Contemporary, Sci-Fi]')}
+        Main Character: {kwargs.get('main_character', '[Describe the Main Character - Age, Personality, Key Traits]')}
+        Core Conflict: {kwargs.get('core_conflict', '[Describe the Central Problem or Challenge the Main Character Faces]')}
+        Themes: {kwargs.get('themes', '[List Key Themes - e.g., Identity, Love, Loss, Friendship, Self-Discovery, Social Justice]')}
+        Keywords: {kwargs.get('keywords', '[List Relevant Keywords - e.g., Magic, Dystopia, First Love, Found Family, Coming of Age]')}
+
+        **Guidelines:**
+
+        *   **Conciseness:** Keep it short and memorable (ideally under 10 words).
+        *   **Intrigue:** Create a sense of mystery and intrigue.
+        *   **Emotional Impact:** Evoke an emotional response in the reader.
+        *   **Relevance:** Reflect the core themes and conflict of the story.
+        *   **Target Audience:** Speak directly to the interests and concerns of young adults.
+        *   **Examples:**
+        *   "Love. Loss. Magic. The fight for her life begins."
+        *   "One choice can change everything."
+        *   "The future is not what it seems."
+        *   "Dare to dream. Dare to rebel."
+        *   "Her past is a dangerous secret."
+        *   "Find your voice. Change the world."
+        *   "Sometimes, the greatest adventure is finding yourself."
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for describing the visual style preferences for the back cover of a Young Adult novel.
+
+        Args:
+        **kwargs: Keyword arguments to provide context about the book (title, author, genre, target audience, etc.).
+
+        Returns:
+        str: A prompt for AI content generation, tailored for generating visual design ideas for YA back covers.
+        """
+        prompt = f"""
+        Describe the visual style preferences for the back cover of a Young Adult novel.
+
+        Title: {kwargs.get('title', '[Insert Title Here]')}
+        Genre: {kwargs.get('genre', 'Young Adult [Specify Subgenre, e.g., Fantasy, Contemporary, Sci-Fi]')}
+        Target Audience: Teenagers and Young Adults (ages 13-19)
+        Main Character: {kwargs.get('main_character', '[Describe the Main Character - Age, Personality, Key Traits]')}
+        Setting: {kwargs.get('setting', '[Describe the Setting - Time Period, Location, Atmosphere]')}
+        Themes: {kwargs.get('themes', '[List Key Themes - e.g., Identity, Love, Loss, Friendship, Self-Discovery, Social Justice]')}
+        Keywords: {kwargs.get('keywords', '[List Relevant Keywords - e.g., Magic, Dystopia, First Love, Found Family, Coming of Age]')}
+        Overall Mood: {kwargs.get('mood', '[Describe the Overall Mood - e.g., Dark, Mysterious, Hopeful, Romantic]')}
+
+        **Guidelines:**
+
+        *   **Target Audience Appeal:** The visual style should appeal to teenagers and young adults. Consider current trends in YA book cover design.
+        *   **Genre Conventions:** Adhere to the visual conventions of the specific subgenre. (e.g., Fantasy novels often feature magical elements, epic landscapes, or character portraits).
+        *   **Color Palette:** Suggest a color palette that reflects the mood and themes of the book. (e.g., Dark colors for a dystopian novel, bright colors for a contemporary romance).
+        *   **Imagery:** Describe the type of imagery that would be appropriate for the back cover. (e.g., A silhouette of the main character, a close-up of a significant object, an abstract design).
+        *   **Typography:** Suggest a font style that is legible, visually appealing, and appropriate for the genre.
+        *   **Examples:**
+        *   **Dystopian:** "A dark and gritty aesthetic with muted colors. The imagery should convey a sense of oppression and rebellion. Consider using a distressed font."
+        *   **Contemporary Romance:** "A bright and cheerful aesthetic with pastel colors. The imagery should evoke feelings of love and happiness. Consider using a handwritten or script font."
+        *   **Fantasy:** "An epic and magical aesthetic with vibrant colors. The imagery should depict fantastical creatures and landscapes. Consider using a bold and ornate font."
+        *   **Modern Trends:** Research current YA cover trends to ensure the design feels fresh and relevant. Consider minimalist designs, bold typography, or photographic elements.
+        """
+        return prompt
+        ```
         youngadult_book_additions = """
 
 ## YoungAdult Series Book Integration
@@ -177,6 +343,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return YoungAdultPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return YoungAdultPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return YoungAdultPrompts.get_series_book_prompt(**kwargs)

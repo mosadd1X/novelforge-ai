@@ -141,6 +141,208 @@ Create a alternatehistory series that builds compelling narratives with authenti
         """Generate a alternatehistory-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class AlternateHistoryMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions for Alternate History novels.
+
+        Args:
+        **kwargs: Optional keyword arguments for customizing the prompt.  Can include:
+        * title: The title of the book.
+        * author: The author of the book.
+        * point_of_divergence: A brief description of the key historical event that changed.
+        * main_characters: A list or description of the main characters.
+        * stakes: The high-stakes consequences of the altered timeline.
+        * target_audience: (Optional) Specify if the target audience is more interested in military history, social commentary, etc.
+        * tone: (Optional) The tone of the book (e.g., gritty, optimistic, satirical).
+
+        Returns:
+        str: A detailed prompt string for generating back cover copy.
+        """
+
+        title = kwargs.get('title', '[Title of Book]')
+        author = kwargs.get('author', '[Author Name]')
+        point_of_divergence = kwargs.get('point_of_divergence', '[Briefly describe the key historical event that changes]')
+        main_characters = kwargs.get('main_characters', '[Describe the main characters and their roles]')
+        stakes = kwargs.get('stakes', '[Describe the high-stakes consequences of the altered timeline]')
+        target_audience = kwargs.get('target_audience', 'general audience')  # Default to general audience
+        tone = kwargs.get('tone', 'serious') # Default to serious
+
+        prompt = f"""
+        Write a compelling back cover description for the Alternate History novel '{title}' by {author}.
+
+        The core concept is: What if {point_of_divergence}?  This single change has rippled through history, creating a drastically different world.
+
+        The story follows {main_characters}.  They are caught in the crosscurrents of this altered timeline and must navigate the challenges it presents.
+
+        The stakes are incredibly high: {stakes}. The fate of nations, the course of technology, or even the very fabric of reality hangs in the balance.
+
+        **Key elements to emphasize in the description:**
+
+        *   **The 'What If?'**:  Clearly articulate the central point of divergence and its immediate consequences.  Don't just state it; make it intriguing.
+        *   **Historical Realism (within the Alternate Reality)**: Ground the story in plausible historical details, even if those details are twisted or re-imagined. Readers expect a degree of believability.
+        *   **Character-Driven Narrative**: Highlight the personal struggles and triumphs of the characters as they grapple with the altered world.  Focus on their emotional journey.
+        *   **Sense of Wonder and Danger**:  Convey the excitement of exploring a familiar yet utterly different world, while also underscoring the dangers and uncertainties that lurk within it.
+        *   **Intrigue and Mystery**:  Hint at hidden agendas, conspiracies, and unanswered questions that will keep readers turning the pages.
+        *   **For {target_audience}:** Tailor the language and focus to appeal to this specific readership.  For example, if targeting military history enthusiasts, emphasize battles, strategies, and geopolitical implications. If targeting a more general audience, focus on the human drama and emotional impact.
+
+        **Tone:** The overall tone should be {tone}. Consider the following:
+
+        *   **Gritty/Dark:** Emphasize the harsh realities and moral compromises of the altered world.
+        *   **Optimistic/Hopeful:** Highlight the potential for positive change and the resilience of the human spirit.
+        *   **Satirical/Humorous:** Use wit and irony to critique historical events and societal norms.
+        *   **Epic/Sweeping:** Convey the grand scale and scope of the altered timeline.
+
+        **Structure:**
+
+        1.  Start with a hook that immediately grabs the reader's attention and introduces the central premise.
+        2.  Briefly describe the setting and the key characters.
+        3.  Outline the central conflict and the stakes involved.
+        4.  End with a question or a cliffhanger that leaves the reader wanting more.
+
+        **Avoid:**
+
+        *   Generic language and clichés.
+        *   Spoilers that reveal key plot points.
+        *   Excessive jargon or technical details.
+
+        Write a description that is approximately 150-200 words.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating short, punchy descriptions (2-3 lines) for book recommendations.
+
+        Args:
+        **kwargs: Optional keyword arguments for customizing the prompt.
+        * title: The title of the book.
+        * author: The author of the book.
+        * point_of_divergence: A one-sentence description of the point of divergence.
+        * key_themes: Keywords related to the book's themes.
+
+        Returns:
+        str: A prompt string for generating short book descriptions.
+        """
+
+        title = kwargs.get('title', '[Title of Book]')
+        author = kwargs.get('author', '[Author Name]')
+        point_of_divergence = kwargs.get('point_of_divergence', '[One-sentence description of the point of divergence]')
+        key_themes = kwargs.get('key_themes', '[List of keywords related to the book\'s themes]')
+
+        prompt = f"""
+        Write a very short (2-3 lines) description for the Alternate History novel '{title}' by {author}.  This description is for book recommendation purposes.
+
+        The core 'what if' is: {point_of_divergence}.
+
+        The key themes of the book are: {key_themes}.
+
+        The description should be concise, intriguing, and highlight the unique aspects of the alternate history setting. Focus on creating a sense of wonder, danger, or curiosity.
+
+        Examples:
+
+        *   "Imagine a world where the Roman Empire never fell. Now, imagine the dark secrets hidden beneath its eternal glory."
+        *   "What if the South had won the Civil War?  A gripping tale of a divided nation struggling to rebuild in the shadow of a Confederate superpower."
+        *   "In a world where magic is real, the Great War is fought with spells and enchanted weapons.  But some secrets are better left buried."
+
+        The description should make people want to read the book immediately.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating punchy marketing taglines for Alternate History novels.
+
+        Args:
+        **kwargs: Optional keyword arguments for customizing the prompt.
+        * title: The title of the book.
+        * point_of_divergence: A very short description of the point of divergence.
+        * target_emotion: The primary emotion the tagline should evoke (e.g., fear, wonder, excitement).
+
+        Returns:
+        str: A prompt string for generating marketing taglines.
+        """
+
+        title = kwargs.get('title', '[Title of Book]')
+        point_of_divergence = kwargs.get('point_of_divergence', '[Very short description of the point of divergence]')
+        target_emotion = kwargs.get('target_emotion', 'wonder')
+
+        prompt = f"""
+        Generate several punchy marketing taglines for the Alternate History novel '{title}'.
+
+        The core 'what if' is: {point_of_divergence}.
+
+        The taglines should be short, memorable, and evoke a sense of {target_emotion}. They should capture the essence of the book and entice readers to learn more.
+
+        Consider these examples:
+
+        *   "History as you know it... never happened."
+        *   "The past is a battlefield. And the war is just beginning."
+        *   "One choice. A million possibilities.  An infinite war."
+        *   "What if the world you know... was a lie?"
+        *   "The future is rewritten.  The past is a weapon."
+
+        The taglines should be no more than 10 words each. Generate at least 5 different options.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for providing visual style preferences for the book cover design.
+
+        Args:
+        **kwargs: Optional keyword arguments for customizing the prompt.
+        * point_of_divergence: A short description of the point of divergence.
+        * setting: The setting of the book (e.g., Victorian England, futuristic Tokyo).
+        * dominant_colors: A list of dominant colors that reflect the tone and setting.
+        * key_visual_elements: A list of key visual elements that should be included (e.g., airships, Roman soldiers, cyberpunk cityscapes).
+        * target_audience: (Optional) Specify the target audience to tailor the visual style.
+
+        Returns:
+        str: A prompt string for visual style preferences.
+        """
+
+        point_of_divergence = kwargs.get('point_of_divergence', '[Short description of the point of divergence]')
+        setting = kwargs.get('setting', '[The setting of the book]')
+        dominant_colors = kwargs.get('dominant_colors', '[List of dominant colors]')
+        key_visual_elements = kwargs.get('key_visual_elements', '[List of key visual elements]')
+        target_audience = kwargs.get('target_audience', 'general audience')
+
+        prompt = f"""
+        Describe the desired visual style for the cover of an Alternate History novel.
+
+        The core concept is: What if {point_of_divergence}?
+
+        The setting is: {setting}.
+
+        The dominant colors should be: {dominant_colors}. These colors should evoke the mood and atmosphere of the altered historical setting.
+
+        Key visual elements to include are: {key_visual_elements}. These elements should immediately convey the alternate history nature of the story.
+
+        **Consider the following aspects for the cover design:**
+
+        *   **Historical Accuracy (with a Twist)**: The cover should maintain a degree of historical authenticity, but with clear visual cues that indicate the alternate timeline.
+        *   **Genre Conventions**: Consider existing cover trends in Alternate History, but also strive for originality and a unique visual identity.
+        *   **Typography**: Choose fonts that are appropriate for the historical period and the overall tone of the book.
+        *   **Imagery**: Use high-quality imagery that is both visually appealing and relevant to the story.
+        *   **Target Audience:** Consider the preferences of the target audience when selecting the visual style. For example, if the target audience is interested in steampunk, incorporate steampunk-inspired elements into the cover design.
+
+        **Examples:**
+
+        *   If the book explores a world where the Roman Empire never fell, the cover might feature a futuristic cityscape with Roman architectural influences.
+        *   If the book is set in a Victorian England where magic is real, the cover might depict a gaslit street scene with wizards and enchanted objects.
+        *   If the book explores a world where the South won the Civil War, the cover might feature a Confederate flag with a modern twist.
+
+        Provide specific details about the desired mood, atmosphere, and overall aesthetic of the cover.  How does the cover visually communicate the 'what if' scenario to potential readers? How does it appeal to {target_audience}?
+        """
+        return prompt
+        ```
         alternatehistory_book_additions = """
 
 ## AlternateHistory Series Book Integration
@@ -180,6 +382,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return AlternateHistoryPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return AlternateHistoryPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return AlternateHistoryPrompts.get_series_book_prompt(**kwargs)

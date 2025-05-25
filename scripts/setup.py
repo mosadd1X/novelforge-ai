@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Setup script for the Ebook Generator package.
+Setup script for the NovelForge AI package.
 """
 from setuptools import setup, find_packages
 import os
@@ -14,20 +14,21 @@ with open("requirements.txt", encoding="utf-8") as f:
     requirements = f.read().splitlines()
 
 setup(
-    name="ebook-generator",
+    name="novelforge-ai",
     version="0.2.0",
-    description="AI-powered ebook generation system using Google's Gemini API",
+    description="AI-powered publishing platform using Google's Gemini API",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="Ebook Generator Team",
-    author_email="example@example.com",
-    url="https://github.com/mosadd1X/ebook-generator",
+    author="Mosaddiq",
+    author_email="mosaddiq@example.com",
+    maintainer="Mosaddiq",
+    url="https://github.com/mosadd1X/novelforge-ai",
     packages=find_packages(),
     include_package_data=True,
     install_requires=requirements,
     entry_points={
         "console_scripts": [
-            "ebook-generator=src.main:main",
+            "novelforge-ai=src.main:main",
         ],
     },
     classifiers=[

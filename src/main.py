@@ -1,7 +1,7 @@
 """
-Main entry point for the Ebook Generator system.
+Main entry point for the NovelForge AI system.
 
-This module serves as the primary entry point for the Ebook Generator application.
+This module serves as the primary entry point for the NovelForge AI application.
 It handles the novel generation process, from collecting user input to generating
 the final EPUB file. It also provides integration with the series management system
 when available.
@@ -1010,8 +1010,9 @@ def main() -> None:
         # Save novel as JSON
         save_novel_json(novel, output_dir)
 
-        # Generate cover with manual selection for single novels
-        cover_path = generate_cover(novel, output_dir, auto_mode=False)
+        # Use smart cover selection (checks for existing covers first, then fallback)
+        from src.utils.smart_cover_selector import get_smart_cover_for_epub
+        cover_path = get_smart_cover_for_epub(novel, output_dir, auto_mode=False)
 
         # Format and save as EPUB with writer profile
         console.print("[bold cyan]Formatting EPUB with front/back matter...[/bold cyan]")
@@ -1171,7 +1172,7 @@ if __name__ == "__main__":
             clear_screen()
             display_title()
 
-            console.print("[bold cyan]Welcome to the Novel Generation System![/bold cyan]")
+            console.print("[bold cyan]Welcome to NovelForge AI![/bold cyan]")
             console.print("You can generate a single novel, work with a series of novels, or manage your book library.\n")
 
             menu_choices = []
@@ -1245,7 +1246,7 @@ if __name__ == "__main__":
                 except Exception as e:
                     console.print(f"[red]Error accessing API Key Management: {e}[/red]")
             elif selected_menu == "Exit":
-                console.print("[bold cyan]Thank you for using the Novel Generation System![/bold cyan]")
+                console.print("[bold cyan]Thank you for using NovelForge AI![/bold cyan]")
         else:
             try:
                 main()

@@ -185,6 +185,200 @@ Ensure this book feels like an authentic continuation of the commercialfiction s
         
         return base_prompt + commercialfiction_book_additions
 
+        ```python
+        class CommercialFictionMarketing:
+        """
+        A class containing methods for generating marketing materials for Commercial Fiction books.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating compelling back cover copy for a Commercial Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, genre, target audience, plot summary, main characters, themes, comparable titles, etc.).
+
+        Returns:
+        A detailed prompt string for generating back cover copy.
+        """
+        prompt = f"""
+        You are an expert copywriter specializing in back cover blurbs for Commercial Fiction novels. Your goal is to create a blurb that will immediately grab the reader's attention and make them want to buy the book.
+
+        Consider the following information about the book:
+
+        *   **Title:** {kwargs.get('title', '[Title]')}
+        *   **Author:** {kwargs.get('author', '[Author]')}
+        *   **Genre:** Commercial Fiction (focus on broad appeal, relatable characters, and engaging plot)
+        *   **Target Audience:** {kwargs.get('target_audience', 'General readers looking for an entertaining and emotionally resonant story')}
+        *   **Plot Summary:** {kwargs.get('plot_summary', '[Detailed Plot Summary]')}
+        *   **Main Characters:** {kwargs.get('main_characters', '[Description of Main Characters and their motivations]')}
+        *   **Themes:** {kwargs.get('themes', '[List of Major Themes - e.g., love, loss, redemption, family, ambition]')}
+        *   **Comparable Titles (Comp Titles):** {kwargs.get('comp_titles', '[List of 2-3 comparable best-selling books, e.g., "The Nightingale" by Kristin Hannah, "Where the Crawdads Sing" by Delia Owens]')}
+        *   **Unique Selling Proposition (USP):** {kwargs.get('usp', '[What makes this book stand out from other books in the genre?]')}
+        *   **Emotional Hook:** {kwargs.get('emotional_hook', '[What emotions should the blurb evoke in the reader? - e.g., hope, fear, excitement, sadness]')}
+
+        **Instructions:**
+
+        Write a back cover blurb that is approximately 150-200 words long. The blurb should:
+
+        1.  **Start with a Hook:** Begin with a compelling sentence or two that immediately grabs the reader's attention. Consider using a question, a shocking statement, or a glimpse into a pivotal moment.
+        2.  **Introduce the Protagonist(s):** Briefly introduce the main character(s) and their desires, flaws, and challenges. Emphasize their relatability and emotional depth.
+        3.  **Highlight the Central Conflict:** Clearly outline the main conflict or obstacle that the protagonist(s) must overcome. Focus on the stakes involved and the potential consequences of failure.
+        4.  **Tease the Plot:** Provide intriguing hints about the plot without giving away major spoilers. Focus on building suspense and creating a sense of mystery.
+        5.  **Emphasize the Emotional Core:** Commercial Fiction is all about emotional resonance. Highlight the emotional journey of the characters and the themes that will resonate with readers.
+        6.  **Include a Strong Call to Action:** End with a sentence or two that encourages the reader to buy the book. This could be a question, a statement of intrigue, or a promise of an unforgettable reading experience.
+        7.  **Comp Titles Influence:** Consider the tone, style, and themes of the provided comp titles when crafting the blurb. Aim for a similar level of emotional impact and broad appeal.
+        8.  **Commercial Fiction Tone:** Maintain a tone that is accessible, engaging, and emotionally resonant. Avoid overly literary or experimental language.
+        9.  **Focus on the "Why":** The blurb should answer the question, "Why should I read this book?" Make it clear what the reader will gain from investing their time in this story (e.g., emotional satisfaction, escapism, thought-provoking insights).
+        10. **Avoid Clichés:** Steer clear of overused phrases and clichés. Strive for originality and authenticity.
+
+        **Example of a Good Opening Hook for Commercial Fiction:**
+
+        "A secret kept buried for decades. A love that defies all odds. One woman's desperate fight for survival."
+
+        **Remember to focus on the emotional journey, relatable characters, and accessible storytelling that are hallmarks of Commercial Fiction.**
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short (2-3 line) description for book recommendations.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, genre, target audience, key themes).
+
+        Returns:
+        A detailed prompt string for generating a short description.
+        """
+        prompt = f"""
+        You are a book reviewer writing a short, punchy recommendation for a Commercial Fiction novel.  Your description should be no more than 2-3 lines long.
+
+        Consider the following information about the book:
+
+        *   **Title:** {kwargs.get('title', '[Title]')}
+        *   **Author:** {kwargs.get('author', '[Author]')}
+        *   **Genre:** Commercial Fiction
+        *   **Key Themes:** {kwargs.get('themes', '[List of Key Themes - e.g., love, loss, family, secrets]')}
+        *   **Target Audience:** {kwargs.get('target_audience', 'General readers')}
+        *   **Emotional Impact:** {kwargs.get('emotional_impact', '[What is the main emotional takeaway from the book? - e.g., heartwarming, suspenseful, thought-provoking]')}
+
+        **Instructions:**
+
+        Write a 2-3 line description that will entice readers to pick up the book. The description should:
+
+        1.  **Be Concise and Engaging:** Use strong verbs and evocative language to capture the essence of the story.
+        2.  **Highlight the Key Themes:** Briefly mention the central themes that will resonate with readers.
+        3.  **Focus on the Emotional Impact:** Convey the emotional experience that readers can expect.
+        4.  **Use Strong Adjectives:** Use descriptive adjectives to create a vivid picture in the reader's mind.
+        5.  **End with a Hook:** Leave the reader wanting more.
+
+        **Examples of Good Short Descriptions for Commercial Fiction:**
+
+        *   "A sweeping tale of love and loss set against the backdrop of World War II. Prepare to be moved."
+        *   "When a dark family secret threatens to unravel everything, one woman must fight to protect the ones she loves.  A page-turner!"
+        *   "A heartwarming story about finding hope and second chances in the most unexpected places. Perfect for fans of [Comparable Author]."
+
+        **Remember to keep it brief, impactful, and focused on the emotional core of the story.  Commercial Fiction thrives on relatability and emotional connection.**
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Commercial Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, genre, key themes, target audience).
+
+        Returns:
+        A detailed prompt string for generating a marketing tagline.
+        """
+        prompt = f"""
+        You are a marketing expert crafting a tagline for a Commercial Fiction novel. The tagline should be short, memorable, and attention-grabbing.
+
+        Consider the following information about the book:
+
+        *   **Title:** {kwargs.get('title', '[Title]')}
+        *   **Author:** {kwargs.get('author', '[Author]')}
+        *   **Genre:** Commercial Fiction
+        *   **Key Themes:** {kwargs.get('themes', '[List of Key Themes - e.g., love, loss, family, secrets, redemption]')}
+        *   **Target Audience:** {kwargs.get('target_audience', 'General readers')}
+        *   **Core Message:** {kwargs.get('core_message', '[What is the central message or feeling the book conveys?]')}
+
+        **Instructions:**
+
+        Create a tagline that is no more than 5-7 words long. The tagline should:
+
+        1.  **Be Memorable and Catchy:** Use wordplay, rhyme, or strong imagery to make the tagline stick in the reader's mind.
+        2.  **Highlight the Key Themes:** Hint at the central themes of the story.
+        3.  **Focus on the Emotional Hook:** Evoke the emotions that the book will elicit in the reader.
+        4.  **Create Intrigue:** Leave the reader wanting to know more.
+        5.  **Reflect the Tone of the Book:** Match the overall tone and style of the novel.
+
+        **Examples of Good Taglines for Commercial Fiction:**
+
+        *   "Love conquers all, even time."
+        *   "Secrets bind. Secrets destroy."
+        *   "Hope blooms in the darkest hours."
+        *   "One choice. Two lives. Infinite possibilities."
+        *   "The past never stays buried."
+
+        **Remember, Commercial Fiction taglines should be emotionally resonant, relatable, and designed to appeal to a broad audience.** Aim for simplicity and impact.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for providing visual style preferences for the back cover design of a Commercial Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, genre, key themes, target audience, mood).
+
+        Returns:
+        A detailed prompt string for guiding the back cover visual design.
+        """
+        prompt = f"""
+        You are an art director providing guidance for the visual design of a Commercial Fiction novel's back cover.  Describe the preferred visual style, considering the book's themes, target audience, and overall mood.
+
+        Consider the following information about the book:
+
+        *   **Title:** {kwargs.get('title', '[Title]')}
+        *   **Author:** {kwargs.get('author', '[Author]')}
+        *   **Genre:** Commercial Fiction
+        *   **Key Themes:** {kwargs.get('themes', '[List of Key Themes - e.g., love, loss, family, secrets, redemption]')}
+        *   **Target Audience:** {kwargs.get('target_audience', 'General readers')}
+        *   **Overall Mood:** {kwargs.get('mood', '[Describe the overall mood of the book - e.g., hopeful, suspenseful, heartwarming, tragic]')}
+        *   **Visual Keywords:** {kwargs.get('visual_keywords', '[List of visual keywords that relate to the story - e.g., beach, sunset, old house, city skyline, floral pattern]')}
+
+        **Instructions:**
+
+        Provide detailed visual style preferences for the back cover design. Consider the following elements:
+
+        1.  **Imagery:** What kind of imagery would be most effective? (e.g., photography, illustration, abstract art).  Should the imagery be realistic or stylized?  Should it feature people, landscapes, objects, or a combination?
+        2.  **Color Palette:** What color palette would best convey the mood and themes of the book? (e.g., warm and inviting, cool and mysterious, vibrant and energetic, muted and melancholic).  Consider using color psychology to evoke specific emotions.
+        3.  **Typography:** What font styles would be most appropriate for the title and author name? (e.g., serif, sans-serif, script).  Consider the readability and visual appeal of the font choices.
+        4.  **Layout:** How should the text and imagery be arranged on the back cover? (e.g., clean and minimalist, layered and textured, symmetrical or asymmetrical).
+        5.  **Overall Impression:** What is the overall impression that the back cover should convey? (e.g., sophisticated, approachable, intriguing, emotional).
+
+        **Commercial Fiction Considerations:**
+
+        *   **Relatability:** The visual style should be relatable and appealing to a broad audience.
+        *   **Emotional Connection:** The imagery and colors should evoke emotions that align with the book's themes.
+        *   **Genre Conventions:** Consider the visual conventions of successful Commercial Fiction book covers.  Look at covers of comp titles for inspiration.
+        *   **Avoid Being Too Niche:** The design should not be so specific that it alienates potential readers.
+        *   **High Quality:** The visual design should be professional and polished.
+
+        **Example:**
+
+        "For a novel about a woman finding love and rediscovering herself in a small coastal town, I envision a back cover with a photograph of a serene beach at sunset. The color palette should be warm and inviting, with shades of orange, pink, and gold. The typography should be elegant and readable, with a serif font for the title and a sans-serif font for the author name. The overall impression should be hopeful and romantic."
+
+        **Provide specific and actionable instructions to guide the visual design process.**
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return CommercialFictionPrompts.get_writer_profile_prompt(**kwargs)
@@ -202,6 +396,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return CommercialFictionPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return CommercialFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return CommercialFictionPrompts.get_series_book_prompt(**kwargs)

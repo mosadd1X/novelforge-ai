@@ -138,6 +138,181 @@ Create a cookbook series that provides comprehensive education with authoritativ
         """Generate a cookbook-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class CookbookBackCover:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating a compelling cookbook back cover description.
+
+        Args:
+        **kwargs:  Keyword arguments to pass parameters to the prompt.
+
+        Returns:
+        str: A detailed prompt string tailored for cookbook back cover descriptions.
+        """
+        title = kwargs.get('title', '[Book Title]')
+        author = kwargs.get('author', '[Author Name]')
+        target_audience = kwargs.get('target_audience', '[Target Audience e.g., busy weeknight cooks, aspiring bakers]')
+        cuisine_type = kwargs.get('cuisine_type', '[Cuisine Type e.g., Italian, Vegan, Paleo]')
+        unique_selling_point = kwargs.get('unique_selling_point', '[Unique Selling Point e.g., 30-minute meals, budget-friendly recipes, family-friendly twists]')
+        number_of_recipes = kwargs.get('number_of_recipes', '[Number of Recipes]')
+        key_features = kwargs.get('key_features', '[Key Features e.g., step-by-step photos, nutritional information, dietary modifications]')
+        emotional_hook = kwargs.get('emotional_hook', '[Emotional Hook e.g., rediscover the joy of cooking, impress your friends and family, nourish your body]')
+        author_credentials = kwargs.get('author_credentials', '[Author Credentials e.g., award-winning chef, food blogger, registered dietitian]')
+
+        prompt = f"""
+        Write a compelling and enticing back cover description for the cookbook '{title}' by {author}.
+
+        The target audience is {target_audience}. The cookbook focuses on {cuisine_type} cuisine and its unique selling point is {unique_selling_point}.
+
+        The description should:
+
+        *   Highlight the core benefits for the reader. What problems does this cookbook solve? How will it improve their cooking experience and their life?
+        *   Clearly state that the cookbook contains {number_of_recipes} recipes.
+        *   Showcase key features like {key_features}.
+        *   Use evocative language related to food, taste, and cooking.  Think about sensory details (smell, texture, sight).
+        *   Incorporate the emotional hook: {emotional_hook}.  Connect with the reader's desires and aspirations.
+        *   Mention the author's credentials: {author_credentials}.  Establish credibility and expertise.
+        *   End with a strong call to action, encouraging the reader to buy the book.
+
+        Guidelines specific to cookbooks:
+
+        *   Emphasize the ease of use and accessibility of the recipes.  Avoid overly technical language.
+        *   Highlight any dietary considerations (e.g., gluten-free, vegetarian, vegan).
+        *   If applicable, mention any beautiful photography or illustrations within the book.
+        *   Focus on the practical benefits: saving time, saving money, improving health, etc.
+        *   Consider including a tantalizing description of one or two signature recipes.
+        *   Use active voice and vivid verbs.
+        *   Keep the tone enthusiastic and inviting.
+
+        Example Structure:
+
+        [Opening sentence capturing the essence of the cookbook]
+
+        [Expand on the unique selling point and benefits for the reader]
+
+        [Highlight key features and recipe variety]
+
+        [Mention author credentials and establish expertise]
+
+        [Concluding sentence with a strong call to action]
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a short, 2-3 line description for cookbook recommendations.
+
+        Args:
+        **kwargs: Keyword arguments to pass parameters to the prompt.
+
+        Returns:
+        str: A prompt string for a concise cookbook description.
+        """
+        title = kwargs.get('title', '[Book Title]')
+        author = kwargs.get('author', '[Author Name]')
+        cuisine_type = kwargs.get('cuisine_type', '[Cuisine Type e.g., Italian, Vegan, Paleo]')
+        unique_selling_point = kwargs.get('unique_selling_point', '[Unique Selling Point e.g., 30-minute meals, budget-friendly recipes, family-friendly twists]')
+        target_audience = kwargs.get('target_audience', '[Target Audience e.g., busy weeknight cooks, aspiring bakers]')
+
+        prompt = f"""
+        Write a short, 2-3 line description for recommending the cookbook '{title}' by {author}.
+
+        The cookbook focuses on {cuisine_type} cuisine and is designed for {target_audience}. Its unique selling point is {unique_selling_point}.
+
+        The description should:
+
+        *   Be concise and impactful.
+        *   Highlight the key benefit for the reader.
+        *   Use enticing language related to food and cooking.
+        *   Focus on the most appealing aspect of the cookbook.
+
+        Example:
+
+        "Craving authentic Italian flavors without the fuss? '{title}' delivers delicious, easy-to-follow recipes that bring the taste of Italy to your kitchen in under 30 minutes."
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a punchy marketing tagline for a cookbook.
+
+        Args:
+        **kwargs: Keyword arguments to pass parameters to the prompt.
+
+        Returns:
+        str: A prompt string for generating cookbook taglines.
+        """
+        title = kwargs.get('title', '[Book Title]')
+        cuisine_type = kwargs.get('cuisine_type', '[Cuisine Type e.g., Italian, Vegan, Paleo]')
+        unique_selling_point = kwargs.get('unique_selling_point', '[Unique Selling Point e.g., 30-minute meals, budget-friendly recipes, family-friendly twists]')
+        target_audience = kwargs.get('target_audience', '[Target Audience e.g., busy weeknight cooks, aspiring bakers]')
+        key_ingredient = kwargs.get('key_ingredient', '[Key Ingredient or Theme e.g., Chocolate, Family Dinners, Healthy Eating]')
+
+        prompt = f"""
+        Create a punchy and memorable marketing tagline for the cookbook '{title}'.
+
+        The cookbook focuses on {cuisine_type} cuisine, is designed for {target_audience}, and its unique selling point is {unique_selling_point}. It also emphasizes {key_ingredient}.
+
+        The tagline should:
+
+        *   Be short and catchy (ideally under 10 words).
+        *   Highlight the key benefit or unique selling point.
+        *   Use strong verbs and evocative language.
+        *   Be memorable and easily shareable.
+        *   Create a sense of excitement and anticipation.
+
+        Examples:
+
+        *   "{cuisine_type} Made Easy: Delicious Recipes, Effortless Cooking."
+        *   "Unlock the Secrets to Perfect {key_ingredient} Every Time."
+        *   "{title}: Your Kitchen, Your {cuisine_type} Adventure."
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for describing visual style preferences for a cookbook's back cover.
+
+        Args:
+        **kwargs: Keyword arguments to pass parameters to the prompt.
+
+        Returns:
+        str: A prompt string for defining visual style preferences.
+        """
+        cuisine_type = kwargs.get('cuisine_type', '[Cuisine Type e.g., Italian, Vegan, Paleo]')
+        target_audience = kwargs.get('target_audience', '[Target Audience e.g., busy weeknight cooks, aspiring bakers]')
+        mood = kwargs.get('mood', '[Desired Mood e.g., warm, inviting, sophisticated, playful]')
+        key_ingredient = kwargs.get('key_ingredient', '[Key Ingredient or Theme e.g., Chocolate, Family Dinners, Healthy Eating]')
+        color_palette = kwargs.get('color_palette', '[Preferred Color Palette e.g., earthy tones, vibrant colors, minimalist black and white]')
+
+        prompt = f"""
+        Describe the desired visual style for the back cover of a cookbook focusing on {cuisine_type} cuisine for {target_audience}.
+
+        The overall mood should be {mood}. The cookbook emphasizes {key_ingredient}. The preferred color palette is {color_palette}.
+
+        The description should consider:
+
+        *   Imagery: What kind of images would be most appealing? (e.g., close-ups of food, lifestyle shots of people cooking, ingredient displays)
+        *   Typography: What font styles would be appropriate? (e.g., classic, modern, handwritten)
+        *   Layout: How should the text and images be arranged? (e.g., clean and minimalist, layered and textured, full-bleed photography)
+        *   Overall aesthetic: What is the overall feeling the back cover should evoke? (e.g., warmth, sophistication, playfulness, health-consciousness)
+        *   Consider the visual representation of {cuisine_type} and how to best convey its essence.
+        *   Think about how to visually represent the key ingredient or theme: {key_ingredient}.
+
+        Examples:
+
+        *   "Warm and inviting, with close-up shots of rustic Italian dishes. Use earthy tones and a classic serif font."
+        *   "Clean and modern, with minimalist black and white photography of vegan ingredients. Use a sans-serif font and a simple layout."
+        *   "Playful and colorful, with vibrant images of chocolate desserts. Use a handwritten font and a layered layout."
+        """
+        return prompt
+        ```
         cookbook_book_additions = """
 
 ## Cookbook Series Book Integration
@@ -177,6 +352,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return CookbookPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return CookbookPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return CookbookPrompts.get_series_book_prompt(**kwargs)

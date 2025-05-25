@@ -3,19 +3,20 @@ layout: default
 title: Advanced Topics
 nav_order: 6
 has_children: true
-description: "Advanced topics and customization options for the Ebook Generator"
+description: 'Advanced topics and customization options for NovelForge AI'
 permalink: /advanced
 ---
 
 # Advanced Topics
+
 {: .no_toc }
 
-This section covers advanced topics and customization options for the Ebook Generator.
+This section covers advanced topics and customization options for NovelForge AI.
 {: .fs-6 .fw-300 }
 
 ## Overview
 
-The Ebook Generator is designed to be flexible and customizable. This section provides detailed information on how to extend and customize various aspects of the system to meet your specific needs.
+NovelForge AI is designed to be flexible and customizable. This section provides detailed information on how to extend and customize various aspects of the system to meet your specific needs.
 
 ### Available Topics
 

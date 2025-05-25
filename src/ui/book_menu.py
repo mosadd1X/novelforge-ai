@@ -14,7 +14,7 @@ import questionary
 from src.core.novel_generator import NovelGenerator
 from src.core.ideas_manager import IdeasManager
 from src.formatters.epub_formatter import EpubFormatter
-from src.utils.file_handler import create_output_directory, save_novel_json, sanitize_filename
+from src.utils.file_handler import create_output_directory, save_novel_json, load_novel_json, sanitize_filename
 from src.utils.genre_defaults import get_genre_defaults
 from src.ui.terminal_ui import (
     clear_screen,
@@ -337,13 +337,21 @@ def create_new_book() -> Optional[Dict[str, Any]]:
         # Save novel as JSON
         save_novel_json(novel, output_dir)
 
-        # Generate cover
-        cover_path = generate_cover(novel, output_dir, auto_mode=False)
+        # Generate enhanced descriptions and back cover
+        console.print("[bold cyan]Generating enhanced descriptions...[/bold cyan]")
+        from src.utils.enhanced_book_workflow import EnhancedBookWorkflow
+        workflow = EnhancedBookWorkflow()
 
-        # Format and save as EPUB with writer profile
-        console.print("[bold cyan]Formatting EPUB...[/bold cyan]")
-        formatter = EpubFormatter(novel, writer_profile=writer_profile)
-        epub_path = formatter.save_epub(output_dir, cover_path, writer_profile)
+        # Save to database first
+        from src.database.database_manager import get_database_manager
+        db_manager = get_database_manager()
+        book_id = db_manager.save_book(novel)
+
+        # Process with enhanced workflow
+        workflow.process_completed_book(book_id, novel)
+
+        console.print("[bold green]✓[/bold green] Book generation completed!")
+        console.print("[bold yellow]Note:[/bold yellow] EPUB can be generated manually from the Export menu.")
 
         # Stop timer
         generation_timer.stop()
@@ -351,7 +359,8 @@ def create_new_book() -> Optional[Dict[str, Any]]:
         # Display completion
         console.print("\n[bold green]Book generation complete![/bold green]")
         console.print(f"[bold green]Generation time:[/bold green] [bold cyan]{generation_timer.get_elapsed_time()}[/bold cyan]")
-        console.print(f"[bold green]Book saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
+        console.print(f"[bold green]Book saved to:[/bold green] [bold cyan]{output_dir}[/bold cyan]")
+        console.print(f"[bold cyan]Enhanced descriptions generated and saved to database[/bold cyan]")
 
         # Create book info for return
         book_info = {
@@ -577,8 +586,9 @@ def create_book_from_idea() -> Optional[Dict[str, Any]]:
         # Save novel as JSON
         save_novel_json(novel, output_dir)
 
-        # Generate cover
-        cover_path = generate_cover(novel, output_dir, auto_mode=False)
+        # Use smart cover selection (checks for existing covers first, then fallback)
+        from src.utils.smart_cover_selector import get_smart_cover_for_epub
+        cover_path = get_smart_cover_for_epub(novel, output_dir, auto_mode=False)
 
         # Format and save as EPUB with writer profile
         console.print("[bold cyan]Formatting EPUB...[/bold cyan]")
@@ -699,12 +709,14 @@ def export_book_formats(book_info: Dict[str, Any]) -> None:
 
     # Find EPUB file
     epub_files = [f for f in os.listdir(book_info["directory"]) if f.endswith(".epub")]
-    if not epub_files:
-        console.print("[yellow]No EPUB file found for this book.[/yellow]")
-        return
 
-    epub_path = os.path.join(book_info["directory"], epub_files[0])
-    console.print(f"[bold cyan]Found EPUB:[/bold cyan] {epub_files[0]}")
+    # Display EPUB status
+    if epub_files:
+        epub_path = os.path.join(book_info["directory"], epub_files[0])
+        console.print(f"[bold cyan]Found EPUB:[/bold cyan] {epub_files[0]}")
+    else:
+        console.print("[yellow]No EPUB file found for this book.[/yellow]")
+        console.print("[dim]You can still generate an EPUB by selecting the EPUB format option below.[/dim]")
 
     # Ask which format to export to
     format_choices = ["EPUB", "PDF", "MOBI", "AZW3", "DOCX", "All Formats", "← Back"]
@@ -735,13 +747,9 @@ def export_book_formats(book_info: Dict[str, Any]) -> None:
             # Extract writer profile from novel data
             writer_profile = novel_data.get("writer_profile")
 
-            # Find existing cover image
-            cover_path = None
-            cover_extensions = ['.jpg', '.jpeg', '.png', '.webp']
-            for file in os.listdir(book_info["directory"]):
-                if any(file.lower().endswith(ext) for ext in cover_extensions):
-                    cover_path = os.path.join(book_info["directory"], file)
-                    break
+            # Use smart cover selection (checks for existing covers first, then fallback)
+            from src.utils.smart_cover_selector import get_smart_cover_for_epub
+            cover_path = get_smart_cover_for_epub(novel_data, book_info["directory"], auto_mode=True)
 
             # Regenerate EPUB with proper content and writer profile
             formatter = EpubFormatter(novel_data, writer_profile=writer_profile)
@@ -753,6 +761,12 @@ def export_book_formats(book_info: Dict[str, Any]) -> None:
         except Exception as e:
             console.print(f"[bold red]Error regenerating EPUB: {str(e)}[/bold red]")
 
+        return
+
+    # Check if we have an EPUB file for conversion to other formats
+    if not epub_files:
+        console.print("[yellow]No EPUB file found to convert to other formats.[/yellow]")
+        console.print("[dim]Please generate an EPUB first by selecting the EPUB format option.[/dim]")
         return
 
     # Determine formats to convert
@@ -834,6 +848,66 @@ def check_api_key_status() -> None:
         console.print("[yellow]Make sure your API keys are properly configured in the .env file.[/yellow]")
         input("\nPress Enter to continue...")
 
+
+def generate_epub_manually(book_info: Dict[str, Any]) -> None:
+    """
+    Generate EPUB manually for a book.
+
+    Args:
+        book_info: Book information dictionary
+    """
+    try:
+        console.print("[bold cyan]Generating EPUB...[/bold cyan]")
+
+        # Load novel data
+        json_path = os.path.join(book_info["directory"], "novel_data.json")
+        if not os.path.exists(json_path):
+            console.print("[bold red]Error: novel_data.json not found![/bold red]")
+            console.print("[dim]This book may have been generated with an older version.[/dim]")
+            return
+
+        novel_data = load_novel_json(json_path)
+
+        # Extract writer profile from novel data
+        writer_profile = novel_data.get("writer_profile")
+
+        # Use smart cover selection
+        from src.utils.smart_cover_selector import get_smart_cover_for_epub
+        cover_path = get_smart_cover_for_epub(novel_data, book_info["directory"], auto_mode=True)
+
+        # Generate EPUB with enhanced back matter
+        formatter = EpubFormatter(novel_data, writer_profile=writer_profile)
+        epub_path = formatter.save_epub(book_info["directory"], cover_path, writer_profile)
+
+        console.print(f"[bold green]✓ EPUB generated successfully![/bold green]")
+        console.print(f"[bold green]File saved to:[/bold green] [bold cyan]{epub_path}[/bold cyan]")
+
+        # Update database if book exists there
+        try:
+            from src.database.database_manager import get_database_manager
+            db_manager = get_database_manager()
+
+            # Try to find book in database by title and author
+            title = novel_data.get("metadata", {}).get("title", "")
+            author = novel_data.get("metadata", {}).get("author", "")
+
+            if title and author:
+                books = db_manager.get_books(status="completed")
+                for book in books:
+                    if (book.get("title", "").lower() == title.lower() and
+                        book.get("author", "").lower() == author.lower()):
+
+                        # Update EPUB path in database
+                        db_manager.update_book(book["book_id"], {"epub_path": epub_path})
+                        console.print("[bold green]✓ Database updated with EPUB path[/bold green]")
+                        break
+        except Exception as e:
+            console.print(f"[yellow]Warning: Could not update database: {e}[/yellow]")
+
+    except Exception as e:
+        console.print(f"[bold red]Error generating EPUB: {e}[/bold red]")
+
+
 def book_options_menu(book_info: Dict[str, Any]) -> None:
     """
     Options menu for a selected book.
@@ -850,6 +924,7 @@ def book_options_menu(book_info: Dict[str, Any]) -> None:
 
         # Book options
         choices = [
+            "Generate EPUB",
             "Generate New Cover",
             "Manage Cover Images",
             "Export to Different Formats",
@@ -864,7 +939,11 @@ def book_options_menu(book_info: Dict[str, Any]) -> None:
             style=custom_style
         ).ask()
 
-        if selected == "Generate New Cover":
+        if selected == "Generate EPUB":
+            generate_epub_manually(book_info)
+            input("\nPress Enter to continue...")
+
+        elif selected == "Generate New Cover":
             generate_book_cover(book_info)
             input("\nPress Enter to continue...")
 

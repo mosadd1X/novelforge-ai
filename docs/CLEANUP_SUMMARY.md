@@ -1,20 +1,23 @@
 # Codebase Cleanup Summary
 
-This document summarizes the comprehensive cleanup and organization performed on the Ebook Generator codebase.
+This document summarizes the comprehensive cleanup and organization performed on the NovelForge AI codebase.
 
 ## Changes Made
 
 ### Directory Structure Improvements
 
 1. **Created New Directories**:
+
    - Created `src/data/` directory for data files
    - Organized documentation in the `docs/` directory
 
 2. **File Relocations**:
+
    - Moved `book_ideas.json` to `src/data/`
    - Moved `genere_guideline.md` to `docs/`
 
 3. **Removed Redundant Files**:
+
    - Deleted `main_backup.py` (backup file)
    - Deleted `genere_guideline_backup.md` (backup file)
    - Deleted `ignore.pdf` (test file)
@@ -27,6 +30,7 @@ This document summarizes the comprehensive cleanup and organization performed on
 ### Documentation Improvements
 
 1. **Created New Documentation Files**:
+
    - `docs/CONTRIBUTING.md`: Guidelines for contributing to the project
    - `docs/API.md`: Documentation of core functions and classes
    - `docs/cover_generator.md`: Documentation for the cover generator
@@ -45,15 +49,18 @@ This document summarizes the comprehensive cleanup and organization performed on
 ### Code Improvements
 
 1. **Updated File References**:
+
    - Updated `chapter_planner.py` to reference the new location of genre guidelines
 
 2. **Improved Docstrings**:
+
    - Added comprehensive docstrings to `run.py`
    - Enhanced docstrings in `src/main.py`
    - Improved function documentation with parameter descriptions and return values
    - Added detailed module-level docstrings
 
 3. **Code Organization**:
+
    - Organized imports into logical groups (standard library, third-party, local)
    - Added import section headers for better readability
    - Improved code structure and formatting
@@ -67,16 +74,19 @@ This document summarizes the comprehensive cleanup and organization performed on
 ## File Changes Summary
 
 ### Files Removed:
+
 - `main_backup.py`
 - `genere_guideline_backup.md`
 - `ignore.pdf`
 - `Grandpas Basket.epub`
 
 ### Files Moved:
+
 - `book_ideas.json` → `src/data/book_ideas.json`
 - `genere_guideline.md` → `docs/genere_guideline.md`
 
 ### Files Created:
+
 - `docs/CONTRIBUTING.md`
 - `docs/API.md`
 - `docs/cover_generator.md`
@@ -88,6 +98,7 @@ This document summarizes the comprehensive cleanup and organization performed on
 - `setup.py`
 
 ### Files Modified:
+
 - `README.md`: Comprehensive update
 - `src/utils/chapter_planner.py`: Updated file references
 - `run.py`: Improved docstrings and organized imports
@@ -97,7 +108,7 @@ This document summarizes the comprehensive cleanup and organization performed on
 ## Project Structure After Cleanup
 
 ```
-ebook-generator/
+novelforge-ai/
 ├── docs/                       # Documentation
 │   ├── API.md                  # API documentation
 │   ├── CONTRIBUTING.md         # Contribution guidelines

@@ -2,21 +2,23 @@
 layout: default
 title: Troubleshooting
 nav_order: 9
-description: "Solutions for common issues encountered when using the Ebook Generator"
+description: 'Solutions for common issues encountered when using the Ebook Generator'
 permalink: /troubleshooting
 ---
 
 # Troubleshooting
+
 {: .no_toc }
 
 This guide provides solutions for common issues encountered when using the Ebook Generator.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
@@ -25,11 +27,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Invalid API Key
 
 **Symptoms:**
+
 - Error message: "Invalid API key"
 - Generation fails immediately
 - API key status shows as invalid
 
 **Solutions:**
+
 1. Verify that your API key is correctly copied from the Google AI Studio
 2. Check for extra spaces or line breaks in your `.env` file
 3. Ensure your API key has not expired
@@ -38,11 +42,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Rate Limit Exceeded
 
 **Symptoms:**
+
 - Error message: "Rate limit exceeded"
 - Generation pauses or fails after several chapters
 - API key status shows as rate-limited
 
 **Solutions:**
+
 1. Configure multiple API keys as described in [Multiple API Keys](./multiple-api-keys.html)
 2. Wait for the rate limit cooldown period (usually 60 seconds to a few minutes)
 3. Reduce the generation frequency by adding delays between API calls
@@ -51,11 +57,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Quota Exceeded
 
 **Symptoms:**
+
 - Error message: "Quota exceeded"
 - Generation fails completely
 - API key status shows as quota exceeded
 
 **Solutions:**
+
 1. Wait until your quota resets (typically at the start of the next day)
 2. Use alternative API keys from different accounts
 3. Upgrade to a paid API tier with higher quotas
@@ -66,11 +74,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Inconsistent Characters
 
 **Symptoms:**
+
 - Characters behave differently across chapters
 - Character traits or backgrounds change
 - Relationships between characters are inconsistent
 
 **Solutions:**
+
 1. Check that the Memory Manager is properly initialized
 2. Ensure character extraction is working correctly after each chapter
 3. Verify that the context provided to each chapter includes character information
@@ -79,11 +89,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Plot Holes
 
 **Symptoms:**
+
 - Plot threads are introduced but never resolved
 - Events contradict earlier established facts
 - Character motivations don't align with their actions
 
 **Solutions:**
+
 1. Review the narrative tracking in the Memory Manager
 2. Check that plot points are being properly extracted and tracked
 3. Provide more explicit plot guidance in the generation options
@@ -92,11 +104,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Short Chapters
 
 **Symptoms:**
+
 - Chapters are consistently shorter than the target length
 - The system frequently needs to extend chapters
 - Final word count is below the target
 
 **Solutions:**
+
 1. Increase the `min_chapter_length` setting in your generation options
 2. Modify the chapter generation prompt to request more detailed descriptions
 3. Adjust the `temperature` setting to encourage more verbose output
@@ -105,11 +119,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Generation Timeouts
 
 **Symptoms:**
+
 - Generation process hangs or times out
 - Error message: "Request timed out"
 - Incomplete chapters or books
 
 **Solutions:**
+
 1. Check your internet connection
 2. Increase the timeout settings in your configuration
 3. Try generating smaller chunks of content at a time
@@ -120,10 +136,12 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Missing Cover
 
 **Symptoms:**
+
 - EPUB file has no cover image
 - Cover page is blank or missing
 
 **Solutions:**
+
 1. Verify that a cover path was provided to the EPUB formatter
 2. Check that the cover file exists and is a valid image format
 3. Ensure the cover generator is working correctly
@@ -132,11 +150,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Formatting Problems
 
 **Symptoms:**
+
 - Text formatting is inconsistent
 - Paragraphs are not properly separated
 - Special characters appear as gibberish
 
 **Solutions:**
+
 1. Check that the content is properly converted to HTML
 2. Verify that the CSS styling is correctly applied
 3. Ensure the content is encoded in UTF-8
@@ -145,11 +165,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### E-reader Compatibility
 
 **Symptoms:**
+
 - EPUB works in some e-readers but not others
 - Strange formatting on certain devices
 - Navigation issues in the EPUB
 
 **Solutions:**
+
 1. Validate your EPUB using the [EPUB Validator](https://validator.idpf.org/)
 2. Simplify the CSS styling for better compatibility
 3. Ensure you're using EPUB 3.0 standard features
@@ -160,11 +182,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Dependency Errors
 
 **Symptoms:**
+
 - Error messages during installation
 - Missing dependencies
 - Import errors when running the application
 
 **Solutions:**
+
 1. Ensure you're using Python 3.8 or higher
 2. Install dependencies with `pip install -r requirements.txt`
 3. Check for conflicting package versions
@@ -173,11 +197,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ### Permission Issues
 
 **Symptoms:**
+
 - Permission denied errors
 - Cannot write to output directory
 - Cannot access API key file
 
 **Solutions:**
+
 1. Run the application with appropriate permissions
 2. Check file and directory permissions
 3. Ensure the output directory exists and is writable
@@ -186,11 +212,13 @@ This guide provides solutions for common issues encountered when using the Ebook
 ## Memory Issues
 
 **Symptoms:**
+
 - Application crashes with memory errors
 - System becomes unresponsive during generation
 - Out of memory errors
 
 **Solutions:**
+
 1. Reduce the size of the context window
 2. Generate fewer chapters at a time
 3. Close other memory-intensive applications
@@ -222,8 +250,8 @@ Ensure you call `initialize_novel()` before attempting to generate content
 
 If you're experiencing issues not covered in this guide:
 
-1. Check the [GitHub Issues](https://github.com/mosadd1X/ebook-generator/issues) for similar problems
-2. Search the [Discussions](https://github.com/mosadd1X/ebook-generator/discussions) for community solutions
+1. Check the [GitHub Issues](https://github.com/mosadd1X/novelforge-ai/issues) for similar problems
+2. Search the [Discussions](https://github.com/mosadd1X/novelforge-ai/discussions) for community solutions
 3. Open a new issue with detailed information about your problem
 4. Include relevant error messages, system information, and steps to reproduce the issue
 

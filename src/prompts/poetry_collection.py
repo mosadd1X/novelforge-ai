@@ -248,6 +248,200 @@ Ensure this volume demonstrates poetrycollection mastery while serving as an int
         """Generate a poetry collection-specific enhancement prompt."""
         base_prompt = super().get_enhancement_prompt(**kwargs)
 
+        ```python
+        class PoetryCollectionMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover copy for a Poetry Collection.
+
+        Args:
+        **kwargs: Keyword arguments containing information about the poetry collection,
+        such as:
+        - title (str): The title of the poetry collection.
+        - author (str): The author of the poetry collection.
+        - themes (list): A list of major themes explored in the collection (e.g., love, loss, nature, identity).
+        - style (str): The dominant poetic style (e.g., free verse, sonnets, haiku).
+        - emotional_tone (str): The overall emotional tone of the collection (e.g., melancholic, hopeful, reflective).
+        - target_audience (str): The intended audience for the collection (e.g., young adults, nature lovers, those grieving).
+        - unique_selling_point (str): What makes this collection stand out (e.g., innovative form, powerful imagery, unique perspective).
+        - keywords (list): Keywords relevant to the collection for SEO and discoverability.
+
+        Returns:
+        str: A detailed prompt for generating back cover copy.
+        """
+
+        title = kwargs.get('title', '[Title of Poetry Collection]')
+        author = kwargs.get('author', '[Author Name]')
+        themes = kwargs.get('themes', ['love', 'loss', 'nature'])
+        style = kwargs.get('style', 'free verse')
+        emotional_tone = kwargs.get('emotional_tone', 'reflective')
+        target_audience = kwargs.get('target_audience', 'poetry lovers')
+        unique_selling_point = kwargs.get('unique_selling_point', 'its raw emotional honesty')
+        keywords = kwargs.get('keywords', ['poetry', 'poems', 'emotions'])
+
+        prompt = f"""
+        Write compelling back cover copy for a poetry collection titled '{title}' by {author}.
+
+        The collection explores themes of {', '.join(themes)}. The dominant poetic style is {style},
+        and the overall emotional tone is {emotional_tone}.  This collection is aimed at {target_audience}
+        and stands out due to {unique_selling_point}.
+
+        The back cover copy should:
+
+        *   Evoke the emotional core of the collection. Use vivid imagery and evocative language that mirrors the poems themselves.
+        *   Highlight the key themes and how they resonate with the reader's own experiences.
+        *   Hint at the unique poetic style and form, making it appealing to readers who appreciate craftsmanship.
+        *   Clearly define who this collection is for, speaking directly to their interests and needs.
+        *   End with a compelling call to action, encouraging readers to open the book and immerse themselves in the poems.
+        *   Include a pull quote from the book (optional, but highly recommended if provided).
+        *   Keep the length between 150-200 words.
+        *   Keywords for SEO: {', '.join(keywords)}
+
+        Example Structure (adapt as needed):
+
+        [Opening lines that hook the reader with a powerful image or question related to a key theme]
+
+        {title} is a journey through [themes], a collection of poems that [describe emotional tone]. {author}'s words
+        [describe the style, e.g., "dance on the page," "cut to the heart," "paint vivid pictures"].
+
+        For readers who [target audience description], this collection offers [what the reader will gain].
+
+        [Optional pull quote from the book]
+
+        Open these pages and discover [what the reader will experience].
+
+        [Author bio - very brief, focus on relevant accomplishments]
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, 2-3 line description for a Poetry Collection, suitable for book recommendations.
+
+        Args:
+        **kwargs: Keyword arguments containing information about the poetry collection,
+        such as:
+        - title (str): The title of the poetry collection.
+        - author (str): The author of the poetry collection.
+        - essence (str): The core emotional or thematic essence of the collection.
+        - style (str): A brief description of the poetic style.
+
+        Returns:
+        str: A detailed prompt for generating a short description.
+        """
+
+        title = kwargs.get('title', '[Title of Poetry Collection]')
+        author = kwargs.get('author', '[Author Name]')
+        essence = kwargs.get('essence', 'a poignant exploration of grief and healing')
+        style = kwargs.get('style', 'raw and unflinching free verse')
+
+        prompt = f"""
+        Write a short, 2-3 line description for the poetry collection '{title}' by {author}.
+
+        This description should capture the essence of the collection in a concise and impactful way, suitable for book recommendations or online listings.
+
+        The collection is {essence}, written in {style}.
+
+        The description should:
+
+        *   Immediately grab the reader's attention.
+        *   Convey the emotional core or central theme of the collection.
+        *   Hint at the poetic style without being overly technical.
+        *   Be concise and memorable.
+
+        Example:
+
+        '{title}' - {author} - A haunting collection of poems that delve into the depths of loss and emerge with a fragile hope. Written in visceral, unflinching verse.
+
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Poetry Collection.
+
+        Args:
+        **kwargs: Keyword arguments containing information about the poetry collection,
+        such as:
+        - title (str): The title of the poetry collection.
+        - theme (str): The dominant theme of the collection.
+        - feeling (str): The primary emotion the collection evokes.
+        - style_adjective (str): An adjective describing the poetic style.
+
+        Returns:
+        str: A detailed prompt for generating a marketing tagline.
+        """
+
+        title = kwargs.get('title', '[Title of Poetry Collection]')
+        theme = kwargs.get('theme', 'love and longing')
+        feeling = kwargs.get('feeling', 'heartbreak')
+        style_adjective = kwargs.get('style_adjective', 'lyrical')
+
+        prompt = f"""
+        Write a punchy marketing tagline for the poetry collection '{title}'.
+
+        The tagline should be short, memorable, and capture the essence of the collection.
+
+        The collection explores themes of {theme}, evokes a feeling of {feeling}, and is written in a {style_adjective} style.
+
+        The tagline should:
+
+        *   Be concise (ideally under 10 words).
+        *   Be attention-grabbing.
+        *   Convey the overall tone or theme of the collection.
+        *   Be easily shareable.
+
+        Examples:
+
+        *   '{title}': Where {theme} meets {feeling}.
+        *   {feeling} in verse: '{title}' by {author}.
+        *   {style_adjective} poems for a broken heart.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for suggesting visual style preferences for the back cover design of a Poetry Collection.
+
+        Args:
+        **kwargs: Keyword arguments containing information about the poetry collection,
+        such as:
+        - theme (str): The dominant theme of the collection.
+        - emotional_tone (str): The overall emotional tone of the collection.
+        - imagery_suggestions (list): A list of potential imagery to use.
+        - color_palette (str): Desired color palette (e.g., muted earth tones, vibrant and bold).
+        - font_style (str): Desired font style (e.g., classic serif, modern sans-serif, handwritten).
+
+        Returns:
+        str: A detailed prompt for guiding the visual design of the back cover.
+        """
+
+        theme = kwargs.get('theme', 'nature')
+        emotional_tone = kwargs.get('emotional_tone', 'melancholic')
+        imagery_suggestions = kwargs.get('imagery_suggestions', ['trees', 'stars', 'rivers'])
+        color_palette = kwargs.get('color_palette', 'muted earth tones')
+        font_style = kwargs.get('font_style', 'classic serif')
+
+        prompt = f"""
+        Provide visual style preferences for the back cover design of a poetry collection.
+
+        The collection's dominant theme is {theme} and the overall emotional tone is {emotional_tone}.
+
+        Consider the following:
+
+        *   Imagery: Suggest imagery that reflects the themes and emotions of the collection. Examples: {', '.join(imagery_suggestions)}. Should the imagery be abstract or representational?  Should it be a photograph, illustration, or a graphic design element?
+        *   Color Palette: The color palette should evoke the desired mood. A {color_palette} palette would be appropriate, but explore other options based on the [theme] and [emotional_tone]. Should it feel warm and inviting, or cool and contemplative?
+        *   Font Style: Choose a font style that complements the tone of the poems. A {font_style} font might be suitable, but consider other options that reflect the [style] of the poetry. Is a handwritten font appropriate for the author name?
+        *   Overall Design: Should the design be minimalist and clean, or more complex and layered? Consider incorporating textures or patterns that relate to the collection's themes. The design should feel sophisticated and literary, appealing to discerning readers of poetry.
+        *   Consider the target audience and what visuals would resonate with them.
+        """
+        return prompt
+        ```
         poetry_enhancement_additions = '''
 
 ## CRITICAL POETRY COLLECTION ENHANCEMENT REQUIREMENTS
@@ -287,6 +481,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return PoetryCollectionPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return PoetryCollectionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return PoetryCollectionPrompts.get_series_book_prompt(**kwargs)

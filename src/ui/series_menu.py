@@ -1143,14 +1143,14 @@ def export_books(series_manager: SeriesManager) -> None:
             if file.endswith(".epub"):
                 epub_files.append(os.path.join(root, file))
 
-    if not epub_files:
-        console.print("[yellow]No EPUB files found for this series.[/yellow]")
-        return
-
-    # Display found EPUB files
-    console.print("\n[bold cyan]Found EPUB Files:[/bold cyan]")
-    for i, path in enumerate(epub_files, 1):
-        console.print(f"[bold green]{i}.[/bold green] {os.path.basename(path)}")
+    # Display found EPUB files or indicate none found
+    if epub_files:
+        console.print("\n[bold cyan]Found EPUB Files:[/bold cyan]")
+        for i, path in enumerate(epub_files, 1):
+            console.print(f"[bold green]{i}.[/bold green] {os.path.basename(path)}")
+    else:
+        console.print("\n[yellow]No EPUB files found for this series.[/yellow]")
+        console.print("[dim]You can still generate EPUBs by selecting the EPUB format option below.[/dim]")
 
     # Ask which format to export to
     format_choices = ["EPUB", "PDF", "MOBI", "AZW3", "DOCX", "All Formats", "← Back"]
@@ -1165,16 +1165,44 @@ def export_books(series_manager: SeriesManager) -> None:
 
     # Handle EPUB format (regenerate with proper content)
     if selected_format == "EPUB":
-        console.print(f"[bold cyan]Regenerating {len(epub_files)} EPUB files with updated content...[/bold cyan]")
+        if not epub_files:
+            console.print("[bold cyan]No existing EPUB files found. Generating EPUBs from book data...[/bold cyan]")
+
+            # Find all book directories with novel_data.json files
+            book_dirs = []
+            for item in os.listdir(series_dir):
+                item_path = os.path.join(series_dir, item)
+                if os.path.isdir(item_path) and item.startswith("book_"):
+                    json_path = os.path.join(item_path, "novel_data.json")
+                    if os.path.exists(json_path):
+                        book_dirs.append(item_path)
+
+            if not book_dirs:
+                console.print("[yellow]No book data found to generate EPUBs from.[/yellow]")
+                console.print("[dim]Please generate some books first using the series generation options.[/dim]")
+                return
+
+            console.print(f"[bold cyan]Found {len(book_dirs)} books to generate EPUBs for...[/bold cyan]")
+        else:
+            console.print(f"[bold cyan]Regenerating {len(epub_files)} EPUB files with updated content...[/bold cyan]")
 
         from src.utils.file_handler import load_novel_json
 
         regenerated_count = 0
         failed_count = 0
 
-        for epub_path in epub_files:
-            book_dir = os.path.dirname(epub_path)
-            book_name = os.path.basename(book_dir)
+        # Process existing EPUB files or generate new ones
+        files_to_process = epub_files if epub_files else book_dirs
+
+        for file_path in files_to_process:
+            if epub_files:
+                # Processing existing EPUB files
+                book_dir = os.path.dirname(file_path)
+                book_name = os.path.basename(book_dir)
+            else:
+                # Processing book directories to generate new EPUBs
+                book_dir = file_path
+                book_name = os.path.basename(book_dir)
 
             console.print(f"[cyan]Processing: {book_name}[/cyan]")
 
@@ -1192,13 +1220,9 @@ def export_books(series_manager: SeriesManager) -> None:
                 # Extract writer profile from novel data
                 writer_profile = novel_data.get("writer_profile")
 
-                # Find existing cover image
-                cover_path = None
-                cover_extensions = ['.jpg', '.jpeg', '.png', '.webp']
-                for file in os.listdir(book_dir):
-                    if any(file.lower().endswith(ext) for ext in cover_extensions):
-                        cover_path = os.path.join(book_dir, file)
-                        break
+                # Use smart cover selection (checks for existing covers first, then fallback)
+                from src.utils.smart_cover_selector import get_smart_cover_for_epub
+                cover_path = get_smart_cover_for_epub(novel_data, book_dir, auto_mode=True)
 
                 # Regenerate EPUB with proper content and writer profile
                 formatter = EpubFormatter(novel_data, writer_profile=writer_profile)
@@ -1212,8 +1236,12 @@ def export_books(series_manager: SeriesManager) -> None:
                 failed_count += 1
 
         # Summary
-        console.print(f"\n[bold green]EPUB Regeneration Complete![/bold green]")
-        console.print(f"[bold green]Successfully regenerated: {regenerated_count}/{len(epub_files)} files[/bold green]")
+        total_processed = len(files_to_process)
+        if epub_files:
+            console.print(f"\n[bold green]EPUB Regeneration Complete![/bold green]")
+        else:
+            console.print(f"\n[bold green]EPUB Generation Complete![/bold green]")
+        console.print(f"[bold green]Successfully processed: {regenerated_count}/{total_processed} files[/bold green]")
         if failed_count > 0:
             console.print(f"[bold red]Failed: {failed_count} files[/bold red]")
 
@@ -1226,6 +1254,12 @@ def export_books(series_manager: SeriesManager) -> None:
         "AZW3": {"calibre_format": "azw3", "extension": "azw3"},
         "DOCX": {"calibre_format": "docx", "extension": "docx"}
     }
+
+    # Check if we have EPUB files for conversion to other formats
+    if not epub_files:
+        console.print("[yellow]No EPUB files found to convert to other formats.[/yellow]")
+        console.print("[dim]Please generate EPUBs first by selecting the EPUB format option.[/dim]")
+        return
 
     # Determine which formats to convert to
     if selected_format == "All Formats":

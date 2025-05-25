@@ -244,6 +244,187 @@ Ensure this book feels like an authentic continuation of the mystery series whil
         
         return base_prompt + mystery_book_additions
 
+        ```python
+        class MysteryMarketing:
+        """
+        A class containing methods for generating marketing copy and visual style preferences
+        specifically tailored for the Mystery genre.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions for Mystery novels.
+
+        Args:
+        **kwargs:  Optional keyword arguments that can be passed to customize the prompt.
+        Example: book_title, author_name, main_character, setting, key_plot_point, target_audience.
+
+        Returns:
+        str: A detailed prompt string for AI content generation.
+        """
+        prompt = f"""
+        Write a captivating back cover description for a Mystery novel.
+
+        Genre: Mystery
+
+        Guidelines:
+        *   **Intrigue and Suspense:**  Start with a hook that immediately grabs the reader's attention and creates a sense of unease or curiosity. Use phrases like "A shocking discovery...", "When secrets unravel...", "In a town where nothing is as it seems...".
+        *   **Character Introduction:** Briefly introduce the protagonist – a detective, amateur sleuth, or someone unexpectedly drawn into the mystery. Highlight their skills, flaws, and motivations.  Emphasize their personal stakes in solving the crime.  Consider phrases like "Haunted by a past case...", "Driven by a thirst for justice...", "Unwillingly thrust into danger...".
+        *   **The Central Mystery:** Clearly outline the central mystery or crime.  Focus on the core question the reader will want answered.  Is it a murder, a disappearance, a theft, or something more insidious?  Avoid giving away the solution, but hint at the complexities and potential dangers involved.
+        *   **Setting the Scene:** Emphasize the atmosphere and setting.  Is it a gritty urban landscape, a quaint village with dark secrets, a remote island, or a historical manor? The setting should enhance the sense of mystery and suspense.
+        *   **Red Herrings and Twists:**  Suggest the presence of red herrings, unreliable narrators, and unexpected twists. Use phrases like "Everyone has a secret...", "Trust no one...", "Nothing is what it seems...".
+        *   **Emotional Hook:** Tap into the reader's emotions.  Evoke feelings of fear, suspense, curiosity, and the desire to uncover the truth.
+        *   **High Stakes:**  Clearly state what's at stake if the mystery isn't solved.  Is someone's life in danger?  Will a killer go free?  Will a dark secret be exposed?
+        *   **Call to Action:** End with a compelling question or statement that urges the reader to pick up the book and start reading.  Examples: "Can they solve the mystery before it's too late?", "The truth lies buried deep. Will they unearth it?", "Prepare to be captivated by a web of deceit...".
+        *   **Word Count:** Aim for approximately 150-200 words.
+        *   **Target Audience:** Consider the target audience for the novel (e.g., cozy mystery fans, thriller enthusiasts, hard-boiled detective fiction readers) and tailor the tone and language accordingly.
+
+        Specific Details (if available):
+        *   Book Title: {kwargs.get('book_title', '[Book Title]')}
+        *   Author Name: {kwargs.get('author_name', '[Author Name]')}
+        *   Main Character: {kwargs.get('main_character', '[Main Character Name and Brief Description]')}
+        *   Setting: {kwargs.get('setting', '[Setting Description]')}
+        *   Key Plot Point: {kwargs.get('key_plot_point', '[A brief, non-spoiler summary of a key plot point]')}
+        *   Target Audience: {kwargs.get('target_audience', '[Target Audience Description]')}
+
+        Example Structure:
+
+        [Intriguing Hook]
+        [Introduce the protagonist and their motivation]
+        [Outline the central mystery and its potential consequences]
+        [Hint at the twists and turns]
+        [Emotional hook]
+        [Compelling call to action]
+
+        Ensure the description maintains a sense of suspense and compels the reader to discover the truth.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, impactful book recommendation for Mystery novels.
+
+        Args:
+        **kwargs: Optional keyword arguments. Example: book_title, author_name, key_plot_point.
+
+        Returns:
+        str: A prompt string for AI content generation.
+        """
+        prompt = f"""
+        Write a short, compelling book recommendation (2-3 lines) for a Mystery novel.
+
+        Genre: Mystery
+
+        Guidelines:
+        *   **Focus on the Core Mystery:** Highlight the central question or crime that drives the plot.
+        *   **Intrigue and Suspense:** Use language that evokes a sense of mystery, suspense, and danger.
+        *   **Character Hook:** Briefly mention the protagonist and their involvement.
+        *   **Intriguing Question:** End with a question that makes the reader want to know more.
+        *   **Word Count:** Aim for approximately 20-30 words.
+
+        Specific Details (if available):
+        *   Book Title: {kwargs.get('book_title', '[Book Title]')}
+        *   Author Name: {kwargs.get('author_name', '[Author Name]')}
+        *   Key Plot Point: {kwargs.get('key_plot_point', '[A brief, non-spoiler summary of a key plot point]')}
+
+        Example Structure:
+
+        [Intriguing Hook]
+        [Central Mystery/Protagonist]
+        [Intriguing Question]
+
+        Example:
+
+        A wealthy industrialist is found dead. Detective Harding suspects foul play, but everyone has an alibi. Can he unravel the secrets of the elite before the killer strikes again?
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating punchy, attention-grabbing marketing taglines for Mystery novels.
+
+        Args:
+        **kwargs: Optional keyword arguments. Example: book_title, key_plot_point, target_audience.
+
+        Returns:
+        str: A prompt string for AI content generation.
+        """
+        prompt = f"""
+        Write a punchy, attention-grabbing marketing tagline for a Mystery novel.
+
+        Genre: Mystery
+
+        Guidelines:
+        *   **Concise and Memorable:**  Keep it short, memorable, and easy to understand.
+        *   **Intrigue and Suspense:**  Evoke a sense of mystery, suspense, and danger.
+        *   **Focus on the Core Mystery:** Hint at the central question or crime.
+        *   **Emotional Hook:**  Tap into the reader's emotions, such as curiosity, fear, or excitement.
+        *   **Word Count:** Aim for approximately 5-10 words.
+        *   **Target Audience:** Consider the target audience and tailor the tagline accordingly.
+
+        Specific Details (if available):
+        *   Book Title: {kwargs.get('book_title', '[Book Title]')}
+        *   Key Plot Point: {kwargs.get('key_plot_point', '[A brief, non-spoiler summary of a key plot point]')}
+        *   Target Audience: {kwargs.get('target_audience', '[Target Audience Description]')}
+
+        Examples:
+        *   Secrets kill.
+        *   The truth hides in plain sight.
+        *   Every clue is a lie.
+        *   Some mysteries are best left unsolved.
+        *   Unravel the darkness.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt describing visual style preferences for the back cover design of a Mystery novel.
+
+        Args:
+        **kwargs: Optional keyword arguments. Example: setting, mood, key_visual_element.
+
+        Returns:
+        str: A prompt string for AI content generation.
+        """
+        prompt = f"""
+        Describe the desired visual style for the back cover design of a Mystery novel.
+
+        Genre: Mystery
+
+        Guidelines:
+        *   **Mood and Atmosphere:**  The visual style should reflect the overall mood and atmosphere of the novel – suspenseful, dark, gritty, eerie, etc.
+        *   **Color Palette:** Suggest a color palette that enhances the mystery and suspense.  Consider using dark blues, grays, blacks, reds (for danger), and muted tones.
+        *   **Imagery:** Describe the types of images or illustrations that would be appropriate.  Consider elements such as:
+        *   Silhouettes
+        *   Shadows
+        *   Abstract shapes
+        *   Crime scene elements (e.g., footprints, bloodstains, weapons)
+        *   Portraits of the main character (with a mysterious or troubled expression)
+        *   The setting (if it's a prominent feature of the story)
+        *   **Typography:**  Specify the typefaces and fonts that should be used.  Consider using fonts that are:
+        *   Sleek and modern (for thrillers)
+        *   Classic and elegant (for historical mysteries)
+        *   Distressed or textured (for a gritty feel)
+        *   **Overall Design:**  The design should be clean and uncluttered, with a focus on creating a sense of mystery and intrigue. Consider using negative space to create a sense of unease.
+        *   **Target Audience:** Consider the target audience and tailor the visual style accordingly.  For example, a cozy mystery might have a lighter and more whimsical design than a hard-boiled detective novel.
+
+        Specific Details (if available):
+        *   Setting: {kwargs.get('setting', '[Setting Description]')}
+        *   Mood: {kwargs.get('mood', '[Overall Mood of the Novel]')}
+        *   Key Visual Element: {kwargs.get('key_visual_element', '[A specific visual element that should be included, e.g., a specific object, a location, or a character]')}
+
+        Examples:
+
+        *   "Dark and gritty, with a color palette of blues and grays. The imagery should feature a silhouette of a detective standing in a rain-soaked alleyway."
+        *   "Elegant and mysterious, with a color palette of deep reds and blacks. The imagery should feature a close-up of an antique key."
+        *   "Clean and modern, with a color palette of cool grays and whites. The typography should be sleek and minimalist."
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return MysteryPrompts.get_writer_profile_prompt(**kwargs)
@@ -259,6 +440,19 @@ def get_chapter_prompt(**kwargs) -> str:
 
 def get_enhancement_prompt(**kwargs) -> str:
     return MysteryPrompts.get_enhancement_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_plan_prompt(**kwargs) -> str:
     return MysteryPrompts.get_series_plan_prompt(**kwargs)

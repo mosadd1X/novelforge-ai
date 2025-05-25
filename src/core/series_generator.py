@@ -398,6 +398,19 @@ class SeriesGenerator:
         # Save novel as JSON
         save_novel_json(novel, output_dir)
 
+        # Generate enhanced descriptions and back cover
+        console.print("[bold cyan]Generating enhanced descriptions...[/bold cyan]")
+        from src.utils.enhanced_book_workflow import EnhancedBookWorkflow
+        workflow = EnhancedBookWorkflow()
+
+        # Save to database first
+        from src.database.database_manager import get_database_manager
+        db_manager = get_database_manager()
+        book_id = db_manager.save_book(novel)
+
+        # Process with enhanced workflow
+        workflow.process_completed_book(book_id, novel)
+
         # Generate cover prompt for series book
         self._generate_series_cover_prompt(novel, output_dir, book_number)
 
@@ -411,8 +424,9 @@ class SeriesGenerator:
                 console.print(f"[bold yellow]Warning: Series continuity tracking failed: {str(e)}[/bold yellow]")
                 console.print("[dim]Continuing with book generation...[/dim]")
 
-        # Generate cover automatically in series mode
-        cover_path = generate_cover(novel, output_dir, auto_mode=True)
+        # Use smart cover selection (checks for existing covers first, then fallback)
+        from src.utils.smart_cover_selector import get_smart_cover_for_epub
+        cover_path = get_smart_cover_for_epub(novel, output_dir, auto_mode=True)
 
         # Format and save as EPUB with writer profile
         console.print("[bold cyan]Formatting EPUB...[/bold cyan]")

@@ -222,7 +222,7 @@ def clear_screen() -> None:
 
 def display_title() -> None:
     """Display the application title."""
-    console.print(Panel("Ebook Generator", style="cyan bold", expand=False))
+    console.print(Panel("NovelForge AI", style="cyan bold", expand=False))
     console.print()
 
 

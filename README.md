@@ -1,6 +1,6 @@
-# Ebook Generator
+# NovelForge AI
 
-An advanced AI-powered ebook generation system that creates complete, human-like novels in EPUB format based on minimal user input. The system uses Google's Gemini 2.0 Flash API to generate content and provides a rich, interactive terminal interface.
+An advanced AI-powered publishing platform that creates complete, professional-quality novels in EPUB format based on minimal user input. This sophisticated system uses Google's Gemini 2.0 Flash API to generate marketing-quality content and provides a rich, interactive terminal interface for enterprise-grade book creation.
 
 ## 🎉 **Latest Major Updates (v2.5)**
 
@@ -56,8 +56,8 @@ An advanced AI-powered ebook generation system that creates complete, human-like
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/mosadd1X/ebook-generator.git
-   cd ebook-generator
+   git clone https://github.com/mosadd1X/novelforge-ai.git
+   cd novelforge-ai
    ```
 
 2. Install the required dependencies:
@@ -117,7 +117,7 @@ python -m src.main --series-menu
 ## 📁 Project Structure
 
 ```
-ebook-generator/
+novelforge-ai/
 ├── docs/                       # Comprehensive documentation
 │   ├── components/             # Component-specific docs
 │   ├── advanced/               # Advanced usage guides
@@ -225,6 +225,13 @@ python tests/simple_memory_test.py
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 👨‍💻 Author
+
+**Mosaddiq** - _Creator & Lead Developer_
+
+- GitHub: [@mosadd1X](https://github.com/mosadd1X)
+- Project: [NovelForge AI](https://github.com/mosadd1X/novelforge-ai)
 
 ## 🙏 Acknowledgments
 

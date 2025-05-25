@@ -7,7 +7,7 @@ from .base_prompts import FictionBasePrompts
 class ChildrenSChapterBooksPrompts(FictionBasePrompts):
     GENRE_NAME = "Children's Chapter Books"
     GENRE_DESCRIPTION = "Children's chapter books are designed for young readers transitioning from picture books to longer narratives. They typically feature simple plots, relatable characters, and age-appropriate themes, divided into easily digestible chapters. The language is accessible, and the stories often focus on themes of friendship, family, problem-solving, and self-discovery, with a clear and satisfying resolution."
-    
+
     GENRE_CHARACTERISTICS = [
         "Simple and straightforward plotlines that are easy for young readers to follow.",
         "Relatable and age-appropriate characters, often children or animals, with clear motivations and flaws.",
@@ -20,7 +20,7 @@ class ChildrenSChapterBooksPrompts(FictionBasePrompts):
         "Limited subplots to avoid overwhelming young readers.",
         "A satisfying and age-appropriate resolution to the central conflict."
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "A protagonist who is a child or animal facing a relatable challenge.",
         "A supportive cast of friends, family members, or mentors.",
@@ -39,7 +39,7 @@ class ChildrenSChapterBooksPrompts(FictionBasePrompts):
     @classmethod
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         children_s_chapter_books_additions = '''
 ## Children's Chapter Books-Specific Writing Considerations
 - **Key Aspect 1: Age Appropriateness**: Ensure all content, including vocabulary, themes, and plot complexity, is suitable for the target age range (typically 6-10 years old). Avoid mature themes or overly complex sentence structures.
@@ -56,7 +56,7 @@ class ChildrenSChapterBooksPrompts(FictionBasePrompts):
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         children_s_chapter_books_additions = '''
 ## Children's Chapter Books-Specific Outline Requirements
 - **Structure Element 1: Clear Beginning, Middle, and End**: Ensure the story has a well-defined beginning that introduces the characters and setting, a middle that develops the conflict, and an end that resolves the conflict in a satisfying way.
@@ -99,7 +99,7 @@ class ChildrenSChapterBooksPrompts(FictionBasePrompts):
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_character_prompt(**kwargs)
-        
+
         children_s_chapter_books_additions = '''
 ## Children's Chapter Books-Specific Character Development
 - **Character Aspect 1: Relatable Flaws**: Give your characters relatable flaws and weaknesses that make them more human and sympathetic.
@@ -133,7 +133,7 @@ class ChildrenSChapterBooksPrompts(FictionBasePrompts):
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         children_s_chapter_books_additions = '''
 ## Children's Chapter Books-Specific Chapter Writing
 - **Writing Technique 1: Focus on Action**: Keep the plot moving forward with plenty of action and dialogue. Avoid lengthy descriptions or exposition.
@@ -169,7 +169,7 @@ class ChildrenSChapterBooksPrompts(FictionBasePrompts):
     def get_series_plan_prompt(cls, **kwargs) -> str:
         """Generate a childrenschapterbooks-specific series planning prompt."""
         base_prompt = super().get_series_plan_prompt(**kwargs)
-        
+
         childrenschapterbooks_series_additions = """
 
 ## ChildrenSChapterBooks Series-Specific Planning Elements
@@ -190,14 +190,14 @@ class ChildrenSChapterBooksPrompts(FictionBasePrompts):
 
 Create a childrenschapterbooks series that builds compelling narratives with authentic genre elements and engaging character development.
 """
-        
+
         return base_prompt + childrenschapterbooks_series_additions
 
     @classmethod
     def get_series_book_prompt(cls, **kwargs) -> str:
         """Generate a childrenschapterbooks-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
-        
+
         childrenschapterbooks_book_additions = """
 
 ## ChildrenSChapterBooks Series Book Integration
@@ -218,8 +218,179 @@ Create a childrenschapterbooks series that builds compelling narratives with aut
 
 Ensure this book feels like an authentic continuation of the childrenschapterbooks series while telling a complete, satisfying story.
 """
-        
+
         return base_prompt + childrenschapterbooks_book_additions
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover copy for a Children's Chapter Book.
+
+        Args:
+        **kwargs: Keyword arguments that can be passed to customize the prompt (e.g., title, author, target_age).
+
+        Returns:
+        A string containing the prompt for back cover copy generation.
+        """
+
+        title = kwargs.get("title", "[Book Title]")
+        author = kwargs.get("author", "[Author Name]")
+        target_age = kwargs.get("target_age", "6-9")
+        main_character = kwargs.get("main_character", "[Main Character Name]")
+        genre_themes = kwargs.get("genre_themes", "Friendship, Adventure, Problem-Solving")
+
+        prompt = f"""
+        Craft a captivating back cover description for the Children's Chapter Book, '{title}' by {author}. Target audience: ages {target_age}.
+
+        The description should be approximately 100-150 words and follow these guidelines:
+
+        *   **Hook:** Start with an engaging question or statement that immediately grabs the reader's attention.  Think about what makes this story irresistible to a child.  For example: "What happens when a talking squirrel moves into your treehouse?" or "Lily thought summer vacation would be boring... until she discovered a secret map!"
+
+        *   **Introduce the Main Character:** Briefly introduce {main_character} and their personality. Highlight their most relatable qualities (e.g., curious, brave, kind, a little bit clumsy). Focus on a challenge or a desire they have.
+
+        *   **Describe the Central Conflict/Adventure:** What problem does {main_character} face? What exciting adventure do they embark on? Hint at the stakes involved. Make sure the conflict is age-appropriate and engaging for the target audience.  Use vivid language that sparks imagination.
+
+        *   **Emphasize Key Themes:** Highlight the core themes of the story, such as {genre_themes}. Show, don't tell, how these themes are woven into the narrative.
+
+        *   **Leave the Reader Wanting More:** End with a cliffhanger or a question that compels the reader to open the book and find out what happens next. Avoid spoilers!
+
+        *   **Tone:** Maintain a playful, optimistic, and age-appropriate tone. Use simple language and avoid complex sentence structures.
+
+        *   **Example Sentence Starters:**
+        *   "Join {main_character} as they..."
+        *   "When {main_character} discovers..."
+        *   "But things take a turn when..."
+        *   "{main_character} must find a way to..."
+        *   "Can {main_character} and their friends..."
+
+        *   **Avoid:** Overly complex plot summaries, mature themes, or language that is too sophisticated for the target age group.
+
+        Remember, the goal is to make kids *want* to read this book!
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a short, punchy book recommendation (2-3 lines) for a Children's Chapter Book.
+
+        Args:
+        **kwargs: Keyword arguments that can be passed to customize the prompt (e.g., title, author, main_character).
+
+        Returns:
+        A string containing the prompt for a short book recommendation.
+        """
+
+        title = kwargs.get("title", "[Book Title]")
+        author = kwargs.get("author", "[Author Name]")
+        main_character = kwargs.get("main_character", "[Main Character Name]")
+
+        prompt = f"""
+        Craft a short, attention-grabbing book recommendation (2-3 lines) for the Children's Chapter Book, '{title}' by {author}.
+
+        Focus on these elements:
+
+        *   **Intrigue:** Immediately pique the reader's interest with a hint of adventure or mystery.
+        *   **Main Character Highlight:** Briefly mention the main character, {main_character}, and their most appealing trait.
+        *   **Promise of Fun:** Convey the excitement and entertainment the book offers.
+
+        Examples:
+
+        *   "Get ready for a wild ride! {main_character} is about to discover that their backyard is full of secrets."
+        *   "{title}: A heartwarming story about friendship and bravery that will leave you smiling!"
+        *   "If you love adventure, you'll love {title}! Join {main_character} on a quest to save the day."
+
+        Keep it concise, engaging, and kid-friendly!  Think of what would make a child immediately grab the book off the shelf.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Children's Chapter Book.
+
+        Args:
+        **kwargs: Keyword arguments that can be passed to customize the prompt (e.g., title, main_theme).
+
+        Returns:
+        A string containing the prompt for a marketing tagline.
+        """
+
+        title = kwargs.get("title", "[Book Title]")
+        main_theme = kwargs.get("main_theme", "[Main Theme]")
+
+        prompt = f"""
+        Create a catchy and memorable marketing tagline for the Children's Chapter Book, '{title}'.
+
+        The tagline should be:
+
+        *   **Short and Sweet:** Ideally, no more than 5-7 words.
+        *   **Intriguing:** Spark curiosity and make kids want to know more.
+        *   **Relevant:** Reflect the core theme or adventure of the book.  Focus on the fun and exciting aspects.
+        *   **Memorable:** Easy to remember and repeat.
+
+        Consider these approaches:
+
+        *   **Highlight the adventure:** "Adventure awaits!" or "Get ready to explore!"
+        *   **Focus on the main character:** "[Main Character Name]: The adventure begins!"
+        *   **Emphasize the theme:** "Friendship is the greatest adventure!" or "[Main Theme]: It's an adventure!"
+        *   **Ask a question:** "Ready for a magical journey?"
+
+        Examples:
+
+        *   "Friendship. Adventure. Magic."
+        *   "Where imagination takes flight!"
+        *   "The adventure starts here!"
+
+        Think like a kid! What would make *you* want to read this book?
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for describing the desired visual style for the back cover of a Children's Chapter Book.
+
+        Args:
+        **kwargs: Keyword arguments that can be passed to customize the prompt (e.g., main_character, setting).
+
+        Returns:
+        A string containing the prompt for visual style preferences.
+        """
+
+        main_character = kwargs.get("main_character", "[Main Character Name]")
+        setting = kwargs.get("setting", "[Setting Description]")
+        genre = kwargs.get("genre", "[Genre Type]")
+
+        prompt = f"""
+        Describe the desired visual style for the back cover of a Children's Chapter Book featuring {main_character} and set in {setting}. This is a {genre} story.
+
+        Consider these elements:
+
+        *   **Overall Tone:** Should the visual style be playful, whimsical, adventurous, mysterious, or heartwarming?  Think about the overall feeling the book evokes.
+
+        *   **Color Palette:** What colors would best represent the story's mood and themes? (e.g., bright and cheerful, warm and inviting, cool and mysterious)
+
+        *   **Illustration Style:** Should the illustrations be cartoonish, realistic, whimsical, or stylized?  Consider artists like Quentin Blake, Chris Van Allsburg, or Beatrix Potter for inspiration.
+
+        *   **Font:** What font style would be appropriate for the title and author name? Should it be bold and playful, elegant and classic, or something else?
+
+        *   **Imagery:** What specific elements from the story should be featured on the back cover? (e.g., the main character, a key object, a glimpse of the setting)
+
+        *   **Composition:** How should the elements be arranged on the back cover to create a visually appealing and engaging design?
+
+        *   **Target Audience:** Keep the visual style appropriate for the target age group.
+
+        Examples:
+
+        *   "Cartoonish illustrations with bright, vibrant colors, featuring {main_character} in a playful pose."
+        *   "Whimsical watercolor illustrations with a soft, muted color palette, showing the magical forest setting."
+        *   "Bold, hand-lettered font for the title, with an image of a key object from the story in the background."
+
+        The goal is to create a back cover that is visually appealing to children and accurately reflects the tone and content of the book.
+        """
+        return prompt
+
 
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
@@ -238,6 +409,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return ChildrenSChapterBooksPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return ChildrenSChapterBooksPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return ChildrenSChapterBooksPrompts.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return ChildrenSChapterBooksPrompts.get_series_book_prompt(**kwargs)

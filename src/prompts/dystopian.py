@@ -180,6 +180,194 @@ Ensure this book feels like an authentic continuation of the dystopian series wh
         
         return base_prompt + dystopian_book_additions
 
+        ```python
+        class DystopianMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating a compelling dystopian back cover description.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt (e.g., title, protagonist, setting).
+
+        Returns:
+        A string containing the prompt for generating a dystopian back cover description.
+        """
+        prompt = f"""
+        Write a compelling back cover description for a dystopian novel.
+
+        Genre: Dystopian
+
+        Core Elements to Emphasize:
+
+        *   Oppressive Regime: Highlight the controlling force (government, corporation, AI) and its methods of control (surveillance, propaganda, resource manipulation, thought control).
+        *   Loss of Individuality: Show how the system crushes individuality, creativity, and free thought. Emphasize conformity and the suppression of dissent.
+        *   Social Stratification: Depict the stark inequalities within the society – the powerful elite versus the oppressed masses.
+        *   Protagonist's Rebellion: Introduce a compelling protagonist who questions the system and embarks on a dangerous path of rebellion.  Make their motivations clear and relatable (e.g., a lost loved one, a sense of injustice, a yearning for freedom).
+        *   Bleak Setting: Paint a vivid picture of the dystopian world – its physical decay, environmental degradation, and psychological atmosphere of fear and despair.
+        *   High Stakes: Emphasize the dangers the protagonist faces – imprisonment, torture, death, or the loss of everything they hold dear.
+        *   Hope (Optional): While the tone should be dark, consider including a glimmer of hope – a possibility of change, a spark of humanity, or the strength of the human spirit to endure.  This should not undermine the core dystopian themes.
+
+        Specifics for this Novel:
+
+        *   Title: {kwargs.get('title', '[Insert Title Here]')}
+        *   Protagonist: {kwargs.get('protagonist', '[Insert Protagonist Name]')} - Briefly describe their personality, skills, and motivations.
+        *   Setting: {kwargs.get('setting', '[Insert Setting Description Here]')} - Describe the physical and societal environment.  Include details about technology, architecture, and social norms.
+        *   Central Conflict: {kwargs.get('conflict', '[Insert Central Conflict Here]')} - Summarize the main conflict the protagonist faces.
+        *   Target Audience:  Young Adult or Adult Dystopian readers?  Tailor the tone and complexity accordingly.
+        *   Key Themes: What are the major themes explored in the novel (e.g., control, freedom, identity, survival, hope, technology)?
+
+        Instructions for Writing the Description:
+
+        *   Start with a hook: Capture the reader's attention immediately with a compelling question, a shocking statement, or a glimpse into the protagonist's desperate situation.
+        *   Describe the world: Briefly paint a picture of the dystopian society and the forces that control it.
+        *   Introduce the protagonist: Highlight their unique qualities and their reason for questioning the system.
+        *   Outline the conflict: Briefly summarize the main conflict and the stakes involved.
+        *   End with a cliffhanger: Leave the reader wanting to know more and eager to discover the protagonist's fate.
+        *   Length: Approximately 150-200 words.
+        *   Tone: Dark, suspenseful, thought-provoking, and emotionally resonant.
+        *   Use strong verbs and vivid imagery to create a sense of urgency and dread.
+        *   Avoid spoilers! Focus on the setup and the initial conflict.
+
+        Example Dystopian Back Cover Description (for Inspiration):
+
+        In a world where thoughts are monitored and individuality is a crime, sixteen-year-old Anya lives in constant fear. The Authority controls every aspect of life in the Collective, from the food they eat to the jobs they perform. But when Anya discovers a hidden message from the past, she begins to question everything she's ever known. Drawn into a secret underground resistance, Anya must choose between conformity and rebellion, knowing that one wrong move could cost her everything.  Can she expose the truth before the Authority silences her forever?
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a short (2-3 line) dystopian book recommendation description.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt (e.g., title, protagonist, setting).
+
+        Returns:
+        A string containing the prompt for generating a short dystopian description.
+        """
+        prompt = f"""
+        Write a very short (2-3 lines) book recommendation description for a dystopian novel.
+
+        Genre: Dystopian
+
+        Focus:
+
+        *   Conciseness: Keep it brief and impactful.
+        *   Intrigue: Focus on the most intriguing aspect of the story.
+        *   Dystopian Elements: Clearly establish the dystopian setting and conflict.
+
+        Specifics for this Novel:
+
+        *   Title: {kwargs.get('title', '[Insert Title Here]')}
+        *   Protagonist: {kwargs.get('protagonist', '[Insert Protagonist Name]')} - Briefly mention their role.
+        *   Dystopian Element: {kwargs.get('dystopian_element', '[Insert Dystopian Element Here]')} - What makes this world dystopian? (e.g., surveillance state, environmental collapse, social control).
+        *   Conflict: {kwargs.get('conflict', '[Insert Central Conflict Here]')} - What's the core struggle?
+
+        Instructions:
+
+        *   Highlight the core dystopian element of the story.
+        *   Briefly introduce the protagonist and their role in the conflict.
+        *   End with a hook to encourage readers to learn more.
+        *   Use strong, evocative language.
+
+        Example:
+
+        In a city choked by toxic smog, Elara discovers a forbidden garden, sparking a rebellion against the corporation that controls the air they breathe.  Will she save her city, or be crushed under its oppressive weight?
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a punchy dystopian marketing tagline.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt (e.g., title, protagonist, setting).
+
+        Returns:
+        A string containing the prompt for generating a dystopian marketing tagline.
+        """
+        prompt = f"""
+        Write a punchy and memorable marketing tagline for a dystopian novel.
+
+        Genre: Dystopian
+
+        Key Considerations:
+
+        *   Brevity: Keep it short and impactful (ideally under 10 words).
+        *   Intrigue: Evoke curiosity and a sense of danger.
+        *   Dystopian Themes: Reflect the core themes of dystopian fiction (control, oppression, rebellion, loss of freedom).
+        *   Emotional Resonance: Tap into the emotions associated with dystopian settings (fear, hope, despair, anger).
+
+        Specifics for this Novel:
+
+        *   Title: {kwargs.get('title', '[Insert Title Here]')}
+        *   Core Conflict: {kwargs.get('conflict', '[Insert Central Conflict Here]')} - What's the central struggle?
+        *   Unique Dystopian Element: {kwargs.get('dystopian_element', '[Insert Dystopian Element Here]')} - What's unique about this dystopian world?
+
+        Instructions:
+
+        *   Focus on the central conflict or the most striking element of the dystopian world.
+        *   Use strong verbs and powerful imagery.
+        *   Consider using a question or a provocative statement.
+        *   Target the emotions associated with dystopian fiction.
+
+        Examples:
+
+        *   "Freedom is a virus. Rebellion is the cure."
+        *   "In a world of silence, one voice can ignite a revolution."
+        *   "They control your mind. She will break it."
+        *   "What if hope is the most dangerous weapon of all?"
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for back cover visual design preferences for a dystopian novel.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt (e.g., title, protagonist, setting).
+
+        Returns:
+        A string containing the prompt for visual style direction.
+        """
+        prompt = f"""
+        Describe the desired visual style for the back cover of a dystopian novel.
+
+        Genre: Dystopian
+
+        Considerations:
+
+        *   Color Palette:  What colors evoke the mood and themes of the story? (e.g., muted tones, grays, blacks, industrial colors, pops of vibrant color to represent rebellion or hope).
+        *   Imagery: What kind of images would be most effective? (e.g., cityscape, technology, protagonist's face, symbolic representation of the conflict).
+        *   Typography: What font styles would be appropriate? (e.g., futuristic, industrial, distressed, bold).
+        *   Overall Tone: The cover should convey the dark, oppressive, and suspenseful atmosphere of the dystopian world.
+        *   Target Audience: Consider the target audience (Young Adult or Adult) and their visual preferences.
+
+        Specifics for this Novel:
+
+        *   Title: {kwargs.get('title', '[Insert Title Here]')}
+        *   Setting: {kwargs.get('setting', '[Insert Setting Description Here]')} - The visual style should reflect the setting.
+        *   Protagonist: {kwargs.get('protagonist', '[Insert Protagonist Name]')} - Should the protagonist's image be included? If so, what should their expression convey?
+        *   Dystopian Element: {kwargs.get('dystopian_element', '[Insert Dystopian Element Here]')} - Can this element be visually represented? (e.g., surveillance cameras, pollution, oppressive architecture).
+        *   Mood: What is the overall mood the cover should evoke? (e.g., fear, despair, hope, rebellion).
+
+        Instructions:
+
+        *   Provide a detailed description of the desired visual style.
+        *   Include specific examples of colors, imagery, and typography.
+        *   Explain how the visual style should reflect the themes and setting of the novel.
+        *   Consider referencing existing dystopian book covers or artwork for inspiration.
+
+        Example:
+
+        The back cover should feature a desaturated color palette of grays, blacks, and rusty browns. The central image should be a stylized silhouette of the protagonist against a backdrop of a crumbling cityscape, dominated by towering surveillance towers. The font should be a bold, sans-serif typeface with a slightly distressed appearance. The overall tone should be bleak and oppressive, conveying the sense of a world on the brink of collapse. A single, small splash of vibrant red (perhaps on the protagonist's clothing) could represent a spark of rebellion.
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return DystopianPrompts.get_writer_profile_prompt(**kwargs)
@@ -197,6 +385,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return DystopianPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return DystopianPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return DystopianPrompts.get_series_book_prompt(**kwargs)

@@ -7,7 +7,7 @@ from .base_prompts import NonFictionBasePrompts
 class HowToPrompts(NonFictionBasePrompts):
     GENRE_NAME = "How-To"
     GENRE_DESCRIPTION = "The How-To genre provides clear, step-by-step instructions and guidance on how to accomplish a specific task, learn a new skill, or solve a particular problem. It emphasizes practicality, clarity, and actionable advice, often incorporating visuals and examples to enhance understanding and facilitate successful implementation."
-    
+
     GENRE_CHARACTERISTICS = [
         "Clear and concise language, avoiding jargon or technical terms without proper explanation.",
         "Step-by-step instructions presented in a logical and sequential order.",
@@ -20,7 +20,7 @@ class HowToPrompts(NonFictionBasePrompts):
         "A focus on achieving a specific, measurable, achievable, relevant, and time-bound (SMART) goal.",
         "Provision of resources, tools, or materials needed to complete the task."
     ]
-    
+
     TYPICAL_ELEMENTS = [
         "A clear and concise title that accurately reflects the topic.",
         "An introduction that explains the purpose and benefits of the how-to guide.",
@@ -39,7 +39,7 @@ class HowToPrompts(NonFictionBasePrompts):
     @classmethod
     def get_writer_profile_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_writer_profile_prompt(**kwargs)
-        
+
         how_to_additions = '''
 ## How-To-Specific Writing Considerations
 - **Accuracy and Expertise**: Demonstrate a thorough understanding of the subject matter and ensure all information is accurate and up-to-date. Back up claims with credible sources where necessary.
@@ -56,7 +56,7 @@ class HowToPrompts(NonFictionBasePrompts):
     @classmethod
     def get_outline_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_outline_prompt(**kwargs)
-        
+
         how_to_additions = '''
 ## How-To-Specific Outline Requirements
 - **Introduction**: Clearly state the purpose and scope of the how-to guide. Include a brief overview of the steps involved and the benefits of following the instructions.
@@ -76,7 +76,7 @@ class HowToPrompts(NonFictionBasePrompts):
     @classmethod
     def get_character_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_character_prompt(**kwargs)
-        
+
         how_to_additions = '''
 ## How-To-Specific Character Development
 - **Expertise and Authority**: While not always necessary to have a "character" in the traditional sense, consider the persona of the guide. They should project expertise and authority in the subject matter.
@@ -91,7 +91,7 @@ class HowToPrompts(NonFictionBasePrompts):
     @classmethod
     def get_chapter_prompt(cls, **kwargs) -> str:
         base_prompt = super().get_chapter_prompt(**kwargs)
-        
+
         how_to_additions = '''
 ## How-To-Specific Chapter Writing
 - **Clear Chapter Goal**: Each chapter should focus on a specific aspect or step of the overall process. Clearly state the goal of the chapter in the introduction.
@@ -112,7 +112,7 @@ class HowToPrompts(NonFictionBasePrompts):
     def get_series_plan_prompt(cls, **kwargs) -> str:
         """Generate a howto-specific series planning prompt."""
         base_prompt = super().get_series_plan_prompt(**kwargs)
-        
+
         howto_series_additions = """
 
 ## HowTo Series-Specific Planning Elements
@@ -133,14 +133,14 @@ class HowToPrompts(NonFictionBasePrompts):
 
 Create a howto series that provides comprehensive education with authoritative, well-researched content.
 """
-        
+
         return base_prompt + howto_series_additions
 
     @classmethod
     def get_series_book_prompt(cls, **kwargs) -> str:
         """Generate a howto-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
-        
+
         howto_book_additions = """
 
 ## HowTo Series Book Integration
@@ -161,8 +161,166 @@ Create a howto series that provides comprehensive education with authoritative, 
 
 Ensure this book provides comprehensive howto education while serving as an integral part of the learning series.
 """
-        
+
         return base_prompt + howto_book_additions
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating a compelling back cover description for a How-To book.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, topic, target audience,
+        key benefits, unique selling points, etc.).
+
+        Returns:
+        str: A prompt string designed to guide AI in writing effective How-To back cover copy.
+        """
+        title = kwargs.get("title", "[Book Title]")
+        author = kwargs.get("author", "[Author Name]")
+        topic = kwargs.get("topic", "[Book's Main Topic]")
+        target_audience = kwargs.get("target_audience", "[Target Audience Description]")
+        key_benefits = kwargs.get("key_benefits", "[List of Key Benefits]")
+        unique_selling_points = kwargs.get("unique_selling_points", "[Unique Aspects of the Book]")
+        level = kwargs.get("level", "Beginner") # Beginner, Intermediate, Advanced
+        book_structure = kwargs.get("book_structure", "[Describe the book's structure, e.g., step-by-step, project-based]")
+        call_to_action = kwargs.get("call_to_action", "[Desired reader action after reading]")
+
+        prompt = f"""
+        Write a compelling back cover description for a How-To book titled '{title}' by {author}.
+
+        The book's main topic is {topic}. It is targeted towards {target_audience}.  The book is designed for {level} level audience.
+
+        The structure of the book is {book_structure}.
+
+        The primary goal of this book is to help readers {key_benefits}.  It should emphasize practical skills and actionable advice.
+
+        Unique selling points of this book include {unique_selling_points}. Highlight what makes this book different and better than other How-To books on the same topic.
+
+        The back cover should clearly communicate the following:
+
+        *   **Problem/Need:** What problem does this book solve for the reader?  What need does it fulfill?
+        *   **Solution/Benefit:** How does this book provide a practical solution? What tangible benefits will the reader gain?
+        *   **Credibility:** Why should the reader trust this author/book? (mention author expertise or unique approach)
+        *   **Clarity and Conciseness:** Use clear, easy-to-understand language. Avoid jargon unless it's essential and well-defined.
+        *   **Actionable Steps:** Emphasize the practical, step-by-step nature of the book.
+        *   **Motivation and Empowerment:** Inspire the reader to take action and achieve their goals.
+
+        Use a tone that is:
+
+        *   Helpful and encouraging
+        *   Confident and authoritative (but not arrogant)
+        *   Enthusiastic and engaging
+        *   Results-oriented
+
+        The back cover should include a strong call to action, encouraging readers to {call_to_action}.
+
+        Aim for a length of approximately 150-200 words.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a short, impactful description (2-3 lines) of the How-To book, suitable for recommendations or social media.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, topic, key benefit).
+
+        Returns:
+        str: A prompt string for generating concise How-To book descriptions.
+        """
+        title = kwargs.get("title", "[Book Title]")
+        topic = kwargs.get("topic", "[Book's Main Topic]")
+        key_benefit = kwargs.get("key_benefit", "[Key Benefit of the Book]")
+
+        prompt = f"""
+        Write a short (2-3 lines) description for the How-To book '{title}' on the topic of {topic}.
+
+        Focus on the key benefit: {key_benefit}.
+
+        The description should be:
+
+        *   Concise and attention-grabbing
+        *   Benefit-driven (what will the reader achieve?)
+        *   Action-oriented (entice the reader to learn more)
+
+        Example: "Master [Skill] with this step-by-step guide.  Unlock [Specific Result] and achieve [Desired Outcome]!"
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for a punchy, memorable marketing tagline for the How-To book.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (topic, target audience, desired outcome).
+
+        Returns:
+        str: A prompt string for generating effective How-To marketing taglines.
+        """
+        topic = kwargs.get("topic", "[Book's Main Topic]")
+        target_audience = kwargs.get("target_audience", "[Target Audience Description]")
+        desired_outcome = kwargs.get("desired_outcome", "[Desired Outcome for the Reader]")
+
+        prompt = f"""
+        Create a punchy, memorable marketing tagline for a How-To book on {topic}, targeted at {target_audience}.
+
+        The tagline should focus on the desired outcome: {desired_outcome}.
+
+        The tagline should be:
+
+        *   Short and catchy (ideally under 10 words)
+        *   Benefit-driven (what will the reader gain?)
+        *   Action-oriented (inspire the reader to take action)
+        *   Unique and memorable
+
+        Examples:
+
+        *   "[Topic]: Your Step-by-Step Success Guide."
+        *   "Unlock [Desired Outcome] with [Book Title]."
+        *   "Master [Skill] in [Number] Days."
+
+        Consider using power words like "Unlock," "Master," "Transform," "Achieve," "Discover."
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt outlining visual style preferences for the back cover of a How-To book.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (topic, target audience, tone).
+
+        Returns:
+        str: A prompt string for guiding the visual design of a How-To book's back cover.
+        """
+        topic = kwargs.get("topic", "[Book's Main Topic]")
+        target_audience = kwargs.get("target_audience", "[Target Audience Description]")
+        tone = kwargs.get("tone", "[Book's Tone, e.g., professional, friendly, playful]")
+        visual_examples = kwargs.get("visual_examples", "[Examples of visually similar book covers or designs]")
+
+        prompt = f"""
+        Describe the desired visual style for the back cover of a How-To book on {topic}, targeted at {target_audience}.
+
+        The overall tone of the book is {tone}.
+
+        Consider the following elements:
+
+        *   **Color Palette:** Suggest a color palette that reflects the book's topic and target audience. (e.g., professional/technical = blues, grays; creative/DIY = vibrant, warm colors).
+        *   **Typography:** Recommend font styles that are clear, readable, and visually appealing. (e.g., sans-serif for modern, serif for traditional).  Consider the font size and spacing for readability.
+        *   **Imagery:** Should the back cover include images? If so, what kind? (e.g., illustrations, photographs, diagrams). Are they stock photos, or should they be more unique?  Should there be images of the tools/materials required for the how-to process?
+        *   **Layout:** How should the text and images be arranged on the back cover? (e.g., clean and minimal, bold and dynamic). Is there a hierarchical structure to the information presented?
+        *   **Overall Impression:** The back cover should convey [Desired Impression - e.g., professionalism, trustworthiness, excitement, ease of use].
+
+        Examples of visually similar book covers or designs that you like are: {visual_examples}
+
+        The design should be visually appealing and communicate the book's value proposition at a glance.  Consider incorporating visual cues that reinforce the "how-to" aspect, such as step-by-step icons or diagrams.
+        """
+        return prompt
+
 
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
@@ -181,6 +339,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return HowToPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return HowToPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return HowToPrompts.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return HowToPrompts.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return HowToPrompts.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return HowToPrompts.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return HowToPrompts.get_series_book_prompt(**kwargs)

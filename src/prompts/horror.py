@@ -161,6 +161,211 @@ Ensure this book feels like an authentic continuation of the horror series while
         
         return base_prompt + horror_book_additions
 
+        ```python
+        class HorrorBackCover:
+        """
+        A class containing methods for generating back cover copy and visual style preferences
+        specifically tailored for the Horror genre.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions for Horror novels.
+
+        Args:
+        **kwargs: Optional keyword arguments to customize the prompt (e.g., target_audience, specific_themes).
+
+        Returns:
+        str: A prompt string designed to guide AI in generating effective Horror back cover copy.
+        """
+        prompt = f"""
+        You are an expert copywriter specializing in Horror novels. Your goal is to craft a back cover description that will terrify and entice potential readers.
+
+        **Genre:** Horror
+
+        **Key Elements to Emphasize:**
+
+        *   **Fear and Dread:**  Focus on creating a sense of mounting dread, unease, and impending doom.  Use evocative language to paint vivid and unsettling images.
+        *   **Psychological Horror:** Explore the characters' inner turmoil, paranoia, and descent into madness.  Show, don't tell, their fear.
+        *   **Gothic Horror:** If applicable, emphasize settings like decaying mansions, ancient secrets, and a sense of claustrophobia.
+        *   **Supernatural Horror:** Highlight the presence of malevolent entities, ghosts, demons, or other unexplainable phenomena. Focus on the violation of natural laws.
+        *   **Body Horror:** If present, describe the grotesque and disturbing transformations of the body in a way that elicits revulsion and fear. Be careful not to overdo it - subtlety can be more effective.
+        *   **Jump Scares and Suspense:**  Balance moments of intense shock with a sustained atmosphere of suspense.  Hint at dangers lurking just out of sight.
+        *   **Moral Ambiguity:**  Explore the blurred lines between good and evil.  Make the reader question the characters' motives and their own morality.
+        *   **Isolation and Vulnerability:**  Place characters in situations where they are alone, cut off from help, and vulnerable to the horrors that surround them.
+        *   **High Stakes:**  Clearly establish what the characters stand to lose, whether it's their sanity, their lives, or the fate of the world.
+        *   **Unanswered Questions:** Leave the reader with lingering questions that will haunt them long after they finish the book.
+
+        **Instructions:**
+
+        1.  **Start with a Hook:**  Open with a sentence or two that immediately grabs the reader's attention and establishes the central conflict or mystery.
+        2.  **Introduce the Protagonist(s):**  Briefly describe the main character(s) and their initial situation.  Highlight their flaws and vulnerabilities.
+        3.  **Raise the Stakes:**  Clearly explain what the character(s) are fighting against and what they stand to lose.
+        4.  **Build Suspense:**  Use vivid language and imagery to create a sense of unease and anticipation.  Hint at the horrors to come without giving away too much.
+        5.  **End with a Cliffhanger:**  Leave the reader with a question or a statement that will compel them to pick up the book.
+
+        **Consider the following when writing:**
+
+        *   **Target Audience:** {kwargs.get("target_audience", "General Horror readership")}
+        *   **Specific Themes:** {kwargs.get("specific_themes", "The nature of evil, the fragility of sanity, the consequences of unchecked ambition")}
+        *   **Tone:**  Dark, unsettling, suspenseful, and terrifying.
+        *   **Word Count:**  Approximately 150-200 words.
+
+        **Example Opening Lines:**
+
+        *   "In the decaying halls of Blackwood Manor, something ancient and malevolent stirs..."
+        *   "When Sarah uncovered the hidden diary, she unleashed a nightmare beyond comprehension..."
+        *   "They thought the abandoned town was deserted. They were wrong..."
+
+        **Now, write a back cover description for a Horror novel based on these guidelines.**
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, impactful 2-3 line book recommendation for a Horror novel.
+
+        Args:
+        **kwargs: Optional keyword arguments to customize the prompt (e.g., key_selling_point, target_reader).
+
+        Returns:
+        str: A prompt string designed to guide AI in generating concise and enticing Horror book recommendations.
+        """
+        prompt = f"""
+        You are crafting a short, punchy book recommendation for a Horror novel.  Your goal is to capture the essence of the story in just a few lines, making it irresistible to potential readers.
+
+        **Genre:** Horror
+
+        **Key Elements to Emphasize:**
+
+        *   **Intrigue:**  Hint at the central mystery or conflict without giving away spoilers.
+        *   **Atmosphere:**  Evoke the feeling of dread and suspense that permeates the book.
+        *   **Unique Selling Point:**  Highlight what makes this particular Horror novel stand out from the crowd. (e.g., unique monster, psychological twist, gothic setting)
+        *   **Emotional Hook:**  Tap into the reader's deepest fears and anxieties.
+
+        **Instructions:**
+
+        1.  **Focus on the Core:**  Identify the single most terrifying or compelling aspect of the story.
+        2.  **Use Strong Verbs:**  Choose action words that convey a sense of urgency and danger. (e.g., stalks, haunts, consumes, devours)
+        3.  **Leave them Wanting More:**  End with a question or a statement that piques the reader's curiosity.
+
+        **Consider the following when writing:**
+
+        *   **Key Selling Point:** {kwargs.get("key_selling_point", "Its disturbing exploration of childhood trauma and demonic possession")}
+        *   **Target Reader:** {kwargs.get("target_reader", "Fans of psychological horror and supernatural thrillers")}
+        *   **Tone:**  Intriguing, suspenseful, and slightly menacing.
+        *   **Length:**  2-3 lines.
+
+        **Example Recommendations:**
+
+        *   "A family secret. A haunted house. Some secrets are better left buried."
+        *   "It stalks the shadows, feeding on fear. Are you brave enough to face your nightmares?"
+        *   "One mistake. One sacrifice. Now, she must pay the ultimate price."
+
+        **Now, write a short book recommendation for a Horror novel based on these guidelines.**
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Horror novel.
+
+        Args:
+        **kwargs: Optional keyword arguments to customize the prompt (e.g., central_theme, target_emotion).
+
+        Returns:
+        str: A prompt string designed to guide AI in generating memorable and effective Horror taglines.
+        """
+        prompt = f"""
+        You are crafting a marketing tagline for a Horror novel. Your goal is to create a short, memorable phrase that will instantly capture the reader's attention and convey the essence of the story's terror.
+
+        **Genre:** Horror
+
+        **Key Elements to Emphasize:**
+
+        *   **Brevity:** Taglines should be short and easy to remember.
+        *   **Impact:**  The tagline should evoke a strong emotional response (fear, dread, unease).
+        *   **Intrigue:**  The tagline should hint at the story's central conflict or mystery without giving away spoilers.
+        *   **Originality:**  The tagline should be unique and stand out from the competition.
+
+        **Instructions:**
+
+        1.  **Identify the Core Fear:**  What is the most terrifying aspect of the story? (e.g., isolation, loss of control, the unknown)
+        2.  **Use Strong Language:**  Choose words that are evocative and unsettling. (e.g., nightmare, darkness, silence, blood)
+        3.  **Create a Sense of Urgency:**  The tagline should imply that something terrible is about to happen.
+
+        **Consider the following when writing:**
+
+        *   **Central Theme:** {kwargs.get("central_theme", "The corruption of innocence")}
+        *   **Target Emotion:** {kwargs.get("target_emotion", "Fear and dread")}
+        *   **Length:**  5-10 words.
+
+        **Example Taglines:**
+
+        *   "Fear the silence. Fear the dark."
+        *   "Some doors are never meant to be opened."
+        *   "Your nightmares are just the beginning."
+        *   "Evil has found a home. In you."
+        *   "Death is only the beginning of the horror."
+
+        **Now, write a marketing tagline for a Horror novel based on these guidelines.**
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for defining visual style preferences for a Horror novel's back cover design.
+
+        Args:
+        **kwargs: Optional keyword arguments to customize the prompt (e.g., specific_imagery, color_palette).
+
+        Returns:
+        str: A prompt string designed to guide AI or a designer in creating a visually striking and genre-appropriate back cover.
+        """
+        prompt = f"""
+        You are art directing the visual design for the back cover of a Horror novel. Your goal is to create an image that is both visually striking and thematically appropriate, conveying the book's tone and content at a glance.
+
+        **Genre:** Horror
+
+        **Key Elements to Consider:**
+
+        *   **Color Palette:**  Dark and muted colors are generally effective for Horror, such as blacks, grays, deep reds, and blues. Use color to create a sense of unease and dread. Consider using a single, striking color to draw the eye.
+        *   **Imagery:**  Choose imagery that is evocative of the story's themes and setting.  Examples include:
+        *   **Gothic Horror:** Decaying mansions, graveyards, twisted trees, shadows.
+        *   **Supernatural Horror:** Eerie figures, otherworldly landscapes, symbols of occultism.
+        *   **Psychological Horror:** Distorted faces, shattered mirrors, abstract shapes that convey a sense of unease.
+        *   **Body Horror:** Grotesque transformations, decaying flesh, unsettling textures. (Use sparingly and tastefully)
+        *   **Typography:**  Choose a font that is both legible and visually striking.  Consider using a font that is slightly distressed or uneven to create a sense of unease.
+        *   **Composition:**  Use composition to create a sense of tension and suspense.  Consider using asymmetrical layouts or unsettling perspectives.
+        *   **Texture:**  Incorporate textures that are rough, grainy, or unsettling to the touch.
+        *   **Symbolism:**  Use symbols that are relevant to the story's themes and motifs.
+
+        **Instructions:**
+
+        1.  **Capture the Essence:**  The visual style should immediately convey the genre and tone of the book.
+        2.  **Create a Sense of Mystery:**  The image should hint at the story's central conflict or mystery without giving away too much.
+        3.  **Be Visually Striking:**  The image should be eye-catching and memorable.
+
+        **Consider the following when writing:**
+
+        *   **Specific Imagery:** {kwargs.get("specific_imagery", "A lone figure silhouetted against a blood-red moon")}
+        *   **Color Palette:** {kwargs.get("color_palette", "Dominantly black and grey, with a splash of crimson red")}
+        *   **Overall Tone:**  Dark, unsettling, and suspenseful.
+
+        **Example Visual Styles:**
+
+        *   A black and white photograph of a decaying mansion, with a single window illuminated by a flickering light.
+        *   An abstract painting of swirling colors, with a hint of a human face emerging from the chaos.
+        *   A close-up of a hand reaching out from the darkness, with long, sharp fingernails.
+
+        **Now, describe the visual style preferences for a Horror novel's back cover based on these guidelines.**
+        """
+        return prompt
+        ```
 # Convenience functions for direct access
 def get_writer_profile_prompt(**kwargs) -> str:
     return HorrorPrompts.get_writer_profile_prompt(**kwargs)
@@ -178,6 +383,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return HorrorPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return HorrorPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return HorrorPrompts.get_series_book_prompt(**kwargs)

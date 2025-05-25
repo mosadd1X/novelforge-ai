@@ -137,6 +137,198 @@ Create a memoir series that provides comprehensive education with authoritative,
         """Generate a memoir-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class MemoirMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover copy for a Memoir.
+
+        Args:
+        **kwargs:  Optional keyword arguments. Can include:
+        - title (str): The title of the memoir.
+        - author (str): The author's name.
+        - main_theme (str): A brief description of the memoir's central theme.
+        - target_audience (str):  Who the memoir is intended for (e.g., readers interested in family dynamics, overcoming adversity).
+        - key_events (list): A list of 2-3 significant events or turning points in the memoir.
+        - emotional_tone (str): The overall emotional tone of the memoir (e.g., hopeful, poignant, humorous, reflective).
+        - comparable_titles (list): A list of 2-3 comparable memoirs.
+
+        Returns:
+        str: A detailed prompt for generating back cover copy.
+        """
+        prompt = f"""
+        Write a compelling back cover description for a memoir titled "{kwargs.get('title', '[Title of Memoir]')}" by {kwargs.get('author', '[Author Name]')}.
+
+        Genre: Memoir
+
+        Core elements to emphasize:
+
+        *   **Authenticity and Vulnerability:**  Memoirs thrive on raw honesty and the author's willingness to share deeply personal experiences and emotions.  The reader should feel a connection to the author's humanity.
+        *   **Emotional Resonance:**  Highlight the emotional journey of the author.  What challenges did they face? What did they learn?  How did they grow?  Evoke empathy and understanding in the reader.
+        *   **Transformation and Growth:**  Memoirs often chronicle a period of significant change or personal transformation.  Focus on the author's arc and the lessons they learned along the way.
+        *   **Universal Themes:**  While the story is personal, connect it to broader human experiences and themes such as love, loss, family, identity, resilience, and the search for meaning.
+        *   **Specific Details:**  Use vivid and sensory language to bring the author's experiences to life.  Don't be afraid to share specific details that make the story unique and memorable.
+
+        Back Cover Copy Guidelines:
+
+        1.  **Hook:** Start with a captivating hook that immediately grabs the reader's attention. This could be a provocative question, a striking image, or a powerful statement that encapsulates the memoir's central theme.
+        2.  **Central Theme:** Clearly state the memoir's main theme and what the author hopes to convey to the reader. {kwargs.get('main_theme', 'Briefly describe the memoir\'s central theme.')}
+        3.  **Key Events:** Briefly describe 2-3 significant events or turning points in the author's life that are explored in the memoir. Focus on the emotional impact of these events. {kwargs.get('key_events', 'List 2-3 significant events.')}
+        4.  **Emotional Tone:**  Convey the overall emotional tone of the memoir. Is it hopeful, poignant, humorous, or reflective?  Let the reader know what to expect emotionally. {kwargs.get('emotional_tone', 'Describe the emotional tone.')}
+        5.  **Target Audience:**  Consider the target audience for the memoir. Who is most likely to be interested in this story? Tailor the language and tone to appeal to that audience. {kwargs.get('target_audience', 'Describe the target audience.')}
+        6.  **Author Bio Teaser:** Include a brief, intriguing sentence or two about the author that connects to the memoir's themes.
+        7.  **Call to Action:** End with a compelling reason for the reader to pick up the book and start reading.
+
+        Example Sentence Starters (adapt as needed):
+
+        *   "In this unflinchingly honest memoir..."
+        *   "A story of resilience, hope, and the power of..."
+        *   "With raw vulnerability, [Author Name] shares..."
+        *   "A deeply personal exploration of..."
+        *   "This is a memoir for anyone who has ever..."
+
+        Comparable Titles:  If possible, subtly reference comparable memoirs to give the reader a sense of what to expect. {kwargs.get('comparable_titles', 'List 2-3 comparable memoirs.')}
+
+        Craft a back cover description that is emotionally resonant, authentic, and ultimately invites the reader to connect with the author's story on a personal level.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short (2-3 line) book recommendation description for a Memoir.
+
+        Args:
+        **kwargs: Optional keyword arguments. Can include:
+        - title (str): The title of the memoir.
+        - author (str): The author's name.
+        - main_theme (str): A brief description of the memoir's central theme.
+        - emotional_tone (str): The overall emotional tone of the memoir.
+
+        Returns:
+        str: A prompt for generating a short book recommendation description.
+        """
+        prompt = f"""
+        Write a short (2-3 lines) book recommendation description for the memoir "{kwargs.get('title', '[Title of Memoir]')}" by {kwargs.get('author', '[Author Name]')}.
+
+        Genre: Memoir
+
+        Focus:
+
+        *   **Emotional Impact:** Emphasize the emotional core of the story. What will readers feel?
+        *   **Central Theme:** Briefly highlight the memoir's main theme.
+        *   **Authenticity:** Convey the author's vulnerability and honesty.
+
+        Guidelines:
+
+        1.  **Brevity:** Keep it concise and impactful.
+        2.  **Emotional Hook:** Use language that evokes emotion and curiosity.
+        3.  **Intrigue:** Leave the reader wanting to know more.
+
+        Example:
+
+        "A poignant and unforgettable memoir about [main theme].  [Author Name]'s raw honesty will stay with you long after you finish reading."
+
+        Another example:
+
+        "Prepare to be moved by this powerful story of [main theme].  A testament to the resilience of the human spirit."
+
+        Craft a short description that captures the essence of the memoir and entices readers to pick it up. The emotional tone is {kwargs.get('emotional_tone', 'Describe the emotional tone.')}, and the main theme is {kwargs.get('main_theme', 'Briefly describe the memoir\'s central theme.')}.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Memoir.
+
+        Args:
+        **kwargs: Optional keyword arguments. Can include:
+        - title (str): The title of the memoir.
+        - main_theme (str): A brief description of the memoir's central theme.
+        - emotional_tone (str): The overall emotional tone of the memoir.
+        - key_message (str): A single sentence describing the core message of the memoir.
+
+        Returns:
+        str: A prompt for generating a marketing tagline.
+        """
+        prompt = f"""
+        Write a punchy marketing tagline for the memoir "{kwargs.get('title', '[Title of Memoir]')}".
+
+        Genre: Memoir
+
+        Tagline Goals:
+
+        *   **Capture the Essence:**  Concisely convey the memoir's main theme or emotional core.
+        *   **Evoke Emotion:**  Use language that is evocative and memorable.
+        *   **Intrigue and Curiosity:**  Make the reader want to know more.
+        *   **Authenticity:**  Reflect the genuine and personal nature of the story.
+
+        Tagline Guidelines:
+
+        1.  **Keep it Short:** Aim for a tagline that is no more than 5-7 words.
+        2.  **Focus on Emotion:** Use words that resonate emotionally (e.g., hope, resilience, loss, love, courage).
+        3.  **Highlight the Theme:**  Hint at the memoir's central theme without giving too much away.
+        4.  **Consider the Tone:** Match the tagline to the overall emotional tone of the memoir (e.g., hopeful, poignant, humorous).
+
+        Example Taglines:
+
+        *   "A story of resilience and hope."
+        *   "Finding light in the darkest of times."
+        *   "A life lived, lessons learned."
+        *   "The courage to tell the truth."
+        *   "Where healing begins."
+
+        The memoir's main theme is {kwargs.get('main_theme', 'Briefly describe the memoir\'s central theme.')}, its emotional tone is {kwargs.get('emotional_tone', 'Describe the emotional tone.')}, and its core message is {kwargs.get('key_message', 'Describe the core message of the memoir in one sentence.')}.
+
+        Craft a tagline that is both memorable and reflective of the author's personal journey.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for providing visual style preferences for a Memoir back cover design.
+
+        Args:
+        **kwargs: Optional keyword arguments. Can include:
+        - main_theme (str): A brief description of the memoir's central theme.
+        - emotional_tone (str): The overall emotional tone of the memoir.
+        - imagery_suggestions (list):  List of 2-3 visual images or metaphors that relate to the memoir's theme.
+        - color_palette (str): Preferred color palette for the cover.
+        - font_style (str): Preferred font style (e.g., classic, modern, handwritten).
+
+        Returns:
+        str: A prompt for generating visual style preferences.
+        """
+        prompt = f"""
+        Provide visual style preferences for the back cover design of a memoir.
+
+        Genre: Memoir
+
+        Visual Considerations:
+
+        *   **Evoke Emotion:** The cover design should visually represent the emotional tone of the memoir.
+        *   **Authenticity:** The design should feel genuine and personal, reflecting the author's voice.
+        *   **Intrigue:** The design should pique the reader's curiosity and make them want to learn more.
+        *   **Simplicity:** Often, less is more. Avoid overly cluttered or distracting designs.
+        *   **Relatability:**  The imagery should resonate with the target audience.
+
+        Specific Preferences:
+
+        1.  **Imagery:** Suggest visual images or metaphors that relate to the memoir's theme.  For example, if the memoir is about overcoming adversity, the imagery might include a sunrise, a blooming flower, or a mountain peak. {kwargs.get('imagery_suggestions', 'List 2-3 visual imagery suggestions.')}
+        2.  **Color Palette:**  Specify a preferred color palette that reflects the emotional tone of the memoir.  For example, warm colors (red, orange, yellow) might be appropriate for a hopeful or uplifting memoir, while cool colors (blue, green, purple) might be better suited for a more reflective or melancholic story. {kwargs.get('color_palette', 'Describe preferred color palette.')}
+        3.  **Font Style:**  Choose a font style that is both readable and visually appealing.  Consider whether a classic, modern, or handwritten font would best represent the author's voice and the overall tone of the memoir. {kwargs.get('font_style', 'Describe preferred font style.')}
+        4.  **Overall Mood:**  Describe the overall mood or feeling that the back cover design should evoke.  Should it be hopeful, poignant, reflective, or something else? {kwargs.get('emotional_tone', 'Describe the emotional tone.')}
+
+        The memoir's main theme is {kwargs.get('main_theme', 'Briefly describe the memoir\'s central theme.')}.
+
+        Provide these visual style preferences to guide the design process and create a back cover that is both visually appealing and emotionally resonant.
+        """
+        return prompt
+        ```
         memoir_book_additions = """
 
 ## Memoir Series Book Integration
@@ -176,6 +368,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return MemoirPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return MemoirPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return MemoirPrompts.get_series_book_prompt(**kwargs)

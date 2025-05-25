@@ -2,25 +2,25 @@
 layout: default
 title: Home
 nav_order: 1
-description: 'Documentation for the AI-powered Ebook Generator system'
+description: 'Documentation for the AI-powered NovelForge AI system'
 permalink: /
 ---
 
-# Ebook Generator Documentation
+# NovelForge AI Documentation
 
 {: .fs-9 }
 
-A comprehensive guide to the AI-powered ebook generation system that creates complete novels and series using Google's Gemini API.
+A comprehensive guide to the AI-powered publishing platform that creates complete, professional-quality novels and series using Google's Gemini API.
 {: .fs-6 .fw-300 }
 
 [Get Started](./getting-started.html){: .btn .btn-primary .fs-5 .mb-4 .mb-md-0 .mr-2 }
-[View on GitHub](https://github.com/mosadd1X/ebook-generator){: .btn .fs-5 .mb-4 .mb-md-0 }
+[View on GitHub](https://github.com/mosadd1X/novelforge-ai){: .btn .fs-5 .mb-4 .mb-md-0 }
 
 ---
 
 ## Overview
 
-The Ebook Generator is an advanced AI-powered system that creates complete, human-like novels in EPUB format based on minimal user input. Using Google's Gemini 2.0 Flash API, the system generates coherent, engaging content with consistent characters, plotlines, and narrative arcs.
+NovelForge AI is an advanced AI-powered publishing platform that creates complete, professional-quality novels in EPUB format based on minimal user input. Using Google's Gemini 2.0 Flash API, this sophisticated system generates marketing-quality content with consistent characters, plotlines, and narrative arcs.
 
 ### Key Features
 
@@ -39,7 +39,7 @@ The Ebook Generator is an advanced AI-powered system that creates complete, huma
 
 ## Documentation Contents
 
-This documentation is organized into several sections to help you understand and use the Ebook Generator effectively:
+This documentation is organized into several sections to help you understand and use NovelForge AI effectively:
 
 ### Getting Started
 
@@ -91,16 +91,23 @@ This documentation is organized into several sections to help you understand and
 
 ## About the Project
 
-The Ebook Generator was developed to explore the capabilities of large language models in creating long-form narrative content while maintaining consistency and coherence. It addresses challenges in content creation and publishing by providing an accessible tool for generating complete novels and series with minimal input.
+NovelForge AI was created by **Mosaddiq** as an advanced AI-powered publishing platform that explores the capabilities of large language models in creating long-form narrative content while maintaining consistency and coherence. It addresses challenges in content creation and publishing by providing an accessible, enterprise-grade tool for generating complete novels and series with minimal input.
 
 For more information about the project's motivation, challenges, and successes, see the [Case Study](./case-study.html).
+
+### Developer
+
+**Mosaddiq** - _Creator & Lead Developer_
+
+- GitHub: [@mosadd1X](https://github.com/mosadd1X)
+- Project Repository: [NovelForge AI](https://github.com/mosadd1X/novelforge-ai)
 
 ---
 
 ## Getting Help
 
-If you encounter issues or have questions about the Ebook Generator:
+If you encounter issues or have questions about NovelForge AI:
 
 - Check the [Troubleshooting Guide](./troubleshooting.html)
-- [Open an issue](https://github.com/mosadd1X/ebook-generator/issues) on GitHub
-- Contribute to the [Discussions](https://github.com/mosadd1X/ebook-generator/discussions) on GitHub
+- [Open an issue](https://github.com/mosadd1X/novelforge-ai/issues) on GitHub
+- Contribute to the [Discussions](https://github.com/mosadd1X/novelforge-ai/discussions) on GitHub

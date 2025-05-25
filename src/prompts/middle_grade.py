@@ -137,6 +137,186 @@ Create a middlegrade series that builds compelling narratives with authentic gen
         """Generate a middlegrade-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class MiddleGradeMarketing:
+        """
+        A class containing methods for generating marketing prompts
+        specifically tailored for Middle Grade books.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions
+        for Middle Grade novels.
+
+        Args:
+        **kwargs: Keyword arguments containing book details such as title, author,
+        main character name, setting, problem/conflict, stakes,
+        themes, target audience age range, and comparable titles.
+
+        Returns:
+        str: A detailed prompt string.
+        """
+        prompt = f"""
+        Write an engaging and age-appropriate back cover description for a Middle Grade novel.
+        The target audience is readers aged {kwargs.get('target_audience_age_range', '8-12')}.
+        The book's title is "{kwargs.get('title', '[Title]')}," and it's written by {kwargs.get('author', '[Author]')}.
+
+        Here's what you need to include:
+
+        1.  **Introduce the Main Character:**  A likable and relatable character named {kwargs.get('main_character_name', '[Main Character Name]')}.
+        *   Highlight their age, personality, and any unique quirks or talents.  Focus on what makes them relatable to Middle Grade readers.
+
+        2.  **Set the Scene:**  Describe the setting, which is {kwargs.get('setting', '[Setting]')} in a vivid and imaginative way.
+        *   Make it appealing and intriguing to young readers.  Consider adding elements of mystery or adventure.
+
+        3.  **Present the Problem/Conflict:** Clearly outline the main problem or conflict that the main character faces, which is {kwargs.get('problem_conflict', '[Problem/Conflict]')}.
+        *   This should be something that Middle Grade readers can connect with – friendship issues, family problems, school challenges, or a quest for self-discovery.
+        *   Avoid overly complex or mature themes.
+
+        4.  **Raise the Stakes:** Explain what's at stake if the character fails to overcome the problem. What will happen? What will they lose?
+        *   The stakes should be meaningful to the character and relatable to the target audience.
+        *   Examples: losing a friendship, failing a grade, letting down their family, or failing to save something important.
+
+        5.  **Hint at the Journey:**  Tease the adventure or journey the character will embark on to solve the problem.
+        *   Focus on the excitement, challenges, and discoveries they will make along the way.
+
+        6.  **Emotional Hook:**  Tap into the emotions that Middle Grade readers experience: friendship, courage, loyalty, fear, hope, and determination.
+        *   Use language that resonates with their emotional world.
+
+        7.  **End with a Question:**  Leave the reader with a compelling question that makes them want to know more.
+        *   Examples:  "Can [Main Character Name] overcome their fears and save the day?" or "Will [Main Character Name] ever find true friendship?"
+
+        8.  **Middle Grade Tone:** Keep the tone light, engaging, and age-appropriate. Avoid sarcasm, cynicism, or overly complex language.
+        *   Focus on themes of friendship, family, self-discovery, and overcoming challenges.
+
+        9.  **Comparable Titles:** Books similar in style or theme to this one include: {kwargs.get('comparable_titles', '[Comparable Titles, e.g., Percy Jackson, Wonder, The Hobbit]')}.  Use these as inspiration for tone and style.
+
+        10. **Themes:** The main themes of the book are: {kwargs.get('themes', '[Themes, e.g., Friendship, Courage, Self-Discovery]')}. Emphasize these themes in a way that resonates with middle grade readers.
+
+        The back cover description should be approximately 150-200 words. Focus on creating a sense of wonder, excitement, and emotional connection for young readers.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, catchy 2-3 line book recommendation
+        specifically for Middle Grade readers.
+
+        Args:
+        **kwargs: Keyword arguments containing book details like title, main character, and main conflict.
+
+        Returns:
+        str: A detailed prompt string.
+        """
+        prompt = f"""
+        Write a short, catchy 2-3 line book recommendation for a Middle Grade novel aimed at readers aged {kwargs.get('target_audience_age_range', '8-12')}.
+        The book's title is "{kwargs.get('title', '[Title]')}," and the main character is {kwargs.get('main_character_name', '[Main Character Name]')}.
+        The core conflict is {kwargs.get('problem_conflict', '[Problem/Conflict]')}.
+
+        Guidelines:
+
+        1.  **Focus on the Hook:** Start with a strong hook that grabs the reader's attention.
+        2.  **Highlight the Adventure:** Emphasize the exciting and adventurous elements of the story.
+        3.  **Relatable Character:** Showcase the main character's relatability and the challenges they face.
+        4.  **Keep it Concise:** Use simple, clear language that Middle Grade readers can easily understand.
+        5.  **Positive Tone:** Maintain an upbeat and positive tone.
+
+        Example:
+        "[Main Character Name] thought middle school was tough enough... until they discovered a secret portal to a magical world!
+        Now, they must team up with unlikely friends to save both worlds from a looming darkness.
+        Get ready for an adventure filled with friendship, courage, and a whole lot of magic!"
+
+        Another Example:
+        "When [Main Character Name] discovers a hidden talent, everything changes!
+        But can they overcome their fears and use their newfound ability to help their friends and their town?
+        A heartwarming story about self-discovery, friendship, and believing in yourself!"
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Middle Grade book.
+
+        Args:
+        **kwargs: Keyword arguments containing the book's core themes and target audience.
+
+        Returns:
+        str: A detailed prompt string.
+        """
+        prompt = f"""
+        Write a punchy and memorable marketing tagline for a Middle Grade book.
+        The target audience is readers aged {kwargs.get('target_audience_age_range', '8-12')}.
+        The book's core themes are: {kwargs.get('themes', '[Themes, e.g., Friendship, Courage, Self-Discovery]')}.
+
+        Guidelines:
+
+        1.  **Keep it Short and Sweet:** Taglines should be concise and easy to remember (ideally under 10 words).
+        2.  **Highlight the Appeal:** Focus on what makes the book exciting, adventurous, or heartwarming.
+        3.  **Use Action Words:** Incorporate action verbs that create a sense of energy and excitement.
+        4.  **Relatability:** Hint at the relatable experiences and emotions of the characters.
+        5.  **Intrigue:** Leave the reader wanting to know more.
+
+        Examples:
+
+        *   "Adventure awaits. Friendship triumphs."
+        *   "Unlock your courage. Discover your magic."
+        *   "The adventure of a lifetime starts now!"
+        *   "Believe in yourself. Believe in your friends."
+        *   "Middle school just got a whole lot weirder."
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for guiding the visual design of a Middle Grade book's back cover.
+
+        Args:
+        **kwargs: Keyword arguments containing information about the book's tone, themes, and target audience.
+
+        Returns:
+        str: A detailed prompt string.
+        """
+        prompt = f"""
+        Provide guidance for the visual style of a Middle Grade book's back cover.
+        The target audience is readers aged {kwargs.get('target_audience_age_range', '8-12')}.
+        The book's tone is {kwargs.get('tone', '[Tone, e.g., adventurous, heartwarming, mysterious]')}.
+        The book's core themes are: {kwargs.get('themes', '[Themes, e.g., Friendship, Courage, Self-Discovery]')}.
+
+        Guidelines:
+
+        1.  **Color Palette:** Suggest a color palette that aligns with the book's tone and themes.
+        *   For example:
+        *   Adventurous: Bright and vibrant colors like blues, greens, and yellows.
+        *   Heartwarming: Warm and inviting colors like oranges, pinks, and soft yellows.
+        *   Mysterious: Cool and muted colors like blues, purples, and grays.
+        2.  **Imagery:** Describe the types of images or illustrations that would be appropriate.
+        *   Consider using illustrations that capture the main character, the setting, or a key moment in the story.
+        *   Illustrations should be age-appropriate and appealing to Middle Grade readers.
+        *   Examples:
+        *   Cartoony and whimsical illustrations
+        *   Realistic but slightly stylized illustrations
+        *   Illustrations that evoke a sense of wonder and imagination
+        3.  **Typography:** Recommend font styles that are legible and visually appealing to Middle Grade readers.
+        *   Avoid overly complex or difficult-to-read fonts.
+        *   Consider using a playful or slightly quirky font that reflects the book's tone.
+        4.  **Overall Design:** The overall design should be clean, uncluttered, and visually engaging.
+        *   Use white space effectively to create a sense of balance and readability.
+        *   Make sure the title and author's name are prominent and easy to read.
+        5.  **Consider the Theme:** Think about how the visual elements can reinforce the book's core themes.
+        *   For example, if the book is about friendship, the cover could feature images of the main characters together.
+        *   If the book is about courage, the cover could feature an image of the main character facing a challenge.
+
+        Example:
+
+        "The back cover should have a vibrant and playful design, appealing to young readers. Use bright blues and greens to evoke a sense of adventure. Include an illustration of [Main Character Name] looking determined and ready to explore. The font should be easy to read and slightly whimsical. The overall design should feel energetic and inviting."
+        """
+        return prompt
+        ```
         middlegrade_book_additions = """
 
 ## MiddleGrade Series Book Integration
@@ -176,6 +356,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return MiddleGradePrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return MiddleGradePrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return MiddleGradePrompts.get_series_book_prompt(**kwargs)

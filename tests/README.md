@@ -1,18 +1,20 @@
 # Test Suite
 
-This directory contains comprehensive tests for the ebook generator's critical fixes and improvements.
+This directory contains comprehensive tests for NovelForge AI's critical fixes and improvements.
 
 ## Test Files
 
 ### Core Functionality Tests
 
 - **`test_memory_leak_fix.py`** - Tests the memory leak fix implementation
+
   - LimitedDict and LimitedList functionality
   - MemoryManager bounded growth
   - Save/load with limited containers
   - Memory optimization features
 
 - **`test_error_handling.py`** - Tests the standardized error handling system
+
   - Exception hierarchy functionality
   - Error handler with Rich formatting
   - Error context manager
@@ -33,6 +35,7 @@ This directory contains comprehensive tests for the ebook generator's critical f
 ## Running Tests
 
 ### Individual Tests
+
 ```bash
 # Test memory leak fix
 python tests/test_memory_leak_fix.py
@@ -48,6 +51,7 @@ python tests/simple_memory_test.py
 ```
 
 ### All Tests
+
 ```bash
 # Run all tests (from project root)
 python -m pytest tests/ -v
@@ -56,6 +60,7 @@ python -m pytest tests/ -v
 ## Test Requirements
 
 Make sure you have the required dependencies:
+
 ```bash
 pip install psutil rich requests
 ```
@@ -65,16 +70,19 @@ pip install psutil rich requests
 These tests verify the implementation of:
 
 1. **Priority 1: Memory Leak Fix**
+
    - Unlimited memory growth prevention
    - LRU eviction in limited containers
    - Memory monitoring and optimization
 
 2. **Priority 2: Standardized Error Handling**
+
    - User-friendly error messages
    - Recovery suggestions
    - Beautiful Rich formatting
 
 3. **Priority 3: Unused Import Cleanup**
+
    - Verified through successful imports
    - No import errors after cleanup
 
@@ -86,6 +94,7 @@ These tests verify the implementation of:
 ## Expected Results
 
 All tests should pass, indicating:
+
 - ✅ Memory usage stays bounded during long operations
 - ✅ Error handling provides user-friendly messages
 - ✅ Network resilience handles unstable connections

@@ -3,20 +3,22 @@ layout: default
 title: Novel Generator
 parent: Core Components
 nav_order: 1
-description: "Documentation for the Novel Generator, the main engine for generating complete novels"
+description: 'Documentation for the Novel Generator, the main engine for generating complete novels'
 ---
 
 # Novel Generator
+
 {: .no_toc }
 
-The Novel Generator is the main engine of the Ebook Generator system, coordinating the generation process and managing the flow of information between different components.
+The Novel Generator is the main engine of the NovelForge AI system, coordinating the generation process and managing the flow of information between different components.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
@@ -67,7 +69,7 @@ characters = generator.generate_characters()
 # Generate chapters
 for chapter_num in range(1, outline["chapter_count"] + 1):
     chapter_text = generator.generate_chapter(chapter_num)
-    
+
 # Format as EPUB
 epub_path = generator.format_as_epub()
 ```
@@ -77,6 +79,7 @@ epub_path = generator.format_as_epub()
 ### Writer Profile Generation
 
 The writer profile creates a fictional author persona with:
+
 - Writing background and experience
 - Stylistic preferences and influences
 - Thematic interests and expertise
@@ -87,6 +90,7 @@ This profile influences the overall style and approach of the novel.
 ### Novel Outline Creation
 
 The outline generation process:
+
 1. Determines appropriate chapter count based on genre
 2. Creates a high-level plot structure
 3. Develops individual chapter summaries
@@ -96,6 +100,7 @@ The outline generation process:
 ### Character Development
 
 Character generation creates:
+
 - Protagonist(s) with detailed backgrounds, motivations, and arcs
 - Supporting characters with distinct roles and relationships
 - Antagonists with clear motivations and obstacles they present
@@ -104,6 +109,7 @@ Character generation creates:
 ### Chapter Generation
 
 For each chapter, the generator:
+
 1. Retrieves relevant context from the Memory Manager
 2. Constructs a detailed prompt incorporating the context
 3. Generates the chapter content using the Gemini API

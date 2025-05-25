@@ -3,20 +3,22 @@ layout: default
 title: EPUB Formatting
 parent: Core Components
 nav_order: 5
-description: "Documentation for the EPUB Formatter that converts generated content into properly formatted ebooks"
+description: 'Documentation for the EPUB Formatter that converts generated content into properly formatted ebooks'
 ---
 
 # EPUB Formatting
+
 {: .no_toc }
 
-The EPUB Formatter is a component of the Ebook Generator that converts generated novel content into properly formatted EPUB files.
+The EPUB Formatter is a component of NovelForge AI that converts generated novel content into properly formatted EPUB files.
 {: .fs-6 .fw-300 }
 
 ## Table of Contents
+
 {: .no_toc .text-delta }
 
 1. TOC
-{:toc}
+   {:toc}
 
 ---
 
@@ -96,6 +98,7 @@ epub_path = formatter.save_epub(output_dir, cover_path="path/to/cover.jpg")
 ### Title Page
 
 The title page includes:
+
 - Book title
 - Author name
 - Series information (if applicable)
@@ -103,6 +106,7 @@ The title page includes:
 ### Chapter Formatting
 
 Chapters are formatted with:
+
 - Chapter titles
 - Proper paragraph spacing
 - Consistent typography
@@ -111,6 +115,7 @@ Chapters are formatted with:
 ### Content Conversion
 
 The formatter handles different content formats:
+
 - **Markdown**: Automatically converted to HTML
 - **Plain Text**: Paragraphs are properly formatted
 - **HTML**: Used as-is with cleaning and normalization
@@ -118,6 +123,7 @@ The formatter handles different content formats:
 ### CSS Styling
 
 The EPUB includes CSS styling for consistent appearance:
+
 - Typography (font family, size, line height)
 - Paragraph spacing and indentation
 - Chapter title formatting
@@ -134,7 +140,7 @@ You can customize the CSS by modifying the `_create_css` method in the `EpubForm
 def _create_css(self) -> epub.EpubItem:
     """
     Create CSS for the EPUB.
-    
+
     Returns:
         EpubItem containing CSS
     """
@@ -146,7 +152,7 @@ def _create_css(self) -> epub.EpubItem:
     }
     /* More styles... */
     """
-    
+
     # Create CSS file
     css = epub.EpubItem(
         uid="style",
@@ -154,10 +160,10 @@ def _create_css(self) -> epub.EpubItem:
         media_type="text/css",
         content=css_content
     )
-    
+
     # Add CSS file
     self.book.add_item(css)
-    
+
     return css
 ```
 
@@ -169,7 +175,7 @@ You can add custom pages by creating additional methods in the `EpubFormatter` c
 def _create_acknowledgments_page(self) -> epub.EpubHtml:
     """
     Create an acknowledgments page.
-    
+
     Returns:
         EpubHtml containing the acknowledgments page
     """
@@ -179,14 +185,14 @@ def _create_acknowledgments_page(self) -> epub.EpubHtml:
         <p>The author would like to thank...</p>
     </div>
     """
-    
+
     page = epub.EpubHtml(
         title="Acknowledgments",
         file_name="acknowledgments.xhtml",
         lang="en"
     )
     page.content = content
-    
+
     self.book.add_item(page)
     return page
 ```
@@ -202,6 +208,7 @@ The formatter creates EPUB 3.0 files, which are compatible with most modern e-re
 ### Metadata
 
 The EPUB includes standard metadata:
+
 - Title
 - Author
 - Language (default: English)
@@ -215,12 +222,14 @@ The EPUB includes standard metadata:
 ### Navigation
 
 The EPUB includes two navigation systems:
+
 - NCX file for older e-readers
 - Navigation document (nav.xhtml) for EPUB 3.0 compatibility
 
 ### Content Processing
 
 The formatter processes content in several steps:
+
 1. Determines if content is markdown, HTML, or plain text
 2. Converts markdown to HTML if needed
 3. Wraps plain text paragraphs in HTML tags

@@ -23,7 +23,7 @@ This guide will help you install and set up the Ebook Generator system on your m
 
 ## Prerequisites
 
-Before installing the Ebook Generator, ensure you have the following prerequisites:
+Before installing NovelForge AI, ensure you have the following prerequisites:
 
 - **Python 3.8+** installed on your system
 - **Google Gemini API key(s)** - [Get API keys here](https://ai.google.dev/)
@@ -36,10 +36,10 @@ Before installing the Ebook Generator, ensure you have the following prerequisit
 
 ```bash
 # Clone the repository
-git clone https://github.com/mosadd1X/ebook-generator.git
+git clone https://github.com/mosadd1X/novelforge-ai.git
 
 # Navigate to the project directory
-cd ebook-generator
+cd novelforge-ai
 
 # Install dependencies
 pip install -r requirements.txt
@@ -49,10 +49,10 @@ pip install -r requirements.txt
 
 ```bash
 # Install from PyPI
-pip install ebook-generator
+pip install novelforge-ai
 
 # Or install directly from GitHub
-pip install git+https://github.com/mosadd1X/ebook-generator.git
+pip install git+https://github.com/mosadd1X/novelforge-ai.git
 ```
 
 ## Configuration
@@ -153,7 +153,7 @@ If you encounter any issues, check the [Troubleshooting](./troubleshooting.html)
 
 ## Next Steps
 
-Now that you have installed and configured the Ebook Generator, you can:
+Now that you have installed and configured NovelForge AI, you can:
 
 - Follow the [Quick Start Guide](./quick-start.html) to generate your first book
 - Learn about [Configuration Options](./configuration.html) to customize the generation process

@@ -1,0 +1,22 @@
+{
+  "id": "c6dda503-4e48-490c-8bed-0c8359b13861",
+  "name": "Test Romance Writer",
+  "description": "Test profile for EPUB generation testing",
+  "genre": "Contemporary Romance",
+  "created_at": "2025-05-25T02:32:04.702443",
+  "last_used": "2025-05-25T02:32:04.702443",
+  "usage_count": 0,
+  "is_template": false,
+  "profile_data": {
+    "writing_style": "Emotional and engaging contemporary romance",
+    "literary_influences": "Jane Austen, Nicholas Sparks",
+    "thematic_focuses": "Love, relationships, personal growth",
+    "narrative_techniques": "Character-driven storytelling",
+    "strengths": "Emotional depth and realistic dialogue"
+  },
+  "books_generated": [],
+  "tags": [
+    "contemporary romance"
+  ],
+  "version": "1.0"
+}

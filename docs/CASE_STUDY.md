@@ -50,6 +50,7 @@ Developing the Ebook Generator presented numerous technical challenges that requ
 **Problem**: Large language models typically have limited context windows and struggle to maintain consistency across thousands of words. Characters might change personalities, plot elements could be forgotten, and the overall narrative might become incoherent.
 
 **Solution**: The Memory Management System was developed to address this challenge. This system:
+
 - Tracks characters, their traits, relationships, and development
 - Maintains a database of plot points and their status (introduced, developed, resolved)
 - Creates and stores chapter summaries for reference
@@ -63,6 +64,7 @@ This approach allows the system to maintain consistency across an entire novel o
 **Problem**: AI services like Google's Gemini API have rate limits, token limits, and can be costly for generating long-form content like novels.
 
 **Solution**: The system implements several strategies to optimize API usage:
+
 - Multiple API key rotation to handle rate limits
 - Efficient prompt engineering to maximize output quality while minimizing token usage
 - Caching mechanisms to avoid regenerating content unnecessarily
@@ -74,6 +76,7 @@ This approach allows the system to maintain consistency across an entire novel o
 **Problem**: Different literary genres have distinct conventions, structures, and reader expectations that must be respected for the content to feel authentic.
 
 **Solution**: The Genre Guidelines System was implemented to address this challenge:
+
 - Genre-specific templates and defaults for chapter count, word count, and structure
 - Customized character archetypes and plot structures based on genre
 - Tailored prompts that incorporate genre-specific elements and tropes
@@ -84,6 +87,7 @@ This approach allows the system to maintain consistency across an entire novel o
 **Problem**: Converting generated content into properly formatted, professional-looking ebooks requires handling complex formatting, metadata, and structure.
 
 **Solution**: The EPUB Formatter component was developed to:
+
 - Convert markdown or plain text to properly structured HTML
 - Generate consistent chapter formatting and navigation
 - Create appropriate metadata and table of contents
@@ -95,6 +99,7 @@ This approach allows the system to maintain consistency across an entire novel o
 **Problem**: A system with this complexity could be intimidating for users without technical backgrounds.
 
 **Solution**: A rich terminal UI was developed using the Rich library to:
+
 - Provide clear, colorful progress information
 - Offer interactive prompts for customization
 - Display generation statistics and status updates
@@ -111,6 +116,7 @@ Unlike many AI writing assistants that focus on generating snippets or assisting
 #### Advanced Memory Management
 
 The system's most significant innovation is its sophisticated memory management, which enables:
+
 - Character consistency across tens of thousands of words
 - Plot continuity and proper development of narrative arcs
 - Thematic coherence throughout the novel
@@ -120,6 +126,7 @@ The system's most significant innovation is its sophisticated memory management,
 #### Series Generation Capabilities
 
 The system can generate not just individual novels but complete series with:
+
 - Consistent world-building across multiple books
 - Character development that spans the series
 - Overarching plot arcs that progress logically
@@ -128,7 +135,8 @@ The system can generate not just individual novels but complete series with:
 
 #### Genre Flexibility
 
-The Ebook Generator supports multiple genres with customized approaches for each:
+NovelForge AI supports multiple genres with customized approaches for each:
+
 - Fantasy (epic, urban, YA)
 - Science Fiction (hard sci-fi, space opera, cyberpunk)
 - Mystery and Thriller
@@ -141,6 +149,7 @@ The Ebook Generator supports multiple genres with customized approaches for each
 #### Cover Generation
 
 The system includes a cover generator that creates professional-looking covers without requiring external images or design skills, featuring:
+
 - Genre-appropriate visual styles
 - Dynamic typography based on title length
 - Series branding for multi-book series
@@ -149,6 +158,7 @@ The system includes a cover generator that creates professional-looking covers w
 #### Multiple API Key Support
 
 To handle the demands of generating long-form content, the system supports:
+
 - Multiple API key rotation to manage rate limits
 - Automatic fallback to alternative keys when limits are reached
 - Status monitoring of API key usage and availability
@@ -156,6 +166,7 @@ To handle the demands of generating long-form content, the system supports:
 #### Rich User Interface
 
 Despite being a terminal application, the system provides:
+
 - Colorful, informative progress displays
 - Interactive customization options
 - Detailed statistics on generation progress
@@ -168,6 +179,7 @@ The Ebook Generator project opens up numerous possibilities for future developme
 #### Enhanced Collaborative Writing
 
 Future versions could evolve into collaborative writing tools where:
+
 - Human authors provide high-level direction and key scenes
 - AI generates connecting material and expands outlines
 - The system suggests alternative plot developments or character arcs
@@ -176,6 +188,7 @@ Future versions could evolve into collaborative writing tools where:
 #### Personalized Reading Experiences
 
 The technology could enable on-demand personalized fiction:
+
 - Stories tailored to individual reader preferences
 - Customizable protagonists and settings
 - Adjustable content parameters (length, complexity, themes)
@@ -184,6 +197,7 @@ The technology could enable on-demand personalized fiction:
 #### Educational Applications
 
 The system could be adapted for educational purposes:
+
 - Creating customized reading material for different age groups and reading levels
 - Generating stories that incorporate specific vocabulary or concepts
 - Producing content in multiple languages for language learning
@@ -192,6 +206,7 @@ The system could be adapted for educational purposes:
 #### Multi-Modal Content Generation
 
 Future enhancements could integrate:
+
 - Audio narration generation for audiobooks
 - Illustration generation for key scenes
 - Interactive elements for digital publications
@@ -200,6 +215,7 @@ Future enhancements could integrate:
 #### Publishing Platform Integration
 
 The system could be integrated with:
+
 - Self-publishing platforms for direct publication
 - Print-on-demand services
 - E-book marketplaces
@@ -208,6 +224,7 @@ The system could be integrated with:
 #### Technical Enhancements
 
 Planned technical improvements include:
+
 - Fine-tuning models specifically for narrative consistency
 - Implementing more sophisticated memory structures
 - Developing better evaluation metrics for narrative quality
@@ -230,6 +247,7 @@ While the Ebook Generator is still evolving, early testing has yielded promising
 
 **Test Case: Fantasy Series**
 A three-book fantasy series was generated with minimal input (series title, world description, and main character concepts). The system successfully:
+
 - Maintained consistent character development across all three books
 - Developed an overarching plot that built to a satisfying conclusion
 - Created a coherent magic system that followed established rules
@@ -237,6 +255,7 @@ A three-book fantasy series was generated with minimal input (series title, worl
 
 **Test Case: Mystery Novel**
 A standalone mystery novel was generated with the following results:
+
 - The mystery plot was logically constructed with fair clues for the reader
 - Red herrings and misdirection were appropriately employed
 - The resolution was satisfying and consistent with established facts
@@ -244,12 +263,14 @@ A standalone mystery novel was generated with the following results:
 
 **Test Case: Genre Adaptation**
 The system demonstrated flexibility by generating the same basic premise across multiple genres:
+
 - A "lost artifact" story was successfully adapted to fantasy, sci-fi, historical fiction, and contemporary thriller settings
 - Each version appropriately incorporated genre conventions while maintaining the core narrative
 - Character archetypes were appropriately adjusted for each genre context
 
 **User Feedback**
 Early users have reported:
+
 - "I was skeptical about AI-generated novels, but the character consistency impressed me."
 - "The system helped me explore a genre I'd never attempted to write in before."
 - "I used the generated novel as a detailed outline for my own writing, saving months of planning."

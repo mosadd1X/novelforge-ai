@@ -2,7 +2,7 @@
 Centralized error handling and user feedback system.
 
 This module provides consistent error handling, user-friendly error messages,
-and standardized error reporting throughout the Ebook Generator application.
+and standardized error reporting throughout the NovelForge AI application.
 """
 
 import traceback
@@ -11,7 +11,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
 
-from src.core.exceptions import EbookGeneratorError
+from src.core.exceptions import NovelForgeError
 
 # Initialize Rich console for beautiful error display
 console = Console(markup=True)
@@ -57,7 +57,7 @@ class ErrorHandler:
         # Determine if we should show technical details
         show_tech = show_technical_details if show_technical_details is not None else self.debug_mode
 
-        if isinstance(error, EbookGeneratorError):
+        if isinstance(error, NovelForgeError):
             self._handle_known_error(error, context, show_suggestions, show_tech)
         else:
             self._handle_unknown_error(error, context, show_suggestions, show_tech)
@@ -67,7 +67,7 @@ class ErrorHandler:
 
     def _handle_known_error(
         self,
-        error: EbookGeneratorError,
+        error: NovelForgeError,
         context: str,
         show_suggestions: bool,
         show_technical_details: bool

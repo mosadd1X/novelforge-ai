@@ -138,6 +138,198 @@ Create a urbanfantasy series that builds compelling narratives with authentic ge
         """Generate a urbanfantasy-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class UrbanFantasyBackCover:
+        """
+        A class containing methods for generating prompts to create compelling back cover copy
+        and visual style guidelines for Urban Fantasy novels.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for crafting a captivating back cover description for an Urban Fantasy novel.
+
+        Args:
+        **kwargs: Keyword arguments providing details about the book, including:
+        - protagonist: The protagonist's name, occupation, and key personality traits.
+        - setting: The specific urban setting of the story.
+        - magical_element: The type of magic system or supernatural creatures involved.
+        - central_conflict: The main conflict or problem the protagonist faces.
+        - stakes: What the protagonist stands to lose if they fail.
+        - tone: The overall tone of the book (e.g., gritty, humorous, romantic).
+        - target_audience: Who the book is targeted toward (e.g., YA, adult).
+        - themes: Key themes explored in the novel (e.g., identity, prejudice, power).
+        - unique_selling_points: Unique aspects of the book that set it apart.
+
+        Returns:
+        A string containing a detailed prompt for generating the back cover description.
+        """
+        return f"""
+        Craft a compelling back cover description for an Urban Fantasy novel.
+
+        **Genre:** Urban Fantasy
+
+        **Core Elements to Emphasize:**
+
+        *   **Urban Setting:** Highlight the gritty realism of the city and how it juxtaposes with the magical elements.  Mention specific landmarks or neighborhoods. The city *is* a character.
+        *   **Hidden World:**  Emphasize the secret magical world hidden beneath the surface of everyday life.  What kind of creatures lurk in the shadows? How does magic manifest in this urban landscape?
+        *   **Protagonist's Journey:** Focus on the protagonist's transformation as they navigate both the mundane and magical worlds. Are they reluctant heroes? Are they embracing their powers?  What personal struggles do they face?
+        *   **Conflict and Stakes:** Clearly define the central conflict and the high stakes involved. What will happen if the protagonist fails? What are the personal costs of victory?
+        *   **Emotional Hook:**  Tap into the emotional core of the story. Is it about love, loss, betrayal, or redemption? What emotions will resonate with the reader?
+        *   **Unique Twist:** Highlight any unique elements that set this book apart from other Urban Fantasy novels.
+
+        **Specific Details (Use the following information to weave a compelling narrative):**
+
+        *   **Protagonist:** {kwargs.get('protagonist', '[Protagonist Name]')} - A {kwargs.get('protagonist_occupation', '[Occupation]')} grappling with {kwargs.get('protagonist_personality', '[Personality Traits]')} and discovering {kwargs.get('protagonist_discovery', 'a hidden power/truth')}.
+        *   **Setting:** {kwargs.get('setting', '[City Name]')} - A vibrant city teeming with secrets, where {kwargs.get('setting_details', '[Specific details about the urban environment and its magical elements]')}.
+        *   **Magical Element:** {kwargs.get('magical_element', '[Type of magic/supernatural creatures]')} - Magic manifests as {kwargs.get('magic_manifestation', '[How magic appears and works in the world]')}.
+        *   **Central Conflict:** {kwargs.get('central_conflict', '[Briefly describe the main conflict]')} - {kwargs.get('conflict_details', '[Expand on the conflict and its implications]')}.
+        *   **Stakes:** {kwargs.get('stakes', '[What the protagonist stands to lose]')} - Failure means {kwargs.get('failure_consequences', '[Consequences of failure]')}.
+        *   **Tone:** {kwargs.get('tone', '[Overall tone of the book, e.g., gritty, humorous, romantic]')} - The story blends {kwargs.get('tone_elements', '[Elements that contribute to the tone]')}.
+        *   **Target Audience:** {kwargs.get('target_audience', '[Target audience, e.g., YA, adult]')} - Readers who enjoy {kwargs.get('similar_books', '[Similar books or authors]')} will love this.
+        *   **Themes:** Explores themes of {kwargs.get('themes', '[List of key themes, e.g., identity, prejudice, power]')} - and how they manifest in a world where magic and reality collide.
+        *   **Unique Selling Points:** {kwargs.get('unique_selling_points', '[Unique aspects of the book, e.g., a new take on a classic myth, a unique magic system]')} - Making this a must-read for Urban Fantasy fans.
+
+        **Instructions:**
+
+        1.  Start with a hook that grabs the reader's attention.
+        2.  Introduce the protagonist and their world in a compelling way.
+        3.  Clearly outline the central conflict and the stakes involved.
+        4.  Hint at the emotional journey the protagonist will undertake.
+        5.  End with a question or a cliffhanger that leaves the reader wanting more.
+        6.  Keep the description concise and engaging (around 150-200 words).
+        7.  Use strong verbs and vivid imagery to bring the story to life.
+        8.  Emphasize the Urban Fantasy elements: the blend of the mundane and the magical.
+        9. Focus on the character and their growth.
+        """
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, attention-grabbing description for book recommendations.
+
+        Args:
+        **kwargs: Keyword arguments providing details about the book, including:
+        - protagonist: The protagonist's key characteristic.
+        - setting: The most striking aspect of the urban setting.
+        - magical_element: The most unique element of the magic system.
+        - conflict: The core problem the protagonist faces.
+
+        Returns:
+        A string containing a detailed prompt for generating the short description.
+        """
+        return f"""
+        Craft a short (2-3 sentence) description for an Urban Fantasy novel, suitable for book recommendations.
+
+        **Genre:** Urban Fantasy
+
+        **Focus:**
+
+        *   Highlight the most intriguing aspects of the protagonist, setting, and magical elements.
+        *   Clearly state the central conflict in a concise and compelling way.
+        *   Use strong verbs and evocative language to capture the essence of the story.
+        *   Focus on what makes this book UNIQUE.
+
+        **Specific Details:**
+
+        *   **Protagonist:** {kwargs.get('protagonist', '[Protagonist Name]')} - A {kwargs.get('protagonist_characteristic', '[Key characteristic]')}
+        *   **Setting:** {kwargs.get('setting', '[City Name]')} - Known for its {kwargs.get('setting_characteristic', '[Striking aspect of the setting]')}
+        *   **Magical Element:** {kwargs.get('magical_element', '[Type of magic/supernatural creatures]')} - With the unique element of {kwargs.get('magic_unique', '[Unique element of the magic system]')}
+        *   **Conflict:** Faces the conflict of {kwargs.get('conflict', '[Core problem the protagonist faces]')}
+
+        **Example:**
+
+        "In the neon-drenched streets of Neo-Tokyo, a cynical hacker discovers she's the last line of defense against a digital demon threatening to consume the city.  She must master her newfound powers before the virtual and real worlds collide."
+        """
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy, memorable marketing tagline for an Urban Fantasy novel.
+
+        Args:
+        **kwargs: Keyword arguments providing details about the book's core elements.
+        - protagonist: The most compelling aspect of the protagonist.
+        - magical_element: A keyword representing the type of magic.
+        - setting: A keyword representing the urban setting.
+        - conflict: A keyword representing the central conflict.
+
+        Returns:
+        A string containing a detailed prompt for generating the marketing tagline.
+        """
+        return f"""
+        Craft a punchy and memorable marketing tagline for an Urban Fantasy novel.
+
+        **Genre:** Urban Fantasy
+
+        **Key Considerations:**
+
+        *   Keep it short, impactful, and easy to remember.
+        *   Highlight the core elements of the story: protagonist, setting, magic, and conflict.
+        *   Use evocative language and imagery to create a sense of mystery and intrigue.
+        *   Focus on the unique selling point of the book.
+        *   Target the emotions of the reader.
+
+        **Specific Details:**
+
+        *   **Protagonist:** {kwargs.get('protagonist', '[Compelling aspect of the protagonist]')}
+        *   **Magical Element:** {kwargs.get('magical_element', '[Keyword representing the type of magic]')}
+        *   **Setting:** {kwargs.get('setting', '[Keyword representing the urban setting]')}
+        *   **Conflict:** {kwargs.get('conflict', '[Keyword representing the central conflict]')}
+
+        **Examples:**
+
+        *   "Magic hides in plain sight. The city will never be the same."
+        *   "When darkness rises, only one can see."
+        *   "Urban legends are about to become reality."
+        """
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for defining the visual style preferences for the back cover design of an Urban Fantasy novel.
+
+        Args:
+        **kwargs: Keyword arguments providing details about the book's tone, setting, and magical elements.
+        - tone: The overall tone of the book (e.g., gritty, dark, romantic).
+        - setting: Key visual elements of the urban setting.
+        - magical_element: Visual representations of the magic or supernatural creatures.
+        - protagonist: Visual representation of the protagonist.
+
+        Returns:
+        A string containing a detailed prompt for generating the visual style preferences.
+        """
+        return f"""
+        Define the visual style preferences for the back cover design of an Urban Fantasy novel.
+
+        **Genre:** Urban Fantasy
+
+        **Key Considerations:**
+
+        *   Reflect the overall tone of the book (gritty, dark, romantic, etc.).
+        *   Capture the essence of the urban setting.
+        *   Visually represent the magic or supernatural elements in a compelling way.
+        *   Consider the target audience and their preferences.
+        *   Use typography that is both readable and visually appealing.
+        *   Utilize color palettes that evoke the desired mood and atmosphere.
+
+        **Specific Details:**
+
+        *   **Tone:** {kwargs.get('tone', '[Overall tone of the book, e.g., gritty, dark, romantic]')} - The visual style should reflect this tone by using {kwargs.get('tone_visuals', '[Visual elements that reflect the tone, e.g., dark colors, sharp contrasts, soft lighting]')}
+        *   **Setting:** {kwargs.get('setting', '[Key visual elements of the urban setting, e.g., neon lights, crumbling buildings, graffiti art]')} - Incorporate elements such as {kwargs.get('setting_elements', '[Specific visual elements to include in the design]')}
+        *   **Magical Element:** {kwargs.get('magical_element', '[Visual representations of the magic or supernatural creatures, e.g., glowing runes, shadowy figures, ethereal light]')} -  Represented by {kwargs.get('magic_visuals', '[Specific visual representations of the magic]')}
+        *   **Protagonist:** {kwargs.get('protagonist', '[Visual representation of the protagonist, e.g., a silhouette, a close-up of their eyes, a full-body shot with magical elements]')} - Should be shown as {kwargs.get('protagonist_visuals', '[Specific visual details of the protagonist’s representation]')}
+
+        **Examples:**
+
+        *   **Gritty Urban Fantasy:** Dark color palette, high contrast, gritty textures, focus on shadows and silhouettes, urban decay elements.
+        *   **Romantic Urban Fantasy:** Soft lighting, pastel colors, flowing lines, focus on character expressions and relationships.
+        *   **Modern/Tech Urban Fantasy:** Neon lights, futuristic elements, clean lines, digital interfaces, vibrant colors.
+
+        **Overall Style:**  Describe the overall visual aesthetic you are aiming for. Examples: Noir, Cyberpunk, Steampunk, Gothic, Contemporary.
+        """
+        ```
         urbanfantasy_book_additions = """
 
 ## UrbanFantasy Series Book Integration
@@ -177,6 +369,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return UrbanFantasyPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return UrbanFantasyPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return UrbanFantasyPrompts.get_series_book_prompt(**kwargs)

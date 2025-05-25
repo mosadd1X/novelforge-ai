@@ -136,6 +136,218 @@ Create a literaryfiction series that builds compelling narratives with authentic
         """Generate a literaryfiction-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class LiteraryFictionMarketing:
+        """
+        A class containing methods for generating marketing materials for Literary Fiction books.
+        """
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions for Literary Fiction.
+
+        Args:
+        **kwargs:  Keyword arguments containing book details (title, author, protagonist, setting, themes, etc.).
+
+        Returns:
+        A string containing the prompt for back cover description generation.
+        """
+        prompt = f"""
+        Craft a captivating back cover description for a Literary Fiction novel.
+
+        **Genre:** Literary Fiction
+
+        **Key Elements to Emphasize:**
+
+        *   **Character Depth and Complexity:** Highlight the protagonist's internal struggles, moral ambiguities, and emotional journey. Focus on their flaws, vulnerabilities, and capacity for growth or transformation.
+        *   **Themes and Ideas:** Clearly articulate the novel's central themes (e.g., identity, loss, memory, societal critique, the human condition).  Make these themes sound profound and relevant to the reader's own life.
+        *   **Atmosphere and Setting:** Evoke a strong sense of place and time. Use vivid language to describe the setting and its impact on the characters and plot.  Emphasize the emotional resonance of the setting.
+        *   **Language and Style:** Suggest the novel's lyrical, introspective, or experimental writing style.  Subtly hint at the quality of the prose.
+        *   **Emotional Resonance:** Create an emotional connection with the reader.  Hint at the emotional impact of the story (e.g., thought-provoking, heartbreaking, uplifting, unsettling).
+
+        **Avoid:**
+
+        *   Excessive plot details or spoilers. Focus on the *what* and *why* rather than the *how*.
+        *   Overly simplistic or sensational language.
+        *   Generic descriptions that could apply to any genre.
+
+        **Structure:**
+
+        1.  **Hook (1-2 sentences):** Start with a compelling hook that introduces the protagonist and their central conflict.  Pose a question or present a situation that immediately grabs the reader's attention.
+        2.  **Core Conflict/Dilemma (2-3 sentences):** Briefly describe the protagonist's internal or external struggle, emphasizing the stakes involved.  Hint at the difficult choices they must make.
+        3.  **Thematic Exploration (1-2 sentences):**  Introduce one or two of the novel's key themes and how they relate to the protagonist's journey.
+        4.  **Emotional Impact (1 sentence):**  Suggest the emotional impact of the story and leave the reader with a lingering question or feeling.
+
+        **Input Information:**
+
+        *   **Title:** {kwargs.get('title', '[Title]')}
+        *   **Author:** {kwargs.get('author', '[Author Name]')}
+        *   **Protagonist:** {kwargs.get('protagonist', '[Protagonist Name]')} - Describe their key characteristics, flaws, and motivations.
+        *   **Setting:** {kwargs.get('setting', '[Setting Description]')} - Include time period, location, and atmosphere.
+        *   **Themes:** {kwargs.get('themes', '[List of Themes]')} - Key thematic elements explored in the novel.
+        *   **Plot Summary (Brief):** {kwargs.get('plot_summary', '[Brief Plot Summary]')} - A concise overview of the main events, *without spoilers*.
+        *   **Target Audience:** Readers who appreciate introspective character studies, thought-provoking themes, and lyrical prose.
+
+        **Example:**
+
+        For a novel about a disillusioned artist returning to their hometown:
+
+        "Eleanor Vance, haunted by past mistakes, returns to the coastal town she swore she'd left behind.  As she confronts her estranged family and the ghosts of her youth, Eleanor must grapple with the meaning of home, the burden of memory, and the elusive nature of forgiveness.  A lyrical exploration of identity and belonging, *The Tide That Binds Us* asks: can we ever truly escape our past?"
+
+        **Output:**
+
+        A compelling back cover description of approximately 150-200 words that captures the essence of the novel and appeals to readers of Literary Fiction.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, impactful description (2-3 lines) for book recommendations in the Literary Fiction genre.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, themes, protagonist).
+
+        Returns:
+        A string containing the prompt for generating a short book description.
+        """
+        prompt = f"""
+        Create a concise and evocative book recommendation blurb (2-3 lines) suitable for a Literary Fiction novel.
+
+        **Genre:** Literary Fiction
+
+        **Focus:**
+
+        *   **Intrigue:** Capture the reader's attention with a hint of mystery or a thought-provoking question.
+        *   **Themes:** Highlight the core themes of the novel in a subtle and engaging way.
+        *   **Protagonist:** Briefly introduce the protagonist and their central conflict.
+        *   **Emotional Hook:** Suggest the emotional impact of the story.
+        *   **Literary Tone:** Maintain a sophisticated and literary tone.
+
+        **Avoid:**
+
+        *   Plot summaries or spoilers.
+        *   Overly descriptive language.
+        *   Generic phrases that could apply to any book.
+
+        **Input Information:**
+
+        *   **Title:** {kwargs.get('title', '[Title]')}
+        *   **Author:** {kwargs.get('author', '[Author Name]')}
+        *   **Protagonist:** {kwargs.get('protagonist', '[Protagonist Name]')}
+        *   **Themes:** {kwargs.get('themes', '[List of Themes]')}
+        *   **Target Audience:** Readers of literary fiction who appreciate character-driven stories and thought-provoking themes.
+
+        **Example:**
+
+        For a novel about a woman grappling with her past:
+
+        "A haunting exploration of memory and identity, *The Silent Echo* follows a woman as she unravels the secrets of her family's past, confronting the ghosts that have shaped her present.  A beautifully written meditation on the enduring power of the past."
+
+        **Output:**
+
+        A 2-3 line book recommendation blurb that captures the essence of the novel and entices readers of Literary Fiction.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for a Literary Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, themes, protagonist).
+
+        Returns:
+        A string containing the prompt for generating a marketing tagline.
+        """
+        prompt = f"""
+        Craft a compelling and memorable marketing tagline for a Literary Fiction novel.
+
+        **Genre:** Literary Fiction
+
+        **Characteristics of Effective Taglines:**
+
+        *   **Intriguing:** Sparks curiosity and makes the reader want to know more.
+        *   **Thematic:** Hints at the core themes of the novel.
+        *   **Evocative:** Creates a mood or feeling that resonates with the story.
+        *   **Concise:** Short, memorable, and to the point (ideally under 10 words).
+        *   **Literary:** Reflects the sophisticated and thoughtful nature of literary fiction.
+
+        **Avoid:**
+
+        *   Clichés or generic phrases.
+        *   Spoilers or plot details.
+        *   Taglines that are too literal or descriptive.
+
+        **Input Information:**
+
+        *   **Title:** {kwargs.get('title', '[Title]')}
+        *   **Author:** {kwargs.get('author', '[Author Name]')}
+        *   **Protagonist:** {kwargs.get('protagonist', '[Protagonist Name]')}
+        *   **Themes:** {kwargs.get('themes', '[List of Themes]')}
+
+        **Examples:**
+
+        *   "Where memory and desire collide."
+        *   "The past is never truly buried."
+        *   "One woman's search for meaning in a world adrift."
+        *   "A journey into the heart of human connection."
+        *   "Forgiveness is the hardest story to tell."
+
+        **Output:**
+
+        A punchy marketing tagline that captures the essence of the novel and appeals to readers of Literary Fiction.  Generate several options.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt for determining visual style preferences for the back cover design of a Literary Fiction novel.
+
+        Args:
+        **kwargs: Keyword arguments containing book details (title, author, setting, themes, overall mood).
+
+        Returns:
+        A string containing the prompt for defining visual style preferences.
+        """
+        prompt = f"""
+        Define the visual style preferences for the back cover design of a Literary Fiction novel.
+
+        **Genre:** Literary Fiction
+
+        **Key Considerations:**
+
+        *   **Mood and Tone:** The design should reflect the overall mood and tone of the novel (e.g., melancholic, hopeful, introspective, unsettling).
+        *   **Imagery:** Imagery should be suggestive and evocative, rather than literal or overly illustrative.  Consider abstract designs, landscapes, or close-up portraits that capture the emotional essence of the story.
+        *   **Typography:** Choose fonts that are elegant, readable, and reflect the literary nature of the book.  Consider serif fonts for a classic look or clean sans-serif fonts for a more modern feel.
+        *   **Color Palette:** Use a color palette that complements the mood and themes of the novel.  Consider muted tones, earthy colors, or a limited palette for a sophisticated look.
+        *   **Overall Aesthetic:** Aim for a design that is sophisticated, understated, and visually appealing to readers of Literary Fiction.
+
+        **Specific Questions to Consider:**
+
+        *   **What is the overall mood of the novel?** (e.g., reflective, melancholic, hopeful, unsettling)
+        *   **What visual elements best represent the setting or themes?** (e.g., landscapes, portraits, abstract designs, symbolic objects)
+        *   **What color palette would best convey the mood and themes?** (e.g., muted tones, earthy colors, vibrant colors, black and white)
+        *   **What font styles would be appropriate for the title and author name?** (e.g., serif, sans-serif, script)
+        *   **Are there any specific visual references or artistic styles that align with the novel's aesthetic?** (e.g., impressionism, minimalism, abstract expressionism)
+
+        **Input Information:**
+
+        *   **Title:** {kwargs.get('title', '[Title]')}
+        *   **Author:** {kwargs.get('author', '[Author Name]')}
+        *   **Setting:** {kwargs.get('setting', '[Setting Description]')}
+        *   **Themes:** {kwargs.get('themes', '[List of Themes]')}
+        *   **Overall Mood:** {kwargs.get('overall_mood', '[Overall Mood of the Novel]')}
+
+        **Output:**
+
+        A detailed description of the desired visual style for the back cover design, including specific preferences for imagery, typography, color palette, and overall aesthetic. Provide example images or visual references if possible.
+        """
+        return prompt
+        ```
         literaryfiction_book_additions = """
 
 ## LiteraryFiction Series Book Integration
@@ -175,6 +387,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return LiteraryFictionPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return LiteraryFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return LiteraryFictionPrompts.get_series_book_prompt(**kwargs)

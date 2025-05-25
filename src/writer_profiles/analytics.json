@@ -2,7 +2,7 @@
   "profile_usage": {},
   "genre_preferences": {
     "Literary Fiction": {
-      "recommendation_requests": 39,
+      "recommendation_requests": 41,
       "profiles_selected": {}
     },
     "Test": {
@@ -34,7 +34,7 @@
       "profiles_selected": {}
     },
     "Romance": {
-      "recommendation_requests": 21,
+      "recommendation_requests": 25,
       "profiles_selected": {}
     },
     "Fantasy": {
@@ -46,7 +46,7 @@
       "profiles_selected": {}
     },
     "Science Fiction": {
-      "recommendation_requests": 4,
+      "recommendation_requests": 6,
       "profiles_selected": {}
     },
     "Historical Fiction": {
@@ -192,7 +192,7 @@
     "genre_popularity": {},
     "user_satisfaction": {}
   },
-  "last_updated": "2025-05-25T01:03:31.112340",
+  "last_updated": "2025-05-25T08:30:54.574434",
   "style_selections": {
     "Romance_Master": {
       "count": 2,

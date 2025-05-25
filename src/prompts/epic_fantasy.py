@@ -137,6 +137,191 @@ Create a epicfantasy series that builds compelling narratives with authentic gen
         """Generate a epicfantasy-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class EpicFantasyMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling Epic Fantasy back cover descriptions.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt (e.g., title, author, target audience).
+
+        Returns:
+        A string containing the prompt for generating Epic Fantasy back cover copy.
+        """
+        prompt = f"""
+        Write a captivating back cover description for an Epic Fantasy novel.
+
+        **Genre:** Epic Fantasy
+
+        **Key Elements to Include:**
+
+        *   **Scope and Stakes:** Emphasize the vast scope of the story, including world-altering events, wars between nations, and the fate of entire civilizations hanging in the balance. Use language that conveys immense scale and consequence.
+        *   **Magic System:** Briefly hint at the magic system, highlighting its depth, complexity, and potential for both good and evil. Use evocative language to describe the nature of the magic (e.g., "ancient runes," "elemental forces," "blood magic").
+        *   **Characters:** Introduce the main characters, focusing on their flaws, motivations, and the burdens they carry. Emphasize their epic journey of self-discovery and their roles in the grand scheme of things. Highlight any chosen one archetypes or reluctant heroes.
+        *   **Worldbuilding:** Allude to the rich and immersive world, including its history, cultures, and unique landscapes. Use vivid imagery and sensory details to bring the world to life (e.g., "towering mountain ranges," "ancient forests," "forgotten cities").
+        *   **Themes:** Touch upon universal themes common in Epic Fantasy, such as good vs. evil, sacrifice, destiny, power, and the corrupting influence of ambition.
+        *   **Emotional Hook:** Create a sense of wonder, excitement, and emotional investment in the story. Hint at the challenges and sacrifices the characters will face.
+        *   **Intrigue:** End with a cliffhanger or a question that leaves the reader wanting to know more.
+
+        **Specific Guidelines:**
+
+        *   **Target Audience:** Aim for readers who enjoy sprawling narratives, complex characters, and intricate worldbuilding.
+        *   **Tone:** Maintain a tone that is both epic and engaging, balancing grandeur with emotional depth.
+        *   **Length:** Keep the description concise and impactful (approximately 150-250 words).
+        *   **Keywords:** Incorporate relevant keywords that will attract Epic Fantasy readers (e.g., "magic," "quest," "prophecy," "kingdom," "war," "hero," "destiny").
+        *   **Avoid Spoilers:** Tease the plot without revealing major twists or ending details.
+
+        **Example Structure:**
+
+        1.  Start with a hook that grabs the reader's attention and introduces the central conflict.
+        2.  Briefly introduce the main characters and their roles in the story.
+        3.  Highlight the stakes and the consequences of failure.
+        4.  Allude to the magic system and the worldbuilding.
+        5.  End with a cliffhanger or a question that leaves the reader wanting to know more.
+
+        **Additional Information (if available):**
+
+        *   Title: {kwargs.get("title", "[Title]")}
+        *   Author: {kwargs.get("author", "[Author]")}
+        *   Main Character(s): {kwargs.get("main_characters", "[Main Characters]")}
+        *   Setting: {kwargs.get("setting", "[Setting]")}
+        *   Central Conflict: {kwargs.get("central_conflict", "[Central Conflict]")}
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, punchy Epic Fantasy book recommendation (2-3 lines).
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt (e.g., title, author, target audience).
+
+        Returns:
+        A string containing the prompt for generating a short Epic Fantasy description.
+        """
+        prompt = f"""
+        Write a short, engaging book recommendation (2-3 lines) for an Epic Fantasy novel.
+
+        **Genre:** Epic Fantasy
+
+        **Key Elements to Include:**
+
+        *   **Core Concept:** Immediately convey the central concept or hook of the story.
+        *   **Target Audience:** Focus on what will appeal to fans of epic fantasy.
+        *   **Intrigue:** Leave the reader wanting to know more.
+        *   **Emotional Hook:** Briefly touch on the emotional core of the story.
+
+        **Specific Guidelines:**
+
+        *   **Length:** Extremely concise (2-3 lines maximum).
+        *   **Keywords:** Use strong keywords that resonate with Epic Fantasy readers (e.g., "epic," "magic," "quest," "world-shattering").
+        *   **Tone:** Enthusiastic and compelling.
+
+        **Example:**
+
+        "In a world teetering on the brink of destruction, a reluctant hero must rise to face an ancient evil. Prepare for a sprawling epic filled with magic, betrayal, and breathtaking battles."
+
+        **Additional Information (if available):**
+
+        *   Title: {kwargs.get("title", "[Title]")}
+        *   Author: {kwargs.get("author", "[Author]")}
+        *   Main Conflict: {kwargs.get("main_conflict", "[Main Conflict]")}
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy Epic Fantasy marketing tagline.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt (e.g., title, author, target audience).
+
+        Returns:
+        A string containing the prompt for generating an Epic Fantasy tagline.
+        """
+        prompt = f"""
+        Write a short, attention-grabbing marketing tagline for an Epic Fantasy novel.
+
+        **Genre:** Epic Fantasy
+
+        **Key Elements to Include:**
+
+        *   **Intrigue:** Spark curiosity and make the reader want to know more.
+        *   **Epic Scope:** Hint at the grand scale of the story.
+        *   **Emotional Resonance:** Evoke a sense of wonder, excitement, or danger.
+        *   **Uniqueness:** Highlight what makes the book stand out from other Epic Fantasy novels.
+
+        **Specific Guidelines:**
+
+        *   **Length:** Extremely short (ideally 5-10 words).
+        *   **Keywords:** Use powerful keywords that resonate with Epic Fantasy readers (e.g., "magic," "destiny," "war," "kingdom," "prophecy").
+        *   **Tone:** Bold, dramatic, and memorable.
+
+        **Examples:**
+
+        *   "Destiny awaits. The world hangs in the balance."
+        *   "Magic will rise. Empires will fall."
+        *   "One hero. A thousand worlds. An epic quest."
+
+        **Additional Information (if available):**
+
+        *   Title: {kwargs.get("title", "[Title]")}
+        *   Core Theme: {kwargs.get("core_theme", "[Core Theme]")}
+        *   Main Conflict: {kwargs.get("main_conflict", "[Main Conflict]")}
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates preferences for back cover visual design for an Epic Fantasy novel.
+
+        Args:
+        **kwargs: Keyword arguments to customize the prompt (e.g., title, author, target audience).
+
+        Returns:
+        A string containing the visual style preferences for an Epic Fantasy back cover.
+        """
+        prompt = f"""
+        Describe the desired visual style for the back cover of an Epic Fantasy novel.
+
+        **Genre:** Epic Fantasy
+
+        **Visual Elements:**
+
+        *   **Imagery:** Suggest imagery that evokes the grand scope and atmosphere of the story. Consider landscapes (e.g., mountains, forests, castles), characters (e.g., warriors, mages, mythical creatures), and symbolic elements (e.g., swords, crowns, runes).
+        *   **Color Palette:** Suggest a color palette that reflects the tone and themes of the book. Consider using rich, saturated colors for a sense of grandeur or muted, earthy tones for a more gritty and realistic feel.
+        *   **Typography:** Suggest a font style that is both legible and visually appealing. Consider using a classic serif font for a traditional feel or a more modern sans-serif font for a contemporary look.
+        *   **Overall Design:** Aim for a design that is both eye-catching and informative. The design should clearly communicate the genre and tone of the book while also highlighting its key elements. Consider incorporating elements of fantasy art, such as intricate patterns, stylized illustrations, or dramatic lighting.
+
+        **Specific Guidelines:**
+
+        *   **Epic Scale:** Emphasize the vast scope and grandeur of the story through visual elements.
+        *   **Atmosphere:** Create a sense of wonder, mystery, or danger.
+        *   **Character Focus:** Highlight the main characters and their roles in the story.
+        *   **Genre Conventions:** Adhere to common visual conventions of Epic Fantasy (e.g., swords, castles, dragons).
+        *   **Target Audience:** Appeal to readers who enjoy visually stunning and immersive artwork.
+
+        **Examples of Visual Styles:**
+
+        *   **High Fantasy:** Lush landscapes, heroic figures, vibrant colors.
+        *   **Grimdark:** Dark and gritty imagery, muted colors, realistic details.
+        *   **Sword and Sorcery:** Action-packed scenes, powerful warriors, magical artifacts.
+
+        **Additional Information (if available):**
+
+        *   Title: {kwargs.get("title", "[Title]")}
+        *   Setting: {kwargs.get("setting", "[Setting]")}
+        *   Main Characters: {kwargs.get("main_characters", "[Main Characters]")}
+        *   Overall Tone: {kwargs.get("overall_tone", "[Overall Tone]")}
+        """
+        return prompt
+        ```
         epicfantasy_book_additions = """
 
 ## EpicFantasy Series Book Integration
@@ -176,6 +361,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return EpicFantasyPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return EpicFantasyPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return EpicFantasyPrompts.get_series_book_prompt(**kwargs)

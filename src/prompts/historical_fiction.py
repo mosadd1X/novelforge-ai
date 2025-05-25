@@ -143,6 +143,243 @@ Create a historicalfiction series that builds compelling narratives with authent
         """Generate a historicalfiction-specific individual book prompt within series context."""
         base_prompt = super().get_series_book_prompt(**kwargs)
 
+        ```python
+        class HistoricalFictionMarketing:
+
+    @classmethod
+    def get_back_cover_prompt(cls, **kwargs):
+        """
+        Generates a detailed prompt for creating compelling back cover descriptions for Historical Fiction novels.
+
+        Args:
+        **kwargs: Keyword arguments that can be passed to further customize the prompt,
+        such as character names, historical period, specific conflicts, etc.
+
+        Returns:
+        str: A detailed prompt string tailored for Historical Fiction back cover copy generation.
+        """
+
+        prompt = f"""
+        Craft a captivating back cover description for a Historical Fiction novel.
+
+        **Genre:** Historical Fiction
+
+        **Core Elements to Emphasize:**
+
+        *   **Authenticity and Immersion:** Highlight the meticulous research and attention to detail that brings the past to life. Emphasize the sensory experience of the era.
+        *   **Character-Driven Narrative:** Focus on compelling characters whose lives are intertwined with significant historical events. Show their struggles, triumphs, and moral dilemmas.
+        *   **Conflict and Stakes:** Clearly define the central conflict, whether it's a personal struggle against societal norms, a battle for survival during wartime, or a fight for justice against oppression.  Raise the stakes – what will the characters lose if they fail?
+        *   **Emotional Resonance:** Evoke strong emotions in the reader.  Tap into themes of love, loss, betrayal, hope, and resilience. Make the reader feel connected to the characters and their experiences.
+        *   **Historical Context:** Briefly establish the historical setting and its significance. Mention specific events, figures, or social conditions that are relevant to the story.  Avoid info-dumping; integrate the history seamlessly into the narrative.
+        *   **Intrigue and Suspense:** Create a sense of mystery and anticipation. Hint at secrets, conspiracies, or hidden agendas that will keep the reader turning the pages.
+
+        **Guidelines for the Description:**
+
+        1.  **Opening Hook:** Start with a compelling sentence or two that immediately grabs the reader's attention. Introduce the protagonist and hint at the central conflict.
+        2.  **Character Introduction:** Briefly introduce the main characters, highlighting their motivations, flaws, and relationships. Use vivid language to bring them to life.
+        3.  **Plot Summary (Concise):** Provide a brief overview of the plot, focusing on the key events and turning points. Avoid spoilers.
+        4.  **Historical Setting:** Weave in details about the historical setting, emphasizing its impact on the characters and the plot.
+        5.  **Emotional Core:** Highlight the emotional themes of the story, such as love, loss, betrayal, hope, or redemption.
+        6.  **Cliffhanger Ending:** End with a question or statement that leaves the reader wanting more.
+
+        **Historical Fiction Specific Considerations:**
+
+        *   **Avoid Modern Language and Slang:** Use language that is appropriate for the historical period.
+        *   **Accuracy vs. Narrative:** While accuracy is important, prioritize a compelling narrative over strict adherence to every historical detail.
+        *   **Focus on Universal Themes:** Explore themes that resonate with modern readers, even though the story is set in the past.
+        *   **Show, Don't Tell:** Use vivid descriptions and sensory details to immerse the reader in the historical setting.
+
+        **Example Structure:**
+
+        [Hook - A captivating opening sentence]
+
+        In [Historical Setting], [Character Name], a [Character Description], finds [Inciting Incident]. Forced to [Action], they must confront [Conflict] while battling [Internal Struggle/External Force].  Their choices will determine not only their own fate, but perhaps [Larger Consequence related to the historical period].
+
+        But [Hint at a twist or challenge].
+
+        Will [Character Name] succeed in [Goal]? Or will the [Historical Period/Opposing Force] claim them as another victim?
+
+        **Optional Keywords (Integrate naturally):**
+
+        *   [Mention specific historical events or figures]
+        *   [Mention relevant social or political issues]
+        *   [Mention specific locations or landmarks]
+        *   [Mention specific objects or symbols]
+
+        **Specific Details (Fill in based on the novel):**
+
+        *   **Title:** {kwargs.get('title', '[Insert Title Here]')}
+        *   **Author:** {kwargs.get('author', '[Insert Author Name Here]')}
+        *   **Historical Period:** {kwargs.get('historical_period', '[Insert Historical Period Here]')}
+        *   **Main Character(s):** {kwargs.get('main_characters', '[Insert Main Character(s) Here]')}
+        *   **Central Conflict:** {kwargs.get('central_conflict', '[Insert Central Conflict Here]')}
+        *   **Setting (Location):** {kwargs.get('setting', '[Insert Setting Here]')}
+
+        Write a back cover description that is approximately 150-200 words. Make it compelling, informative, and evocative.
+        """
+        return prompt
+
+    @classmethod
+    def get_short_description_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a short, impactful description for Historical Fiction novels.
+        Ideal for book recommendations or online listings.
+
+        Args:
+        **kwargs: Keyword arguments that can be passed to further customize the prompt.
+
+        Returns:
+        str: A prompt string tailored for concise Historical Fiction descriptions.
+        """
+
+        prompt = f"""
+        Craft a short, impactful description (2-3 lines) for a Historical Fiction novel.
+
+        **Genre:** Historical Fiction
+
+        **Focus:**
+
+        *   **Intrigue:** Immediately hook the reader with a compelling question or statement.
+        *   **Setting:** Briefly establish the historical period and location.
+        *   **Character:** Hint at the protagonist's motivations or challenges.
+        *   **Conflict:** Suggest the central conflict or stakes.
+        *   **Emotional Hook:** Evoke a sense of mystery, danger, or romance.
+
+        **Guidelines:**
+
+        *   **Conciseness:** Use vivid language and strong verbs to convey a lot of information in a limited space.
+        *   **Specificity:** Avoid vague generalities. Focus on the unique elements of the story.
+        *   **Intrigue:** Leave the reader wanting to know more.
+
+        **Example Structures:**
+
+        *   In [Historical Setting], one woman's courage will change the course of [Historical Event]. But at what cost?
+        *   [Character Name] thought they knew their place in [Historical Setting]. But a shocking secret will shatter their world and ignite a revolution.
+        *   Amidst the chaos of [Historical Event], two unlikely lovers risk everything for a forbidden passion.
+
+        **Specific Details (Fill in based on the novel):**
+
+        *   **Title:** {kwargs.get('title', '[Insert Title Here]')}
+        *   **Author:** {kwargs.get('author', '[Insert Author Name Here]')}
+        *   **Historical Period:** {kwargs.get('historical_period', '[Insert Historical Period Here]')}
+        *   **Main Character(s):** {kwargs.get('main_characters', '[Insert Main Character(s) Here]')}
+        *   **Central Conflict:** {kwargs.get('central_conflict', '[Insert Central Conflict Here]')}
+
+        Write a description that is 2-3 lines long. Make it compelling and informative.
+        """
+        return prompt
+
+    @classmethod
+    def get_marketing_tagline_prompt(cls, **kwargs):
+        """
+        Generates a prompt for creating a punchy marketing tagline for Historical Fiction novels.
+
+        Args:
+        **kwargs: Keyword arguments that can be passed to further customize the prompt.
+
+        Returns:
+        str: A prompt string tailored for catchy Historical Fiction taglines.
+        """
+
+        prompt = f"""
+        Craft a punchy and memorable marketing tagline for a Historical Fiction novel.
+
+        **Genre:** Historical Fiction
+
+        **Focus:**
+
+        *   **Intrigue:** Spark curiosity and make the reader want to learn more.
+        *   **Emotion:** Evoke a sense of wonder, danger, romance, or adventure.
+        *   **Historical Context:** Hint at the historical setting or events.
+        *   **Uniqueness:** Capture the essence of the story in a concise and memorable way.
+
+        **Guidelines:**
+
+        *   **Brevity:** Keep it short and sweet (ideally under 10 words).
+        *   **Impact:** Use strong verbs and evocative language.
+        *   **Memorability:** Make it easy to remember and repeat.
+        *   **Relevance:** Accurately reflect the tone and themes of the novel.
+
+        **Example Taglines:**
+
+        *   History is written in blood.
+        *   Love knows no time.
+        *   The past is never truly buried.
+        *   One woman's rebellion. A nation's destiny.
+        *   The truth will rewrite history.
+
+        **Specific Details (Fill in based on the novel):**
+
+        *   **Title:** {kwargs.get('title', '[Insert Title Here]')}
+        *   **Author:** {kwargs.get('author', '[Insert Author Name Here]')}
+        *   **Historical Period:** {kwargs.get('historical_period', '[Insert Historical Period Here]')}
+        *   **Main Character(s):** {kwargs.get('main_characters', '[Insert Main Character(s) Here]')}
+        *   **Central Conflict:** {kwargs.get('central_conflict', '[Insert Central Conflict Here]')}
+
+        Write a tagline that is short, memorable, and captures the essence of the novel.
+        """
+        return prompt
+
+    @classmethod
+    def get_visual_style_preferences(cls, **kwargs):
+        """
+        Generates a prompt outlining visual style preferences for back cover design for Historical Fiction novels.
+
+        Args:
+        **kwargs: Keyword arguments that can be passed to further customize the prompt.
+
+        Returns:
+        str: A prompt string outlining visual style preferences for Historical Fiction book covers.
+        """
+
+        prompt = f"""
+        Outline the visual style preferences for a back cover design for a Historical Fiction novel.
+
+        **Genre:** Historical Fiction
+
+        **Key Considerations:**
+
+        *   **Historical Accuracy:** The visual elements should be appropriate for the historical period. Research clothing, architecture, landscapes, and technology of the time.
+        *   **Mood and Atmosphere:** The design should evoke the mood and atmosphere of the story. Consider using color palettes, lighting, and textures that reflect the historical setting and the emotional tone of the novel.
+        *   **Character Representation:** If characters are depicted, they should be dressed and styled in a way that is consistent with the historical period and their social status.
+        *   **Imagery:** Consider using historical photographs, paintings, or illustrations as inspiration. Alternatively, create original artwork that captures the essence of the story.
+        *   **Typography:** Choose fonts that are appropriate for the historical period. Avoid overly modern or futuristic fonts. Consider using serif fonts for a classic and elegant look.
+
+        **Specific Visual Elements to Consider:**
+
+        *   **Color Palette:**
+        *   [Suggest specific color palettes that are appropriate for the historical period. For example, muted tones for a somber story, or vibrant colors for a more celebratory one.]
+        *   [Consider the use of sepia tones or black and white for a vintage feel.]
+        *   **Imagery:**
+        *   [Suggest specific images that could be used on the cover, such as historical landmarks, portraits of historical figures, or scenes from the novel.]
+        *   [Consider using symbolic imagery to represent the themes of the story.]
+        *   **Typography:**
+        *   [Suggest specific fonts that are appropriate for the historical period. For example, Garamond, Times New Roman, or Baskerville.]
+        *   [Consider the use of decorative fonts for the title.]
+        *   **Layout:**
+        *   [Consider the overall layout of the cover. Should it be symmetrical or asymmetrical? Should it be minimalist or complex?]
+        *   [Ensure that the title and author name are clearly visible and legible.]
+
+        **Example Visual Styles:**
+
+        *   **Classic:** Elegant and timeless, with a focus on historical accuracy and detail.
+        *   **Romantic:** Evokes a sense of romance and passion, with soft colors and flowing lines.
+        *   **Dramatic:** Bold and impactful, with strong contrasts and striking imagery.
+        *   **Mysterious:** Evokes a sense of intrigue and suspense, with dark colors and shadowy figures.
+
+        **Specific Details (Fill in based on the novel):**
+
+        *   **Title:** {kwargs.get('title', '[Insert Title Here]')}
+        *   **Author:** {kwargs.get('author', '[Insert Author Name Here]')}
+        *   **Historical Period:** {kwargs.get('historical_period', '[Insert Historical Period Here]')}
+        *   **Main Character(s):** {kwargs.get('main_characters', '[Insert Main Character(s) Here]')}
+        *   **Central Conflict:** {kwargs.get('central_conflict', '[Insert Central Conflict Here]')}
+        *   **Desired Mood/Atmosphere:** {kwargs.get('mood', '[Insert desired mood/atmosphere, e.g., somber, hopeful, adventurous]')}
+
+        Outline the visual style preferences for the back cover design, considering historical accuracy, mood, and character representation.
+        """
+        return prompt
+        ```
         historicalfiction_book_additions = """
 
 ## HistoricalFiction Series Book Integration
@@ -182,6 +419,19 @@ def get_enhancement_prompt(**kwargs) -> str:
     return HistoricalFictionPrompts.get_enhancement_prompt(**kwargs)
 def get_series_plan_prompt(**kwargs) -> str:
     return HistoricalFictionPrompts.get_series_plan_prompt(**kwargs)
+
+def get_back_cover_prompt(**kwargs) -> str:
+    return {class_name}.get_back_cover_prompt(**kwargs)
+
+def get_short_description_prompt(**kwargs) -> str:
+    return {class_name}.get_short_description_prompt(**kwargs)
+
+def get_marketing_tagline_prompt(**kwargs) -> str:
+    return {class_name}.get_marketing_tagline_prompt(**kwargs)
+
+def get_visual_style_preferences(**kwargs) -> str:
+    return {class_name}.get_visual_style_preferences(**kwargs)
+
 
 def get_series_book_prompt(**kwargs) -> str:
     return HistoricalFictionPrompts.get_series_book_prompt(**kwargs)
